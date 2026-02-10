@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Our Story</title>
 
 <style>
-/* ---------- GLOBAL ---------- */
+/* ---------- Page background ---------- */
 body {
   margin: 0;
   font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
-  background: linear-gradient(180deg, #f7efe3, #f3eadf);
+  background: linear-gradient(180deg, #fbf6ee, #f3ede3);
+  height: 100vh;
 }
 
-/* ---------- FLOATING ICON ---------- */
+/* ---------- Floating launcher ---------- */
 .chat-launcher {
   position: fixed;
   bottom: 20px;
@@ -21,34 +22,39 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   font-size: 26px;
-  z-index: 999;
+  z-index: 1000;
 }
 
-/* ---------- CHAT CARD ---------- */
+/* ---------- Chat card ---------- */
 .chat-card {
   position: fixed;
   bottom: 90px;
   right: 20px;
-  width: 340px;
-  max-height: 80vh;
-  background: #ffffff;
+  width: 360px;
+  max-height: 75vh;
+  background: white;
   border-radius: 18px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.25);
   display: none;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeIn 0.4s ease;
   z-index: 999;
+  animation: fadeUp 0.4s ease;
 }
 
-/* ---------- HEADER ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Header ---------- */
 .chat-header {
   padding: 18px;
   border-bottom: 1px solid #eee;
@@ -61,76 +67,65 @@ body {
 
 .chat-header p {
   margin: 4px 0 0;
-  color: #666;
+  color: #777;
   font-size: 14px;
 }
 
-/* ---------- CHAT BODY ---------- */
+/* ---------- Chat content ---------- */
 .chat-box {
   padding: 18px;
   overflow-y: auto;
   font-size: 15px;
   line-height: 1.6;
-  flex-grow: 1;
 }
 
-/* ---------- BUTTONS ---------- */
-.voice-buttons,
-.question-buttons {
+/* ---------- Buttons ---------- */
+.voice-buttons, .question-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 16px;
 }
 
 .btn {
-  padding: 10px 14px;
+  padding: 8px 14px;
   border-radius: 20px;
   border: none;
-  background: #f4f4f4;
   cursor: pointer;
-  font-family: inherit;
   font-size: 14px;
+  background: #f2f2f2;
 }
 
-/* Saira Glow */
-.saira {
-  box-shadow: 0 0 10px rgba(255, 168, 120, 0.8);
+/* Voice glow */
+.btn.saira {
+  box-shadow: 0 0 10px rgba(255, 180, 120, 0.7);
+}
+.btn.aayan {
+  box-shadow: 0 0 10px rgba(120, 180, 255, 0.7);
 }
 
-/* Aayan Glow */
-.aayan {
-  box-shadow: 0 0 10px rgba(120, 170, 255, 0.8);
+/* Question glow */
+.question-buttons .btn {
+  background: white;
+  border: 1px solid #ddd;
 }
 
-/* ---------- FOOTER ---------- */
+/* ---------- Footer ---------- */
 .chat-footer {
-  padding: 12px;
+  padding: 14px;
   border-top: 1px solid #eee;
-  display: flex;
-  gap: 10px;
+  color: #888;
+  font-size: 13px;
+  text-align: center;
 }
 
-.chat-footer input {
-  flex-grow: 1;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-family: inherit;
-}
-
-/* ---------- ANIMATION ---------- */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ---------- MOBILE ---------- */
-@media (max-width: 600px) {
+/* ---------- Mobile ---------- */
+@media (max-width: 480px) {
   .chat-card {
     right: 10px;
     left: 10px;
     width: auto;
+    bottom: 80px;
   }
 }
 </style>
@@ -138,11 +133,12 @@ body {
 
 <body>
 
-<!-- Floating Icon -->
+<!-- Floating icon -->
 <div class="chat-launcher" onclick="toggleChat()">💬</div>
 
-<!-- Chat Card -->
+<!-- Chat card -->
 <div class="chat-card" id="chatCard">
+
   <div class="chat-header">
     <h2>Our Story</h2>
     <p>A quiet place to listen</p>
@@ -162,10 +158,83 @@ body {
   </div>
 
   <div class="chat-footer">
-    <input type="text" placeholder="Type here (optional)..." disabled />
+    Listening, not rushing.
   </div>
+
 </div>
 
-<script src="script.js"></script>
+<script>
+let activeVoice = null;
+const chatBox = document.getElementById("chatBox");
+
+/* Toggle chat */
+function toggleChat() {
+  const card = document.getElementById("chatCard");
+  card.style.display = card.style.display === "flex" ? "none" : "flex";
+}
+
+/* Select voice */
+function selectVoice(voice) {
+  activeVoice = voice;
+  chatBox.innerHTML = "";
+
+  if (voice === "saira") {
+    chatBox.innerHTML += `
+      <p><strong>Hello, this is Saira.</strong></p>
+      <p>I’d love to share our story with you — gently, honestly.</p>
+    `;
+  } else {
+    chatBox.innerHTML += `
+      <p><strong>Hello. This is Aayan.</strong></p>
+      <p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>
+    `;
+  }
+
+  chatBox.innerHTML += `
+    <div class="question-buttons">
+      <button class="btn" onclick="answer('story')">What kind of story is this?</button>
+      <button class="btn" onclick="answer('about')">What is the story about?</button>
+      <button class="btn" onclick="answer('for')">Who is this story for?</button>
+      <button class="btn" onclick="answer('where')">Where can I read it?</button>
+      <button class="btn" onclick="answer('author')">Who is the author?</button>
+    </div>
+  `;
+}
+
+/* Answers */
+function answer(type) {
+  let reply = "";
+
+  if (activeVoice === "saira") {
+    if (type === "story")
+      reply = "Our story is a contemporary romantic fiction — reflective, intimate, and deeply human.";
+    if (type === "about")
+      reply = "It’s about me and Aayan, about love shaped by timing, distance, and the choices we make.";
+    if (type === "for")
+      reply = "It’s for readers who value emotion, memory, and quiet connection over spectacle.";
+    if (type === "where")
+      reply = "You can read our story as a Kindle eBook, Paperback, Hardcover, or Audio edition.";
+    if (type === "author")
+      reply = "Mohan R. brought this story to life. It’s his debut novel, written with sincerity.";
+  }
+
+  if (activeVoice === "aayan") {
+    if (type === "story")
+      reply = "It’s a contemporary romantic fiction, but not an easy one.";
+    if (type === "about")
+      reply = "It’s about knowing something matters — and still having to choose carefully.";
+    if (type === "for")
+      reply = "For those who understand that not every love story is about arrival.";
+    if (type === "where")
+      reply = "The story is available in digital, print, and audio formats.";
+    if (type === "author")
+      reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
+  }
+
+  chatBox.innerHTML += `<p>${reply}</p>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+</script>
+
 </body>
 </html>
