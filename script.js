@@ -1,10 +1,16 @@
 const chatBox = document.getElementById("chatBox");
 const input = document.getElementById("userInput");
+const chatCard = document.getElementById("chatCard");
 
 let activeVoice = null;
 
-// ---------- Helpers ----------
+/* ---------- Toggle Chat ---------- */
+function toggleChat() {
+  chatCard.style.display =
+    chatCard.style.display === "flex" ? "none" : "flex";
+}
 
+/* ---------- Helpers ---------- */
 function addMessage(text, sender) {
   const msg = document.createElement("div");
   msg.className = "message " + sender;
@@ -21,8 +27,7 @@ function containsAny(text, list) {
   return list.some(word => text.includes(word));
 }
 
-// ---------- Voice Selection ----------
-
+/* ---------- Voice Selection ---------- */
 function selectVoice(voice) {
   addMessage(voice, "user");
   activeVoice = voice.toLowerCase();
@@ -36,56 +41,54 @@ function selectVoice(voice) {
     addMessage(intro, "bot");
     document.getElementById("voiceOptions").style.display = "none";
     document.getElementById("questionOptions").style.display = "block";
-  }, 500);
+  }, 400);
 }
 
-// ---------- Questions ----------
-
+/* ---------- Question Buttons ---------- */
 function askOption(text) {
   addMessage(text, "user");
   const reply = getReply(normalize(text));
-  setTimeout(() => addMessage(reply, "bot"), 500);
+  setTimeout(() => addMessage(reply, "bot"), 400);
 }
 
+/* ---------- Free Text ---------- */
 function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
   input.value = "";
   addMessage(text, "user");
   const reply = getReply(normalize(text));
-  setTimeout(() => addMessage(reply, "bot"), 500);
+  setTimeout(() => addMessage(reply, "bot"), 400);
 }
 
-// ---------- Intent Logic ----------
-
+/* ---------- Intent Logic ---------- */
 function getReply(msg) {
-
   if (!activeVoice) {
-    return "You can choose to listen to Saira or Aayan.";
+    return "You can listen through Saira or Aayan when you’re ready.";
   }
 
   if (containsAny(msg, ["author", "writer", "wrote", "written"])) {
     return activeVoice === "saira"
-      ? "The one who brought our story to life is Mohan R., and this is his debut novel.\n\nIt grew from lived emotion, travel, and a quiet curiosity about how people connect and remember each other."
-      : "Mohan R. is the one who gave this story its shape.\n\nHe wasn’t trying to explain love — only to sit honestly with how it feels when timing and responsibility complicate it.";
+      ? "The one who brought our story to life is Mohan R., and this is his debut novel.\n\nIt grew from lived emotion, travel, and a quiet curiosity about how people connect and remember."
+      : "Mohan R. gave this story its shape.\n\nNot to explain love — but to sit honestly with how it feels.";
   }
 
   if (containsAny(msg, ["about", "story", "plot", "meaning"])) {
     return activeVoice === "saira"
-      ? "At its heart, it’s a story about love that feels deeply human — imperfect, intense, and shaped by the choices we make over time.\n\nIt’s about me and Aayan, and the way connections linger."
-      : "It’s about timing.\n\nAbout knowing something matters, and still having to decide what you’re willing to give up for it.";
+      ? "At its heart, it’s a story about love that feels deeply human.\n\nImperfect, intense, and shaped by choice."
+      : "It’s about timing.\n\nAbout knowing something matters, and still having to choose.";
   }
 
   if (containsAny(msg, ["kind", "genre", "type", "fiction"])) {
     return activeVoice === "saira"
-      ? "Ours is a contemporary romantic fiction story, shaped by feeling and memory."
-      : "It’s a contemporary romantic fiction that lives between love and responsibility.";
+      ? "Ours is a contemporary romantic fiction — reflective and grounded in emotion."
+      : "A contemporary romantic fiction that lives between love and responsibility.";
   }
 
   if (containsAny(msg, ["for", "reader", "audience", "who"])) {
     return activeVoice === "saira"
-      ? "This story often finds readers who value emotional depth and reflection."
-      : "It tends to speak to those who sit with questions instead of rushing toward answers.";
+      ? "Readers who value emotional depth and atmosphere often feel at home here."
+      : "Those who sit with questions instead of rushing toward answers.";
   }
 
   if (containsAny(msg, ["read", "buy", "available", "where"])) {
@@ -93,6 +96,6 @@ function getReply(msg) {
   }
 
   return activeVoice === "saira"
-    ? "Some things take time to put into words.\n\nYou don’t have to rush."
-    : "Not every question has a clean answer.\n\nBut you can ask it anyway.";
+    ? "Some things don’t need quick answers.\n\nYou can stay here a while."
+    : "Not every question resolves cleanly.\n\nThat’s part of the story.";
 }
