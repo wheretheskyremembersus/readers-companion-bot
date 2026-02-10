@@ -3,23 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <title>Reader Companion Bot</title>
-  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div class="container">
-    <h1>Reader Companion</h1>
-    <p>This is a simple reader companion chatbot for the book.</p>
+  <h1>Reader Companion</h1>
+  <p>This is a simple reader companion chatbot for the book.</p>
 
-    <div class="chat-box">
-      <div class="bot-message">
-        Hello. You can ask me about the book.
-      </div>
+  <div class="chat-box" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:auto;">
+    <div class="bot-message">
+      Hello. You can ask me about the book.
     </div>
-
-    <input type="text" placeholder="Type your question here...">
-<button type="button" onclick="sendMessage()">Send</button>
   </div>
+
+  <input id="userInput" type="text" placeholder="Type your question here..." style="width:70%;">
+  <button id="sendBtn">Send</button>
 
   <script src="script.js"></script>
 </body>
