@@ -1,9 +1,12 @@
-// Get elements
+// Elements
 const chatBox = document.querySelector(".chat-box");
 const input = document.getElementById("userInput");
 const button = document.getElementById("sendBtn");
 
-// Event listeners
+// Active voice: "saira" | "aayan"
+let activeVoice = null;
+
+// Events
 button.addEventListener("click", sendMessage);
 input.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
@@ -22,88 +25,110 @@ function sendMessage() {
 
   setTimeout(() => {
     addMessage(reply, "bot");
-  }, 300);
+  }, 600);
 }
 
-// Core brain
+// Core logic
 function getBotReply(message) {
 
-  // Q1: Who is the author? (with typo tolerance)
-  if (
-    message.includes("author") ||
-    message.includes("writer") ||
-    message.includes("who wrote") ||
-    message.includes("aurthor") ||
-    message.includes("aurthot")
-  ) {
+  // ---- Voice selection ----
+  if (message.includes("saira")) {
+    activeVoice = "saira";
     return (
-      "The author is Mohan R., and this is his debut novel.\n\n" +
-      "The story was shaped by lived emotion, personal travel experiences, and a curiosity about how people connect, drift apart, and remember each other over time.\n\n" +
-      "Rather than trying to create a perfect love story, the author wanted to explore something more honest — how love feels when life, distance, timing, and responsibility complicate it."
+      "You’re listening to Saira now.\n\n" +
+      "I tend to speak through memory and feeling.\n" +
+      "You can ask me what stayed with me, what I felt, or what I still carry."
     );
   }
 
-  // Q2: What kind of story is this?
+  if (message.includes("aayan")) {
+    activeVoice = "aayan";
+    return (
+      "You’re listening to Aayan now.\n\n" +
+      "I speak reflectively.\n" +
+      "You can ask me about love, choice, distance, or what it cost to decide."
+    );
+  }
+
+  // ---- No voice chosen yet ----
+  if (!activeVoice) {
+    return (
+      "This story has two voices.\n\n" +
+      "When you’re ready, you can choose to listen to Saira or Aayan."
+    );
+  }
+
+  // ---- What kind of story ----
   if (
     message.includes("kind of story") ||
-    message.includes("type of story") ||
-    message.includes("genre") ||
-    (message.includes("story") && message.includes("what"))
+    message.includes("what is this") ||
+    message.includes("story")
   ) {
     return (
-      "This is a contemporary romantic fiction story.\n\n" +
-      "It is emotionally driven, reflective, and grounded in human connection rather than fast-paced action or dramatic twists."
+      "Our story is a contemporary romantic fiction.\n\n" +
+      "It isn’t shaped by grand events, but by moments —\n" +
+      "the kind that stay with you even as life keeps moving."
     );
   }
 
-  // Q3: What is the book about?
+  // ---- What the story is about ----
+  if (message.includes("about")) {
+    if (activeVoice === "saira") {
+      return (
+        "For me, it was about what lingers.\n\n" +
+        "About how someone can become part of you quietly,\n" +
+        "without ever asking permission."
+      );
+    }
+
+    if (activeVoice === "aayan") {
+      return (
+        "It was about timing.\n\n" +
+        "About knowing something matters,\n" +
+        "and still having to choose what you’re willing to carry."
+      );
+    }
+  }
+
+  // ---- Who the story is for ----
+  if (message.includes("for") || message.includes("who")) {
+    return (
+      "This story often finds people who read slowly.\n\n" +
+      "Those who notice silences, places,\n" +
+      "and the weight of what isn’t said."
+    );
+  }
+
+  // ---- Where to read ----
   if (
-    message.includes("book about") ||
-    message.includes("story about") ||
-    message.includes("summary") ||
-    message.includes("plot")
+    message.includes("read") ||
+    message.includes("buy") ||
+    message.includes("available")
   ) {
     return (
-      "At its heart, this is a story about love that feels deeply human — imperfect, intense, and shaped by the choices people make over time.\n\n" +
-      "It follows two individuals whose lives intersect unexpectedly across different cities, moments, and emotional landscapes."
+      "Our story exists in a few forms.\n\n" +
+      "You can find it as a Kindle eBook,\n" +
+      "Paperback, Hardcover, and Audio edition."
     );
   }
 
-  // Q4: Who is this book for?
-  if (
-    message.includes("who is this book for") ||
-    message.includes("who should read") ||
-    message.includes("for me") ||
-    message.includes("audience")
-  ) {
+  // ---- Soft fallback (voice-aware) ----
+  if (activeVoice === "saira") {
     return (
-      "This book tends to resonate with readers who enjoy emotionally driven, character-focused stories.\n\n" +
-      "It is well suited for readers who value reflection, atmosphere, and emotional depth over fast-paced plots."
+      "Some things are harder to put into words.\n\n" +
+      "You don’t have to rush."
     );
   }
 
-  // Q5: Where can I read or buy the book?
-  if (
-    message.includes("where can i read") ||
-    message.includes("where to buy") ||
-    message.includes("where can i get") ||
-    message.includes("available") ||
-    message.includes("formats")
-  ) {
+  if (activeVoice === "aayan") {
     return (
-      "The book is available in multiple formats.\n\n" +
-      "You can find it as a Kindle eBook, Paperback, Hardcover, and Audio edition."
+      "Not every question has a clean answer.\n\n" +
+      "But you can ask it anyway."
     );
   }
-
-  // Friendly fallback
-  return (
-    "I can help you understand the book better.\n\n" +
-    "You can ask about the author, what kind of story this is, what the book is about, who it is for, or where to read it."
-  );
 }
 
-// Message renderer
+// Render messages
 function addMessage(text, sender) {
   const msg = document.createElement("div");
   msg.textContent = text;
