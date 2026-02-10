@@ -9,22 +9,35 @@
       font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
       line-height: 1.65;
       color: #222;
-      background-color: #fff;
+      background: linear-gradient(
+        180deg,
+        #f8f3ea 0%,
+        #f6f2ec 40%,
+        #f7f4ef 100%
+      );
       padding: 24px;
+    }
+
+    .wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 30px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.04);
     }
 
     h1 {
       font-weight: normal;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .chat-box {
-      border: 1px solid #ccc;
+      border: 1px solid #e2dfda;
       padding: 22px;
       height: 380px;
       overflow-y: auto;
       font-size: 16px;
-      margin-bottom: 26px;
+      margin-bottom: 28px;
     }
 
     .bot-message {
@@ -48,12 +61,12 @@
 
     #options {
       display: none;
-      margin-top: 28px;
-      margin-bottom: 24px;
+      margin-top: 30px;
+      margin-bottom: 26px;
     }
 
     #options p {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 15px;
     }
 
@@ -71,10 +84,12 @@
 
 <body>
 
-  <h1>Our Story</h1>
+  <div class="wrapper">
 
-  <div class="chat-box">
-    <div class="bot-message">
+    <h1>Our Story</h1>
+
+    <div class="chat-box">
+      <div class="bot-message">
 Hello.
 
 This is a quiet space.
@@ -83,26 +98,28 @@ You can listen to our story through Saira or Aayan.
 Our story is a contemporary romantic fiction.
 
 When you’re ready, you can choose a voice.
+      </div>
     </div>
+
+    <!-- Contextual options -->
+    <div id="options">
+      <p>If you’d like, you can choose one of these:</p>
+      <button onclick="askOption('What kind of story is this?')">What kind of story is this?</button>
+      <button onclick="askOption('What is the story about?')">What is the story about?</button>
+      <button onclick="askOption('Who is this story for?')">Who is this story for?</button>
+      <button onclick="askOption('Where can I read the story?')">Where can I read the story?</button>
+      <button onclick="askOption('Who is the author?')">Who is the author?</button>
+    </div>
+
+    <input
+      id="userInput"
+      type="text"
+      placeholder="Type Saira or Aayan…"
+    />
+
+    <button id="sendBtn">Send</button>
+
   </div>
-
-  <!-- Contextual options -->
-  <div id="options">
-    <p>If you’d like, you can choose one of these:</p>
-    <button onclick="askOption('What kind of story is this?')">What kind of story is this?</button>
-    <button onclick="askOption('What is the story about?')">What is the story about?</button>
-    <button onclick="askOption('Who is this story for?')">Who is this story for?</button>
-    <button onclick="askOption('Where can I read the story?')">Where can I read the story?</button>
-    <button onclick="askOption('Who is the author?')">Who is the author?</button>
-  </div>
-
-  <input
-    id="userInput"
-    type="text"
-    placeholder="Type Saira or Aayan…"
-  />
-
-  <button id="sendBtn">Send</button>
 
   <script src="script.js"></script>
 
