@@ -10,25 +10,26 @@
       line-height: 1.65;
       color: #222;
       background-color: #fff;
-      padding: 20px;
+      padding: 24px;
     }
 
     h1 {
       font-weight: normal;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .chat-box {
       border: 1px solid #ccc;
-      padding: 14px;
-      height: 360px;
+      padding: 22px;
+      height: 380px;
       overflow-y: auto;
       font-size: 16px;
+      margin-bottom: 26px;
     }
 
     .bot-message {
       white-space: pre-line;
-      margin-bottom: 10px;
+      line-height: 1.65;
     }
 
     input {
@@ -46,21 +47,24 @@
     }
 
     #options {
-      margin-top: 12px;
+      display: none;
+      margin-top: 28px;
+      margin-bottom: 24px;
     }
 
     #options p {
-      margin-bottom: 6px;
+      margin-bottom: 10px;
       font-size: 15px;
     }
 
     #options button {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
       background: none;
-      border: 1px solid #ccc;
-      padding: 6px 10px;
+      border: 1px solid #ddd;
+      padding: 8px 12px;
       text-align: left;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -82,8 +86,8 @@ When you’re ready, you can choose a voice.
     </div>
   </div>
 
-  <!-- Contextual options (hidden until a voice is chosen) -->
-  <div id="options" style="display:none;">
+  <!-- Contextual options -->
+  <div id="options">
     <p>If you’d like, you can choose one of these:</p>
     <button onclick="askOption('What kind of story is this?')">What kind of story is this?</button>
     <button onclick="askOption('What is the story about?')">What is the story about?</button>
@@ -91,8 +95,6 @@ When you’re ready, you can choose a voice.
     <button onclick="askOption('Where can I read the story?')">Where can I read the story?</button>
     <button onclick="askOption('Who is the author?')">Who is the author?</button>
   </div>
-
-  <br>
 
   <input
     id="userInput"
