@@ -1,5 +1,6 @@
 const chatBox = document.getElementById("chatBox");
 const options = document.getElementById("options");
+const voiceSelect = document.getElementById("voiceSelect");
 
 let voice = null;
 
@@ -13,7 +14,9 @@ function addMessage(text) {
 
 function selectVoice(selected) {
   voice = selected;
-  chatBox.innerHTML = "";
+
+  // Remove voice buttons only once
+  if (voiceSelect) voiceSelect.remove();
 
   if (voice === "saira") {
     addMessage(
@@ -37,54 +40,37 @@ function ask(type) {
 
   if (voice === "saira") {
     if (type === "story") {
-      reply =
-        "Our story is a contemporary romantic fiction.\n\n" +
-        "It’s emotionally driven, reflective, and grounded in human connection rather than spectacle.";
+      reply = "Our story is a contemporary romantic fiction.\n\nIt’s emotionally driven and grounded in human connection.";
     }
     if (type === "about") {
-      reply =
-        "At its heart, it’s a story about love — imperfect, intense, and shaped by the choices people make over time.\n\n" +
-        "It’s about me and Aayan, and the moments that quietly changed us.";
+      reply = "At its heart, it’s a story about love — imperfect, intense, and shaped by choice.\n\nIt’s about me and Aayan.";
     }
     if (type === "for") {
-      reply =
-        "This story tends to resonate with readers who value emotional depth, reflection, and stories that linger rather than rush.";
+      reply = "This story is for readers who value emotion, reflection, and quiet honesty.";
     }
     if (type === "where") {
-      reply =
-        "You can find our story as a Kindle eBook, Paperback, Hardcover, and Audio edition.";
+      reply = "You can find our story as a Kindle eBook, Paperback, Hardcover, and Audio edition.";
     }
     if (type === "author") {
-      reply =
-        "The one who brought this to life is Mohan R.\n\n" +
-        "This is his debut novel, shaped by lived emotion, travel, and curiosity about how people remember each other.";
+      reply = "Mohan R. wrote this as his debut novel — shaped by lived emotion and personal travel.";
     }
   }
 
   if (voice === "ayaan") {
     if (type === "story") {
-      reply =
-        "It’s a contemporary romantic fiction.\n\n" +
-        "A story that lives between love and responsibility — where wanting something doesn’t always mean choosing it.";
+      reply = "It’s a contemporary romantic fiction.\n\nA story that lives between love and responsibility.";
     }
     if (type === "about") {
-      reply =
-        "It’s about timing.\n\n" +
-        "About knowing something matters, and still having to decide what you’re willing to give up for it.";
+      reply = "It’s about timing.\n\nAbout knowing something matters, and still having to let it go.";
     }
     if (type === "for") {
-      reply =
-        "This story speaks to readers who sit with questions instead of rushing toward answers.\n\n" +
-        "Those who understand that not every love story is about arrival.";
+      reply = "This story is for those who understand that not every love story ends where we want it to.";
     }
     if (type === "where") {
-      reply =
-        "Our story is available as an eBook, paperback, hardcover, and audio — in whatever way you choose to meet it.";
+      reply = "Our story exists in eBook, print, and audio — however you choose to meet it.";
     }
     if (type === "author") {
-      reply =
-        "Mohan R. wrote this story.\n\n" +
-        "He wasn’t trying to explain love — only to sit honestly with how it feels when life complicates it.";
+      reply = "Mohan R. wrote this story without trying to explain love — only to sit with it honestly.";
     }
   }
 
