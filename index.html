@@ -1,157 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Our Story – Reader Companion</title>
+  <meta charset="UTF-8" />
+  <title>Our Story</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-  body {
-    margin: 0;
-    font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
-    background: linear-gradient(
-      180deg,
-      #f8f3ea 0%,
-      #f6f2ec 40%,
-      #f7f4ef 100%
-    );
-    min-height: 100vh;
-  }
-
-  /* Floating launcher */
-  .chat-launcher {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: #ffffff;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-  }
-
-  /* Chat card */
-  .chat-card {
-    position: fixed;
-    bottom: 90px;
-    right: 24px;
-    width: 360px;
-    max-height: 560px;
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  /* Header */
-  .chat-header {
-    padding: 16px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .chat-header h2 {
-    margin: 0;
-    font-weight: normal;
-    font-size: 18px;
-  }
-
-  .chat-header p {
-    margin: 4px 0 0;
-    font-size: 13px;
-    color: #666;
-  }
-
-  /* Messages */
-  .chat-box {
-    padding: 18px;
-    overflow-y: auto;
-    flex-grow: 1;
-    font-size: 15px;
-  }
-
-  .message {
-    white-space: pre-line;
-    line-height: 1.6;
-  }
-
-  .user {
-    text-align: right;
-    font-weight: bold;
-    margin-bottom: 14px;
-  }
-
-  .bot {
-    margin-bottom: 36px;
-  }
-
-  /* Options */
-  #voiceOptions,
-  #questionOptions {
-    padding: 16px;
-    border-top: 1px solid #eee;
-  }
-
-  #voiceOptions button,
-  #questionOptions button {
-    width: 100%;
-    background: none;
-    border: 1px solid #ddd;
-    padding: 10px 12px;
-    margin-bottom: 10px;
-    font-family: inherit;
-    font-size: 15px;
-    cursor: pointer;
-    text-align: left;
-  }
-
-  /* Input */
-  .chat-input {
-    display: flex;
-    border-top: 1px solid #eee;
-  }
-
-  .chat-input input {
-    flex: 1;
-    border: none;
-    padding: 12px;
-    font-family: inherit;
-    font-size: 15px;
-  }
-
-  .chat-input button {
-    border: none;
-    padding: 12px 16px;
-    font-family: inherit;
-    cursor: pointer;
-    background: none;
-  }
-
-  /* Mobile */
-  @media (max-width: 600px) {
-    .chat-card {
-      width: calc(100% - 24px);
-      right: 12px;
-      bottom: 80px;
+  <style>
+    body {
+      margin: 0;
+      font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+      background: linear-gradient(180deg, #fdf8f3 0%, #f6efe9 100%);
+      height: 100vh;
     }
-  }
-</style>
+
+    /* Floating launcher */
+    .chat-launcher {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    /* Chat card */
+    .chat-card {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 380px;
+      max-width: 92vw;
+      height: 520px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    @media (max-width: 600px) {
+      .chat-card {
+        width: 94vw;
+        height: 70vh;
+        right: 3vw;
+      }
+    }
+
+    .chat-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .chat-header h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .chat-header p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .message {
+      margin-bottom: 18px;
+      white-space: pre-line;
+    }
+
+    .bot {
+      color: #111;
+    }
+
+    .user {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .options {
+      padding: 14px;
+      border-top: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    button {
+      font-family: inherit;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #f5f5f5;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- Floating button -->
 <div class="chat-launcher" onclick="toggleChat()">✦</div>
 
-<!-- Chat card -->
 <div class="chat-card" id="chatCard">
   <div class="chat-header">
-    <h2>Our Story</h2>
+    <h3>Our Story</h3>
     <p>A quiet place to listen</p>
   </div>
 
@@ -164,32 +135,24 @@ This is a quiet space.
 You can listen to our story through Saira or Aayan.
 Our story is a contemporary romantic fiction.
 
-When you’re ready, you can choose a voice.
+When you’re ready, choose a voice.
     </div>
   </div>
 
-  <!-- Voice selection -->
-  <div id="voiceOptions">
+  <div class="options" id="voiceOptions">
     <button onclick="selectVoice('Saira')">Saira</button>
     <button onclick="selectVoice('Aayan')">Aayan</button>
   </div>
 
-  <!-- Question options -->
-  <div id="questionOptions" style="display:none;">
-    <button onclick="askOption('What kind of story is this?')">What kind of story is this?</button>
-    <button onclick="askOption('What is the story about?')">What is the story about?</button>
-    <button onclick="askOption('Who is this story for?')">Who is this story for?</button>
-    <button onclick="askOption('Where can I read the story?')">Where can I read the story?</button>
-    <button onclick="askOption('Who is the author?')">Who is the author?</button>
-  </div>
-
-  <div class="chat-input">
-    <input id="userInput" placeholder="Type here (optional)…" />
-    <button onclick="sendMessage()">Send</button>
+  <div class="options" id="questionOptions" style="display:none;">
+    <button onclick="ask('kind')">What kind of story is this?</button>
+    <button onclick="ask('about')">What is the book about?</button>
+    <button onclick="ask('for')">Who is this book for?</button>
+    <button onclick="ask('author')">Who is the author?</button>
+    <button onclick="ask('where')">Where can I read the book?</button>
   </div>
 </div>
 
 <script src="script.js"></script>
-  
 </body>
 </html>
