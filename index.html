@@ -43,7 +43,6 @@ body {
   border-radius: 6px;
   opacity: 0;
   pointer-events: none;
-  white-space: nowrap;
   transition: opacity 0.3s;
 }
 
@@ -90,7 +89,7 @@ body {
   font-size: 14px;
 }
 
-/* Close button */
+/* Close */
 .close-btn {
   position: absolute;
   right: 16px;
@@ -100,26 +99,27 @@ body {
   color: #888;
 }
 
-/* Chat body */
-.chat-box {
+/* Conversation area */
+.chat-body {
+  flex: 1;
   padding: 18px;
   overflow-y: auto;
   font-size: 15px;
   line-height: 1.7;
 }
 
-/* Locked content blocks */
-.intro-block,
-.answer-block,
-.question-block {
-  margin-bottom: 18px;
+.message {
+  margin-bottom: 16px;
 }
 
-/* Question buttons */
-.question-block {
+/* Fixed question dock */
+.question-dock {
+  padding: 14px;
+  border-top: 1px solid #eee;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  background: #fff;
 }
 
 /* Buttons */
@@ -130,6 +130,13 @@ body {
   cursor: pointer;
   border: 1px solid #ddd;
   background: white;
+  transition: opacity 0.3s;
+}
+
+/* Disabled */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 /* Voice glow */
@@ -143,11 +150,10 @@ body {
 
 /* Footer */
 .chat-footer {
-  padding: 14px;
-  border-top: 1px solid #eee;
-  color: #999;
-  font-size: 13px;
+  padding: 12px;
   text-align: center;
+  font-size: 13px;
+  color: #999;
 }
 
 /* Mobile */
@@ -172,19 +178,19 @@ body {
     <div class="close-btn" onclick="toggleChat()">×</div>
   </div>
 
-  <div class="chat-box" id="chatBox">
-    <div class="intro-block">
+  <div class="chat-body" id="chatBody">
+    <div class="message">
       <p>Hello.</p>
       <p>This is a quiet space.</p>
       <p>You can listen to our story through Saira or Aayan.</p>
       <p>Our story is a contemporary romantic fiction.</p>
       <p>When you’re ready, you can choose a voice.</p>
     </div>
+  </div>
 
-    <div class="question-block">
-      <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-      <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-    </div>
+  <div class="question-dock" id="questionDock">
+    <button class="btn saira" onclick="selectVoice('saira', this)">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan', this)">Aayan</button>
   </div>
 
   <div class="chat-footer">
@@ -194,44 +200,44 @@ body {
 
 <script>
 let activeVoice = null;
-const chatBox = document.getElementById("chatBox");
+const chatBody = document.getElementById("chatBody");
+const dock = document.getElementById("questionDock");
 
 function toggleChat() {
   const card = document.getElementById("chatCard");
   card.style.display = card.style.display === "flex" ? "none" : "flex";
 }
 
-function selectVoice(voice) {
+function selectVoice(voice, btn) {
   activeVoice = voice;
-  chatBox.innerHTML = "";
+  dock.innerHTML = "";
 
-  let intro = "";
-  if (voice === "saira") {
-    intro = `
-      <div class="intro-block">
-        <p><strong>Hello, this is Saira.</strong></p>
-        <p>I’d love to share our story with you — gently, honestly.</p>
-      </div>`;
-  } else {
-    intro = `
-      <div class="intro-block">
-        <p><strong>Hello. This is Aayan.</strong></p>
-        <p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>
-      </div>`;
-  }
+  const intro = voice === "saira"
+    ? "<p><strong>Hello, this is Saira.</strong></p><p>I’d love to share our story with you — gently, honestly.</p>"
+    : "<p><strong>Hello. This is Aayan.</strong></p><p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>";
 
-  chatBox.innerHTML = intro + `
-    <div class="question-block">
-      <button class="btn ${voice}" onclick="answer('story')">What kind of story is this?</button>
-      <button class="btn ${voice}" onclick="answer('about')">What is the story about?</button>
-      <button class="btn ${voice}" onclick="answer('for')">Who is this story for?</button>
-      <button class="btn ${voice}" onclick="answer('where')">Where can I read it?</button>
-      <button class="btn ${voice}" onclick="answer('author')">Who is the author?</button>
-    </div>
-  `;
+  chatBody.insertAdjacentHTML("beforeend", `<div class="message">${intro}</div>`);
+
+  const questions = [
+    ["What kind of story is this?", "story"],
+    ["What is the story about?", "about"],
+    ["Who is this story for?", "for"],
+    ["Where can I read it?", "where"],
+    ["Who is the author?", "author"]
+  ];
+
+  questions.forEach(q => {
+    const b = document.createElement("button");
+    b.className = `btn ${voice}`;
+    b.textContent = q[0];
+    b.onclick = () => ask(q[1], b);
+    dock.appendChild(b);
+  });
 }
 
-function answer(type) {
+function ask(type, btn) {
+  btn.disabled = true;
+
   let reply = "";
 
   if (activeVoice === "saira") {
@@ -250,8 +256,8 @@ function answer(type) {
     if (type === "author") reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
   }
 
-  chatBox.insertAdjacentHTML("beforeend", `<div class="answer-block"><p>${reply}</p></div>`);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  chatBody.insertAdjacentHTML("beforeend", `<div class="message"><p>${reply}</p></div>`);
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 </script>
 
