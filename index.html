@@ -13,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* Floating chat icon */
+/* Floating launcher */
 .chat-launcher {
   position: fixed;
   bottom: 20px;
@@ -109,7 +109,7 @@ body {
   margin-bottom: 18px;
 }
 
-/* Question dock (fixed bottom area) */
+/* Question dock */
 .question-dock {
   padding: 10px 12px;
   border-top: 1px solid #eee;
@@ -119,7 +119,7 @@ body {
   background: #fff;
 }
 
-/* Question buttons */
+/* Buttons */
 .btn {
   padding: 6px 12px;
   border-radius: 16px;
@@ -127,7 +127,6 @@ body {
   border: 1px solid #ddd;
   background: white;
   cursor: pointer;
-  transition: opacity 0.3s;
 }
 
 .btn:disabled {
@@ -135,14 +134,9 @@ body {
   cursor: default;
 }
 
-/* Voice-specific glow */
-.saira {
-  box-shadow: 0 0 10px rgba(255, 180, 120, 0.55);
-}
-
-.aayan {
-  box-shadow: 0 0 10px rgba(120, 180, 255, 0.55);
-}
+/* Glow */
+.saira { box-shadow: 0 0 10px rgba(255,180,120,0.55); }
+.aayan { box-shadow: 0 0 10px rgba(120,180,255,0.55); }
 
 /* Footer */
 .chat-footer {
@@ -150,15 +144,6 @@ body {
   text-align: center;
   font-size: 13px;
   color: #999;
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .chat-card {
-    left: 10px;
-    right: 10px;
-    width: auto;
-  }
 }
 </style>
 </head>
@@ -175,21 +160,36 @@ body {
   </div>
 
   <div class="chat-body" id="chatBody"></div>
-
   <div class="question-dock" id="questionDock"></div>
 
-  <div class="chat-footer">
-    Listening, not rushing.
-  </div>
+  <div class="chat-footer">Listening, not rushing.</div>
 </div>
+
+<!-- Hidden Formspree form -->
+<form id="reflectionForm" action="https://formspree.io/f/xaqdqobr" method="POST" style="display:none;">
+  <input type="hidden" name="voice" id="formVoice">
+  <input type="hidden" name="reflection" id="formReflection">
+  <input type="hidden" name="timestamp" id="formTime">
+</form>
 
 <script>
 const chatCard = document.getElementById("chatCard");
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 let activeVoice = null;
+let reflectionShown = false;
 
-/* Initial welcome */
+function toggleChat() {
+  chatCard.style.display = chatCard.style.display === "flex" ? "none" : "flex";
+}
+
+function resetChat() {
+  activeVoice = null;
+  reflectionShown = false;
+  chatCard.style.display = "none";
+  loadWelcome();
+}
+
 function loadWelcome() {
   chatBody.innerHTML = `
     <div class="message">
@@ -200,80 +200,63 @@ function loadWelcome() {
       <p>When you’re ready, you can choose a voice.</p>
     </div>
   `;
-
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
     <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
   `;
 }
 
-function toggleChat() {
-  chatCard.style.display = chatCard.style.display === "flex" ? "none" : "flex";
-}
-
-function resetChat() {
-  activeVoice = null;
-  chatCard.style.display = "none";
-  loadWelcome();
-}
-
 function selectVoice(voice) {
   activeVoice = voice;
+  chatBody.insertAdjacentHTML("beforeend", `
+    <div class="message">
+      <p><strong>Hello, this is ${voice === "saira" ? "Saira" : "Aayan"}.</strong></p>
+    </div>
+  `);
+
+  showReflection();
+}
+
+function showReflection() {
+  if (reflectionShown) return;
+  reflectionShown = true;
+
+  const question =
+    activeVoice === "saira"
+      ? "How closely did this story stay with you?"
+      : "How clearly did the emotional world reveal itself to you?";
+
+  const emojis =
+    activeVoice === "saira"
+      ? ["🌫️","🌱","💛","🌙","✨"]
+      : ["🌑","🌘","🌗","🌕","☀️"];
+
+  chatBody.insertAdjacentHTML("beforeend", `
+    <div class="message"><p>${question}</p></div>
+  `);
+
   dock.innerHTML = "";
-
-  const intro =
-    voice === "saira"
-      ? `<p><strong>Hello, this is Saira.</strong></p>
-         <p>I’d love to share our story with you — gently, honestly.</p>`
-      : `<p><strong>Hello. This is Aayan.</strong></p>
-         <p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>`;
-
-  chatBody.insertAdjacentHTML("beforeend", `<div class="message">${intro}</div>`);
-
-  const questions = [
-    ["What kind of story is this?", "story"],
-    ["What is the story about?", "about"],
-    ["Who is this story for?", "for"],
-    ["Where can I read it?", "where"],
-    ["Who is the author?", "author"]
-  ];
-
-  questions.forEach(q => {
+  emojis.forEach(e => {
     const b = document.createElement("button");
-    b.className = `btn ${voice}`;
-    b.textContent = q[0];
-    b.onclick = () => ask(q[1], b);
+    b.className = `btn ${activeVoice}`;
+    b.textContent = e;
+    b.onclick = () => submitReflection(e);
     dock.appendChild(b);
   });
-
-  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-function ask(type, btn) {
-  btn.disabled = true;
-  let reply = "";
+function submitReflection(emoji) {
+  document.getElementById("formVoice").value = activeVoice;
+  document.getElementById("formReflection").value = emoji;
+  document.getElementById("formTime").value = new Date().toISOString();
+  document.getElementById("reflectionForm").submit();
 
-  if (activeVoice === "saira") {
-    if (type === "story") reply = "Our story is a contemporary romantic fiction — reflective, intimate, and deeply human.";
-    if (type === "about") reply = "It’s about me and Aayan, about love shaped by timing, distance, and quiet choices.";
-    if (type === "for") reply = "For readers who value emotion, atmosphere, and human connection.";
-    if (type === "where") reply = "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.";
-    if (type === "author") reply = "Mohan R. brought this story to life. It’s his debut novel, written with sincerity.";
-  }
-
-  if (activeVoice === "aayan") {
-    if (type === "story") reply = "It’s a contemporary romantic fiction — but not an easy one.";
-    if (type === "about") reply = "It’s about timing. About knowing something matters, and still choosing carefully.";
-    if (type === "for") reply = "For those who understand that not every love story is about arrival.";
-    if (type === "where") reply = "The story is available in digital, print, and audio formats.";
-    if (type === "author") reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
-  }
-
-  chatBody.insertAdjacentHTML("beforeend", `<div class="message"><p>${reply}</p></div>`);
-  chatBody.scrollTop = chatBody.scrollHeight;
+  dock.innerHTML = "";
+  chatBody.insertAdjacentHTML("beforeend", `
+    <div class="message"><p>Thank you for listening.</p></div>
+  `);
 }
 
-/* Load welcome on page load */
 loadWelcome();
 </script>
 
