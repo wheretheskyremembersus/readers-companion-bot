@@ -35,9 +35,11 @@ function sendMessage() {
 
   // QUESTION 2: What kind of story is this?
   else if (
-    lowerText.includes("what kind of story") ||
-    lowerText.includes("genre") ||
-    lowerText.includes("type of book")
+  lowerText.includes("kind of story") ||
+  lowerText.includes("story is this") ||
+  lowerText.includes("genre") ||
+  lowerText.includes("type of book") ||
+  lowerText.includes("what kind")
   ) {
     botReply =
       "This is a contemporary romantic fiction story.\n\n" +
@@ -45,10 +47,11 @@ function sendMessage() {
   }
 
   // QUESTION 3: What is the book about?
-  else if (
-    lowerText.includes("what is the book about") ||
-    lowerText.includes("story about") ||
-    lowerText.includes("summary")
+ else if (
+  lowerText.includes("book about") ||
+  lowerText.includes("story about") ||
+  lowerText.includes("summary") ||
+  lowerText.includes("what is this book")
   ) {
     botReply =
       "At its heart, this is a story about love that feels deeply human — imperfect, intense, and shaped by the choices people make over time.\n\n" +
@@ -57,9 +60,10 @@ function sendMessage() {
 
   // QUESTION 4: Who is this book for?
   else if (
-    lowerText.includes("who is this book for") ||
-    lowerText.includes("who should read") ||
-    lowerText.includes("is this book for me")
+  lowerText.includes("who is this book for") ||
+  lowerText.includes("who should read") ||
+  lowerText.includes("is this book for me") ||
+  lowerText.includes("who is it for")
   ) {
     botReply =
       "This book tends to resonate with readers who enjoy emotionally driven stories.\n\n" +
@@ -68,10 +72,11 @@ function sendMessage() {
 
   // QUESTION 5: Where can I read or buy the book?
   else if (
-    lowerText.includes("where can i read") ||
-    lowerText.includes("where to buy") ||
-    lowerText.includes("available") ||
-    lowerText.includes("formats")
+  lowerText.includes("where can i read") ||
+  lowerText.includes("where to buy") ||
+  lowerText.includes("where can i get") ||
+  lowerText.includes("available") ||
+  lowerText.includes("formats")
   ) {
     botReply =
       "The book is available in multiple formats, so you can choose what suits you best.\n\n" +
