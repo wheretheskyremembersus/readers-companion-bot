@@ -13,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* Floating launcher */
+/* Floating chat icon */
 .chat-launcher {
   position: fixed;
   bottom: 20px;
@@ -31,7 +31,6 @@ body {
   z-index: 1000;
 }
 
-/* Tooltip */
 .chat-launcher::after {
   content: "Listen to our story";
   position: absolute;
@@ -42,7 +41,6 @@ body {
   font-size: 13px;
   border-radius: 6px;
   opacity: 0;
-  pointer-events: none;
   transition: opacity 0.3s;
 }
 
@@ -56,7 +54,7 @@ body {
   bottom: 90px;
   right: 20px;
   width: 360px;
-  max-height: 75vh;
+  max-height: 72vh;
   background: white;
   border-radius: 18px;
   box-shadow: 0 25px 60px rgba(0,0,0,0.25);
@@ -89,7 +87,6 @@ body {
   font-size: 14px;
 }
 
-/* Close */
 .close-btn {
   position: absolute;
   right: 16px;
@@ -99,7 +96,7 @@ body {
   color: #888;
 }
 
-/* Conversation area */
+/* Conversation */
 .chat-body {
   flex: 1;
   padding: 18px;
@@ -109,48 +106,47 @@ body {
 }
 
 .message {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
-/* Fixed question dock */
+/* Question dock (fixed bottom area) */
 .question-dock {
-  padding: 14px;
+  padding: 10px 12px;
   border-top: 1px solid #eee;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   background: #fff;
 }
 
-/* Buttons */
+/* Question buttons */
 .btn {
-  padding: 7px 14px;
-  border-radius: 18px;
-  font-size: 14px;
-  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
   border: 1px solid #ddd;
   background: white;
+  cursor: pointer;
   transition: opacity 0.3s;
 }
 
-/* Disabled */
 .btn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: default;
 }
 
-/* Voice glow */
+/* Voice-specific glow */
 .saira {
-  box-shadow: 0 0 12px rgba(255, 180, 120, 0.6);
+  box-shadow: 0 0 10px rgba(255, 180, 120, 0.55);
 }
 
 .aayan {
-  box-shadow: 0 0 12px rgba(120, 180, 255, 0.6);
+  box-shadow: 0 0 10px rgba(120, 180, 255, 0.55);
 }
 
 /* Footer */
 .chat-footer {
-  padding: 12px;
+  padding: 10px;
   text-align: center;
   font-size: 13px;
   color: #999;
@@ -175,23 +171,12 @@ body {
   <div class="chat-header">
     <h2>Our Story</h2>
     <p>A quiet place to listen</p>
-    <div class="close-btn" onclick="toggleChat()">×</div>
+    <div class="close-btn" onclick="resetChat()">×</div>
   </div>
 
-  <div class="chat-body" id="chatBody">
-    <div class="message">
-      <p>Hello.</p>
-      <p>This is a quiet space.</p>
-      <p>You can listen to our story through Saira or Aayan.</p>
-      <p>Our story is a contemporary romantic fiction.</p>
-      <p>When you’re ready, you can choose a voice.</p>
-    </div>
-  </div>
+  <div class="chat-body" id="chatBody"></div>
 
-  <div class="question-dock" id="questionDock">
-    <button class="btn saira" onclick="selectVoice('saira', this)">Saira</button>
-    <button class="btn aayan" onclick="selectVoice('aayan', this)">Aayan</button>
-  </div>
+  <div class="question-dock" id="questionDock"></div>
 
   <div class="chat-footer">
     Listening, not rushing.
@@ -199,22 +184,49 @@ body {
 </div>
 
 <script>
-let activeVoice = null;
+const chatCard = document.getElementById("chatCard");
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
+let activeVoice = null;
 
-function toggleChat() {
-  const card = document.getElementById("chatCard");
-  card.style.display = card.style.display === "flex" ? "none" : "flex";
+/* Initial welcome */
+function loadWelcome() {
+  chatBody.innerHTML = `
+    <div class="message">
+      <p>Hello.</p>
+      <p>This is a quiet space.</p>
+      <p>You can listen to our story through Saira or Aayan.</p>
+      <p>Our story is a contemporary romantic fiction.</p>
+      <p>When you’re ready, you can choose a voice.</p>
+    </div>
+  `;
+
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+  `;
 }
 
-function selectVoice(voice, btn) {
+function toggleChat() {
+  chatCard.style.display = chatCard.style.display === "flex" ? "none" : "flex";
+}
+
+function resetChat() {
+  activeVoice = null;
+  chatCard.style.display = "none";
+  loadWelcome();
+}
+
+function selectVoice(voice) {
   activeVoice = voice;
   dock.innerHTML = "";
 
-  const intro = voice === "saira"
-    ? "<p><strong>Hello, this is Saira.</strong></p><p>I’d love to share our story with you — gently, honestly.</p>"
-    : "<p><strong>Hello. This is Aayan.</strong></p><p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>";
+  const intro =
+    voice === "saira"
+      ? `<p><strong>Hello, this is Saira.</strong></p>
+         <p>I’d love to share our story with you — gently, honestly.</p>`
+      : `<p><strong>Hello. This is Aayan.</strong></p>
+         <p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>`;
 
   chatBody.insertAdjacentHTML("beforeend", `<div class="message">${intro}</div>`);
 
@@ -233,24 +245,25 @@ function selectVoice(voice, btn) {
     b.onclick = () => ask(q[1], b);
     dock.appendChild(b);
   });
+
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
 function ask(type, btn) {
   btn.disabled = true;
-
   let reply = "";
 
   if (activeVoice === "saira") {
     if (type === "story") reply = "Our story is a contemporary romantic fiction — reflective, intimate, and deeply human.";
-    if (type === "about") reply = "It’s about me and Aayan, about love shaped by timing, distance, and choice.";
-    if (type === "for") reply = "For readers who value emotion, atmosphere, and quiet connection.";
+    if (type === "about") reply = "It’s about me and Aayan, about love shaped by timing, distance, and quiet choices.";
+    if (type === "for") reply = "For readers who value emotion, atmosphere, and human connection.";
     if (type === "where") reply = "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.";
     if (type === "author") reply = "Mohan R. brought this story to life. It’s his debut novel, written with sincerity.";
   }
 
   if (activeVoice === "aayan") {
     if (type === "story") reply = "It’s a contemporary romantic fiction — but not an easy one.";
-    if (type === "about") reply = "It’s about knowing something matters, and still having to choose carefully.";
+    if (type === "about") reply = "It’s about timing. About knowing something matters, and still choosing carefully.";
     if (type === "for") reply = "For those who understand that not every love story is about arrival.";
     if (type === "where") reply = "The story is available in digital, print, and audio formats.";
     if (type === "author") reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
@@ -259,6 +272,9 @@ function ask(type, btn) {
   chatBody.insertAdjacentHTML("beforeend", `<div class="message"><p>${reply}</p></div>`);
   chatBody.scrollTop = chatBody.scrollHeight;
 }
+
+/* Load welcome on page load */
+loadWelcome();
 </script>
 
 </body>
