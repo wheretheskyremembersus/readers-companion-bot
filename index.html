@@ -6,7 +6,6 @@
 <title>Our Story</title>
 
 <style>
-/* ---------- Page background ---------- */
 body {
   margin: 0;
   font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
@@ -14,7 +13,7 @@ body {
   height: 100vh;
 }
 
-/* ---------- Floating launcher ---------- */
+/* Floating launcher */
 .chat-launcher {
   position: fixed;
   bottom: 20px;
@@ -32,7 +31,7 @@ body {
   z-index: 1000;
 }
 
-/* ---------- Chat card ---------- */
+/* Chat card */
 .chat-card {
   position: fixed;
   bottom: 90px;
@@ -45,7 +44,6 @@ body {
   display: none;
   flex-direction: column;
   overflow: hidden;
-  z-index: 999;
   animation: fadeUp 0.4s ease;
 }
 
@@ -54,7 +52,7 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---------- Header ---------- */
+/* Header */
 .chat-header {
   padding: 18px;
   border-bottom: 1px solid #eee;
@@ -71,61 +69,58 @@ body {
   font-size: 14px;
 }
 
-/* ---------- Chat content ---------- */
+/* Chat body */
 .chat-box {
   padding: 18px;
   overflow-y: auto;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
-/* ---------- Buttons ---------- */
-.voice-buttons, .question-buttons {
+/* Question section — IMPORTANT FIX */
+.question-section {
+  margin-top: 18px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 16px;
+  align-items: flex-start;
 }
 
+/* Buttons */
 .btn {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 18px;
   font-size: 14px;
-  background: #f2f2f2;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background: white;
+  white-space: nowrap;
 }
 
 /* Voice glow */
-.btn.saira {
-  box-shadow: 0 0 10px rgba(255, 180, 120, 0.7);
-}
-.btn.aayan {
-  box-shadow: 0 0 10px rgba(120, 180, 255, 0.7);
+.saira-glow {
+  box-shadow: 0 0 12px rgba(255, 180, 120, 0.65);
 }
 
-/* Question glow */
-.question-buttons .btn {
-  background: white;
-  border: 1px solid #ddd;
+.aayan-glow {
+  box-shadow: 0 0 12px rgba(120, 180, 255, 0.65);
 }
 
-/* ---------- Footer ---------- */
+/* Footer */
 .chat-footer {
   padding: 14px;
   border-top: 1px solid #eee;
-  color: #888;
+  color: #999;
   font-size: 13px;
   text-align: center;
 }
 
-/* ---------- Mobile ---------- */
+/* Mobile */
 @media (max-width: 480px) {
   .chat-card {
-    right: 10px;
     left: 10px;
+    right: 10px;
     width: auto;
-    bottom: 80px;
   }
 }
 </style>
@@ -133,12 +128,9 @@ body {
 
 <body>
 
-<!-- Floating icon -->
 <div class="chat-launcher" onclick="toggleChat()">💬</div>
 
-<!-- Chat card -->
 <div class="chat-card" id="chatCard">
-
   <div class="chat-header">
     <h2>Our Story</h2>
     <p>A quiet place to listen</p>
@@ -151,29 +143,26 @@ body {
     <p>Our story is a contemporary romantic fiction.</p>
     <p>When you’re ready, you can choose a voice.</p>
 
-    <div class="voice-buttons">
-      <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-      <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+    <div class="question-section">
+      <button class="btn saira-glow" onclick="selectVoice('saira')">Saira</button>
+      <button class="btn aayan-glow" onclick="selectVoice('aayan')">Aayan</button>
     </div>
   </div>
 
   <div class="chat-footer">
     Listening, not rushing.
   </div>
-
 </div>
 
 <script>
 let activeVoice = null;
 const chatBox = document.getElementById("chatBox");
 
-/* Toggle chat */
 function toggleChat() {
   const card = document.getElementById("chatCard");
   card.style.display = card.style.display === "flex" ? "none" : "flex";
 }
 
-/* Select voice */
 function selectVoice(voice) {
   activeVoice = voice;
   chatBox.innerHTML = "";
@@ -191,44 +180,33 @@ function selectVoice(voice) {
   }
 
   chatBox.innerHTML += `
-    <div class="question-buttons">
-      <button class="btn" onclick="answer('story')">What kind of story is this?</button>
-      <button class="btn" onclick="answer('about')">What is the story about?</button>
-      <button class="btn" onclick="answer('for')">Who is this story for?</button>
-      <button class="btn" onclick="answer('where')">Where can I read it?</button>
-      <button class="btn" onclick="answer('author')">Who is the author?</button>
+    <div class="question-section">
+      <button class="btn ${voice}-glow" onclick="answer('story')">What kind of story is this?</button>
+      <button class="btn ${voice}-glow" onclick="answer('about')">What is the story about?</button>
+      <button class="btn ${voice}-glow" onclick="answer('for')">Who is this story for?</button>
+      <button class="btn ${voice}-glow" onclick="answer('where')">Where can I read it?</button>
+      <button class="btn ${voice}-glow" onclick="answer('author')">Who is the author?</button>
     </div>
   `;
 }
 
-/* Answers */
 function answer(type) {
   let reply = "";
 
   if (activeVoice === "saira") {
-    if (type === "story")
-      reply = "Our story is a contemporary romantic fiction — reflective, intimate, and deeply human.";
-    if (type === "about")
-      reply = "It’s about me and Aayan, about love shaped by timing, distance, and the choices we make.";
-    if (type === "for")
-      reply = "It’s for readers who value emotion, memory, and quiet connection over spectacle.";
-    if (type === "where")
-      reply = "You can read our story as a Kindle eBook, Paperback, Hardcover, or Audio edition.";
-    if (type === "author")
-      reply = "Mohan R. brought this story to life. It’s his debut novel, written with sincerity.";
+    if (type === "story") reply = "Our story is a contemporary romantic fiction — intimate, reflective, and deeply human.";
+    if (type === "about") reply = "It’s about me and Aayan, about love shaped by timing, distance, and choice.";
+    if (type === "for") reply = "It’s for readers who value emotion and quiet connection.";
+    if (type === "where") reply = "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.";
+    if (type === "author") reply = "Mohan R. brought this story to life. It’s his debut novel, written with sincerity.";
   }
 
   if (activeVoice === "aayan") {
-    if (type === "story")
-      reply = "It’s a contemporary romantic fiction, but not an easy one.";
-    if (type === "about")
-      reply = "It’s about knowing something matters — and still having to choose carefully.";
-    if (type === "for")
-      reply = "For those who understand that not every love story is about arrival.";
-    if (type === "where")
-      reply = "The story is available in digital, print, and audio formats.";
-    if (type === "author")
-      reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
+    if (type === "story") reply = "It’s a contemporary romantic fiction — but not a simple one.";
+    if (type === "about") reply = "It’s about knowing something matters, and still having to choose carefully.";
+    if (type === "for") reply = "For those who understand that not every love story is about arrival.";
+    if (type === "where") reply = "The story is available in digital, print, and audio formats.";
+    if (type === "author") reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
   }
 
   chatBox.innerHTML += `<p>${reply}</p>`;
