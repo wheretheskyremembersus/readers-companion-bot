@@ -85,6 +85,14 @@ body {
 }
 .message { margin-bottom: 18px; }
 
+/* Highlighted reflection prompt */
+.reflection-prompt {
+  background: #f6f1ea;
+  border-left: 3px solid #d8cfc3;
+  padding: 14px 16px;
+  border-radius: 8px;
+}
+
 /* Dock */
 .question-dock {
   padding: 10px 12px;
@@ -182,9 +190,15 @@ function loadWelcome() {
 
 function selectVoice(v) {
   activeVoice = v;
+
+  const intro =
+    v === "saira"
+      ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
+      : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us, and what it changed.";
+
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message"><p><strong>Hello, this is ${v === "saira" ? "Saira" : "Aayan"}.</strong></p></div>`
+    `<div class="message"><p><strong>${intro}</strong></p></div>`
   );
   showQuestions();
 }
@@ -213,18 +227,18 @@ function answer(type, btn) {
 
   const replies = {
     saira: {
-      story: "Our story is a contemporary romantic fiction — reflective and deeply human.",
-      about: "It’s about me and Aayan, shaped by timing, distance, and quiet choices.",
-      for: "For readers who value emotion, atmosphere, and connection.",
-      where: "It’s available as Kindle, Paperback, Hardcover, and Audio.",
-      author: "Mohan R. wrote this as his debut novel, with sincerity."
+      story: "Our story is a contemporary romantic fiction, but more than that, it’s an emotional journey — shaped by moments that arrive quietly and stay longer than expected.",
+      about: "At its heart, it’s about love that doesn’t move in straight lines. It’s about me and Aayan, and the choices we made when life didn’t pause for us.",
+      for: "This story tends to find readers who value emotion over spectacle — people who listen closely to what’s left unsaid.",
+      where: "You can find our story as a Kindle eBook, Paperback, Hardcover, and Audio edition — whichever way feels right to you.",
+      author: "Mohan R. wrote this as his debut novel, drawing from lived emotion, travel, and a curiosity about how people remember one another."
     },
     aayan: {
-      story: "It’s a contemporary romantic fiction — not an easy one.",
-      about: "It’s about knowing something matters, and still choosing carefully.",
-      for: "For those who understand that not every love story arrives.",
-      where: "It exists in digital, print, and audio formats.",
-      author: "Mohan R. wrote this story from lived emotion."
+      story: "It’s a contemporary romantic fiction, but it doesn’t rush toward comfort. It stays in the space where love and responsibility pull in different directions.",
+      about: "It’s about timing. About knowing something matters deeply, and still having to decide what you can carry forward.",
+      for: "This story often speaks to readers who understand that not every connection is meant to be resolved neatly.",
+      where: "The story is available in digital, print, and audio formats — however you choose to meet it.",
+      author: "Mohan R. wrote this story not to define love, but to sit honestly with how it feels when life complicates it."
     }
   };
 
@@ -232,7 +246,6 @@ function answer(type, btn) {
     "beforeend",
     `<div class="message"><p>${replies[activeVoice][type]}</p></div>`
   );
-  chatBody.scrollTop = chatBody.scrollHeight;
 
   if (answered.size === 5) askPermission();
 }
@@ -240,7 +253,10 @@ function answer(type, btn) {
 function askPermission() {
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message"><p>If you’d like, you can share a few quiet reflections. Would you like to do that?</p></div>`
+    `<div class="message reflection-prompt">
+      <p><em>If you’d like, you can share a few quiet reflections.</em></p>
+      <p><em>Would you like to do that?</em></p>
+    </div>`
   );
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
