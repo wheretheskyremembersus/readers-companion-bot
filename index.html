@@ -18,14 +18,14 @@
   .chat-card {
     width: 380px;
     max-width: 92vw;
-    height: 600px;
+    height: 620px;
     background: #ffffff;
     border-radius: 18px;
     box-shadow: 0 24px 60px rgba(0,0,0,0.12);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: fadeIn 0.9s ease;
+    animation: fadeIn 0.8s ease;
   }
 
   @keyframes fadeIn {
@@ -60,18 +60,18 @@
   .message {
     margin-bottom: 26px;
     white-space: pre-line;
-    animation: fadeIn 0.6s ease;
+    animation: fadeIn 0.5s ease;
   }
 
   .voice-select {
     display: flex;
     gap: 12px;
-    margin-top: 14px;
+    margin-top: 18px;
   }
 
   .options {
     padding: 16px;
-    display: grid;
+    display: none;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     border-top: 1px solid #eee;
@@ -94,7 +94,6 @@
     transition: all 0.25s ease;
   }
 
-  /* Saira – warm glow */
   .saira {
     box-shadow: 0 0 8px rgba(210,140,90,0.35),
                 0 0 18px rgba(210,140,90,0.25);
@@ -105,7 +104,6 @@
                 0 0 26px rgba(210,140,90,0.4);
   }
 
-  /* Aayan – cool glow */
   .ayaan {
     box-shadow: 0 0 8px rgba(110,150,190,0.35),
                 0 0 18px rgba(110,150,190,0.25);
@@ -115,7 +113,6 @@
     box-shadow: 0 0 12px rgba(110,150,190,0.6),
                 0 0 26px rgba(110,150,190,0.4);
   }
-
 </style>
 </head>
 
@@ -134,19 +131,19 @@ Hello.
 
 This is a quiet space.
 
-You can listen to my story through Saira or Aayan.
-The story is a contemporary romantic fiction.
+You can listen to our story through Saira or Aayan.
+Our story is a contemporary romantic fiction.
 
 When you’re ready, you can choose a voice.
     </div>
 
-    <div class="voice-select">
+    <div class="voice-select" id="voiceSelect">
       <button class="glow-btn saira" onclick="selectVoice('saira')">Saira</button>
       <button class="glow-btn ayaan" onclick="selectVoice('ayaan')">Aayan</button>
     </div>
   </div>
 
-  <div class="options" id="options" style="display:none;">
+  <div class="options" id="options">
     <button class="glow-btn" onclick="ask('story')">What kind of story is this?</button>
     <button class="glow-btn" onclick="ask('about')">What is the story about?</button>
     <button class="glow-btn" onclick="ask('for')">Who is this story for?</button>
