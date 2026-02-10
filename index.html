@@ -3,13 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <title>Our Story</title>
+
+  <style>
+    body {
+      font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+      line-height: 1.65;
+      color: #222;
+      background-color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      font-weight: normal;
+      margin-bottom: 10px;
+    }
+
+    .chat-box {
+      border: 1px solid #ccc;
+      padding: 14px;
+      height: 360px;
+      overflow-y: auto;
+      font-size: 16px;
+    }
+
+    .bot-message {
+      white-space: pre-line;
+      margin-bottom: 10px;
+    }
+
+    input {
+      width: 70%;
+      padding: 8px;
+      font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+      font-size: 15px;
+    }
+
+    button {
+      padding: 8px 12px;
+      font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    #options {
+      margin-top: 12px;
+    }
+
+    #options p {
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    #options button {
+      display: block;
+      margin-bottom: 6px;
+      background: none;
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: left;
+    }
+  </style>
 </head>
+
 <body>
 
   <h1>Our Story</h1>
 
-  <div class="chat-box" style="border:1px solid #ccc; padding:12px; height:340px; overflow-y:auto;">
-    <div class="bot-message" style="white-space:pre-line;">
+  <div class="chat-box">
+    <div class="bot-message">
 Hello.
 
 This is a quiet space.
@@ -21,9 +82,9 @@ When you’re ready, you can choose a voice.
     </div>
   </div>
 
-  <!-- Contextual options (hidden initially) -->
-  <div id="options" style="display:none; margin-top:10px;">
-    <p style="margin-bottom:6px;">If you’d like, you can choose one of these:</p>
+  <!-- Contextual options (hidden until a voice is chosen) -->
+  <div id="options" style="display:none;">
+    <p>If you’d like, you can choose one of these:</p>
     <button onclick="askOption('What kind of story is this?')">What kind of story is this?</button>
     <button onclick="askOption('What is the story about?')">What is the story about?</button>
     <button onclick="askOption('Who is this story for?')">Who is this story for?</button>
@@ -37,11 +98,11 @@ When you’re ready, you can choose a voice.
     id="userInput"
     type="text"
     placeholder="Type Saira or Aayan…"
-    style="width:70%; padding:8px;"
   />
 
-  <button id="sendBtn" style="padding:8px;">Send</button>
+  <button id="sendBtn">Send</button>
 
   <script src="script.js"></script>
+
 </body>
 </html>
