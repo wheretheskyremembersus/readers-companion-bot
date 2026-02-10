@@ -40,7 +40,7 @@
     bottom: 90px;
     right: 24px;
     width: 360px;
-    max-height: 540px;
+    max-height: 560px;
     background: #ffffff;
     border-radius: 14px;
     box-shadow: 0 12px 40px rgba(0,0,0,0.2);
@@ -78,7 +78,6 @@
   .message {
     white-space: pre-line;
     line-height: 1.6;
-    margin-bottom: 36px;
   }
 
   .user {
@@ -87,13 +86,19 @@
     margin-bottom: 14px;
   }
 
+  .bot {
+    margin-bottom: 36px;
+  }
+
   /* Options */
-  #options {
+  #voiceOptions,
+  #questionOptions {
     padding: 16px;
     border-top: 1px solid #eee;
   }
 
-  #options button {
+  #voiceOptions button,
+  #questionOptions button {
     width: 100%;
     background: none;
     border: 1px solid #ddd;
@@ -151,7 +156,7 @@
   </div>
 
   <div class="chat-box" id="chatBox">
-    <div class="message">
+    <div class="message bot">
 Hello.
 
 This is a quiet space.
@@ -163,13 +168,23 @@ When you’re ready, you can choose a voice.
     </div>
   </div>
 
-  <div id="options">
-    <button onclick="askOption('Saira')">Saira</button>
-    <button onclick="askOption('Aayan')">Aayan</button>
+  <!-- Voice selection -->
+  <div id="voiceOptions">
+    <button onclick="selectVoice('Saira')">Saira</button>
+    <button onclick="selectVoice('Aayan')">Aayan</button>
+  </div>
+
+  <!-- Question options -->
+  <div id="questionOptions" style="display:none;">
+    <button onclick="askOption('What kind of story is this?')">What kind of story is this?</button>
+    <button onclick="askOption('What is the story about?')">What is the story about?</button>
+    <button onclick="askOption('Who is this story for?')">Who is this story for?</button>
+    <button onclick="askOption('Where can I read the story?')">Where can I read the story?</button>
+    <button onclick="askOption('Who is the author?')">Who is the author?</button>
   </div>
 
   <div class="chat-input">
-    <input id="userInput" placeholder="Type here…" />
+    <input id="userInput" placeholder="Type here (optional)…" />
     <button onclick="sendMessage()">Send</button>
   </div>
 </div>
