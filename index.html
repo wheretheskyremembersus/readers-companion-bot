@@ -3,65 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <title>Our Story</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     body {
       margin: 0;
       font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
-      background: linear-gradient(180deg, #fdf8f3 0%, #f6efe9 100%);
+      background: linear-gradient(135deg, #f7f3ee, #efe8df);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       height: 100vh;
     }
 
-    /* Floating launcher */
-    .chat-launcher {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 22px;
-    }
-
-    /* Chat card */
     .chat-card {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
       width: 380px;
       max-width: 92vw;
-      height: 520px;
-      background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
-      display: none;
+      height: 600px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+      display: flex;
       flex-direction: column;
       overflow: hidden;
     }
 
-    @media (max-width: 600px) {
-      .chat-card {
-        width: 94vw;
-        height: 70vh;
-        right: 3vw;
-      }
-    }
-
     .chat-header {
-      padding: 16px 18px;
+      padding: 18px 20px;
       border-bottom: 1px solid #eee;
     }
 
-    .chat-header h3 {
+    .chat-header h1 {
       margin: 0;
-      font-size: 18px;
+      font-size: 22px;
     }
 
     .chat-header p {
@@ -72,87 +45,104 @@
 
     .chat-box {
       flex: 1;
-      padding: 18px;
+      padding: 20px;
       overflow-y: auto;
       font-size: 15px;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     .message {
-      margin-bottom: 18px;
+      margin-bottom: 26px;
       white-space: pre-line;
-    }
-
-    .bot {
-      color: #111;
-    }
-
-    .user {
-      text-align: right;
-      font-weight: bold;
     }
 
     .options {
       padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       border-top: 1px solid #eee;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
-    button {
-      font-family: inherit;
+    @media (max-width: 600px) {
+      .options {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glow-btn {
       padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      background: #fff;
+      font-size: 13.5px;
+      border-radius: 999px;
+      border: none;
       cursor: pointer;
-      font-size: 14px;
+      font-family: inherit;
+      color: #222;
+      background: #fafafa;
+      box-shadow:
+        0 0 6px rgba(255,255,255,0.6),
+        0 0 10px rgba(200,200,200,0.25);
+      transition: all 0.25s ease;
     }
 
-    button:hover {
-      background: #f5f5f5;
+    .glow-btn:hover {
+      box-shadow:
+        0 0 8px rgba(255,255,255,0.9),
+        0 0 16px rgba(160,160,160,0.4);
+      transform: translateY(-1px);
     }
+
+    .voice-select {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .voice-select button {
+      flex: 1;
+    }
+
   </style>
 </head>
 
 <body>
 
-<div class="chat-launcher" onclick="toggleChat()">✦</div>
+  <div class="chat-card">
 
-<div class="chat-card" id="chatCard">
-  <div class="chat-header">
-    <h3>Our Story</h3>
-    <p>A quiet place to listen</p>
-  </div>
-
-  <div class="chat-box" id="chatBox">
-    <div class="message bot">
-Hello.
-
-This is a quiet space.
-
-You can listen to our story through Saira or Aayan.
-Our story is a contemporary romantic fiction.
-
-When you’re ready, choose a voice.
+    <div class="chat-header">
+      <h1>Our Story</h1>
+      <p>A quiet place to listen</p>
     </div>
+
+    <div class="chat-box" id="chatBox">
+      <div class="message">
+        Hello.
+
+        This is a quiet space.
+
+        You can listen to our story through Saira or Ayaan.
+        Our story is a contemporary romantic fiction.
+
+        When you’re ready, you can choose a voice.
+      </div>
+
+      <div class="voice-select">
+        <button class="glow-btn" onclick="selectVoice('saira')">Saira</button>
+        <button class="glow-btn" onclick="selectVoice('ayaan')">Ayaan</button>
+      </div>
+    </div>
+
+    <div class="options" id="options" style="display:none;">
+      <button class="glow-btn" onclick="ask('story')">What kind of story is this?</button>
+      <button class="glow-btn" onclick="ask('about')">What is the story about?</button>
+      <button class="glow-btn" onclick="ask('for')">Who is this story for?</button>
+      <button class="glow-btn" onclick="ask('where')">Where can I read it?</button>
+      <button class="glow-btn" onclick="ask('author')">Who is the author?</button>
+    </div>
+
   </div>
 
-  <div class="options" id="voiceOptions">
-    <button onclick="selectVoice('Saira')">Saira</button>
-    <button onclick="selectVoice('Aayan')">Aayan</button>
-  </div>
+  <script src="script.js"></script>
 
-  <div class="options" id="questionOptions" style="display:none;">
-    <button onclick="ask('kind')">What kind of story is this?</button>
-    <button onclick="ask('about')">What is the book about?</button>
-    <button onclick="ask('for')">Who is this book for?</button>
-    <button onclick="ask('author')">Who is the author?</button>
-    <button onclick="ask('where')">Where can I read the book?</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
 </body>
 </html>
