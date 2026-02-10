@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -135,10 +135,10 @@ body {
 
 <form id="reflectionForm" action="https://formspree.io/f/xaqdqobr" method="POST" style="display:none;">
   <input type="hidden" name="voice" id="formVoice">
-  <input type="hidden" name="r1" id="r1">
-  <input type="hidden" name="r2" id="r2">
-  <input type="hidden" name="r3" id="r3">
-  <input type="hidden" name="time" id="formTime">
+  <input type="hidden" name="reflection_1" id="r1">
+  <input type="hidden" name="reflection_2" id="r2">
+  <input type="hidden" name="reflection_3" id="r3">
+  <input type="hidden" name="timestamp" id="formTime">
 </form>
 
 <script>
@@ -147,9 +147,9 @@ const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
 let activeVoice = null;
-let answeredCount = 0;
-let reflectionStep = 0;
+let answered = new Set();
 let reflections = [];
+let reflectionStep = 0;
 
 function toggleChat() {
   chatCard.style.display = chatCard.style.display === "flex" ? "none" : "flex";
@@ -157,9 +157,9 @@ function toggleChat() {
 
 function resetChat() {
   activeVoice = null;
-  answeredCount = 0;
-  reflectionStep = 0;
+  answered.clear();
   reflections = [];
+  reflectionStep = 0;
   chatCard.style.display = "none";
   loadWelcome();
 }
@@ -182,7 +182,8 @@ function loadWelcome() {
 
 function selectVoice(v) {
   activeVoice = v;
-  chatBody.insertAdjacentHTML("beforeend",
+  chatBody.insertAdjacentHTML(
+    "beforeend",
     `<div class="message"><p><strong>Hello, this is ${v === "saira" ? "Saira" : "Aayan"}.</strong></p></div>`
   );
   showQuestions();
@@ -208,7 +209,7 @@ function showQuestions() {
 
 function answer(type, btn) {
   btn.disabled = true;
-  answeredCount++;
+  answered.add(type);
 
   const replies = {
     saira: {
@@ -227,19 +228,37 @@ function answer(type, btn) {
     }
   };
 
-  chatBody.insertAdjacentHTML("beforeend",
+  chatBody.insertAdjacentHTML(
+    "beforeend",
     `<div class="message"><p>${replies[activeVoice][type]}</p></div>`
   );
   chatBody.scrollTop = chatBody.scrollHeight;
 
-  if (answeredCount === 3) startReflection();
+  if (answered.size === 5) askPermission();
+}
+
+function askPermission() {
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message"><p>If you’d like, you can share a few quiet reflections. Would you like to do that?</p></div>`
+  );
+  dock.innerHTML = `
+    <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+    <button class="btn" onclick="declineReflection()">No</button>
+  `;
+}
+
+function declineReflection() {
+  dock.innerHTML = "";
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message"><p>That’s completely fine. Thank you for listening.</p></div>`
+  );
 }
 
 function startReflection() {
-  dock.innerHTML = "";
-  chatBody.insertAdjacentHTML("beforeend",
-    `<div class="message"><p>If you’d like, you can leave a quiet reflection.</p></div>`
-  );
+  reflections = [];
+  reflectionStep = 0;
   nextReflection();
 }
 
@@ -257,15 +276,13 @@ function nextReflection() {
     ]
   };
 
-  if (reflectionStep >= 3) {
+  if (reflectionStep === 3) {
     submitReflection();
     return;
   }
 
   const [q, emojis] = sets[activeVoice][reflectionStep];
-  chatBody.insertAdjacentHTML("beforeend",
-    `<div class="message"><p>${q}</p></div>`
-  );
+  chatBody.insertAdjacentHTML("beforeend", `<div class="message"><p>${q}</p></div>`);
 
   dock.innerHTML = "";
   emojis.forEach(e => {
@@ -290,7 +307,8 @@ function submitReflection() {
   document.getElementById("reflectionForm").submit();
 
   dock.innerHTML = "";
-  chatBody.insertAdjacentHTML("beforeend",
+  chatBody.insertAdjacentHTML(
+    "beforeend",
     `<div class="message"><p>Thank you for listening.</p></div>`
   );
 }
