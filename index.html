@@ -31,6 +31,26 @@ body {
   z-index: 1000;
 }
 
+/* Tooltip */
+.chat-launcher::after {
+  content: "Listen to our story";
+  position: absolute;
+  right: 70px;
+  background: #222;
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+}
+
+.chat-launcher:hover::after {
+  opacity: 1;
+}
+
 /* Chat card */
 .chat-card {
   position: fixed;
@@ -56,6 +76,7 @@ body {
 .chat-header {
   padding: 18px;
   border-bottom: 1px solid #eee;
+  position: relative;
 }
 
 .chat-header h2 {
@@ -69,6 +90,16 @@ body {
   font-size: 14px;
 }
 
+/* Close button */
+.close-btn {
+  position: absolute;
+  right: 16px;
+  top: 14px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
 /* Chat body */
 .chat-box {
   padding: 18px;
@@ -77,13 +108,18 @@ body {
   line-height: 1.7;
 }
 
-/* Question section — IMPORTANT FIX */
-.question-section {
-  margin-top: 18px;
+/* Locked content blocks */
+.intro-block,
+.answer-block,
+.question-block {
+  margin-bottom: 18px;
+}
+
+/* Question buttons */
+.question-block {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  align-items: flex-start;
 }
 
 /* Buttons */
@@ -94,16 +130,15 @@ body {
   cursor: pointer;
   border: 1px solid #ddd;
   background: white;
-  white-space: nowrap;
 }
 
 /* Voice glow */
-.saira-glow {
-  box-shadow: 0 0 12px rgba(255, 180, 120, 0.65);
+.saira {
+  box-shadow: 0 0 12px rgba(255, 180, 120, 0.6);
 }
 
-.aayan-glow {
-  box-shadow: 0 0 12px rgba(120, 180, 255, 0.65);
+.aayan {
+  box-shadow: 0 0 12px rgba(120, 180, 255, 0.6);
 }
 
 /* Footer */
@@ -134,18 +169,21 @@ body {
   <div class="chat-header">
     <h2>Our Story</h2>
     <p>A quiet place to listen</p>
+    <div class="close-btn" onclick="toggleChat()">×</div>
   </div>
 
   <div class="chat-box" id="chatBox">
-    <p>Hello.</p>
-    <p>This is a quiet space.</p>
-    <p>You can listen to our story through Saira or Aayan.</p>
-    <p>Our story is a contemporary romantic fiction.</p>
-    <p>When you’re ready, you can choose a voice.</p>
+    <div class="intro-block">
+      <p>Hello.</p>
+      <p>This is a quiet space.</p>
+      <p>You can listen to our story through Saira or Aayan.</p>
+      <p>Our story is a contemporary romantic fiction.</p>
+      <p>When you’re ready, you can choose a voice.</p>
+    </div>
 
-    <div class="question-section">
-      <button class="btn saira-glow" onclick="selectVoice('saira')">Saira</button>
-      <button class="btn aayan-glow" onclick="selectVoice('aayan')">Aayan</button>
+    <div class="question-block">
+      <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+      <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
     </div>
   </div>
 
@@ -167,25 +205,28 @@ function selectVoice(voice) {
   activeVoice = voice;
   chatBox.innerHTML = "";
 
+  let intro = "";
   if (voice === "saira") {
-    chatBox.innerHTML += `
-      <p><strong>Hello, this is Saira.</strong></p>
-      <p>I’d love to share our story with you — gently, honestly.</p>
-    `;
+    intro = `
+      <div class="intro-block">
+        <p><strong>Hello, this is Saira.</strong></p>
+        <p>I’d love to share our story with you — gently, honestly.</p>
+      </div>`;
   } else {
-    chatBox.innerHTML += `
-      <p><strong>Hello. This is Aayan.</strong></p>
-      <p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>
-    `;
+    intro = `
+      <div class="intro-block">
+        <p><strong>Hello. This is Aayan.</strong></p>
+        <p>I don’t speak easily about the past, but I can tell you what it asked of us.</p>
+      </div>`;
   }
 
-  chatBox.innerHTML += `
-    <div class="question-section">
-      <button class="btn ${voice}-glow" onclick="answer('story')">What kind of story is this?</button>
-      <button class="btn ${voice}-glow" onclick="answer('about')">What is the story about?</button>
-      <button class="btn ${voice}-glow" onclick="answer('for')">Who is this story for?</button>
-      <button class="btn ${voice}-glow" onclick="answer('where')">Where can I read it?</button>
-      <button class="btn ${voice}-glow" onclick="answer('author')">Who is the author?</button>
+  chatBox.innerHTML = intro + `
+    <div class="question-block">
+      <button class="btn ${voice}" onclick="answer('story')">What kind of story is this?</button>
+      <button class="btn ${voice}" onclick="answer('about')">What is the story about?</button>
+      <button class="btn ${voice}" onclick="answer('for')">Who is this story for?</button>
+      <button class="btn ${voice}" onclick="answer('where')">Where can I read it?</button>
+      <button class="btn ${voice}" onclick="answer('author')">Who is the author?</button>
     </div>
   `;
 }
@@ -194,22 +235,22 @@ function answer(type) {
   let reply = "";
 
   if (activeVoice === "saira") {
-    if (type === "story") reply = "Our story is a contemporary romantic fiction — intimate, reflective, and deeply human.";
+    if (type === "story") reply = "Our story is a contemporary romantic fiction — reflective, intimate, and deeply human.";
     if (type === "about") reply = "It’s about me and Aayan, about love shaped by timing, distance, and choice.";
-    if (type === "for") reply = "It’s for readers who value emotion and quiet connection.";
+    if (type === "for") reply = "For readers who value emotion, atmosphere, and quiet connection.";
     if (type === "where") reply = "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.";
     if (type === "author") reply = "Mohan R. brought this story to life. It’s his debut novel, written with sincerity.";
   }
 
   if (activeVoice === "aayan") {
-    if (type === "story") reply = "It’s a contemporary romantic fiction — but not a simple one.";
+    if (type === "story") reply = "It’s a contemporary romantic fiction — but not an easy one.";
     if (type === "about") reply = "It’s about knowing something matters, and still having to choose carefully.";
     if (type === "for") reply = "For those who understand that not every love story is about arrival.";
     if (type === "where") reply = "The story is available in digital, print, and audio formats.";
     if (type === "author") reply = "Mohan R. wrote this story from lived emotion and unanswered questions.";
   }
 
-  chatBox.innerHTML += `<p>${reply}</p>`;
+  chatBox.insertAdjacentHTML("beforeend", `<div class="answer-block"><p>${reply}</p></div>`);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 </script>
