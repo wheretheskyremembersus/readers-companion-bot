@@ -7,7 +7,47 @@ const optionsBox = document.getElementById("options");
 // Active voice: "saira" | "aayan"
 let activeVoice = null;
 
-// Events
+// ---------- INTENT KEYWORDS ----------
+
+// AUTHOR
+const AUTHOR_KEYWORDS = [
+  "author", "writer", "wrote", "written", "write",
+  "created", "creator", "penned", "pen",
+  "novelist", "storyteller", "authored", "behind"
+];
+
+// ABOUT (what the story is about)
+const ABOUT_KEYWORDS = [
+  "about", "plot", "storyline", "story line",
+  "happens", "theme", "meaning", "focus",
+  "explore", "explores", "inside", "summary"
+];
+
+// KIND / GENRE
+const GENRE_KEYWORDS = [
+  "kind", "type", "genre", "sort", "category",
+  "style", "fiction", "romance", "romantic",
+  "contemporary", "novel"
+];
+
+// AUDIENCE
+const AUDIENCE_KEYWORDS = [
+  "for", "audience", "reader", "readers",
+  "who should", "meant", "appeal", "enjoy",
+  "recommend", "suitable", "resonate",
+  "ideal", "right for"
+];
+
+// AVAILABILITY
+const AVAILABILITY_KEYWORDS = [
+  "read", "buy", "purchase", "available",
+  "find", "get", "download", "listen",
+  "ebook", "kindle", "audio",
+  "paperback", "hardcover", "format"
+];
+
+// ---------- EVENTS ----------
+
 button.addEventListener("click", sendMessage);
 input.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
@@ -15,30 +55,39 @@ input.addEventListener("keydown", function (e) {
   }
 });
 
-// Handle option clicks
+// For option buttons
 function askOption(text) {
   addMessage(text, "user");
-  const reply = getBotReply(text.toLowerCase());
-  setTimeout(() => {
-    addMessage(reply, "bot");
-  }, 600);
+  const reply = getBotReply(normalize(text));
+  setTimeout(() => addMessage(reply, "bot"), 600);
 }
+
+// ---------- CORE FUNCTIONS ----------
 
 function sendMessage() {
   const text = input.value.trim();
-  if (text === "") return;
+  if (!text) return;
 
   addMessage(text, "user");
   input.value = "";
 
-  const reply = getBotReply(text.toLowerCase());
-
-  setTimeout(() => {
-    addMessage(reply, "bot");
-  }, 600);
+  const reply = getBotReply(normalize(text));
+  setTimeout(() => addMessage(reply, "bot"), 600);
 }
 
-// Core logic
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .replace(/\s+/g, " ");
+}
+
+function containsAny(message, keywords) {
+  return keywords.some(keyword => message.includes(keyword));
+}
+
+// ---------- BRAIN ----------
+
 function getBotReply(message) {
 
   // ---- Voice selection ----
@@ -68,31 +117,33 @@ function getBotReply(message) {
     );
   }
 
-  // ---- What kind of story ----
-  if (message.includes("kind of story")) {
+  // ======================================================
+  // PRIORITY-BASED INTENT CHECKING
+  // ======================================================
+
+  // 1. AUTHOR
+  if (containsAny(message, AUTHOR_KEYWORDS)) {
     if (activeVoice === "saira") {
       return (
-        "Ours is a contemporary romantic fiction story.\n\n" +
-        "It’s shaped by feeling and memory, by quiet moments that stay long after everything else moves on."
+        "The one who brought our story to life is Mohan R., and this is his debut novel.\n\n" +
+        "It grew from lived emotion, travel, and a quiet curiosity about how people connect and remember each other."
       );
-    }
-    if (activeVoice === "aayan") {
+    } else {
       return (
-        "Our story is a contemporary romantic fiction.\n\n" +
-        "It lives in the space between love and responsibility — where wanting something doesn’t always mean choosing it."
+        "Mohan R. is the one who gave this story its shape.\n\n" +
+        "He wasn’t trying to explain love — only to sit honestly with how it feels when timing and responsibility complicate it."
       );
     }
   }
 
-  // ---- What the story is about ----
-  if (message.includes("about")) {
+  // 2. ABOUT
+  if (containsAny(message, ABOUT_KEYWORDS)) {
     if (activeVoice === "saira") {
       return (
         "At its heart, it’s a story about love that feels deeply human — imperfect, intense, and shaped by the choices we make over time.\n\n" +
         "It’s about me and Aayan, about two lives crossing unexpectedly, and the way those connections linger."
       );
-    }
-    if (activeVoice === "aayan") {
+    } else {
       return (
         "It’s about timing.\n\n" +
         "About knowing something matters, and still having to decide what you’re willing to give up for it.\n\n" +
@@ -101,15 +152,29 @@ function getBotReply(message) {
     }
   }
 
-  // ---- Who the story is for ----
-  if (message.includes("for")) {
+  // 3. KIND / GENRE
+  if (containsAny(message, GENRE_KEYWORDS)) {
+    if (activeVoice === "saira") {
+      return (
+        "Ours is a contemporary romantic fiction story.\n\n" +
+        "It’s shaped by feeling and memory, by quiet moments that stay long after everything else moves on."
+      );
+    } else {
+      return (
+        "Our story is a contemporary romantic fiction.\n\n" +
+        "It lives in the space between love and responsibility — where wanting something doesn’t always mean choosing it."
+      );
+    }
+  }
+
+  // 4. AUDIENCE
+  if (containsAny(message, AUDIENCE_KEYWORDS)) {
     if (activeVoice === "saira") {
       return (
         "This story often finds readers who are drawn to emotion and connection.\n\n" +
         "Those who enjoy reflection, atmosphere, and stories that unfold gently rather than loudly."
       );
-    }
-    if (activeVoice === "aayan") {
+    } else {
       return (
         "This story tends to speak to readers who sit with questions instead of rushing toward answers.\n\n" +
         "Those who understand that not every love story is about arrival."
@@ -117,28 +182,12 @@ function getBotReply(message) {
     }
   }
 
-  // ---- Where to read ----
-  if (message.includes("read")) {
+  // 5. AVAILABILITY
+  if (containsAny(message, AVAILABILITY_KEYWORDS)) {
     return (
       "Our story exists beyond this space now.\n\n" +
       "You can find it as a Kindle eBook, Paperback, Hardcover, and Audio edition."
     );
-  }
-
-  // ---- Who is the author ----
-  if (message.includes("author")) {
-    if (activeVoice === "saira") {
-      return (
-        "The one who brought our story to life is Mohan R., and this is his debut novel.\n\n" +
-        "It grew from lived emotion, travel, and a quiet curiosity about how people connect and remember each other."
-      );
-    }
-    if (activeVoice === "aayan") {
-      return (
-        "Mohan R. is the one who gave this story its shape.\n\n" +
-        "He wasn’t trying to explain love — only to sit honestly with how it feels when timing and responsibility complicate it."
-      );
-    }
   }
 
   // ---- Soft fallback ----
@@ -149,15 +198,14 @@ function getBotReply(message) {
     );
   }
 
-  if (activeVoice === "aayan") {
-    return (
-      "Not every question has a clean answer.\n\n" +
-      "But you can ask it anyway."
-    );
-  }
+  return (
+    "Not every question has a clean answer.\n\n" +
+    "But you can ask it anyway."
+  );
 }
 
-// Render messages
+// ---------- RENDER ----------
+
 function addMessage(text, sender) {
   const msg = document.createElement("div");
   msg.textContent = text;
