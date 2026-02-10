@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -30,7 +30,6 @@ body {
   font-size: 26px;
   z-index: 1000;
 }
-
 .chat-launcher::after {
   content: "Listen to our story";
   position: absolute;
@@ -43,10 +42,7 @@ body {
   opacity: 0;
   transition: opacity 0.3s;
 }
-
-.chat-launcher:hover::after {
-  opacity: 1;
-}
+.chat-launcher:hover::after { opacity: 1; }
 
 /* Chat card */
 .chat-card {
@@ -61,12 +57,6 @@ body {
   display: none;
   flex-direction: column;
   overflow: hidden;
-  animation: fadeUp 0.4s ease;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Header */
@@ -75,28 +65,17 @@ body {
   border-bottom: 1px solid #eee;
   position: relative;
 }
-
-.chat-header h2 {
-  margin: 0;
-  font-size: 22px;
-}
-
-.chat-header p {
-  margin: 4px 0 0;
-  color: #777;
-  font-size: 14px;
-}
-
+.chat-header h2 { margin: 0; font-size: 22px; }
+.chat-header p { margin: 4px 0 0; color: #777; font-size: 14px; }
 .close-btn {
   position: absolute;
   right: 16px;
   top: 14px;
   font-size: 20px;
   cursor: pointer;
-  color: #888;
 }
 
-/* Conversation */
+/* Body */
 .chat-body {
   flex: 1;
   padding: 18px;
@@ -104,19 +83,15 @@ body {
   font-size: 15px;
   line-height: 1.7;
 }
+.message { margin-bottom: 18px; }
 
-.message {
-  margin-bottom: 18px;
-}
-
-/* Question dock */
+/* Dock */
 .question-dock {
   padding: 10px 12px;
   border-top: 1px solid #eee;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  background: #fff;
 }
 
 /* Buttons */
@@ -128,13 +103,7 @@ body {
   background: white;
   cursor: pointer;
 }
-
-.btn:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-
-/* Glow */
+.btn:disabled { opacity: 0.45; cursor: default; }
 .saira { box-shadow: 0 0 10px rgba(255,180,120,0.55); }
 .aayan { box-shadow: 0 0 10px rgba(120,180,255,0.55); }
 
@@ -161,23 +130,26 @@ body {
 
   <div class="chat-body" id="chatBody"></div>
   <div class="question-dock" id="questionDock"></div>
-
   <div class="chat-footer">Listening, not rushing.</div>
 </div>
 
-<!-- Hidden Formspree form -->
 <form id="reflectionForm" action="https://formspree.io/f/xaqdqobr" method="POST" style="display:none;">
   <input type="hidden" name="voice" id="formVoice">
-  <input type="hidden" name="reflection" id="formReflection">
-  <input type="hidden" name="timestamp" id="formTime">
+  <input type="hidden" name="r1" id="r1">
+  <input type="hidden" name="r2" id="r2">
+  <input type="hidden" name="r3" id="r3">
+  <input type="hidden" name="time" id="formTime">
 </form>
 
 <script>
 const chatCard = document.getElementById("chatCard");
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
+
 let activeVoice = null;
-let reflectionShown = false;
+let answeredCount = 0;
+let reflectionStep = 0;
+let reflections = [];
 
 function toggleChat() {
   chatCard.style.display = chatCard.style.display === "flex" ? "none" : "flex";
@@ -185,7 +157,9 @@ function toggleChat() {
 
 function resetChat() {
   activeVoice = null;
-  reflectionShown = false;
+  answeredCount = 0;
+  reflectionStep = 0;
+  reflections = [];
   chatCard.style.display = "none";
   loadWelcome();
 }
@@ -206,55 +180,119 @@ function loadWelcome() {
   `;
 }
 
-function selectVoice(voice) {
-  activeVoice = voice;
-  chatBody.insertAdjacentHTML("beforeend", `
-    <div class="message">
-      <p><strong>Hello, this is ${voice === "saira" ? "Saira" : "Aayan"}.</strong></p>
-    </div>
-  `);
-
-  showReflection();
+function selectVoice(v) {
+  activeVoice = v;
+  chatBody.insertAdjacentHTML("beforeend",
+    `<div class="message"><p><strong>Hello, this is ${v === "saira" ? "Saira" : "Aayan"}.</strong></p></div>`
+  );
+  showQuestions();
 }
 
-function showReflection() {
-  if (reflectionShown) return;
-  reflectionShown = true;
+function showQuestions() {
+  const questions = [
+    ["What kind of story is this?", "story"],
+    ["What is the story about?", "about"],
+    ["Who is this story for?", "for"],
+    ["Where can I read it?", "where"],
+    ["Who is the author?", "author"]
+  ];
+  dock.innerHTML = "";
+  questions.forEach(q => {
+    const b = document.createElement("button");
+    b.className = `btn ${activeVoice}`;
+    b.textContent = q[0];
+    b.onclick = () => answer(q[1], b);
+    dock.appendChild(b);
+  });
+}
 
-  const question =
-    activeVoice === "saira"
-      ? "How closely did this story stay with you?"
-      : "How clearly did the emotional world reveal itself to you?";
+function answer(type, btn) {
+  btn.disabled = true;
+  answeredCount++;
 
-  const emojis =
-    activeVoice === "saira"
-      ? ["🌫️","🌱","💛","🌙","✨"]
-      : ["🌑","🌘","🌗","🌕","☀️"];
+  const replies = {
+    saira: {
+      story: "Our story is a contemporary romantic fiction — reflective and deeply human.",
+      about: "It’s about me and Aayan, shaped by timing, distance, and quiet choices.",
+      for: "For readers who value emotion, atmosphere, and connection.",
+      where: "It’s available as Kindle, Paperback, Hardcover, and Audio.",
+      author: "Mohan R. wrote this as his debut novel, with sincerity."
+    },
+    aayan: {
+      story: "It’s a contemporary romantic fiction — not an easy one.",
+      about: "It’s about knowing something matters, and still choosing carefully.",
+      for: "For those who understand that not every love story arrives.",
+      where: "It exists in digital, print, and audio formats.",
+      author: "Mohan R. wrote this story from lived emotion."
+    }
+  };
 
-  chatBody.insertAdjacentHTML("beforeend", `
-    <div class="message"><p>${question}</p></div>
-  `);
+  chatBody.insertAdjacentHTML("beforeend",
+    `<div class="message"><p>${replies[activeVoice][type]}</p></div>`
+  );
+  chatBody.scrollTop = chatBody.scrollHeight;
+
+  if (answeredCount === 3) startReflection();
+}
+
+function startReflection() {
+  dock.innerHTML = "";
+  chatBody.insertAdjacentHTML("beforeend",
+    `<div class="message"><p>If you’d like, you can leave a quiet reflection.</p></div>`
+  );
+  nextReflection();
+}
+
+function nextReflection() {
+  const sets = {
+    saira: [
+      ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
+      ["How clearly did the emotions feel to you?", ["🌑","🌘","🌗","🌕","☀️"]],
+      ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
+    ],
+    aayan: [
+      ["How clearly did the emotional world reveal itself to you?", ["🌑","🌘","🌗","🌕","☀️"]],
+      ["How steady did the story feel to you?", ["🌫️","🌱","💛","🌙","✨"]],
+      ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
+    ]
+  };
+
+  if (reflectionStep >= 3) {
+    submitReflection();
+    return;
+  }
+
+  const [q, emojis] = sets[activeVoice][reflectionStep];
+  chatBody.insertAdjacentHTML("beforeend",
+    `<div class="message"><p>${q}</p></div>`
+  );
 
   dock.innerHTML = "";
   emojis.forEach(e => {
     const b = document.createElement("button");
     b.className = `btn ${activeVoice}`;
     b.textContent = e;
-    b.onclick = () => submitReflection(e);
+    b.onclick = () => {
+      reflections.push(e);
+      reflectionStep++;
+      nextReflection();
+    };
     dock.appendChild(b);
   });
 }
 
-function submitReflection(emoji) {
+function submitReflection() {
   document.getElementById("formVoice").value = activeVoice;
-  document.getElementById("formReflection").value = emoji;
+  document.getElementById("r1").value = reflections[0];
+  document.getElementById("r2").value = reflections[1];
+  document.getElementById("r3").value = reflections[2];
   document.getElementById("formTime").value = new Date().toISOString();
   document.getElementById("reflectionForm").submit();
 
   dock.innerHTML = "";
-  chatBody.insertAdjacentHTML("beforeend", `
-    <div class="message"><p>Thank you for listening.</p></div>
-  `);
+  chatBody.insertAdjacentHTML("beforeend",
+    `<div class="message"><p>Thank you for listening.</p></div>`
+  );
 }
 
 loadWelcome();
