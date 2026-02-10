@@ -1,10 +1,6 @@
 const chatBox = document.querySelector(".chat-box");
-const input = document.querySelector("input");
-const button = document.querySelector("button");
-
-// Enable input and button
-input.disabled = false;
-button.disabled = false;
+const input = document.getElementById("userInput");
+const button = document.getElementById("sendBtn");
 
 button.addEventListener("click", sendMessage);
 input.addEventListener("keypress", function (e) {
@@ -20,44 +16,10 @@ function sendMessage() {
   addMessage(userText, "user");
   input.value = "";
 
-  setTimeout(() => {
-    addMessage("I hear you. I’ll be able to answer more soon.", "bot");
-  }, 500);
-}
-
-function addMessage(text, sender) {
-  const messageDiv = document.createElement("div");
-  messageDiv.className = sender === "user" ? "user-message" : "bot-message";
-  messageDiv.textContent = text;
-  chatBox.appendChild(messageDiv);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-const chatBox = document.querySelector(".chat-box");
-const input = document.querySelector("input");
-const button = document.querySelector("button");
-
-// Enable input and button
-input.disabled = false;
-button.disabled = false;
-
-button.addEventListener("click", sendMessage);
-input.addEventListener("keypress", function (e) {
-  if (e.key === "Enter") {
-    sendMessage();
-  }
-});
-
-function sendMessage() {
-  const userText = input.value.trim();
-  if (userText === "") return;
-
-  addMessage(userText, "user");
-  input.value = "";
-
-  const lowerText = userText.toLowerCase();
   let botReply = "I hear you. I’ll be able to answer more soon.";
 
-  // QUESTION 1: Who is the author?
+  const lowerText = userText.toLowerCase();
+
   if (
     lowerText.includes("author") ||
     lowerText.includes("who wrote") ||
@@ -71,13 +33,20 @@ function sendMessage() {
 
   setTimeout(() => {
     addMessage(botReply, "bot");
-  }, 500);
+  }, 300);
 }
 
 function addMessage(text, sender) {
-  const messageDiv = document.createElement("div");
-  messageDiv.className = sender === "user" ? "user-message" : "bot-message";
-  messageDiv.textContent = text;
-  chatBox.appendChild(messageDiv);
+  const msg = document.createElement("div");
+  msg.textContent = text;
+  msg.style.margin = "6px 0";
+  msg.style.whiteSpace = "pre-line";
+
+  if (sender === "user") {
+    msg.style.textAlign = "right";
+    msg.style.fontWeight = "bold";
+  }
+
+  chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
