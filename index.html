@@ -7,9 +7,8 @@
 
 <style>
 /* =========================
-   Page Styling (Canva-like)
+   GLOBAL PAGE (Canva-like)
 ========================= */
-
 body {
   margin: 0;
   font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
@@ -23,14 +22,26 @@ body {
 }
 
 .page-wrapper {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 20px 80px;
+  padding: 60px 40px 80px;
 }
 
-/* Header */
+/* =========================
+   TWO-COLUMN LAYOUT
+========================= */
+.layout {
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 80px;
+  align-items: flex-start;
+}
+
+/* =========================
+   HEADER
+========================= */
 .page-header {
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .page-header h1 {
@@ -49,11 +60,9 @@ body {
 }
 
 /* =========================
-   Bot Container
+   BOT SHELL
 ========================= */
-
 .bot-shell {
-  max-width: 440px;
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 20px 50px rgba(0,0,0,0.18);
@@ -69,33 +78,32 @@ body {
 
 .message {
   margin-bottom: 18px;
+  animation: fadeIn 0.3s ease;
 }
 
-/* Highlighted permission prompt */
-.reflection-prompt {
-  background: #f6f1ea;
-  border-left: 3px solid #d8cfc3;
-  padding: 14px 16px;
-  border-radius: 8px;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Question dock */
+/* =========================
+   QUESTION DOCK
+========================= */
 .question-dock {
-  margin-top: 12px;
-  padding-top: 12px;
+  margin-top: 14px;
+  padding-top: 14px;
   border-top: 1px solid #eee;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-/* Buttons */
 .btn {
   padding: 6px 14px;
   border-radius: 16px;
   font-size: 13px;
   border: 1px solid #ddd;
-  background: white;
+  background: #fff;
   cursor: pointer;
 }
 
@@ -112,17 +120,59 @@ body {
   box-shadow: 0 0 10px rgba(120,180,255,0.55);
 }
 
-/* Footer */
+/* =========================
+   PERMISSION PROMPT
+========================= */
+.reflection-prompt {
+  background: #f6f1ea;
+  border-left: 3px solid #d8cfc3;
+  padding: 14px 16px;
+  border-radius: 8px;
+}
+
+/* =========================
+   TRUST PANEL (RIGHT)
+========================= */
+.right-column h2 {
+  font-size: 22px;
+  font-weight: normal;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+}
+
+.right-column h2.spaced {
+  margin-top: 48px;
+}
+
+.right-column h3 {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  margin: 0 0 6px;
+}
+
+.right-column p {
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+
+/* =========================
+   FOOTER
+========================= */
 .page-footer {
   margin-top: 80px;
   font-size: 13px;
   color: #888;
 }
 
-/* Mobile */
-@media (max-width: 600px) {
-  .bot-shell {
-    max-width: 100%;
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 60px;
   }
 }
 </style>
@@ -132,26 +182,59 @@ body {
 
 <div class="page-wrapper">
 
-  <!-- Header -->
+  <!-- HEADER -->
   <div class="page-header">
     <h1>Our Story</h1>
     <p>A quiet companion space for <em>Where The Sky Remembers Us</em>.</p>
   </div>
 
-  <!-- Bot -->
-  <div class="bot-shell">
-    <div class="chat-body" id="chatBody"></div>
-    <div class="question-dock" id="questionDock"></div>
+  <div class="layout">
+
+    <!-- LEFT: BOT -->
+    <div class="left-column">
+      <div class="bot-shell">
+        <div class="chat-body" id="chatBody"></div>
+        <div class="question-dock" id="questionDock"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: TRUST / CONTACT -->
+    <div class="right-column">
+      <h2>Reach Out to the Author</h2>
+
+      <h3>WEBSITE</h3>
+      <p>www.wheretheskyremembersus.com</p>
+
+      <h2 class="spaced">Privacy Note</h2>
+      <p>
+        We value your privacy. Information you share through our feedback form—
+        such as your name, email, or message—is used solely to understand and
+        respond to your feedback. We do not use cookies, trackers, or third-party tools.
+      </p>
+
+      <p>
+        For any questions, contact us at:<br>
+        <strong>wheretheskyremembersus@gmail.com</strong>
+      </p>
+
+      <h2 class="spaced">Communication Address</h2>
+      <p>
+        PO Box : 10<br>
+        General Post Office<br>
+        Shillong 793001<br>
+        Meghalaya, India
+      </p>
+    </div>
+
   </div>
 
-  <!-- Footer -->
   <div class="page-footer">
     © 2026 Mohan R. All rights reserved.
   </div>
 
 </div>
 
-<!-- Hidden Formspree -->
+<!-- FORM (hidden) -->
 <form id="reflectionForm" action="https://formspree.io/f/xaqdqobr" method="POST" style="display:none;">
   <input type="hidden" name="voice" id="formVoice">
   <input type="hidden" name="reflection_1" id="r1">
@@ -161,6 +244,9 @@ body {
 </form>
 
 <script>
+/* =========================
+   STATE
+========================= */
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
@@ -169,8 +255,9 @@ let answered = new Set();
 let reflections = [];
 let reflectionStep = 0;
 
-/* ---------- Helpers ---------- */
-
+/* =========================
+   HELPERS
+========================= */
 function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
@@ -179,8 +266,9 @@ function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
 }
 
-/* ---------- Initial State ---------- */
-
+/* =========================
+   INIT
+========================= */
 function loadWelcome() {
   chatBody.innerHTML = `
     <div class="message">
@@ -198,11 +286,13 @@ function loadWelcome() {
   autoScroll();
 }
 
-/* ---------- Voice Selection ---------- */
-
+/* =========================
+   VOICE SELECTION
+========================= */
 function selectVoice(v) {
   activeVoice = v;
 
+  // CANON VOICES — DO NOT EDIT
   const intro =
     v === "saira"
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
@@ -216,8 +306,9 @@ function selectVoice(v) {
   autoScroll();
 }
 
-/* ---------- Guided Questions ---------- */
-
+/* =========================
+   QUESTIONS
+========================= */
 function showQuestions() {
   const questions = [
     ["What kind of story is this?", "story"],
@@ -226,7 +317,6 @@ function showQuestions() {
     ["Where can I read it?", "where"],
     ["Who is the author?", "author"]
   ];
-
   dock.innerHTML = "";
   questions.forEach(q => {
     const b = document.createElement("button");
@@ -267,8 +357,9 @@ function answer(type, btn) {
   if (answered.size === 5) askPermission();
 }
 
-/* ---------- Permission Gate ---------- */
-
+/* =========================
+   PERMISSION
+========================= */
 function askPermission() {
   chatBody.insertAdjacentHTML(
     "beforeend",
@@ -277,7 +368,6 @@ function askPermission() {
       <p><em>Would you like to do that?</em></p>
     </div>`
   );
-
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
     <button class="btn" onclick="declineReflection()">No</button>
@@ -297,8 +387,9 @@ function declineReflection() {
   autoScroll();
 }
 
-/* ---------- Reflection Flow ---------- */
-
+/* =========================
+   REFLECTION
+========================= */
 function startReflection() {
   reflections = [];
   reflectionStep = 0;
@@ -342,8 +433,9 @@ function nextReflection() {
   autoScroll();
 }
 
-/* ---------- Submission ---------- */
-
+/* =========================
+   SUBMIT
+========================= */
 function submitReflection() {
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
@@ -363,7 +455,9 @@ function submitReflection() {
   autoScroll();
 }
 
-/* ---------- Init ---------- */
+/* =========================
+   START
+========================= */
 loadWelcome();
 </script>
 
