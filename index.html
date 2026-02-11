@@ -253,9 +253,12 @@ const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
 let activeVoice = null;
-let answered = new Set();
+let foundationalAnswered = new Set();
+let characterAnsweredCount = 0;
+let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
+let reflectionStarted = false;
 
 /* =========================
    HELPERS
@@ -294,7 +297,6 @@ function loadWelcome() {
 function selectVoice(v) {
   activeVoice = v;
 
-  // CANON VOICES — DO NOT EDIT
   const intro =
     v === "saira"
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
@@ -304,14 +306,15 @@ function selectVoice(v) {
     "beforeend",
     `<div class="message"><p><strong>${intro}</strong></p></div>`
   );
-  showQuestions();
+
+  showFoundationalQuestions();
   autoScroll();
 }
 
 /* =========================
-   QUESTIONS
+   FOUNDATIONAL QUESTIONS
 ========================= */
-function showQuestions() {
+function showFoundationalQuestions() {
   const questions = [
     ["What kind of story is this?", "story"],
     ["What is the story about?", "about"],
@@ -319,19 +322,21 @@ function showQuestions() {
     ["Where can I read it?", "where"],
     ["Who is the author?", "author"]
   ];
+
   dock.innerHTML = "";
+
   questions.forEach(q => {
     const b = document.createElement("button");
     b.className = `btn ${activeVoice}`;
     b.textContent = q[0];
-    b.onclick = () => answer(q[1], b);
+    b.onclick = () => answerFoundational(q[1], b);
     dock.appendChild(b);
   });
 }
 
-function answer(type, btn) {
+function answerFoundational(type, btn) {
   btn.disabled = true;
-  answered.add(type);
+  foundationalAnswered.add(type);
 
   const replies = {
     saira: {
@@ -354,44 +359,121 @@ function answer(type, btn) {
     "beforeend",
     `<div class="message"><p>${replies[activeVoice][type]}</p></div>`
   );
+
   autoScroll();
 
-  if (answered.size === 5) askPermission();
+  if (foundationalAnswered.size === 5) {
+    unlockNextLayer();
+  }
 }
 
 /* =========================
-   PERMISSION
+   CHARACTER LAYERS (12)
 ========================= */
-function askPermission() {
+
+const characterLayers = [
+  [
+    ["Where did you first meet?","We met in Mumbai. The city moved fast, but that moment felt still."],
+    ["What did you first notice?","Presence. Listening. Something steady."],
+    ["When did it feel different?","Not sudden — just a quiet shift that stayed."],
+    ["Which city began it all?","Mumbai. Restless, imperfect, unforgettable."]
+  ],
+  [
+    ["Did you ever question it?","Love makes doubt more complicated, not smaller."],
+    ["Were you ever afraid?","Yes. Love asks you to surrender control."],
+    ["Your happiest moment?","A quiet night before leaving Goa — nothing grand, just peace."],
+    ["What stayed the longest?","The moments we almost said goodbye."]
+  ],
+  [
+    ["Did you meet again?","Some meetings don’t need witnesses to be real."],
+    ["Is there more?","Stories don’t end. They change shape."],
+    ["Will there be a part two?","Some stories continue only when they’re meant to."],
+    ["Do you still think of each other?","Some people don’t leave. They simply change rooms."]
+  ]
+];
+
+function unlockNextLayer() {
+  if (currentLayer >= 3) return;
+
+  if (currentLayer > 0) {
+    chatBody.insertAdjacentHTML(
+      "beforeend",
+      `<div class="message"><p>There’s more, if you’d like to continue.</p></div>`
+    );
+  }
+
+  const layer = characterLayers[currentLayer];
+  layer.forEach(item => {
+    const b = document.createElement("button");
+    b.className = `btn ${activeVoice}`;
+    b.textContent = item[0];
+    b.onclick = () => answerCharacter(item[1], b);
+    dock.appendChild(b);
+  });
+
+  currentLayer++;
+  autoScroll();
+}
+
+function answerCharacter(reply, btn) {
+  btn.disabled = true;
+  characterAnsweredCount++;
+
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message reflection-prompt">
-      <p><em>If you’d like, you can share a few quiet reflections.</em></p>
-      <p><em>Would you like to do that?</em></p>
+    `<div class="message"><p>${reply}</p></div>`
+  );
+
+  autoScroll();
+
+  if (characterAnsweredCount === 4 || characterAnsweredCount === 8) {
+    unlockNextLayer();
+  }
+
+  if (characterAnsweredCount === 12) {
+    showAuthorInvitation();
+  }
+}
+
+/* =========================
+   AUTHOR INVITATION
+========================= */
+
+function showAuthorInvitation() {
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message">
+      <p>You’ve stayed with us until the end.</p>
+      <p>If you’d like to write to the author, you’re welcome to. He sometimes shares digital copies with thoughtful readers.</p>
+      <p><strong>wheretheskyremembersus@gmail.com</strong></p>
+      <p><em>Before you leave, may I ask you three quiet reflections?</em></p>
     </div>`
   );
+
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
     <button class="btn" onclick="declineReflection()">No</button>
   `;
-  autoScroll();
-}
 
-function declineReflection() {
-  dock.innerHTML = "";
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message">
-      <p>That’s completely fine. Thank you for listening.</p>
-      <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
-    </div>`
-  );
   autoScroll();
 }
 
 /* =========================
    REFLECTION
 ========================= */
+
+function declineReflection() {
+  dock.innerHTML = "";
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message">
+      <p>${activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying."}</p>
+      <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+    </div>`
+  );
+  autoScroll();
+}
+
 function startReflection() {
   reflections = [];
   reflectionStep = 0;
@@ -399,15 +481,16 @@ function startReflection() {
 }
 
 function nextReflection() {
+
   const sets = {
     saira: [
       ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
-      ["How clearly did the emotions feel to you?", ["🌑","🌘","🌗","🌕","☀️"]],
-      ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
+      ["How clearly did the emotions feel?", ["🌫️","🌱","💛","🌙","✨"]],
+      ["How drawn do you feel to continue?", ["🚶","👀","💫","❤️","📖"]]
     ],
     aayan: [
       ["How clearly did the emotional world reveal itself to you?", ["🌑","🌘","🌗","🌕","☀️"]],
-      ["How steady did the story feel to you?", ["🌫️","🌱","💛","🌙","✨"]],
+      ["How steady did the story feel?", ["🌑","🌘","🌗","🌕","☀️"]],
       ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
     ]
   };
@@ -418,9 +501,14 @@ function nextReflection() {
   }
 
   const [q, emojis] = sets[activeVoice][reflectionStep];
-  chatBody.insertAdjacentHTML("beforeend", `<div class="message"><p>${q}</p></div>`);
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message"><p>${q}</p></div>`
+  );
 
   dock.innerHTML = "";
+
   emojis.forEach(e => {
     const b = document.createElement("button");
     b.className = `btn ${activeVoice}`;
@@ -432,12 +520,14 @@ function nextReflection() {
     };
     dock.appendChild(b);
   });
+
   autoScroll();
 }
 
 /* =========================
    SUBMIT
 ========================= */
+
 function submitReflection() {
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
@@ -447,21 +537,21 @@ function submitReflection() {
   document.getElementById("reflectionForm").submit();
 
   dock.innerHTML = "";
+
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message">
-      <p>Thank you for listening.</p>
+      <p>${activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying."}</p>
       <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
     </div>`
   );
+
   autoScroll();
 }
 
 /* =========================
    START
 ========================= */
+
 loadWelcome();
 </script>
-
-</body>
-</html>
