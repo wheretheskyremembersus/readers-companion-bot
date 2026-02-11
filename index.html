@@ -254,11 +254,10 @@ const dock = document.getElementById("questionDock");
 
 let activeVoice = null;
 let foundationalAnswered = new Set();
-let characterAnsweredCount = 0;
+let characterAnswered = 0;
 let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
-let reflectionStarted = false;
 
 /* =========================
    HELPERS
@@ -307,14 +306,14 @@ function selectVoice(v) {
     `<div class="message"><p><strong>${intro}</strong></p></div>`
   );
 
-  showFoundationalQuestions();
+  showFoundational();
   autoScroll();
 }
 
 /* =========================
    FOUNDATIONAL QUESTIONS
 ========================= */
-function showFoundationalQuestions() {
+function showFoundational() {
   const questions = [
     ["What kind of story is this?", "story"],
     ["What is the story about?", "about"],
@@ -368,32 +367,128 @@ function answerFoundational(type, btn) {
 }
 
 /* =========================
-   CHARACTER LAYERS (12)
+   15 CHARACTER QUESTIONS
 ========================= */
 
 const characterLayers = [
+  // Layer 1 (5)
   [
-    ["Where did you first meet?","We met in Mumbai. The city moved fast, but that moment felt still."],
-    ["What did you first notice?","Presence. Listening. Something steady."],
-    ["When did it feel different?","Not sudden — just a quiet shift that stayed."],
-    ["Which city began it all?","Mumbai. Restless, imperfect, unforgettable."]
+    {
+      q: "Saira, where did you first meet Aayan?",
+      a: {
+        saira: "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still, as if everything else had stepped aside.",
+        aayan: "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long."
+      }
+    },
+    {
+      q: "Aayan, what did you first notice about Saira?",
+      a: {
+        saira: "That he listened before he spoke. That stayed with me.",
+        aayan: "She didn’t try to be impressive. She was simply present. That was rare."
+      }
+    },
+    {
+      q: "Saira, when did you start feeling he might be the one?",
+      a: {
+        saira: "It wasn’t sudden — not even in Venice. It was the quiet kind of knowing, the kind that grows without asking permission.",
+        aayan: "I don’t think I believed in ‘the one.’ But I knew something had shifted."
+      }
+    },
+    {
+      q: "Who admitted their feelings first?",
+      a: {
+        saira: "I felt it first, but he was the one who said it. Though he had been carrying it just as long.",
+        aayan: "I did. But I think she knew before I did. I tend to weigh words before I let them go."
+      }
+    },
+    {
+      q: "Which was the first city you were together in?",
+      a: {
+        saira: "Mumbai. It held our beginning — loud, restless, unforgettable.",
+        aayan: "Mumbai. It didn’t give us space, but it gave us momentum."
+      }
+    }
   ],
+  // Layer 2 (5)
   [
-    ["Did you ever question it?","Love makes doubt more complicated, not smaller."],
-    ["Were you ever afraid?","Yes. Love asks you to surrender control."],
-    ["Your happiest moment?","A quiet night before leaving Goa — nothing grand, just peace."],
-    ["What stayed the longest?","The moments we almost said goodbye."]
+    {
+      q: "Did you ever question your choice?",
+      a: {
+        saira: "Yes. Loving someone deeply doesn’t silence doubt — it makes it more complicated.",
+        aayan: "I questioned the timing more than the feeling."
+      }
+    },
+    {
+      q: "Were you ever afraid of loving her?",
+      a: {
+        saira: "I was afraid of losing him, not loving him.",
+        aayan: "Yes. Love asks you to give up control. That frightened me."
+      }
+    },
+    {
+      q: "What was your happiest moment together?",
+      a: {
+        saira: "It wasn’t dramatic. It was the night before we left Goa. Nothing extraordinary happened — except that we were both at peace.",
+        aayan: "Silence. Sitting beside her at Triveni Ghat, without needing to explain anything."
+      }
+    },
+    {
+      q: "What moment stayed with you the longest?",
+      a: {
+        saira: "The moments when fear tried to take the place of love.",
+        aayan: "The look she gave me when she understood what I couldn’t say."
+      }
+    },
+    {
+      q: "Which chapter feels closest to your heart?",
+      a: {
+        saira: "The one where everything felt possible. Though I carry a special tenderness for the chapters around our first trip to Manali, Spiti, and Shimla.",
+        aayan: "The one where everything felt uncertain. Perhaps the London restaurant event — where silence spoke more than conversation."
+      }
+    }
   ],
+  // Layer 3 (5)
   [
-    ["Did you meet again?","Some meetings don’t need witnesses to be real."],
-    ["Is there more?","Stories don’t end. They change shape."],
-    ["Will there be a part two?","Some stories continue only when they’re meant to."],
-    ["Do you still think of each other?","Some people don’t leave. They simply change rooms."]
+    {
+      q: "Did you finally meet again?",
+      a: {
+        saira: "Some meetings don’t need witnesses to be real.",
+        aayan: "Not all reunions look the way people expect."
+      }
+    },
+    {
+      q: "Is there more to your story?",
+      a: {
+        saira: "Stories don’t end. They change shape.",
+        aayan: "What mattered didn’t disappear."
+      }
+    },
+    {
+      q: "Will there be a part two?",
+      a: {
+        saira: "Only if the story still has something honest to say. Some stories continue only when they’re meant to.",
+        aayan: "Not everything needs a sequel. But some silences deserve one."
+      }
+    },
+    {
+      q: "If readers could learn one thing from you?",
+      a: {
+        saira: "To listen to what feels true — even if it complicates your life.",
+        aayan: "That love isn’t always about arrival. Sometimes it’s about understanding."
+      }
+    },
+    {
+      q: "Do you still think about each other?",
+      a: {
+        saira: "Some people don’t leave your thoughts. They simply change rooms.",
+        aayan: "Yes. Not with regret. With clarity."
+      }
+    }
   ]
 ];
 
 function unlockNextLayer() {
-  if (currentLayer >= 3) return;
+  if (currentLayer >= characterLayers.length) return;
 
   if (currentLayer > 0) {
     chatBody.insertAdjacentHTML(
@@ -402,12 +497,11 @@ function unlockNextLayer() {
     );
   }
 
-  const layer = characterLayers[currentLayer];
-  layer.forEach(item => {
+  characterLayers[currentLayer].forEach(item => {
     const b = document.createElement("button");
     b.className = `btn ${activeVoice}`;
-    b.textContent = item[0];
-    b.onclick = () => answerCharacter(item[1], b);
+    b.textContent = item.q;
+    b.onclick = () => answerCharacter(item, b);
     dock.appendChild(b);
   });
 
@@ -415,22 +509,22 @@ function unlockNextLayer() {
   autoScroll();
 }
 
-function answerCharacter(reply, btn) {
+function answerCharacter(item, btn) {
   btn.disabled = true;
-  characterAnsweredCount++;
+  characterAnswered++;
 
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message"><p>${reply}</p></div>`
+    `<div class="message"><p>${item.a[activeVoice]}</p></div>`
   );
 
   autoScroll();
 
-  if (characterAnsweredCount === 4 || characterAnsweredCount === 8) {
+  if (characterAnswered === 5 || characterAnswered === 10) {
     unlockNextLayer();
   }
 
-  if (characterAnsweredCount === 12) {
+  if (characterAnswered === 15) {
     showAuthorInvitation();
   }
 }
@@ -481,7 +575,6 @@ function startReflection() {
 }
 
 function nextReflection() {
-
   const sets = {
     saira: [
       ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
