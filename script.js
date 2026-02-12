@@ -85,36 +85,35 @@ function showFoundational() {
   });
 }
 
-function answerFoundational(type, btn) {
-  btn.remove();  // ← CHANGED FROM disabled
-  foundationalAnswered.add(type);
+function answerCharacter(item, btn) {
 
-  const replies = {
-    saira: {
-      story: "Our story is a contemporary romantic fiction, shaped by moments that arrive quietly and stay longer than expected.",
-      about: "It’s about me and Aayan — about love, distance, memory, and the choices we carry with us.",
-      for: "This story often finds readers who value reflection, atmosphere, and emotional honesty.",
-      where: "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.",
-      author: "Mohan R. wrote this as his debut novel, drawing from lived emotion, travel, and quiet observation."
-    },
-    aayan: {
-      story: "It’s a contemporary romantic fiction, but it stays where love and responsibility pull in different directions.",
-      about: "It’s about timing. About knowing something matters deeply, and still choosing carefully.",
-      for: "This story speaks to readers who understand that not every connection arrives neatly or resolves cleanly.",
-      where: "The story is available in digital, print, and audio formats.",
-      author: "Mohan R. wrote this story to sit honestly with complicated love and unanswered questions."
-    }
-  };
+  // Remove question button
+  btn.remove();
 
+  characterAnswered++;
+
+  // Show question in chat
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message"><p>${replies[activeVoice][type]}</p></div>`
+    `<div class="message"><p><strong>${item.q}</strong></p></div>`
   );
 
-  autoScroll();
+  // Show answer
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message response ${selectedVoice}">
+        <p>${item.a[selectedVoice]}</p>
+     </div>`
+  );
 
-  if (foundationalAnswered.size === 5) {
+  scrollDown();
+
+  if (characterAnswered === 5 || characterAnswered === 10) {
     unlockNextLayer();
+  }
+
+  if (characterAnswered === 15) {
+    showAuthorInvite();
   }
 }
 
