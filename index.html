@@ -172,6 +172,35 @@ body {
 .aayan {
   box-shadow: 0 0 10px rgba(120,180,255,0.55);
 }
+   /* Typing Animation */
+.typing-bubble {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.typing-bubble span {
+  width: 6px;
+  height: 6px;
+  background: #999;
+  border-radius: 50%;
+  animation: blink 1.4s infinite both;
+}
+
+.typing-bubble span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-bubble span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+   
 /* =========================
    TYPING AREA
 ========================= */
@@ -382,13 +411,13 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+/* ---------- Auto Scroll ---------- */
+
 function autoScroll() {
-  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-}
-function addSystemMessageDelayed(text, delay = 400) {
-  setTimeout(() => {
-    addSystemMessage(text);
-  }, delay);
+  chatBody.scrollTo({
+    top: chatBody.scrollHeight,
+    behavior: "smooth"
+  });
 }
 
 /* ---------- Message Types ---------- */
@@ -425,7 +454,7 @@ function addSystemMessage(text) {
   autoScroll();
 }
 
-/* ---------- Typing Indicator ---------- */
+/* ---------- Animated Typing Indicator ---------- */
 
 function showTypingIndicator() {
   const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
@@ -433,7 +462,11 @@ function showTypingIndicator() {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message ${side}" id="typingIndicator">
-        <div class="bubble"><em>typing...</em></div>
+        <div class="bubble typing-bubble">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
      </div>`
   );
 
@@ -450,71 +483,16 @@ function removeTypingIndicator() {
 function deliverReply(replyText) {
   showTypingIndicator();
 
-  // Realistic delay based on text length
-  const delay = Math.min(7000, Math.max(1200, replyText.length * 35));
+  // Realistic delay based on reply length
+  const delay = Math.min(
+    7000,
+    Math.max(1200, replyText.length * 35)
+  );
 
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
   }, delay);
-}
-
-/* ---------- Typing Input Intelligence ---------- */
-
-function sendTypedMessage() {
-  const input = document.getElementById("userInput");
-  const originalText = input.value.trim();
-  const text = originalText.toLowerCase();
-
-  if (!text || !activeVoice) return;
-
-  addUserMessage(originalText);
-  input.value = "";
-
-  let reply;
-
-  // Keyword-based intelligence
-  if (text.includes("meet") || text.includes("first time")) {
-    reply = activeVoice === "saira"
-      ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
-      : "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long.";
-  }
-
-  else if (text.includes("love") || text.includes("feel")) {
-    reply = activeVoice === "saira"
-      ? "Love doesn’t always arrive loudly. Sometimes it grows quietly, without asking permission."
-      : "Love asks you to give up certainty. That was never easy for me.";
-  }
-
-  else if (text.includes("end") || text.includes("together")) {
-    reply = activeVoice === "saira"
-      ? "Not all stories end the way we imagine. Some simply change form."
-      : "What mattered didn’t disappear. It just stopped belonging to time.";
-  }
-
-  else if (text.includes("author") || text.includes("mohan")) {
-    reply = activeVoice === "saira"
-      ? "He wrote this story as something deeply personal — not loud, but honest."
-      : "He didn’t want to explain everything. Only to sit with what felt true.";
-  }
-
-  else {
-    reply = activeVoice === "saira"
-      ? "I don’t always have the right words — but I’m listening."
-      : "Some questions don’t need quick answers.";
-  }
-
-  deliverReply(reply);
-}
-
-/* ---------- Utility ---------- */
-
-function clearDock() {
-  dock.innerHTML = "";
-}
-
-function returnToWebsite() {
-  window.location.href = "https://wheretheskyremembersus.com";
 }
 
 /* =========================
