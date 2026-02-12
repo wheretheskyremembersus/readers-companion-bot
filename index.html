@@ -245,9 +245,15 @@ body {
 
     <!-- LEFT: BOT -->
     <div class="left-column">
-     <div class="bot-shell">
+    <div class="bot-shell">
   <div class="chat-body" id="chatBody"></div>
   <div class="question-dock" id="questionDock"></div>
+
+  <!-- TYPING AREA -->
+  <div class="typing-area" id="typingArea" style="display:none;">
+    <input type="text" id="userInput" placeholder="You can ask something…" />
+    <button onclick="sendTypedMessage()">Send</button>
+  </div>
 </div>
 
     </div>
@@ -316,10 +322,11 @@ let reflectionStep = 0;
 /* =========================
    HELPERS
 ========================= */
+
 function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
-   
+
 function addSystemMessageDelayed(text, delay = 400) {
   setTimeout(() => {
     addSystemMessage(text);
@@ -347,7 +354,7 @@ function addVoiceMessage(text) {
   );
   autoScroll();
 }
-   
+
 function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
@@ -364,6 +371,33 @@ function clearDock() {
 
 function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
+}
+function sendTypedMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim().toLowerCase();
+
+  if (!text) return;
+
+  addUserMessage(input.value);
+  input.value = "";
+
+  let reply = null;
+
+  if (text.includes("meet")) {
+    reply = activeVoice === "saira"
+      ? "We met in a city that never really slows down — Mumbai."
+      : "It was supposed to be an ordinary encounter in Mumbai.";
+  }
+
+  else {
+    reply = activeVoice === "saira"
+      ? "I don’t always have the right words — but I’m listening."
+      : "Some questions don’t need quick answers.";
+  }
+
+  setTimeout(() => {
+    addVoiceMessage(reply);
+  }, 500);
 }
 
 /* =========================
@@ -410,6 +444,9 @@ function loadWelcome() {
 function selectVoice(v) {
   activeVoice = v;
   clearDock();
+
+  // SHOW TYPING BOX
+  document.getElementById("typingArea").style.display = "flex";
 
   const intro =
     v === "saira"
