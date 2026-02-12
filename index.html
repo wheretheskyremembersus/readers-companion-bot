@@ -820,10 +820,45 @@ function unlockNextLayer() {
 
   setTimeout(() => {
     dock.innerHTML = `
-      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-      <button class="btn" onclick="showVoiceOptions()">No</button>
+      <button class="btn ${activeVoice}" id="continueYes">Yes</button>
+      <button class="btn" id="continueNo">No</button>
     `;
+
+    document.getElementById("continueYes").onclick = function () {
+      showNextLayer();
+    };
+
+    document.getElementById("continueNo").onclick = function () {
+      showVoiceOptions();
+    };
+
   }, 600);
+}
+
+
+/* ---------- Voice Options (FIXED – prevents freeze) ---------- */
+
+function showVoiceOptions() {
+
+  clearDock();
+
+  dock.innerHTML = `
+    <button class="btn saira" id="voiceSaira">Saira</button>
+    <button class="btn aayan" id="voiceAayan">Aayan</button>
+    <button class="btn" id="returnMain">Return to Main Site</button>
+  `;
+
+  document.getElementById("voiceSaira").onclick = function () {
+    selectVoice("saira");
+  };
+
+  document.getElementById("voiceAayan").onclick = function () {
+    selectVoice("aayan");
+  };
+
+  document.getElementById("returnMain").onclick = function () {
+    returnToWebsite();
+  };
 }
 
 
@@ -844,7 +879,7 @@ function showNextLayer() {
     btn.textContent = item.q;
 
     btn.onclick = function () {
-      answerCharacter(item, btn);
+      answerCharacter(item);
     };
 
     dock.appendChild(btn);
@@ -854,11 +889,10 @@ function showNextLayer() {
 }
 
 
-/* ---------- Answer Character Question ---------- */
+/* ---------- Answer Character Question (Fully Stable) ---------- */
 
-function answerCharacter(item, btn) {
+function answerCharacter(item) {
 
-  /* Prevent multi-click */
   if (isReplying) {
     addSystemMessage(
       activeVoice === "saira"
@@ -868,9 +902,7 @@ function answerCharacter(item, btn) {
     return;
   }
 
-  /* Disable all buttons immediately */
-  const allButtons = dock.querySelectorAll("button");
-  allButtons.forEach(b => b.disabled = true);
+  clearDock(); // 🔥 Important — prevents frozen layers
 
   addUserMessage(item.q);
 
@@ -890,7 +922,7 @@ function answerCharacter(item, btn) {
 
   });
 }
-
+   
 /* =========================
    AUTHOR INVITATION
 ========================= */
