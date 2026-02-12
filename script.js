@@ -29,11 +29,11 @@ function addUserMessage(text) {
 }
 
 function addVoiceMessage(text) {
-  const sideClass = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+  const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
 
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message ${sideClass}">
+    `<div class="message ${side}">
         <div class="bubble">${text}</div>
      </div>`
   );
@@ -53,7 +53,7 @@ function returnToWebsite() {
 ========================= */
 function loadWelcome() {
   chatBody.innerHTML = "";
-  activeVoice = null;
+  activeVoice = "aayan"; // default side for welcome
 
   addVoiceMessage("Hello.");
   addVoiceMessage("This is a quiet space.");
