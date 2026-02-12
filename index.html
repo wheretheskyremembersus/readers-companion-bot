@@ -397,7 +397,8 @@ let reflectionStep = 0;
    HELPERS
 ========================= */
 
-// Enable Enter key safely after DOM loads
+/* ---------- Enable Enter Key ---------- */
+
 window.addEventListener("DOMContentLoaded", function () {
   const inputField = document.getElementById("userInput");
 
@@ -414,13 +415,15 @@ window.addEventListener("DOMContentLoaded", function () {
 /* ---------- Auto Scroll ---------- */
 
 function autoScroll() {
+  if (!chatBody) return;
+
   chatBody.scrollTo({
     top: chatBody.scrollHeight,
     behavior: "smooth"
   });
 }
 
-/* ---------- Message Types ---------- */
+/* ---------- Message Builders ---------- */
 
 function addUserMessage(text) {
   chatBody.insertAdjacentHTML(
@@ -433,7 +436,12 @@ function addUserMessage(text) {
 }
 
 function addVoiceMessage(text) {
-  const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+  const side =
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "aayan"
+      ? "aayan-msg"
+      : "system-msg";
 
   chatBody.insertAdjacentHTML(
     "beforeend",
@@ -441,6 +449,7 @@ function addVoiceMessage(text) {
         <div class="bubble">${text}</div>
      </div>`
   );
+
   autoScroll();
 }
 
@@ -457,7 +466,14 @@ function addSystemMessage(text) {
 /* ---------- Animated Typing Indicator ---------- */
 
 function showTypingIndicator() {
-  const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+  removeTypingIndicator(); // Prevent duplicates
+
+  const side =
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "aayan"
+      ? "aayan-msg"
+      : "system-msg";
 
   chatBody.insertAdjacentHTML(
     "beforeend",
@@ -481,12 +497,14 @@ function removeTypingIndicator() {
 /* ---------- Intelligent Reply Delivery ---------- */
 
 function deliverReply(replyText) {
+  if (!replyText) return;
+
   showTypingIndicator();
 
-  // Realistic delay based on reply length
+  // Realistic human delay based on length
   const delay = Math.min(
-    7000,
-    Math.max(1200, replyText.length * 35)
+    7000,                          // max delay
+    Math.max(1200, replyText.length * 35) // dynamic delay
   );
 
   setTimeout(() => {
@@ -494,9 +512,17 @@ function deliverReply(replyText) {
     addVoiceMessage(replyText);
   }, delay);
 }
+
+/* ---------- Utility ---------- */
+
 function clearDock() {
-  dock.innerHTML = "";
+  if (dock) dock.innerHTML = "";
 }
+
+function returnToWebsite() {
+  window.location.href = "https://wheretheskyremembersus.com";
+}
+
 /* =========================
    INIT
 ========================= */
