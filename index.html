@@ -600,22 +600,17 @@ function answerCharacter(item, btn) {
 ========================= */
 
 function showAuthorInvitation() {
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message">
-      <p>You’ve stayed with us until the end.</p>
-      <p>If you’d like to write to the author, you’re welcome to. He sometimes shares digital copies with thoughtful readers.</p>
-      <p><strong>wheretheskyremembersus@gmail.com</strong></p>
-      <p><em>Before you leave, may I ask you three quiet reflections?</em></p>
-    </div>`
-  );
+  clearDock();
+
+  addVoiceMessage("You’ve stayed with us until the end.");
+  addVoiceMessage("If you’d like to write to the author, you’re welcome to.");
+  addVoiceMessage("wheretheskyremembersus@gmail.com");
+  addVoiceMessage("Before you leave, may I ask you three quiet reflections?");
 
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
     <button class="btn" onclick="declineReflection()">No</button>
   `;
-
-  autoScroll();
 }
 
 /* =========================
@@ -623,15 +618,17 @@ function showAuthorInvitation() {
 ========================= */
 
 function declineReflection() {
-  dock.innerHTML = "";
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message">
-      <p>${activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying."}</p>
-      <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
-    </div>`
+  clearDock();
+
+  addVoiceMessage(
+    activeVoice === "saira"
+      ? "Thank you for sitting with us."
+      : "Thank you for staying."
   );
-  autoScroll();
+
+  dock.innerHTML = `
+    <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+  `;
 }
 
 function startReflection() {
@@ -659,28 +656,23 @@ function nextReflection() {
     return;
   }
 
-  const [q, emojis] = sets[activeVoice][reflectionStep];
+  clearDock();
 
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message"><p>${q}</p></div>`
-  );
+  const [question, emojis] = sets[activeVoice][reflectionStep];
 
-  dock.innerHTML = "";
+  addVoiceMessage(question);
 
   emojis.forEach(e => {
-    const b = document.createElement("button");
-    b.className = `btn ${activeVoice}`;
-    b.textContent = e;
-    b.onclick = () => {
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = e;
+    btn.onclick = () => {
       reflections.push(e);
       reflectionStep++;
       nextReflection();
     };
-    dock.appendChild(b);
+    dock.appendChild(btn);
   });
-
-  autoScroll();
 }
 
 /* =========================
