@@ -505,9 +505,6 @@ function deliverReply(replyText, callback) {
 
   if (!replyText) return;
 
-  // Force release any stuck state first
-  isReplying = true;
-
   showTypingIndicator();
 
   const delay = Math.min(
@@ -516,17 +513,12 @@ function deliverReply(replyText, callback) {
   );
 
   setTimeout(() => {
-
     removeTypingIndicator();
     addVoiceMessage(replyText);
-
-    // 🔥 ALWAYS release lock safely
-    isReplying = false;
 
     if (typeof callback === "function") {
       callback();
     }
-
   }, delay);
 }
 
@@ -622,7 +614,6 @@ function showFoundational() {
 
   autoScroll();
 }
-
 
 function answerFoundational(q, btn) {
 
@@ -835,7 +826,7 @@ function showNextLayer() {
     btn.textContent = item.q;
 
     btn.onclick = function () {
-      answerCharacter(item);
+      answerCharacter(item, btn);
     };
 
     dock.appendChild(btn);
@@ -843,7 +834,6 @@ function showNextLayer() {
 
   currentLayer++;
 }
-
 
 /* ---------- Answer Character Question ---------- */
 
@@ -860,6 +850,7 @@ function answerCharacter(item, btn) {
 
   isReplying = true;
 
+  btn.remove();
   addUserMessage(item.q);
 
   const reply = item.a[activeVoice];
@@ -870,28 +861,11 @@ function answerCharacter(item, btn) {
 
     isReplying = false;
 
-    // 🔥 Always clear dock after answer
-    clearDock();
-
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
       unlockNextLayer();
     }
     else if (characterAnswered === 15) {
       showAuthorInvitation();
-    }
-    else {
-      // Re-render current layer questions
-      const current = characterLayers[currentLayer - 1];
-
-      current.forEach(qItem => {
-        if (qItem.q !== item.q) {
-          const newBtn = document.createElement("button");
-          newBtn.className = "btn " + activeVoice;
-          newBtn.textContent = qItem.q;
-          newBtn.onclick = () => answerCharacter(qItem, newBtn);
-          dock.appendChild(newBtn);
-        }
-      });
     }
 
   });
