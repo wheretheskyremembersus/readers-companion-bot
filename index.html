@@ -413,6 +413,7 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+
 /* ---------- Auto Scroll ---------- */
 
 function autoScroll() {
@@ -424,13 +425,14 @@ function autoScroll() {
   });
 }
 
+
 /* ---------- Message Builders ---------- */
 
 function addUserMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message user">
-        <div class="bubble"><strong>${text}</strong></div>
+       <div class="bubble"><strong>${text}</strong></div>
      </div>`
   );
   autoScroll();
@@ -447,10 +449,9 @@ function addVoiceMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message ${side}">
-        <div class="bubble">${text}</div>
+       <div class="bubble">${text}</div>
      </div>`
   );
-
   autoScroll();
 }
 
@@ -458,16 +459,18 @@ function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message system-msg">
-        <div class="bubble">${text}</div>
+       <div class="bubble">${text}</div>
      </div>`
   );
   autoScroll();
 }
 
+
 /* ---------- Animated Typing Indicator ---------- */
 
 function showTypingIndicator() {
-  removeTypingIndicator(); // Prevent duplicates
+
+  removeTypingIndicator(); // prevent duplicates
 
   const side =
     activeVoice === "saira"
@@ -479,11 +482,11 @@ function showTypingIndicator() {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message ${side}" id="typingIndicator">
-        <div class="bubble typing-bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+       <div class="bubble typing-bubble">
+         <span></span>
+         <span></span>
+         <span></span>
+       </div>
      </div>`
   );
 
@@ -495,10 +498,21 @@ function removeTypingIndicator() {
   if (typing) typing.remove();
 }
 
-/* ---------- Intelligent Reply Delivery ---------- */
+
+/* ---------- Intelligent Reply Delivery (Locked + Safe) ---------- */
 
 function deliverReply(replyText, callback) {
-  if (!replyText || isReplying) return;
+
+  if (!replyText) return;
+
+  if (isReplying) {
+    addSystemMessage(
+      activeVoice === "saira"
+        ? "Just a moment 🙂 I want to answer you properly."
+        : "One at a time 🙂 I’ll respond fully."
+    );
+    return;
+  }
 
   isReplying = true;
 
@@ -510,6 +524,7 @@ function deliverReply(replyText, callback) {
   );
 
   setTimeout(() => {
+
     removeTypingIndicator();
     addVoiceMessage(replyText);
 
@@ -518,60 +533,10 @@ function deliverReply(replyText, callback) {
     if (typeof callback === "function") {
       callback();
     }
+
   }, delay);
 }
 
-/* ---------- Typed Input Handler ---------- */
-
-function sendTypedMessage() {
-  const input = document.getElementById("userInput");
-  if (!input) return;
-
-  const originalText = input.value.trim();
- if (!originalText) return;
-
-if (!activeVoice) {
-  addSystemMessage("Please choose Saira or Aayan first.");
-  return;
-}
-  addUserMessage(originalText);
-  input.value = "";
-
-  const text = originalText.toLowerCase();
-  let reply;
-
-  if (text.includes("meet") || text.includes("first time")) {
-    reply = activeVoice === "saira"
-      ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
-      : "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long.";
-  }
-
-  else if (text.includes("love") || text.includes("feel")) {
-    reply = activeVoice === "saira"
-      ? "Love doesn’t always arrive loudly. Sometimes it grows quietly, without asking permission."
-      : "Love asks you to give up certainty. That was never easy for me.";
-  }
-
-  else if (text.includes("end") || text.includes("together")) {
-    reply = activeVoice === "saira"
-      ? "Not all stories end the way we imagine. Some simply change form."
-      : "What mattered didn’t disappear. It just stopped belonging to time.";
-  }
-
-  else if (text.includes("author") || text.includes("mohan")) {
-    reply = activeVoice === "saira"
-      ? "He wrote this story as something deeply personal — not loud, but honest."
-      : "He didn’t want to explain everything. Only to sit with what felt true.";
-  }
-
-  else {
-    reply = activeVoice === "saira"
-      ? "I don’t always have the right words — but I’m listening."
-      : "Some questions don’t need quick answers.";
-  }
-
-  deliverReply(reply);
-}
 
 /* ---------- Utility ---------- */
 
@@ -582,7 +547,6 @@ function clearDock() {
 function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
 }
-
 /* =========================
    INIT
 ========================= */
@@ -643,7 +607,9 @@ function selectVoice(v) {
 /* =========================
    FOUNDATIONAL
 ========================= */
+
 function showFoundational() {
+
   clearDock();
 
   const questions = [
@@ -661,9 +627,23 @@ function showFoundational() {
     btn.onclick = () => answerFoundational(q, btn);
     dock.appendChild(btn);
   });
+
+  autoScroll();
 }
 
+
 function answerFoundational(q, btn) {
+
+  /* Prevent double clicking */
+  if (isReplying) {
+    addSystemMessage(
+      activeVoice === "saira"
+        ? "Just a moment 🙂 I want to answer you properly."
+        : "One at a time 🙂 I’ll respond fully."
+    );
+    return;
+  }
+
   btn.remove();
   foundationalAnswered.add(q.key);
 
@@ -690,20 +670,26 @@ function answerFoundational(q, btn) {
 
   deliverReply(reply, function () {
 
+    /* When all 5 are answered */
     if (foundationalAnswered.size === 5) {
+
+      /* 🔥 CRITICAL RESET — prevents layer bugs */
+      currentLayer = 0;
+      characterAnswered = 0;
+
       unlockNextLayer();
     }
 
   });
 }
-
+   
 /* =========================
    15 CHARACTER QUESTIONS
 ========================= */
 
 const characterLayers = [
 
-  // -------- Layer 1 --------
+  /* -------- Layer 1 -------- */
   [
     {
       q: "Where did you first meet?",
@@ -742,7 +728,7 @@ const characterLayers = [
     }
   ],
 
-  // -------- Layer 2 --------
+  /* -------- Layer 2 -------- */
   [
     {
       q: "Did you ever question your choice?",
@@ -781,7 +767,7 @@ const characterLayers = [
     }
   ],
 
-  // -------- Layer 3 --------
+  /* -------- Layer 3 -------- */
   [
     {
       q: "Did you finally meet again?",
@@ -837,7 +823,6 @@ function unlockNextLayer() {
       <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
       <button class="btn" onclick="showVoiceOptions()">No</button>
     `;
-    autoScroll();
   }, 600);
 }
 
@@ -853,10 +838,15 @@ function showNextLayer() {
   const layer = characterLayers[currentLayer];
 
   layer.forEach(item => {
+
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
-    btn.onclick = () => answerCharacter(item, btn);
+
+    btn.onclick = function () {
+      answerCharacter(item, btn);
+    };
+
     dock.appendChild(btn);
   });
 
@@ -864,10 +854,11 @@ function showNextLayer() {
 }
 
 
-/* ---------- Answer Character Question (Locked + Polite) ---------- */
+/* ---------- Answer Character Question ---------- */
 
 function answerCharacter(item, btn) {
 
+  /* Prevent multi-click */
   if (isReplying) {
     addSystemMessage(
       activeVoice === "saira"
@@ -877,7 +868,10 @@ function answerCharacter(item, btn) {
     return;
   }
 
-  btn.remove();
+  /* Disable all buttons immediately */
+  const allButtons = dock.querySelectorAll("button");
+  allButtons.forEach(b => b.disabled = true);
+
   addUserMessage(item.q);
 
   const reply = item.a[activeVoice];
