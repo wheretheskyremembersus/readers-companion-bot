@@ -98,6 +98,16 @@ body {
 .aayan-msg {
   justify-content: flex-start;
 }
+.system-msg {
+  justify-content: center;
+}
+
+.system-msg .bubble {
+  background: linear-gradient(135deg, #f4faf5, #e6f4ea);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(120, 180, 140, 0.15);
+  border: 1px solid rgba(140, 190, 160, 0.2);
+}
 
 .bubble {
   max-width: 70%;
@@ -305,6 +315,12 @@ let reflectionStep = 0;
 function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
+   
+function addSystemMessageDelayed(text, delay = 400) {
+  setTimeout(() => {
+    addSystemMessage(text);
+  }, delay);
+}
 
 function addUserMessage(text) {
   chatBody.insertAdjacentHTML(
@@ -322,6 +338,16 @@ function addVoiceMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message ${side}">
+        <div class="bubble">${text}</div>
+     </div>`
+  );
+  autoScroll();
+}
+   
+function addSystemMessage(text) {
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message system-msg">
         <div class="bubble">${text}</div>
      </div>`
   );
@@ -361,15 +387,8 @@ function loadWelcome() {
 
   // Neutral opening messages (no voice colour)
   welcomeMessages.forEach(text => {
-    chatBody.insertAdjacentHTML(
-      "beforeend",
-      `<div class="message">
-         <div class="bubble" style="background:#f2f2f2;border-radius:14px;">
-           ${text}
-         </div>
-       </div>`
-    );
-  });
+  addSystemMessage(text);
+});
 
   clearDock();
 
@@ -579,7 +598,7 @@ function unlockNextLayer() {
   clearDock();
 
   if (characterAnswered > 0) {
-    addVoiceMessage("There’s more, if you’d like to continue.");
+   addSystemMessage("There’s more, if you’d like to continue.");
   }
 
   dock.innerHTML = `
@@ -626,17 +645,19 @@ function answerCharacter(item, btn) {
 function showAuthorInvitation() {
   clearDock();
 
-  addVoiceMessage("You’ve stayed with us until the end.");
-  addVoiceMessage("If you’d like to write to the author, you’re welcome to.");
-  addVoiceMessage("wheretheskyremembersus@gmail.com");
-  addVoiceMessage("Before you leave, may I ask you three quiet reflections?");
+  addSystemMessage("You’ve stayed with us until the end.");
+  addSystemMessageDelayed("If you’d like to write to the author, you’re welcome to.", 500);
+  addSystemMessageDelayed("wheretheskyremembersus@gmail.com", 900);
+  addSystemMessageDelayed("Before you leave, may I ask you three quiet reflections?", 1300);
 
+  setTimeout(() => {
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
     <button class="btn" onclick="declineReflection()">No</button>
   `;
-}
-
+}, 1500);
+} 
+   
 /* =========================
    REFLECTION
 ========================= */
@@ -644,11 +665,11 @@ function showAuthorInvitation() {
 function declineReflection() {
   clearDock();
 
-  addVoiceMessage(
-    activeVoice === "saira"
-      ? "Thank you for sitting with us."
-      : "Thank you for staying."
-  );
+  addSystemMessage(
+  activeVoice === "saira"
+    ? "Thank you for sitting with us."
+    : "Thank you for staying."
+);
 
   dock.innerHTML = `
     <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
@@ -684,7 +705,7 @@ function nextReflection() {
 
   const [question, emojis] = sets[activeVoice][reflectionStep];
 
-  addVoiceMessage(question);
+  addSystemMessage(question);
 
   emojis.forEach(e => {
     const btn = document.createElement("button");
