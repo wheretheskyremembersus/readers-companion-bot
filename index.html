@@ -505,15 +505,7 @@ function deliverReply(replyText, callback) {
 
   if (!replyText) return;
 
-  if (isReplying) {
-    addSystemMessage(
-      activeVoice === "saira"
-        ? "Just a moment 🙂 I want to answer you properly."
-        : "One at a time 🙂 I’ll respond fully."
-    );
-    return;
-  }
-
+  // Force release any stuck state first
   isReplying = true;
 
   showTypingIndicator();
@@ -528,6 +520,7 @@ function deliverReply(replyText, callback) {
     removeTypingIndicator();
     addVoiceMessage(replyText);
 
+    // 🔥 ALWAYS release lock safely
     isReplying = false;
 
     if (typeof callback === "function") {
@@ -536,7 +529,6 @@ function deliverReply(replyText, callback) {
 
   }, delay);
 }
-
 
 /* ---------- Utility ---------- */
 
