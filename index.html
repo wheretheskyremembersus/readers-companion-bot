@@ -717,11 +717,11 @@ function sendTypedMessage() {
       : "What mattered didn’t disappear.";
   }
 
-  else if (/(who.*author|about.*author|who wrote|author)/.test(text))
-    reply = activeVoice === "saira"
-      ? "He wrote this honestly. That was enough."
-      : "He chose truth over comfort.";
-  }
+  else if (/(who.*author|about.*author|who wrote|author)/.test(text)) {
+  reply = activeVoice === "saira"
+    ? "He wrote this honestly. That was enough."
+    : "He chose truth over comfort.";
+}
 
   else {
     reply = activeVoice === "saira"
