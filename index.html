@@ -703,7 +703,7 @@ function answerFoundational(q, btn) {
 
 const characterLayers = [
 
-  // Layer 1
+  /* -------- LAYER 1 -------- */
   [
     {
       q: "Where did you first meet?",
@@ -722,7 +722,7 @@ const characterLayers = [
     {
       q: "When did you start feeling he might be the one?",
       a: {
-        saira: "It wasn’t sudden — it was the quiet kind of knowing, the kind that grows without asking permission.",
+        saira: "It wasn’t sudden — it was the quiet kind of knowing that grows without asking permission.",
         aayan: "I don’t think I believed in ‘the one.’ But I knew something had shifted."
       }
     },
@@ -742,7 +742,7 @@ const characterLayers = [
     }
   ],
 
-  // Layer 2
+  /* -------- LAYER 2 -------- */
   [
     {
       q: "Did you ever question your choice?",
@@ -762,7 +762,7 @@ const characterLayers = [
       q: "What was your happiest moment together?",
       a: {
         saira: "The night before we left Goa. Nothing dramatic — just peace.",
-        aayan: "Sitting beside her at Triveni Ghat, without needing to explain anything."
+        aayan: "Sitting beside her quietly, without needing to explain anything."
       }
     },
     {
@@ -781,7 +781,7 @@ const characterLayers = [
     }
   ],
 
-  // Layer 3
+  /* -------- LAYER 3 -------- */
   [
     {
       q: "Did you finally meet again?",
@@ -801,7 +801,7 @@ const characterLayers = [
       q: "Will there be a part two?",
       a: {
         saira: "Only if the story still has something honest to say.",
-        aayan: "Some silences deserve a continuation."
+        aayan: "Some silences deserve continuation."
       }
     },
     {
@@ -841,21 +841,6 @@ function unlockNextLayer() {
 }
 
 
-/* ---------- Show Voice Options + Return ---------- */
-
-function showVoiceOptions() {
-  clearDock();
-
-  dock.innerHTML = `
-    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-    <button class="btn" onclick="returnToWebsite()">Return to Main Site</button>
-  `;
-
-  autoScroll();
-}
-
-
 /* ---------- Show Next Layer ---------- */
 
 function showNextLayer() {
@@ -875,7 +860,7 @@ function showNextLayer() {
 }
 
 
-/* ---------- Answer Character Question ---------- */
+/* ---------- Answer Character (FULL SAFE LOCK) ---------- */
 
 function answerCharacter(item, btn) {
 
@@ -888,7 +873,13 @@ function answerCharacter(item, btn) {
     return;
   }
 
-  btn.remove();
+  // 🔒 Lock immediately
+  isReplying = true;
+
+  // Disable all buttons instantly
+  const buttons = dock.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+
   addUserMessage(item.q);
 
   const reply = item.a[activeVoice];
@@ -905,6 +896,8 @@ function answerCharacter(item, btn) {
       showAuthorInvitation();
     }
 
+    // 🔓 Unlock
+    isReplying = false;
   });
 }
 
