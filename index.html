@@ -697,7 +697,8 @@ function answerFoundational(q, btn) {
 ========================= */
 
 const characterLayers = [
-  // Layer 1 (5)
+
+  // Layer 1
   [
     {
       q: "Where did you first meet?",
@@ -723,8 +724,8 @@ const characterLayers = [
     {
       q: "Who admitted their feelings first?",
       a: {
-        saira: "I felt it first, but he was the one who said it. Though he had been carrying it just as long.",
-        aayan: "I did. But I think she knew before I did. I tend to weigh words before I let them go."
+        saira: "I felt it first, but he was the one who said it.",
+        aayan: "I did. But I think she knew before I did."
       }
     },
     {
@@ -736,7 +737,7 @@ const characterLayers = [
     }
   ],
 
-  // Layer 2 (5)
+  // Layer 2
   [
     {
       q: "Did you ever question your choice?",
@@ -749,14 +750,14 @@ const characterLayers = [
       q: "Were you ever afraid of loving her?",
       a: {
         saira: "I was afraid of losing him, not loving him.",
-        aayan: "Yes. Love asks you to give up control. That frightened me."
+        aayan: "Yes. Love asks you to give up control."
       }
     },
     {
       q: "What was your happiest moment together?",
       a: {
-        saira: "It wasn’t dramatic. It was the night before we left Goa. Nothing extraordinary happened — except that we were both at peace.",
-        aayan: "Silence. Sitting beside her at Triveni Ghat, without needing to explain anything."
+        saira: "The night before we left Goa. Nothing dramatic — just peace.",
+        aayan: "Sitting beside her at Triveni Ghat, without needing to explain anything."
       }
     },
     {
@@ -775,7 +776,7 @@ const characterLayers = [
     }
   ],
 
-  // Layer 3 (5)
+  // Layer 3
   [
     {
       q: "Did you finally meet again?",
@@ -795,25 +796,28 @@ const characterLayers = [
       q: "Will there be a part two?",
       a: {
         saira: "Only if the story still has something honest to say.",
-        aayan: "Not everything needs a sequel. But some silences deserve one."
+        aayan: "Some silences deserve a continuation."
       }
     },
     {
       q: "If readers could learn one thing from you?",
       a: {
-        saira: "To listen to what feels true — even if it complicates your life.",
+        saira: "To listen to what feels true.",
         aayan: "That love isn’t always about arrival."
       }
     },
     {
       q: "Do you still think about each other?",
       a: {
-        saira: "Some people don’t leave your thoughts. They simply change rooms.",
+        saira: "Some people don’t leave your thoughts.",
         aayan: "Yes. Not with regret. With clarity."
       }
     }
   ]
 ];
+
+
+/* ---------- Unlock Permission ---------- */
 
 function unlockNextLayer() {
   if (currentLayer >= characterLayers.length) return;
@@ -825,13 +829,33 @@ function unlockNextLayer() {
   setTimeout(() => {
     dock.innerHTML = `
       <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-      <button class="btn" onclick="loadWelcome()">No</button>
+      <button class="btn" onclick="showVoiceOptions()">No</button>
     `;
     autoScroll();
   }, 600);
 }
 
+
+/* ---------- Show Voice Options + Return ---------- */
+
+function showVoiceOptions() {
+  clearDock();
+
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+    <button class="btn" onclick="returnToWebsite()">Return to Main Site</button>
+  `;
+
+  autoScroll();
+}
+
+
+/* ---------- Show Next Question Layer ---------- */
+
 function showNextLayer() {
+  if (currentLayer >= characterLayers.length) return;
+
   clearDock();
 
   characterLayers[currentLayer].forEach(item => {
@@ -845,6 +869,9 @@ function showNextLayer() {
   currentLayer++;
 }
 
+
+/* ---------- Answer Character Question ---------- */
+
 function answerCharacter(item, btn) {
   btn.remove();
 
@@ -853,6 +880,7 @@ function answerCharacter(item, btn) {
   const reply = item.a[activeVoice];
 
   deliverReply(reply, function () {
+
     characterAnswered++;
 
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
@@ -862,6 +890,7 @@ function answerCharacter(item, btn) {
     if (characterAnswered === 15) {
       showAuthorInvitation();
     }
+
   });
 }
 
