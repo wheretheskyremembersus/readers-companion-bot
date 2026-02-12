@@ -496,20 +496,23 @@ function removeTypingIndicator() {
 
 /* ---------- Intelligent Reply Delivery ---------- */
 
-function deliverReply(replyText) {
+function deliverReply(replyText, callback) {
   if (!replyText) return;
 
   showTypingIndicator();
 
-  // Realistic human delay based on length
   const delay = Math.min(
-    7000,                          // max delay
-    Math.max(1200, replyText.length * 35) // dynamic delay
+    7000,
+    Math.max(1200, replyText.length * 35)
   );
 
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
+
+    if (typeof callback === "function") {
+      callback();
+    }
   }, delay);
 }
 
@@ -790,17 +793,18 @@ function answerCharacter(item, btn) {
   addUserMessage(item.q);
 
   const reply = item.a[activeVoice];
-deliverReply(reply);
 
-  characterAnswered++;
+  deliverReply(reply, function () {
+    characterAnswered++;
 
-  if (characterAnswered % 5 === 0 && characterAnswered < 15) {
-    unlockNextLayer();
-  }
+    if (characterAnswered % 5 === 0 && characterAnswered < 15) {
+      unlockNextLayer();
+    }
 
-  if (characterAnswered === 15) {
-    showAuthorInvitation();
-  }
+    if (characterAnswered === 15) {
+      showAuthorInvitation();
+    }
+  });
 }
 
 /* =========================
