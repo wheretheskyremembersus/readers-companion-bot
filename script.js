@@ -55,7 +55,12 @@ function loadWelcome() {
   chatBody.innerHTML = "";
   activeVoice = "aayan"; // default side for welcome
 
-  addVoiceMessage("Hello.");
+  chatBody.insertAdjacentHTML(
+  "beforeend",
+  `<div class="message user">
+      <div class="bubble">TEST BUBBLE</div>
+   </div>`
+);
   addVoiceMessage("This is a quiet space.");
   addVoiceMessage("You can listen to our story through Saira or Aayan.");
   addVoiceMessage("Our story is a contemporary romantic fiction.");
