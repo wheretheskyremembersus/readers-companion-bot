@@ -18,10 +18,10 @@ function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
 
-function addMessage(text, bold = false) {
+function addMessage(text, isBold = false) {
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message"><p>${bold ? "<strong>" + text + "</strong>" : text}</p></div>`
+    `<div class="message"><p>${isBold ? "<strong>" + text + "</strong>" : text}</p></div>`
   );
   autoScroll();
 }
@@ -93,7 +93,7 @@ function showFoundational() {
 
 function answerFoundational(type, btn) {
   const questionText = btn.textContent;
-  btn.remove(); // Remove from dock
+  btn.remove();
   foundationalAnswered.add(type);
 
   addMessage(questionText, true);
@@ -123,10 +123,8 @@ function answerFoundational(type, btn) {
 }
 
 /* =========================
-   CHARACTER LAYERS
+   CHARACTER QUESTIONS
 ========================= */
-
-const characterLayers = /* KEEP YOUR EXISTING characterLayers ARRAY HERE */ characterLayers;
 
 function unlockNextLayer() {
   if (currentLayer >= characterLayers.length) return;
@@ -150,7 +148,7 @@ function unlockNextLayer() {
 
 function answerCharacter(item, btn) {
   const questionText = btn.textContent;
-  btn.remove(); // Remove from dock
+  btn.remove();
   characterAnswered++;
 
   addMessage(questionText, true);
