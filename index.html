@@ -601,27 +601,17 @@ function unlockNextLayer() {
 
   clearDock();
 
-  if (characterAnswered === 5 || characterAnswered === 10) {
+  addSystemMessage("There’s more, if you’d like to continue.");
 
-    addSystemMessage("There’s more, if you’d like to continue.");
-
-    setTimeout(() => {
-      dock.innerHTML = `
-        <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-        <button class="btn" onclick="loadWelcome()">No</button>
-      `;
-      autoScroll();
-    }, 600);
-
-  } else {
-
+  setTimeout(() => {
     dock.innerHTML = `
       <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
       <button class="btn" onclick="loadWelcome()">No</button>
     `;
-  }
+    autoScroll();
+  }, 600);
 }
- 
+
 function showNextLayer() {
   clearDock();
 
@@ -644,7 +634,8 @@ function answerCharacter(item, btn) {
 
   characterAnswered++;
 
-  if (characterAnswered === 5 || characterAnswered === 10) {
+  // Trigger only after finishing each set of 5
+  if (characterAnswered % 5 === 0 && characterAnswered < 15) {
     unlockNextLayer();
   }
 
