@@ -69,7 +69,7 @@ function loadWelcome() {
   reflectionStep = 0;
 
   const welcomeMessages = [
-    "Hello.",
+    "Hello — NEW VERSION TEST.",
     "This is a quiet space.",
     "You can listen to our story through Saira or Aayan.",
     "Our story is a contemporary romantic fiction.",
