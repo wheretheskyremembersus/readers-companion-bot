@@ -81,19 +81,13 @@ body {
    CHAT BUBBLE PREP
 ========================= */
 
-.chat-body {
-  max-height: 420px;
-  overflow-y: auto;
-  padding: 4px 0;
-  font-size: 15px;
-  line-height: 1.7;
-}
 .message {
   display: flex;
   width: 100%;
   margin-bottom: 12px;
 }
-   .user {
+
+.user {
   justify-content: flex-end;
 }
 
@@ -114,35 +108,21 @@ body {
 }
 
 /* User Question (grey) */
-.user {
-  align-self: flex-end;
-}
 .user .bubble {
   background: #e5e5ea;
   border-radius: 18px 18px 4px 18px;
 }
 
 /* Saira Reply (warm right) */
-.saira-msg {
-  align-self: flex-end;
-}
 .saira-msg .bubble {
   background: #f3e4d7;
   border-radius: 18px 18px 4px 18px;
 }
 
 /* Aayan Reply (cool left) */
-.aayan-msg {
-  align-self: flex-start;
-}
 .aayan-msg .bubble {
   background: #dbe9f7;
   border-radius: 18px 18px 18px 4px;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* =========================
