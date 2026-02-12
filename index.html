@@ -172,6 +172,47 @@ body {
 .aayan {
   box-shadow: 0 0 10px rgba(120,180,255,0.55);
 }
+/* =========================
+   TYPING AREA
+========================= */
+
+.typing-area {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.typing-area input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.typing-area input:focus {
+  border-color: #bbb;
+  box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
+}
+
+.typing-area button {
+  padding: 8px 16px;
+  border-radius: 18px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  background: #222;
+  color: white;
+  transition: opacity 0.2s ease;
+}
+
+.typing-area button:hover {
+  opacity: 0.85;
+}
 
 /* =========================
    PERMISSION PROMPT
@@ -323,6 +364,20 @@ let reflectionStep = 0;
    HELPERS
 ========================= */
 
+// Enable Enter key safely after DOM loads
+window.addEventListener("DOMContentLoaded", function () {
+  const inputField = document.getElementById("userInput");
+
+  if (inputField) {
+    inputField.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendTypedMessage();
+      }
+    });
+  }
+});
+
 function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
@@ -372,21 +427,36 @@ function clearDock() {
 function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
 }
+
 function sendTypedMessage() {
   const input = document.getElementById("userInput");
-  const text = input.value.trim().toLowerCase();
+  const originalText = input.value.trim();
+  const text = originalText.toLowerCase();
 
   if (!text) return;
 
-  addUserMessage(input.value);
+  addUserMessage(originalText);
   input.value = "";
 
   let reply = null;
 
-  if (text.includes("meet")) {
+  // Basic intelligent keyword detection
+  if (text.includes("meet") || text.includes("first time")) {
     reply = activeVoice === "saira"
-      ? "We met in a city that never really slows down — Mumbai."
-      : "It was supposed to be an ordinary encounter in Mumbai.";
+      ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
+      : "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long.";
+  }
+
+  else if (text.includes("love") || text.includes("feel")) {
+    reply = activeVoice === "saira"
+      ? "Love doesn’t always arrive loudly. Sometimes it grows quietly, without asking permission."
+      : "Love asks you to give up certainty. That was never easy for me.";
+  }
+
+  else if (text.includes("end") || text.includes("together")) {
+    reply = activeVoice === "saira"
+      ? "Not all stories end the way we imagine. Some simply change form."
+      : "What mattered didn’t disappear. It just stopped belonging to time.";
   }
 
   else {
