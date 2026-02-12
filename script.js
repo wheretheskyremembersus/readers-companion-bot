@@ -1,3 +1,4 @@
+<script>
 /* =========================
    STATE
 ========================= */
@@ -15,7 +16,7 @@ let reflectionStep = 0;
    HELPERS
 ========================= */
 function autoScroll() {
-  chatBody.scrollTop = chatBody.scrollHeight;
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
 
 function addUserMessage(text) {
@@ -29,7 +30,12 @@ function addUserMessage(text) {
 }
 
 function addVoiceMessage(text) {
-  const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+  const side =
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "aayan"
+      ? "aayan-msg"
+      : "";
 
   chatBody.insertAdjacentHTML(
     "beforeend",
@@ -54,7 +60,7 @@ function returnToWebsite() {
 function loadWelcome() {
   chatBody.innerHTML = "";
 
-  // RESET EVERYTHING
+  // FULL RESET
   activeVoice = null;
   foundationalAnswered = 0;
   characterAnswered = 0;
@@ -74,7 +80,7 @@ function loadWelcome() {
     chatBody.insertAdjacentHTML(
       "beforeend",
       `<div class="message">
-         <div class="bubble" style="background:#f2f2f2; border-radius:14px;">
+         <div class="bubble" style="background:#f2f2f2;border-radius:14px;">
            ${text}
          </div>
        </div>`
@@ -83,18 +89,10 @@ function loadWelcome() {
 
   clearDock();
 
-  const sairaBtn = document.createElement("button");
-  sairaBtn.className = "btn saira";
-  sairaBtn.textContent = "Saira";
-  sairaBtn.onclick = () => selectVoice("saira");
-
-  const aayanBtn = document.createElement("button");
-  aayanBtn.className = "btn aayan";
-  aayanBtn.textContent = "Aayan";
-  aayanBtn.onclick = () => selectVoice("aayan");
-
-  dock.appendChild(sairaBtn);
-  dock.appendChild(aayanBtn);
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+  `;
 
   autoScroll();
 }
@@ -177,21 +175,12 @@ function unlockLayer() {
 
   clearDock();
 
-  // Ask permission before moving forward
   addVoiceMessage("There’s more, if you’d like to continue.");
 
-  const yesBtn = document.createElement("button");
-  yesBtn.className = "btn " + activeVoice;
-  yesBtn.textContent = "Yes";
-  yesBtn.onclick = showNextLayer;
-
-  const noBtn = document.createElement("button");
-  noBtn.className = "btn";
-  noBtn.textContent = "No";
-  noBtn.onclick = loadWelcome;
-
-  dock.appendChild(yesBtn);
-  dock.appendChild(noBtn);
+  dock.innerHTML = `
+    <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+    <button class="btn" onclick="loadWelcome()">No</button>
+  `;
 }
 
 function showNextLayer() {
@@ -225,7 +214,7 @@ function answerCharacter(item, btn) {
 }
 
 /* =========================
-   AUTHOR INVITE
+   AUTHOR INVITATION
 ========================= */
 function showAuthorInvitation() {
   clearDock();
@@ -235,18 +224,10 @@ function showAuthorInvitation() {
   addVoiceMessage("wheretheskyremembersus@gmail.com");
   addVoiceMessage("Before you leave, may I ask you three quiet reflections?");
 
-  const yesBtn = document.createElement("button");
-  yesBtn.className = "btn " + activeVoice;
-  yesBtn.textContent = "Yes";
-  yesBtn.onclick = startReflection;
-
-  const noBtn = document.createElement("button");
-  noBtn.className = "btn";
-  noBtn.textContent = "No";
-  noBtn.onclick = declineReflection;
-
-  dock.appendChild(yesBtn);
-  dock.appendChild(noBtn);
+  dock.innerHTML = `
+    <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+    <button class="btn" onclick="declineReflection()">No</button>
+  `;
 }
 
 /* =========================
@@ -261,12 +242,9 @@ function declineReflection() {
       : "Thank you for staying."
   );
 
-  const backBtn = document.createElement("button");
-  backBtn.className = "btn";
-  backBtn.textContent = "Return to the main site";
-  backBtn.onclick = returnToWebsite;
-
-  dock.appendChild(backBtn);
+  dock.innerHTML = `
+    <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+  `;
 }
 
 function startReflection() {
@@ -331,15 +309,13 @@ function submitReflection() {
       : "Thank you for staying."
   );
 
-  const backBtn = document.createElement("button");
-  backBtn.className = "btn";
-  backBtn.textContent = "Return to the main site";
-  backBtn.onclick = returnToWebsite;
-
-  dock.appendChild(backBtn);
+  dock.innerHTML = `
+    <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+  `;
 }
 
 /* =========================
    START
 ========================= */
 loadWelcome();
+</script>
