@@ -499,6 +499,8 @@ function removeTypingIndicator() {
 function deliverReply(replyText, callback) {
   if (!replyText) return;
 
+  interactionLocked = true;
+
   showTypingIndicator();
 
   const delay = Math.min(
@@ -510,9 +512,12 @@ function deliverReply(replyText, callback) {
     removeTypingIndicator();
     addVoiceMessage(replyText);
 
+    interactionLocked = false;
+
     if (typeof callback === "function") {
       callback();
     }
+
   }, delay);
 }
    
@@ -659,6 +664,14 @@ function showFoundational() {
 }
 
 function answerFoundational(q, btn) {
+  if (interactionLocked) {
+    const msg = activeVoice === "saira"
+      ? "Let me finish this gently… 🌙"
+      : "Give it a moment. I’m still here. 🌿";
+    addVoiceMessage(msg);
+    return;
+  }
+
   btn.remove();
   foundationalAnswered.add(q.key);
 
@@ -846,6 +859,15 @@ function showNextLayer() {
 }
 
 function answerCharacter(item, btn) {
+
+  if (interactionLocked) {
+    const msg = activeVoice === "saira"
+      ? "Let me finish this gently… 🌙"
+      : "Give it a moment. I’m still here. 🌿";
+    addVoiceMessage(msg);
+    return;
+  }
+
   btn.remove();
 
   addUserMessage(item.q);
