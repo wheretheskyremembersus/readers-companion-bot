@@ -847,7 +847,7 @@ function showNextLayer() {
 
 /* ---------- Answer Character Question ---------- */
 
-function answerCharacter(item) {
+function answerCharacter(item, btn) {
 
   if (isReplying) {
     addSystemMessage(
@@ -868,16 +868,34 @@ function answerCharacter(item) {
 
     characterAnswered++;
 
+    isReplying = false;
+
+    // 🔥 Always clear dock after answer
+    clearDock();
+
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
       unlockNextLayer();
     }
-
-    if (characterAnswered === 15) {
+    else if (characterAnswered === 15) {
       showAuthorInvitation();
     }
+    else {
+      // Re-render current layer questions
+      const current = characterLayers[currentLayer - 1];
+
+      current.forEach(qItem => {
+        if (qItem.q !== item.q) {
+          const newBtn = document.createElement("button");
+          newBtn.className = "btn " + activeVoice;
+          newBtn.textContent = qItem.q;
+          newBtn.onclick = () => answerCharacter(qItem, newBtn);
+          dock.appendChild(newBtn);
+        }
+      });
+    }
+
   });
 }
-
    
 /* =========================
    AUTHOR INVITATION
