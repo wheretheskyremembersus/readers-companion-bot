@@ -306,6 +306,32 @@ function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
 
+function addUserMessage(text) {
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message user">
+        <div class="bubble"><strong>${text}</strong></div>
+     </div>`
+  );
+  autoScroll();
+}
+
+function addVoiceMessage(text) {
+  const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${side}">
+        <div class="bubble">${text}</div>
+     </div>`
+  );
+  autoScroll();
+}
+
+function clearDock() {
+  dock.innerHTML = "";
+}
+
 function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
 }
@@ -314,20 +340,21 @@ function returnToWebsite() {
    INIT
 ========================= */
 function loadWelcome() {
-  chatBody.innerHTML = `
-    <div class="message">
-      <p>Hello.</p>
-      <p>This is a quiet space.</p>
-      <p>You can listen to our story through Saira or Aayan.</p>
-      <p>Our story is a contemporary romantic fiction.</p>
-      <p>When you’re ready, you can choose a voice.</p>
-    </div>
-  `;
+  chatBody.innerHTML = "";
+  activeVoice = "aayan"; // temporary style
+
+  addVoiceMessage("Hello.");
+  addVoiceMessage("This is a quiet space.");
+  addVoiceMessage("You can listen to our story through Saira or Aayan.");
+  addVoiceMessage("Our story is a contemporary romantic fiction.");
+  addVoiceMessage("When you’re ready, you can choose a voice.");
+
+  clearDock();
+
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
     <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
   `;
-  autoScroll();
 }
 
 /* =========================
@@ -335,54 +362,45 @@ function loadWelcome() {
 ========================= */
 function selectVoice(v) {
   activeVoice = v;
+  clearDock();
 
   const intro =
     v === "saira"
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
       : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message"><p><strong>${intro}</strong></p></div>`
-  );
-
+  addVoiceMessage(intro);
   showFoundational();
-  autoScroll();
 }
 
 /* =========================
-   FOUNDATIONAL QUESTIONS
+   FOUNDATIONAL
 ========================= */
 function showFoundational() {
+  clearDock();
+
   const questions = [
-    ["What kind of story is this?", "story"],
-    ["What is the story about?", "about"],
-    ["Who is this story for?", "for"],
-    ["Where can I read it?", "where"],
-    ["Who is the author?", "author"]
+    { text: "What kind of story is this?", key: "story" },
+    { text: "What is the story about?", key: "about" },
+    { text: "Who is this story for?", key: "for" },
+    { text: "Where can I read it?", key: "where" },
+    { text: "Who is the author?", key: "author" }
   ];
 
-  dock.innerHTML = "";
-
   questions.forEach(q => {
-    const b = document.createElement("button");
-    b.className = `btn ${activeVoice}`;
-    b.textContent = q[0];
-    b.onclick = () => answerFoundational(q[1], b);
-    dock.appendChild(b);
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = q.text;
+    btn.onclick = () => answerFoundational(q, btn);
+    dock.appendChild(btn);
   });
 }
 
-function answerFoundational(type, btn) {
-  const questionText = btn.textContent;
-btn.remove();
+function answerFoundational(q, btn) {
+  btn.remove();
+  foundationalAnswered.add(q.key);
 
-chatBody.insertAdjacentHTML(
-  "beforeend",
-  `<div class="message"><p><strong>${questionText}</strong></p></div>`
-);
-
-  foundationalAnswered.add(type);
+  addUserMessage(q.text);
 
   const replies = {
     saira: {
@@ -390,28 +408,25 @@ chatBody.insertAdjacentHTML(
       about: "It’s about me and Aayan — about love, distance, memory, and the choices we carry with us.",
       for: "This story often finds readers who value reflection, atmosphere, and emotional honesty.",
       where: "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.",
-      author: "Mohan R. wrote this as his debut novel, drawing from lived emotion, travel, and quiet observation."
+      author: "Mohan R. wrote this as his debut novel."
     },
     aayan: {
       story: "It’s a contemporary romantic fiction, but it stays where love and responsibility pull in different directions.",
-      about: "It’s about timing. About knowing something matters deeply, and still choosing carefully.",
-      for: "This story speaks to readers who understand that not every connection arrives neatly or resolves cleanly.",
+      about: "It’s about timing.",
+      for: "This story speaks to readers who understand complexity.",
       where: "The story is available in digital, print, and audio formats.",
-      author: "Mohan R. wrote this story to sit honestly with complicated love and unanswered questions."
+      author: "Mohan R. wrote this story."
     }
   };
 
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message"><p>${replies[activeVoice][type]}</p></div>`
-  );
-
-  autoScroll();
+  addVoiceMessage(replies[activeVoice][q.key]);
 
   if (foundationalAnswered.size === 5) {
     unlockNextLayer();
   }
 }
+   
+</script>
 
 /* =========================
    15 CHARACTER QUESTIONS
