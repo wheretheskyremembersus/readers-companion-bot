@@ -602,18 +602,28 @@ function unlockNextLayer() {
   clearDock();
 
   if (characterAnswered > 0) {
-    addSystemMessage("There’s more, if you’d like to continue.");
-    autoScroll();  // ensures message is visible
-  }
 
-  setTimeout(() => {
-  dock.innerHTML = `
-    <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-    <button class="btn" onclick="loadWelcome()">No</button>
-  `;
-}, 400);
+    // Show message first
+    addSystemMessage("There’s more, if you’d like to continue.");
+
+    // Then show buttons after slight pause
+    setTimeout(() => {
+      dock.innerHTML = `
+        <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+        <button class="btn" onclick="loadWelcome()">No</button>
+      `;
+      autoScroll();
+    }, 600);
+
+  } else {
+
+    dock.innerHTML = `
+      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+      <button class="btn" onclick="loadWelcome()">No</button>
+    `;
+  }
 }
-   
+ 
 function showNextLayer() {
   clearDock();
 
