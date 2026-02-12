@@ -4,7 +4,7 @@ let characterAnswered = 0;
 let currentLayer = 0;
 
 const chatCard = document.getElementById("chatCard");
-const chatBox = document.getElementById("chatBox");
+const chatBox = document.getElementById("chatBody");
 
 function toggleChat() {
   chatCard.style.display =
