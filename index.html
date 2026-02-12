@@ -383,6 +383,7 @@ body {
 /* =========================
    STATE
 ========================= */
+
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
@@ -394,15 +395,13 @@ let reflections = [];
 let reflectionStep = 0;
 let isReplying = false;
 
+
 /* =========================
    HELPERS
 ========================= */
 
-/* ---------- Enable Enter Key ---------- */
-
 window.addEventListener("DOMContentLoaded", function () {
   const inputField = document.getElementById("userInput");
-
   if (inputField) {
     inputField.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
@@ -413,26 +412,22 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
-/* ---------- Auto Scroll ---------- */
-
 function autoScroll() {
-  if (!chatBody) return;
-
   chatBody.scrollTo({
     top: chatBody.scrollHeight,
     behavior: "smooth"
   });
 }
 
-
-/* ---------- Message Builders ---------- */
+function clearDock() {
+  dock.innerHTML = "";
+}
 
 function addUserMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message user">
-       <div class="bubble"><strong>${text}</strong></div>
+        <div class="bubble"><strong>${text}</strong></div>
      </div>`
   );
   autoScroll();
@@ -449,7 +444,7 @@ function addVoiceMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message ${side}">
-       <div class="bubble">${text}</div>
+        <div class="bubble">${text}</div>
      </div>`
   );
   autoScroll();
@@ -459,19 +454,14 @@ function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message system-msg">
-       <div class="bubble">${text}</div>
+        <div class="bubble">${text}</div>
      </div>`
   );
   autoScroll();
 }
 
-
-/* ---------- Animated Typing Indicator ---------- */
-
 function showTypingIndicator() {
-
-  removeTypingIndicator(); // prevent duplicates
-
+  removeTypingIndicator();
   const side =
     activeVoice === "saira"
       ? "saira-msg"
@@ -482,14 +472,11 @@ function showTypingIndicator() {
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message ${side}" id="typingIndicator">
-       <div class="bubble typing-bubble">
-         <span></span>
-         <span></span>
-         <span></span>
-       </div>
+        <div class="bubble typing-bubble">
+          <span></span><span></span><span></span>
+        </div>
      </div>`
   );
-
   autoScroll();
 }
 
@@ -498,66 +485,48 @@ function removeTypingIndicator() {
   if (typing) typing.remove();
 }
 
-
-/* ---------- Intelligent Reply Delivery (Locked + Safe) ---------- */
-
+/* LOCKED + SAFE DELIVERY */
 function deliverReply(replyText, callback) {
+  if (!replyText || isReplying) return;
 
-  if (!replyText) return;
-
+  isReplying = true;
   showTypingIndicator();
 
-  const delay = Math.min(
-    7000,
-    Math.max(1200, replyText.length * 35)
-  );
+  const delay = Math.min(7000, Math.max(1200, replyText.length * 35));
 
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
-
-    if (typeof callback === "function") {
-      callback();
-    }
+    isReplying = false;
+    if (callback) callback();
   }, delay);
-}
-
-/* ---------- Utility ---------- */
-
-function clearDock() {
-  if (dock) dock.innerHTML = "";
 }
 
 function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
 }
+
 /* =========================
-   INIT
+   WELCOME
 ========================= */
 
 function loadWelcome() {
   chatBody.innerHTML = "";
 
-  // FULL RESET
   activeVoice = null;
   foundationalAnswered = new Set();
   characterAnswered = 0;
   currentLayer = 0;
   reflections = [];
   reflectionStep = 0;
+  isReplying = false;
 
-  const welcomeMessages = [
+  [
     "Hello.",
     "This is a quiet space.",
     "You can listen to our story through Saira or Aayan.",
-    "Our story is a contemporary romantic fiction.",
-    "When you’re ready, you can choose a voice."
-  ];
-
-  // Neutral opening messages (no voice colour)
-  welcomeMessages.forEach(text => {
-  addSystemMessage(text);
-});
+    "When you're ready, choose a voice."
+  ].forEach(addSystemMessage);
 
   clearDock();
 
@@ -565,27 +534,32 @@ function loadWelcome() {
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
     <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
   `;
-
-  autoScroll();
 }
 
 /* =========================
    VOICE SELECTION
 ========================= */
+
 function selectVoice(v) {
   activeVoice = v;
   clearDock();
-
-  // SHOW TYPING BOX
   document.getElementById("typingArea").style.display = "flex";
 
   const intro =
     v === "saira"
-      ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
-      : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
+      ? "Hello, this is Saira."
+      : "Hello. This is Aayan.";
 
   addVoiceMessage(intro);
   showFoundational();
+}
+
+function showVoiceOptions() {
+  clearDock();
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+  `;
 }
 
 /* =========================
@@ -593,7 +567,6 @@ function selectVoice(v) {
 ========================= */
 
 function showFoundational() {
-
   clearDock();
 
   const questions = [
@@ -611,262 +584,141 @@ function showFoundational() {
     btn.onclick = () => answerFoundational(q, btn);
     dock.appendChild(btn);
   });
-
-  autoScroll();
 }
 
 function answerFoundational(q, btn) {
-
-  /* Prevent double clicking */
   if (isReplying) {
-    addSystemMessage(
-      activeVoice === "saira"
-        ? "Just a moment 🙂 I want to answer you properly."
-        : "One at a time 🙂 I’ll respond fully."
-    );
+    addSystemMessage("Just a moment 🙂");
     return;
   }
 
   btn.remove();
   foundationalAnswered.add(q.key);
-
   addUserMessage(q.text);
 
   const replies = {
-    saira: {
-      story: "Our story is a contemporary romantic fiction, shaped by moments that arrive quietly and stay longer than expected.",
-      about: "It’s about me and Aayan — about love, distance, memory, and the choices we carry with us.",
-      for: "This story often finds readers who value reflection, atmosphere, and emotional honesty.",
-      where: "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.",
-      author: "Mohan R. wrote this as his debut novel."
-    },
-    aayan: {
-      story: "It’s a contemporary romantic fiction, but it stays where love and responsibility pull in different directions.",
-      about: "It’s about timing.",
-      for: "This story speaks to readers who understand complexity.",
-      where: "The story is available in digital, print, and audio formats.",
-      author: "Mohan R. wrote this story."
-    }
+    story: "It’s a contemporary romantic fiction.",
+    about: "It’s about love, memory and timing.",
+    for: "For readers who value emotional honesty.",
+    where: "Available in digital and print formats.",
+    author: "Written by Mohan R."
   };
 
-  const reply = replies[activeVoice][q.key];
-
-  deliverReply(reply, function () {
-
-    /* When all 5 are answered */
-   if (foundationalAnswered.size === 5) {
-
-  // 🔥 FULL HARD RESET BEFORE CHARACTER FLOW
-  currentLayer = 0;
-  characterAnswered = 0;
-
-  unlockNextLayer();
-}
+  deliverReply(replies[q.key], () => {
+    if (foundationalAnswered.size === 5) {
+      currentLayer = 0;
+      characterAnswered = 0;
+      unlockNextLayer();
+    }
   });
 }
-   
+
 /* =========================
-   15 CHARACTER QUESTIONS
+   CHARACTER QUESTIONS
 ========================= */
 
 const characterLayers = [
-
-  // Layer 1
   [
-    {
-      q: "Where did you first meet?",
-      a: {
-        saira: "We met in Mumbai. The moment felt strangely still.",
-        aayan: "It was meant to be ordinary. It wasn’t."
-      }
-    },
-    {
-      q: "What did you first notice?",
-      a: {
-        saira: "That he listened before he spoke.",
-        aayan: "She was simply present."
-      }
-    },
-    {
-      q: "When did you feel something shift?",
-      a: {
-        saira: "It was quiet. It grew without asking permission.",
-        aayan: "I didn’t believe in ‘the one’. But something changed."
-      }
-    },
-    {
-      q: "Who admitted their feelings first?",
-      a: {
-        saira: "I felt it first. He said it first.",
-        aayan: "I did. But she already knew."
-      }
-    },
-    {
-      q: "Which city held your beginning?",
-      a: {
-        saira: "Mumbai. Restless. Unforgettable.",
-        aayan: "Mumbai. It gave us momentum."
-      }
-    }
+    { q: "Where did you first meet?", a: { saira: "In Mumbai.", aayan: "In Mumbai." }},
+    { q: "What did you first notice?", a: { saira: "His silence.", aayan: "Her presence." }},
+    { q: "Who admitted feelings first?", a: { saira: "He did.", aayan: "I did." }},
+    { q: "Was it easy?", a: { saira: "No.", aayan: "Never." }},
+    { q: "Did it change you?", a: { saira: "Yes.", aayan: "Completely." }}
   ],
-
-  // Layer 2
   [
-    {
-      q: "Did you ever question your choice?",
-      a: {
-        saira: "Yes. Loving deeply complicates doubt.",
-        aayan: "I questioned timing, not feeling."
-      }
-    },
-    {
-      q: "Were you afraid of loving?",
-      a: {
-        saira: "I feared losing him, not loving him.",
-        aayan: "Love asks you to give up control."
-      }
-    },
-    {
-      q: "Your happiest moment?",
-      a: {
-        saira: "A quiet night before leaving Goa.",
-        aayan: "Sitting beside her in silence."
-      }
-    },
-    {
-      q: "What stayed the longest?",
-      a: {
-        saira: "When fear tried to replace love.",
-        aayan: "The look she gave me."
-      }
-    },
-    {
-      q: "Which chapter feels closest?",
-      a: {
-        saira: "When everything felt possible.",
-        aayan: "When everything felt uncertain."
-      }
-    }
+    { q: "Did you doubt it?", a: { saira: "Yes.", aayan: "Yes." }},
+    { q: "Were you afraid?", a: { saira: "Sometimes.", aayan: "Often." }},
+    { q: "Happiest memory?", a: { saira: "A quiet evening.", aayan: "A quiet silence." }},
+    { q: "Hardest moment?", a: { saira: "Letting go.", aayan: "Waiting." }},
+    { q: "Would you choose it again?", a: { saira: "Yes.", aayan: "Yes." }}
   ],
-
-  // Layer 3
   [
-    {
-      q: "Did you meet again?",
-      a: {
-        saira: "Some meetings don’t need witnesses.",
-        aayan: "Not all reunions look obvious."
-      }
-    },
-    {
-      q: "Is there more?",
-      a: {
-        saira: "Stories change shape.",
-        aayan: "What mattered didn’t disappear."
-      }
-    },
-    {
-      q: "Will there be more?",
-      a: {
-        saira: "Only if honesty remains.",
-        aayan: "Some silences deserve continuation."
-      }
-    },
-    {
-      q: "One lesson for readers?",
-      a: {
-        saira: "Listen to what feels true.",
-        aayan: "Love isn’t always arrival."
-      }
-    },
-    {
-      q: "Do you still think of each other?",
-      a: {
-        saira: "Some people never leave.",
-        aayan: "Yes. With clarity."
-      }
-    }
+    { q: "Did you meet again?", a: { saira: "Maybe.", aayan: "Not the way you expect." }},
+    { q: "Is it over?", a: { saira: "Stories never end.", aayan: "They change form." }},
+    { q: "Will there be more?", a: { saira: "Perhaps.", aayan: "Perhaps." }},
+    { q: "What did love teach you?", a: { saira: "Patience.", aayan: "Restraint." }},
+    { q: "Do you still think of each other?", a: { saira: "Yes.", aayan: "Yes." }}
   ]
 ];
 
-
-/* ---------- Unlock Permission ---------- */
-
 function unlockNextLayer() {
-
   clearDock();
-
   addSystemMessage("There’s more, if you’d like to continue.");
 
-  setTimeout(() => {
-    dock.innerHTML = `
-      <button class="btn ${activeVoice}" id="yesBtn">Yes</button>
-      <button class="btn" id="noBtn">No</button>
-    `;
-
-    document.getElementById("yesBtn").onclick = showNextLayer;
-    document.getElementById("noBtn").onclick = showVoiceOptions;
-
-  }, 500);
+  dock.innerHTML = `
+    <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+    <button class="btn" onclick="showVoiceOptions()">No</button>
+  `;
 }
 
-
-/* ---------- Show Next Layer ---------- */
-
 function showNextLayer() {
+  if (currentLayer >= characterLayers.length) return;
 
   clearDock();
 
   const layer = characterLayers[currentLayer];
 
   layer.forEach(item => {
-
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
-
-    btn.onclick = function () {
-      answerCharacter(item);
-    };
-
+    btn.onclick = () => answerCharacter(item, btn);
     dock.appendChild(btn);
   });
 
   currentLayer++;
 }
 
+function answerCharacter(item, btn) {
+  if (isReplying) {
+    addSystemMessage("One at a time 🙂");
+    return;
+  }
 
-/* ---------- Answer Character ---------- */
-
-function answerCharacter(item) {
-
-  // Lock dock immediately
-  const buttons = dock.querySelectorAll("button");
-  buttons.forEach(b => b.disabled = true);
-
+  btn.remove();
   addUserMessage(item.q);
 
-  const reply = item.a[activeVoice];
-
-  deliverReply(reply, function () {
-
+  deliverReply(item.a[activeVoice], () => {
     characterAnswered++;
 
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
       unlockNextLayer();
     }
-    else if (characterAnswered === 15) {
-      showAuthorInvitation();
-    }
-    else {
-      // Re-enable remaining buttons in same layer
-      const remaining = dock.querySelectorAll("button");
-      remaining.forEach(b => b.disabled = false);
-    }
 
+    if (characterAnswered === 15) {
+  showAuthorInvitation();
+}
+    }
   });
-} 
-   
+}
+
+/* =========================
+   TYPED INPUT
+========================= */
+
+function sendTypedMessage() {
+  const input = document.getElementById("userInput");
+  if (!input) return;
+
+  const text = input.value.trim();
+  if (!text) return;
+
+  if (!activeVoice) {
+    addSystemMessage("Please choose a voice first.");
+    return;
+  }
+
+  if (isReplying) {
+    addSystemMessage("Just a moment 🙂");
+    return;
+  }
+
+  addUserMessage(text);
+  input.value = "";
+
+  deliverReply("I’m listening.");
+}
+
 /* =========================
    AUTHOR INVITATION
 ========================= */
