@@ -335,7 +335,14 @@ function showFoundational() {
 }
 
 function answerFoundational(type, btn) {
-  btn.disabled = true;
+  const questionText = btn.textContent;
+btn.remove();
+
+chatBody.insertAdjacentHTML(
+  "beforeend",
+  `<div class="message"><p><strong>${questionText}</strong></p></div>`
+);
+
   foundationalAnswered.add(type);
 
   const replies = {
@@ -511,7 +518,14 @@ function unlockNextLayer() {
 }
 
 function answerCharacter(item, btn) {
-  btn.disabled = true;
+  const questionText = btn.textContent;
+btn.remove();
+
+chatBody.insertAdjacentHTML(
+  "beforeend",
+  `<div class="message"><p><strong>${questionText}</strong></p></div>`
+);
+
   characterAnswered++;
 
   chatBody.insertAdjacentHTML(
