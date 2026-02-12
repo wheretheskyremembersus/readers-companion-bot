@@ -670,118 +670,119 @@ function answerFoundational(q, btn) {
 ========================= */
 
 const characterLayers = [
-  /* -------- Layer 1 -------- */
+
+  // Layer 1
   [
     {
       q: "Where did you first meet?",
       a: {
-        saira: "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still.",
-        aayan: "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long."
+        saira: "We met in Mumbai. The moment felt strangely still.",
+        aayan: "It was meant to be ordinary. It wasn’t."
       }
     },
     {
       q: "What did you first notice?",
       a: {
-        saira: "That he listened before he spoke. That stayed with me.",
-        aayan: "She was simply present. That was rare."
+        saira: "That he listened before he spoke.",
+        aayan: "She was simply present."
       }
     },
     {
-      q: "When did you start feeling he might be the one?",
+      q: "When did you feel something shift?",
       a: {
-        saira: "It wasn’t sudden. It was the quiet kind of knowing.",
-        aayan: "I don’t think I believed in 'the one.' But something shifted."
+        saira: "It was quiet. It grew without asking permission.",
+        aayan: "I didn’t believe in ‘the one’. But something changed."
       }
     },
     {
       q: "Who admitted their feelings first?",
       a: {
         saira: "I felt it first. He said it first.",
-        aayan: "I did. But she knew."
+        aayan: "I did. But she already knew."
       }
     },
     {
-      q: "Which was the first city you were together in?",
+      q: "Which city held your beginning?",
       a: {
-        saira: "Mumbai. Loud, restless, unforgettable.",
+        saira: "Mumbai. Restless. Unforgettable.",
         aayan: "Mumbai. It gave us momentum."
       }
     }
   ],
 
-  /* -------- Layer 2 -------- */
+  // Layer 2
   [
     {
       q: "Did you ever question your choice?",
       a: {
-        saira: "Yes. Loving deeply makes doubt more complicated.",
-        aayan: "I questioned the timing more than the feeling."
+        saira: "Yes. Loving deeply complicates doubt.",
+        aayan: "I questioned timing, not feeling."
       }
     },
     {
-      q: "Were you ever afraid of loving her?",
+      q: "Were you afraid of loving?",
       a: {
         saira: "I feared losing him, not loving him.",
-        aayan: "Yes. Love asks you to give up control."
+        aayan: "Love asks you to give up control."
       }
     },
     {
-      q: "What was your happiest moment together?",
+      q: "Your happiest moment?",
       a: {
-        saira: "The quiet night before we left Goa.",
-        aayan: "Sitting beside her without needing to speak."
+        saira: "A quiet night before leaving Goa.",
+        aayan: "Sitting beside her in silence."
       }
     },
     {
-      q: "What moment stayed with you the longest?",
+      q: "What stayed the longest?",
       a: {
-        saira: "When fear tried to take the place of love.",
-        aayan: "The look she gave me when she understood."
+        saira: "When fear tried to replace love.",
+        aayan: "The look she gave me."
       }
     },
     {
-      q: "Which chapter feels closest to your heart?",
+      q: "Which chapter feels closest?",
       a: {
-        saira: "The one where everything felt possible.",
-        aayan: "The one where everything felt uncertain."
+        saira: "When everything felt possible.",
+        aayan: "When everything felt uncertain."
       }
     }
   ],
 
-  /* -------- Layer 3 -------- */
+  // Layer 3
   [
     {
-      q: "Did you finally meet again?",
+      q: "Did you meet again?",
       a: {
-        saira: "Some meetings don’t need witnesses to be real.",
-        aayan: "Not all reunions look the way people expect."
+        saira: "Some meetings don’t need witnesses.",
+        aayan: "Not all reunions look obvious."
       }
     },
     {
-      q: "Is there more to your story?",
+      q: "Is there more?",
       a: {
-        saira: "Stories don’t end. They change shape.",
+        saira: "Stories change shape.",
         aayan: "What mattered didn’t disappear."
       }
     },
     {
-      q: "Will there be a part two?",
+      q: "Will there be more?",
       a: {
-        saira: "Only if it has something honest to say.",
+        saira: "Only if honesty remains.",
         aayan: "Some silences deserve continuation."
       }
     },
     {
-      q: "If readers could learn one thing from you?",
+      q: "One lesson for readers?",
       a: {
         saira: "Listen to what feels true.",
-        aayan: "Love isn’t always about arrival."
+        aayan: "Love isn’t always arrival."
       }
     },
     {
-      q: "Do you still think about each other?",
+      q: "Do you still think of each other?",
       a: {
-        saira: "Some people don’t leave your thoughts.",
+        saira: "Some people never leave.",
         aayan: "Yes. With clarity."
       }
     }
@@ -793,40 +794,39 @@ const characterLayers = [
 
 function unlockNextLayer() {
 
-  if (currentLayer >= characterLayers.length) return;
-
   clearDock();
-  isReplying = false; // 🔥 ensure unlocked
 
   addSystemMessage("There’s more, if you’d like to continue.");
 
   setTimeout(() => {
     dock.innerHTML = `
-      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-      <button class="btn" onclick="showVoiceOptions()">No</button>
+      <button class="btn ${activeVoice}" id="yesBtn">Yes</button>
+      <button class="btn" id="noBtn">No</button>
     `;
-  }, 600);
+
+    document.getElementById("yesBtn").onclick = showNextLayer;
+    document.getElementById("noBtn").onclick = showVoiceOptions;
+
+  }, 500);
 }
 
 
-/* ---------- Show Question Layer ---------- */
+/* ---------- Show Next Layer ---------- */
 
 function showNextLayer() {
 
-  if (currentLayer >= characterLayers.length) return;
-
   clearDock();
-  isReplying = false; // 🔥 critical reset
 
   const layer = characterLayers[currentLayer];
 
   layer.forEach(item => {
+
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
 
     btn.onclick = function () {
-      answerCharacter(item, btn);
+      answerCharacter(item);
     };
 
     dock.appendChild(btn);
@@ -835,22 +835,15 @@ function showNextLayer() {
   currentLayer++;
 }
 
-/* ---------- Answer Character Question ---------- */
 
-function answerCharacter(item, btn) {
+/* ---------- Answer Character ---------- */
 
-  if (isReplying) {
-    addSystemMessage(
-      activeVoice === "saira"
-        ? "Just a moment 🙂 I want to answer you properly."
-        : "One at a time 🙂 I’ll respond fully."
-    );
-    return;
-  }
+function answerCharacter(item) {
 
-  isReplying = true;
+  // Lock dock immediately
+  const buttons = dock.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
 
-  btn.remove();
   addUserMessage(item.q);
 
   const reply = item.a[activeVoice];
@@ -859,17 +852,20 @@ function answerCharacter(item, btn) {
 
     characterAnswered++;
 
-    isReplying = false;
-
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
       unlockNextLayer();
     }
     else if (characterAnswered === 15) {
       showAuthorInvitation();
     }
+    else {
+      // Re-enable remaining buttons in same layer
+      const remaining = dock.querySelectorAll("button");
+      remaining.forEach(b => b.disabled = false);
+    }
 
   });
-}
+} 
    
 /* =========================
    AUTHOR INVITATION
