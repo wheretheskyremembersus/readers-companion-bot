@@ -909,7 +909,7 @@ function showAuthorInvitation() {
   addSystemMessage("You’ve stayed with us until the end.");
 
 setTimeout(() => {
-  addSystemMessage("If you’d like to write to the author, you’re welcome to.");
+  addSystemMessage("If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.");
 }, 500);
 
 setTimeout(() => {
@@ -1022,12 +1022,17 @@ function submitReflection() {
   dock.innerHTML = "";
 
   chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message">
-      <p>${activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying."}</p>
-      <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
-    </div>`
-  );
+  "beforeend",
+  `<div class="message ${activeVoice === "saira" ? "saira-msg" : "aayan-msg"}">
+     <div class="bubble">
+       ${activeVoice === "saira"
+         ? "Thank you for sitting with us. It means more than you know."
+         : "Thank you for staying. Not everyone chooses to listen this closely."}
+       <br><br>
+       <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+     </div>
+   </div>`
+);
 
   autoScroll();
 }
