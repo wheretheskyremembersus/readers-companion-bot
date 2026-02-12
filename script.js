@@ -175,7 +175,10 @@ function unlockLayer() {
 
   clearDock();
 
-  addVoiceMessage("There’s more, if you’d like to continue.");
+  // Only show continuation message after first batch
+  if (characterAnswered > 0) {
+    addVoiceMessage("There’s more, if you’d like to continue.");
+  }
 
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
@@ -201,13 +204,18 @@ function answerCharacter(item, btn) {
   btn.remove();
   characterAnswered++;
 
+  // Proper user bubble
   addUserMessage(item.q);
+
+  // Proper voice bubble
   addVoiceMessage(item.a[activeVoice]);
 
+  // Unlock next layer after 5 and 10
   if (characterAnswered === 5 || characterAnswered === 10) {
-    unlockLayer(); // ✅ FIXED
+    unlockLayer();
   }
 
+  // After 15 questions, move to author section
   if (characterAnswered === 15) {
     showAuthorInvitation();
   }
