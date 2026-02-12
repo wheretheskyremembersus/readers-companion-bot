@@ -85,6 +85,39 @@ body {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* =========================
+   CHAT BUBBLES
+========================= */
+
+.message {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+  max-width: 75%;
+  line-height: 1.6;
+}
+
+/* Question bubble (user side) */
+.question-bubble {
+  background: #f1f1f1;
+  margin-left: auto;   /* pushes it to right */
+  color: #222;
+}
+
+/* Answer bubbles */
+.answer-bubble.saira {
+  background: #fff3e8;
+  color: #c96b2c;
+}
+
+.answer-bubble.aayan {
+  background: #e8f2fb;
+  color: #2f6fa3;
+}
 
 /* =========================
    QUESTION DOCK
