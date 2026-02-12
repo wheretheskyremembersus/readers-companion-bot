@@ -515,6 +515,58 @@ function deliverReply(replyText, callback) {
     }
   }, delay);
 }
+   
+/* ---------- Typed Input Handler ---------- */
+
+function sendTypedMessage() {
+  const input = document.getElementById("userInput");
+  if (!input) return;
+
+  const originalText = input.value.trim();
+ if (!originalText) return;
+
+if (!activeVoice) {
+  addSystemMessage("Please choose Saira or Aayan first.");
+  return;
+}
+  addUserMessage(originalText);
+  input.value = "";
+
+  const text = originalText.toLowerCase();
+  let reply;
+
+  if (text.includes("meet") || text.includes("first time")) {
+    reply = activeVoice === "saira"
+      ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
+      : "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long.";
+  }
+
+  else if (text.includes("love") || text.includes("feel")) {
+    reply = activeVoice === "saira"
+      ? "Love doesn’t always arrive loudly. Sometimes it grows quietly, without asking permission."
+      : "Love asks you to give up certainty. That was never easy for me.";
+  }
+
+  else if (text.includes("end") || text.includes("together")) {
+    reply = activeVoice === "saira"
+      ? "Not all stories end the way we imagine. Some simply change form."
+      : "What mattered didn’t disappear. It just stopped belonging to time.";
+  }
+
+  else if (text.includes("author") || text.includes("mohan")) {
+    reply = activeVoice === "saira"
+      ? "He wrote this story as something deeply personal — not loud, but honest."
+      : "He didn’t want to explain everything. Only to sit with what felt true.";
+  }
+
+  else {
+    reply = activeVoice === "saira"
+      ? "I don’t always have the right words — but I’m listening."
+      : "Some questions don’t need quick answers.";
+  }
+
+  deliverReply(reply);
+}
 
 /* ---------- Utility ---------- */
 
