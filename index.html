@@ -213,6 +213,10 @@ body {
 .typing-area button:hover {
   opacity: 0.85;
 }
+#typingIndicator .bubble {
+  opacity: 0.8;
+  font-style: italic;
+}
 
 /* =========================
    PERMISSION PROMPT
@@ -369,7 +373,7 @@ window.addEventListener("DOMContentLoaded", function () {
   const inputField = document.getElementById("userInput");
 
   if (inputField) {
-    inputField.addEventListener("keypress", function (e) {
+    inputField.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
         e.preventDefault();
         sendTypedMessage();
@@ -381,12 +385,13 @@ window.addEventListener("DOMContentLoaded", function () {
 function autoScroll() {
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 }
-
 function addSystemMessageDelayed(text, delay = 400) {
   setTimeout(() => {
     addSystemMessage(text);
   }, delay);
 }
+
+/* ---------- Message Types ---------- */
 
 function addUserMessage(text) {
   chatBody.insertAdjacentHTML(
@@ -420,27 +425,55 @@ function addSystemMessage(text) {
   autoScroll();
 }
 
-function clearDock() {
-  dock.innerHTML = "";
+/* ---------- Typing Indicator ---------- */
+
+function showTypingIndicator() {
+  const side = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${side}" id="typingIndicator">
+        <div class="bubble"><em>typing...</em></div>
+     </div>`
+  );
+
+  autoScroll();
 }
 
-function returnToWebsite() {
-  window.location.href = "https://wheretheskyremembersus.com";
+function removeTypingIndicator() {
+  const typing = document.getElementById("typingIndicator");
+  if (typing) typing.remove();
 }
+
+/* ---------- Intelligent Reply Delivery ---------- */
+
+function deliverReply(replyText) {
+  showTypingIndicator();
+
+  // Realistic delay based on text length
+  const delay = Math.min(7000, Math.max(1200, replyText.length * 35));
+
+  setTimeout(() => {
+    removeTypingIndicator();
+    addVoiceMessage(replyText);
+  }, delay);
+}
+
+/* ---------- Typing Input Intelligence ---------- */
 
 function sendTypedMessage() {
   const input = document.getElementById("userInput");
   const originalText = input.value.trim();
   const text = originalText.toLowerCase();
 
-  if (!text) return;
+  if (!text || !activeVoice) return;
 
   addUserMessage(originalText);
   input.value = "";
 
-  let reply = null;
+  let reply;
 
-  // Basic intelligent keyword detection
+  // Keyword-based intelligence
   if (text.includes("meet") || text.includes("first time")) {
     reply = activeVoice === "saira"
       ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
@@ -459,15 +492,29 @@ function sendTypedMessage() {
       : "What mattered didn’t disappear. It just stopped belonging to time.";
   }
 
+  else if (text.includes("author") || text.includes("mohan")) {
+    reply = activeVoice === "saira"
+      ? "He wrote this story as something deeply personal — not loud, but honest."
+      : "He didn’t want to explain everything. Only to sit with what felt true.";
+  }
+
   else {
     reply = activeVoice === "saira"
       ? "I don’t always have the right words — but I’m listening."
       : "Some questions don’t need quick answers.";
   }
 
-  setTimeout(() => {
-    addVoiceMessage(reply);
-  }, 500);
+  deliverReply(reply);
+}
+
+/* ---------- Utility ---------- */
+
+function clearDock() {
+  dock.innerHTML = "";
+}
+
+function returnToWebsite() {
+  window.location.href = "https://wheretheskyremembersus.com";
 }
 
 /* =========================
@@ -573,11 +620,9 @@ function answerFoundational(q, btn) {
     }
   };
 
-  addVoiceMessage(replies[activeVoice][q.key]);
+  const reply = replies[activeVoice][q.key];
 
-  if (foundationalAnswered.size === 5) {
-    unlockNextLayer();
-  }
+deliverReply(reply);
 }
    
 /* =========================
@@ -737,11 +782,12 @@ function answerCharacter(item, btn) {
   btn.remove();
 
   addUserMessage(item.q);
-  addVoiceMessage(item.a[activeVoice]);
+
+  const reply = item.a[activeVoice];
+deliverReply(reply);
 
   characterAnswered++;
 
-  // Trigger only after finishing each set of 5
   if (characterAnswered % 5 === 0 && characterAnswered < 15) {
     unlockNextLayer();
   }
@@ -759,9 +805,18 @@ function showAuthorInvitation() {
   clearDock();
 
   addSystemMessage("You’ve stayed with us until the end.");
-  addSystemMessageDelayed("If you’d like to write to the author, you’re welcome to.", 500);
-  addSystemMessageDelayed("wheretheskyremembersus@gmail.com", 900);
-  addSystemMessageDelayed("Before you leave, may I ask you three quiet reflections?", 1300);
+
+setTimeout(() => {
+  addSystemMessage("If you’d like to write to the author, you’re welcome to.");
+}, 500);
+
+setTimeout(() => {
+  addSystemMessage("wheretheskyremembersus@gmail.com");
+}, 900);
+
+setTimeout(() => {
+  addSystemMessage("Before you leave, may I ask you three quiet reflections?");
+}, 1300);
 
   setTimeout(() => {
   dock.innerHTML = `
