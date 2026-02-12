@@ -75,10 +75,51 @@ body {
   font-size: 15px;
   line-height: 1.7;
 }
+/* =========================
+   CHAT BUBBLE PREP
+========================= */
+
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
 .message {
-  margin-bottom: 18px;
-  animation: fadeIn 0.3s ease;
+  display: flex;
+  max-width: 75%;
+}
+
+.bubble {
+  padding: 10px 14px;
+  border-radius: 18px;
+}
+
+/* User Question (grey) */
+.user {
+  align-self: flex-end;
+}
+.user .bubble {
+  background: #e5e5ea;
+  border-radius: 18px 18px 4px 18px;
+}
+
+/* Saira Reply (warm right) */
+.saira-msg {
+  align-self: flex-end;
+}
+.saira-msg .bubble {
+  background: #f3e4d7;
+  border-radius: 18px 18px 4px 18px;
+}
+
+/* Aayan Reply (cool left) */
+.aayan-msg {
+  align-self: flex-start;
+}
+.aayan-msg .bubble {
+  background: #dbe9f7;
+  border-radius: 18px 18px 18px 4px;
 }
 
 @keyframes fadeIn {
