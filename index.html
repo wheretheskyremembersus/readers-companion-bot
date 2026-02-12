@@ -393,6 +393,7 @@ let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
 let interactionLocked = false;
+let emotionalToggle = false;
 
 /* =========================
    HELPERS
@@ -464,10 +465,10 @@ function addSystemMessage(text) {
   autoScroll();
 }
 
-/* ---------- Animated Typing Indicator ---------- */
+/* ---------- Typing Indicator ---------- */
 
 function showTypingIndicator() {
-  removeTypingIndicator(); // Prevent duplicates
+  removeTypingIndicator();
 
   const side =
     activeVoice === "saira"
@@ -495,7 +496,7 @@ function removeTypingIndicator() {
   if (typing) typing.remove();
 }
 
-/* ---------- Intelligent Reply Delivery ---------- */
+/* ---------- Reply Delivery ---------- */
 
 function deliverReply(replyText, callback) {
   if (!replyText) return;
@@ -504,15 +505,14 @@ function deliverReply(replyText, callback) {
 
   showTypingIndicator();
 
- const delay = Math.min(
-  3000,
-  Math.max(700, replyText.length * 16)
-);
-   
+  const delay = Math.min(
+    3000,
+    Math.max(700, replyText.length * 16)
+  );
+
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
-
     interactionLocked = false;
 
     if (typeof callback === "function") {
@@ -521,48 +521,188 @@ function deliverReply(replyText, callback) {
 
   }, delay);
 }
+
+
+/* =========================
+   INTELLIGENCE ROUTER
+========================= */
+
+function handleIntelligence(text, originalText) {
+
+  // Prevent overlapping replies while typing
+  if (interactionLocked) return true;
+
+  const lower = text.toLowerCase().trim();
+
+  /* 1️⃣ GREETING */
+  if (/^(hi|hello|hey)\b/.test(lower)) {
+
+  const words = originalText.trim().split(" ");
+  const lastWord = words[words.length - 1];
+
+  const cleaned = lastWord.replace(/[^a-zA-Z]/g, "");
+const reply = cleaned.length > 1
+  ? `Hello, ${cleaned}.`
+  : "Hello.";
+
+  deliverReply(reply);
+  return true;
+}
    
+  /* 2️⃣ VOICE IDENTITY */
+  if (/(what is your name|who are you|your name)/.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "I’m Saira."
+      : "Aayan.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  /* 3️⃣ DIRECT NAME CALL */
+  if (/^(saira|aayan)$/i.test(lower)) {
+
+    if (lower === activeVoice) {
+      deliverReply("I’m here.");
+    } else {
+      deliverReply(
+        activeVoice === "saira"
+          ? "He isn’t here."
+          : "She isn’t here."
+      );
+    }
+
+    return true;
+  }
+
+  /* 4️⃣ BUY */
+  if (/(buy|purchase|order|get|price|cost)/.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "You can find our story in the format that feels closest to you — digital, print, or audio."
+      : "It’s available in digital, print, and audio. The form doesn’t change what it carries.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  /* 5️⃣ SEQUEL */
+  if (/(part 2|sequel|next book|continue|future|more)/.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "Stories don’t end. They change shape."
+      : "What mattered didn’t disappear.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  /* 6️⃣ TECHNICAL */
+  if (/(not working|frozen|stuck|not loading|can't click|cannot click)/.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "If something feels out of place, refresh and begin again."
+      : "If it falters, refresh and return.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  /* 7️⃣ EMOTIONAL */
+  if (/(sad|hurt|pain|broken|cry|regret|angry|unfair|lost|heartbroken|disappointed|didn't like|bad ending|hate you)/.test(lower)) {
+
+    let reply;
+
+    if (activeVoice === "saira") {
+      reply = emotionalToggle
+        ? "Not everything needs to be resolved to be real."
+        : "Some feelings don’t ask for answers. They just stay.";
+    } else {
+      reply = emotionalToggle
+        ? "Some things are understood without being solved."
+        : "Not everything that hurts needs explaining.";
+    }
+
+    emotionalToggle = !emotionalToggle;
+    deliverReply(reply);
+    return true;
+  }
+
+  /* 8️⃣ ABUSE (voice targeted only) */
+  if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
+      && /(you|saira|aayan)/.test(lower)) {
+
+    const reply = activeVoice === "saira"
+      ? "I won’t stay where respect isn’t present."
+      : "If this turns careless, I’ll remain silent.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  /* 9️⃣ FOREIGN / RANDOM */
+  if (!/[a-z]/i.test(originalText)) {
+    const reply = activeVoice === "saira"
+      ? "I may not understand that — but I’m still here."
+      : "Some words don’t reach me. Try again.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  return false;
+}
+
+
 /* ---------- Typed Input Handler ---------- */
 
 function sendTypedMessage() {
+
   const input = document.getElementById("userInput");
   if (!input) return;
 
   const originalText = input.value.trim();
- if (!originalText) return;
+  if (!originalText) return;
 
-if (!activeVoice) {
-  addSystemMessage("Please choose Saira or Aayan first.");
-  return;
-}
+  if (!activeVoice) {
+    addSystemMessage("Please choose Saira or Aayan first.");
+    return;
+  }
+
+  // Show user message ONCE
   addUserMessage(originalText);
   input.value = "";
 
   const text = originalText.toLowerCase();
+
+  // 🔥 INTELLIGENCE ROUTER FIRST
+  if (handleIntelligence(text, originalText)) {
+    return;
+  }
+
+  // 🔁 EXISTING MIRROR LOGIC
+
   let reply;
 
   if (text.includes("meet") || text.includes("first time")) {
     reply = activeVoice === "saira"
-      ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
-      : "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long.";
+      ? "We didn’t meet gently. It began with headlights and argument."
+      : "It started with brakes and irritation. Not romance.";
   }
 
   else if (text.includes("love") || text.includes("feel")) {
     reply = activeVoice === "saira"
-      ? "Love doesn’t always arrive loudly. Sometimes it grows quietly, without asking permission."
-      : "Love asks you to give up certainty. That was never easy for me.";
+      ? "Love arrived quietly. It didn’t ask permission."
+      : "Love requires surrender. That wasn’t easy for me.";
   }
 
   else if (text.includes("end") || text.includes("together")) {
     reply = activeVoice === "saira"
-      ? "Not all stories end the way we imagine. Some simply change form."
-      : "What mattered didn’t disappear. It just stopped belonging to time.";
+      ? "Not all endings are conclusions."
+      : "What mattered didn’t disappear.";
   }
 
   else if (text.includes("author") || text.includes("mohan")) {
     reply = activeVoice === "saira"
-      ? "He wrote this story as something deeply personal — not loud, but honest."
-      : "He didn’t want to explain everything. Only to sit with what felt true.";
+      ? "He wrote this honestly. That was enough."
+      : "He chose truth over comfort.";
   }
 
   else {
@@ -572,16 +712,6 @@ if (!activeVoice) {
   }
 
   deliverReply(reply);
-}
-
-/* ---------- Utility ---------- */
-
-function clearDock() {
-  if (dock) dock.innerHTML = "";
-}
-
-function returnToWebsite() {
-  window.location.href = "https://wheretheskyremembersus.com";
 }
 
 /* =========================
