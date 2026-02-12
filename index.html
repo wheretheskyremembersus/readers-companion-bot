@@ -601,12 +601,10 @@ function unlockNextLayer() {
 
   clearDock();
 
-  if (characterAnswered > 0) {
+  if (characterAnswered === 5 || characterAnswered === 10) {
 
-    // Show message first
     addSystemMessage("There’s more, if you’d like to continue.");
 
-    // Then show buttons after slight pause
     setTimeout(() => {
       dock.innerHTML = `
         <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
