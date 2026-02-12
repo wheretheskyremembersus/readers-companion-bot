@@ -671,15 +671,14 @@ function answerFoundational(q, btn) {
   deliverReply(reply, function () {
 
     /* When all 5 are answered */
-    if (foundationalAnswered.size === 5) {
+   if (foundationalAnswered.size === 5) {
 
-      /* 🔥 CRITICAL RESET — prevents layer bugs */
-      currentLayer = 0;
-      characterAnswered = 0;
+  // 🔥 FULL HARD RESET BEFORE CHARACTER FLOW
+  currentLayer = 0;
+  characterAnswered = 0;
 
-      unlockNextLayer();
-    }
-
+  unlockNextLayer();
+}
   });
 }
    
