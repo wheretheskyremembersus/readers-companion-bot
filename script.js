@@ -1,4 +1,3 @@
-console.log("NEW SCRIPT LOADED");
 /* =========================
    STATE
 ========================= */
@@ -6,7 +5,7 @@ const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
 let activeVoice = null;
-let foundationalAnswered = new Set();
+let foundationalAnswered = 0;
 let characterAnswered = 0;
 let currentLayer = 0;
 let reflections = [];
@@ -16,15 +15,21 @@ let reflectionStep = 0;
    HELPERS
 ========================= */
 function autoScroll() {
-  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+  chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-function addMessage(text, isBold = false) {
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message"><p>${isBold ? "<strong>" + text + "</strong>" : text}</p></div>`
-  );
+function addMessage(text, bold = false) {
+  const html = `
+    <div class="message">
+      <p>${bold ? "<strong>" + text + "</strong>" : text}</p>
+    </div>
+  `;
+  chatBody.insertAdjacentHTML("beforeend", html);
   autoScroll();
+}
+
+function clearDock() {
+  dock.innerHTML = "";
 }
 
 function returnToWebsite() {
@@ -45,10 +50,20 @@ function loadWelcome() {
     </div>
   `;
 
-  dock.innerHTML = `
-    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-  `;
+  clearDock();
+
+  const sairaBtn = document.createElement("button");
+  sairaBtn.className = "btn saira";
+  sairaBtn.textContent = "Saira";
+  sairaBtn.onclick = () => selectVoice("saira");
+
+  const aayanBtn = document.createElement("button");
+  aayanBtn.className = "btn aayan";
+  aayanBtn.textContent = "Aayan";
+  aayanBtn.onclick = () => selectVoice("aayan");
+
+  dock.appendChild(sairaBtn);
+  dock.appendChild(aayanBtn);
 
   autoScroll();
 }
@@ -56,12 +71,12 @@ function loadWelcome() {
 /* =========================
    VOICE SELECTION
 ========================= */
-function selectVoice(v) {
-  activeVoice = v;
-  dock.innerHTML = "";
+function selectVoice(voice) {
+  activeVoice = voice;
+  clearDock();
 
   const intro =
-    v === "saira"
+    voice === "saira"
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
       : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
@@ -70,34 +85,33 @@ function selectVoice(v) {
 }
 
 /* =========================
-   FOUNDATIONAL QUESTIONS
+   FOUNDATIONAL
 ========================= */
 function showFoundational() {
+  clearDock();
+
   const questions = [
-    ["What kind of story is this?", "story"],
-    ["What is the story about?", "about"],
-    ["Who is this story for?", "for"],
-    ["Where can I read it?", "where"],
-    ["Who is the author?", "author"]
+    { text: "What kind of story is this?", key: "story" },
+    { text: "What is the story about?", key: "about" },
+    { text: "Who is this story for?", key: "for" },
+    { text: "Where can I read it?", key: "where" },
+    { text: "Who is the author?", key: "author" }
   ];
 
-  dock.innerHTML = "";
-
-  questions.forEach(([text, type]) => {
-    const b = document.createElement("button");
-    b.className = `btn ${activeVoice}`;
-    b.textContent = text;
-    b.onclick = () => answerFoundational(type, b);
-    dock.appendChild(b);
+  questions.forEach(q => {
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = q.text;
+    btn.onclick = () => answerFoundational(q, btn);
+    dock.appendChild(btn);
   });
 }
 
-function answerFoundational(type, btn) {
-  const questionText = btn.textContent;
-  btn.remove();
-  foundationalAnswered.add(type);
+function answerFoundational(q, btn) {
+  btn.remove(); // REMOVE from dock
+  foundationalAnswered++;
 
-  addMessage(questionText, true);
+  addMessage(q.text, true);
 
   const replies = {
     saira: {
@@ -116,47 +130,46 @@ function answerFoundational(type, btn) {
     }
   };
 
-  addMessage(replies[activeVoice][type]);
+  addMessage(replies[activeVoice][q.key]);
 
-  if (foundationalAnswered.size === 5) {
-    unlockNextLayer();
+  if (foundationalAnswered === 5) {
+    unlockLayer();
   }
 }
 
 /* =========================
-   CHARACTER QUESTIONS
+   CHARACTER LAYERS
 ========================= */
 
-function unlockNextLayer() {
+function unlockLayer() {
   if (currentLayer >= characterLayers.length) return;
+
+  clearDock();
 
   if (currentLayer > 0) {
     addMessage("There’s more, if you'd like to continue.");
   }
 
-  dock.innerHTML = "";
-
   characterLayers[currentLayer].forEach(item => {
-    const b = document.createElement("button");
-    b.className = `btn ${activeVoice}`;
-    b.textContent = item.q;
-    b.onclick = () => answerCharacter(item, b);
-    dock.appendChild(b);
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = item.q;
+    btn.onclick = () => answerCharacter(item, btn);
+    dock.appendChild(btn);
   });
 
   currentLayer++;
 }
 
 function answerCharacter(item, btn) {
-  const questionText = btn.textContent;
-  btn.remove();
+  btn.remove(); // REMOVE from dock
   characterAnswered++;
 
-  addMessage(questionText, true);
+  addMessage(item.q, true);
   addMessage(item.a[activeVoice]);
 
   if (characterAnswered === 5 || characterAnswered === 10) {
-    unlockNextLayer();
+    unlockLayer();
   }
 
   if (characterAnswered === 15) {
@@ -165,21 +178,29 @@ function answerCharacter(item, btn) {
 }
 
 /* =========================
-   AUTHOR INVITATION
+   AUTHOR INVITE
 ========================= */
 
 function showAuthorInvitation() {
-  dock.innerHTML = "";
+  clearDock();
 
   addMessage("You’ve stayed with us until the end.");
-  addMessage("If you’d like to write to the author, you’re welcome to. He sometimes shares digital copies with thoughtful readers.");
+  addMessage("If you’d like to write to the author, you’re welcome to.");
   addMessage("wheretheskyremembersus@gmail.com", true);
   addMessage("Before you leave, may I ask you three quiet reflections?", true);
 
-  dock.innerHTML = `
-    <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
-    <button class="btn" onclick="declineReflection()">No</button>
-  `;
+  const yesBtn = document.createElement("button");
+  yesBtn.className = "btn " + activeVoice;
+  yesBtn.textContent = "Yes";
+  yesBtn.onclick = startReflection;
+
+  const noBtn = document.createElement("button");
+  noBtn.className = "btn";
+  noBtn.textContent = "No";
+  noBtn.onclick = declineReflection;
+
+  dock.appendChild(yesBtn);
+  dock.appendChild(noBtn);
 }
 
 /* =========================
@@ -187,9 +208,15 @@ function showAuthorInvitation() {
 ========================= */
 
 function declineReflection() {
-  dock.innerHTML = "";
+  clearDock();
   addMessage(activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying.");
-  dock.innerHTML = `<button class="btn" onclick="returnToWebsite()">Return to the main site</button>`;
+
+  const backBtn = document.createElement("button");
+  backBtn.className = "btn";
+  backBtn.textContent = "Return to the main site";
+  backBtn.onclick = returnToWebsite;
+
+  dock.appendChild(backBtn);
 }
 
 function startReflection() {
@@ -217,21 +244,21 @@ function nextReflection() {
     return;
   }
 
-  const [q, emojis] = sets[activeVoice][reflectionStep];
-  addMessage(q);
+  clearDock();
 
-  dock.innerHTML = "";
+  const [question, emojis] = sets[activeVoice][reflectionStep];
+  addMessage(question);
 
   emojis.forEach(e => {
-    const b = document.createElement("button");
-    b.className = `btn ${activeVoice}`;
-    b.textContent = e;
-    b.onclick = () => {
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = e;
+    btn.onclick = () => {
       reflections.push(e);
       reflectionStep++;
       nextReflection();
     };
-    dock.appendChild(b);
+    dock.appendChild(btn);
   });
 }
 
@@ -247,9 +274,15 @@ function submitReflection() {
   document.getElementById("formTime").value = new Date().toISOString();
   document.getElementById("reflectionForm").submit();
 
-  dock.innerHTML = "";
+  clearDock();
   addMessage(activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying.");
-  dock.innerHTML = `<button class="btn" onclick="returnToWebsite()">Return to the main site</button>`;
+
+  const backBtn = document.createElement("button");
+  backBtn.className = "btn";
+  backBtn.textContent = "Return to the main site";
+  backBtn.onclick = returnToWebsite;
+
+  dock.appendChild(backBtn);
 }
 
 /* =========================
