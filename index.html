@@ -683,9 +683,15 @@ function answerFoundational(q, btn) {
 
   const reply = replies[activeVoice][q.key];
 
-deliverReply(reply);
+  deliverReply(reply, function () {
+
+    if (foundationalAnswered.size === 5) {
+      unlockNextLayer();
+    }
+
+  });
 }
-   
+
 /* =========================
    15 CHARACTER QUESTIONS
 ========================= */
