@@ -687,7 +687,6 @@ function answerFoundational(q, btn) {
 ========================= */
 
 const characterLayers = [
-
   /* -------- Layer 1 -------- */
   [
     {
@@ -814,50 +813,16 @@ function unlockNextLayer() {
   if (currentLayer >= characterLayers.length) return;
 
   clearDock();
+  isReplying = false; // 🔥 ensure unlocked
 
   addSystemMessage("There’s more, if you’d like to continue.");
 
   setTimeout(() => {
     dock.innerHTML = `
-      <button class="btn ${activeVoice}" id="continueYes">Yes</button>
-      <button class="btn" id="continueNo">No</button>
+      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+      <button class="btn" onclick="showVoiceOptions()">No</button>
     `;
-
-    document.getElementById("continueYes").onclick = function () {
-      showNextLayer();
-    };
-
-    document.getElementById("continueNo").onclick = function () {
-      showVoiceOptions();
-    };
-
   }, 600);
-}
-
-
-/* ---------- Voice Options (FIXED – prevents freeze) ---------- */
-
-function showVoiceOptions() {
-
-  clearDock();
-
-  dock.innerHTML = `
-    <button class="btn saira" id="voiceSaira">Saira</button>
-    <button class="btn aayan" id="voiceAayan">Aayan</button>
-    <button class="btn" id="returnMain">Return to Main Site</button>
-  `;
-
-  document.getElementById("voiceSaira").onclick = function () {
-    selectVoice("saira");
-  };
-
-  document.getElementById("voiceAayan").onclick = function () {
-    selectVoice("aayan");
-  };
-
-  document.getElementById("returnMain").onclick = function () {
-    returnToWebsite();
-  };
 }
 
 
@@ -868,11 +833,11 @@ function showNextLayer() {
   if (currentLayer >= characterLayers.length) return;
 
   clearDock();
+  isReplying = false; // 🔥 critical reset
 
   const layer = characterLayers[currentLayer];
 
   layer.forEach(item => {
-
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
@@ -888,7 +853,7 @@ function showNextLayer() {
 }
 
 
-/* ---------- Answer Character Question (Fully Stable) ---------- */
+/* ---------- Answer Character Question ---------- */
 
 function answerCharacter(item) {
 
@@ -901,7 +866,7 @@ function answerCharacter(item) {
     return;
   }
 
-  clearDock(); // 🔥 Important — prevents frozen layers
+  isReplying = true;
 
   addUserMessage(item.q);
 
@@ -918,9 +883,9 @@ function answerCharacter(item) {
     if (characterAnswered === 15) {
       showAuthorInvitation();
     }
-
   });
 }
+
    
 /* =========================
    AUTHOR INVITATION
