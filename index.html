@@ -592,12 +592,13 @@ function loadWelcome() {
 
   // FULL RESET
   activeVoice = null;
-  foundationalAnswered = new Set();
-  characterAnswered = 0;
-  currentLayer = 0;
-  reflections = [];
-  reflectionStep = 0;
-
+foundationalAnswered = new Set();
+characterAnswered = 0;
+currentLayer = 0;
+reflections = [];
+reflectionStep = 0;
+interactionLocked = false; // reset lock
+   
   const welcomeMessages = [
     "Hello.",
     "This is a quiet space.",
@@ -625,10 +626,12 @@ function loadWelcome() {
    VOICE SELECTION
 ========================= */
 function selectVoice(v) {
+
+  interactionLocked = false; // reset lock
+
   activeVoice = v;
   clearDock();
 
-  // SHOW TYPING BOX
   document.getElementById("typingArea").style.display = "flex";
 
   const intro =
