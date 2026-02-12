@@ -205,7 +205,7 @@ function answerCharacter(item, btn) {
   addVoiceMessage(item.a[activeVoice]);
 
   if (characterAnswered === 5 || characterAnswered === 10) {
-    unlockLayer();
+    unlockLayer(); // ✅ FIXED
   }
 
   if (characterAnswered === 15) {
