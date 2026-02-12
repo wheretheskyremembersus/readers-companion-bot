@@ -554,7 +554,20 @@ const reply = cleaned.length > 1
   deliverReply(reply);
   return true;
 }
-   
+ /* 1.5️⃣ USER INTRODUCTION */
+if (/(i am|i'm|my name is)/.test(lower)) {
+
+  const words = originalText.split(" ");
+  const name = words[words.length - 1].replace(/[^a-zA-Z]/g, "");
+
+  const reply = name.length > 1
+    ? `It’s good to meet you, ${name}.`
+    : "It’s good to meet you.";
+
+  deliverReply(reply);
+  return true;
+}
+  
   /* 2️⃣ VOICE IDENTITY */
   if (/(what is your name|who are you|your name)/.test(lower)) {
     const reply = activeVoice === "saira"
@@ -704,7 +717,7 @@ function sendTypedMessage() {
       : "What mattered didn’t disappear.";
   }
 
-  else if (text.includes("author") || text.includes("mohan")) {
+  else if (/(who.*author|about.*author|who wrote|author)/.test(text))
     reply = activeVoice === "saira"
       ? "He wrote this honestly. That was enough."
       : "He chose truth over comfort.";
