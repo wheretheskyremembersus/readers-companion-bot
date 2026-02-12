@@ -504,10 +504,10 @@ function deliverReply(replyText, callback) {
   showTypingIndicator();
 
   const delay = Math.min(
-    7000,
-    Math.max(1200, replyText.length * 35)
-  );
-
+  5000,
+  Math.max(900, replyText.length * 22)
+);
+   
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
@@ -681,21 +681,29 @@ function answerFoundational(q, btn) {
   addUserMessage(q.text);
 
   const replies = {
-    saira: {
-      story: "Our story is a contemporary romantic fiction, shaped by moments that arrive quietly and stay longer than expected.",
-      about: "It’s about me and Aayan — about love, distance, memory, and the choices we carry with us.",
-      for: "This story often finds readers who value reflection, atmosphere, and emotional honesty.",
-      where: "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.",
-      author: "Mohan R. wrote this as his debut novel."
-    },
-    aayan: {
-      story: "It’s a contemporary romantic fiction, but it stays where love and responsibility pull in different directions.",
-      about: "It’s about timing.",
-      for: "This story speaks to readers who understand complexity.",
-      where: "The story is available in digital, print, and audio formats.",
-      author: "Mohan R. wrote this story."
-    }
-  };
+  saira: {
+    story: "Our story is a contemporary romantic fiction — but it moves quietly. It lingers in moments that don’t seem significant at first, and then refuses to leave you. It’s less about grand declarations, and more about what remains unsaid.",
+    
+    about: "It’s about me and Aayan — about the kind of love that feels certain, even when life around it isn’t. It’s about distance that isn’t always physical, and choices that seem small until they change everything. Some stories are built on moments. Ours was built on hesitation.",
+    
+    for: "This story finds people who have felt something deeply and didn’t know what to do with it. The ones who replay conversations long after they’ve ended. If you’ve ever stood between love and fear — you already understand us.",
+    
+    where: "You can find our story in whatever form feels closest to you — as a Kindle eBook, in paperback, hardcover, or even as an audiobook. Some prefer to hold it. Some prefer to listen. However you choose, the story remains the same.",
+    
+    author: "Mohan R. wrote this as his debut novel. He didn’t try to make it loud — only honest. I think he trusted silence as much as dialogue, and allowed the pauses to speak."
+  },
+  aayan: {
+    story: "It’s a contemporary romantic fiction, but it lives in the space between love and responsibility. It’s about choices that don’t feel urgent — until they are. And about how easily silence can become distance.",
+    
+    about: "It’s about timing — but not in the simple way people think. The feeling was never uncertain. What faltered was courage, and the belief that love would wait. It’s about how easily something real can slip into memory if you hesitate too long.",
+    
+    for: "It’s for those who believe feelings can wait — until they realise they can’t. For people who have chosen responsibility over vulnerability, and wondered about the cost later. If you’ve ever hesitated when it mattered most, this story will feel familiar.",
+    
+    where: "It’s available in digital, print, and audio formats. The format doesn’t change what it carries — only how you meet it. Some stories are read. Some are heard. Ours survives both.",
+    
+    author: "Mohan R. wrote this story. Not to explain everything — but to sit with what lingers after love shifts. Some things are written for applause. This wasn’t one of them."
+  }
+};
 
   const reply = replies[activeVoice][q.key];
 
