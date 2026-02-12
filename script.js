@@ -18,13 +18,25 @@ function autoScroll() {
   chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-function addMessage(text, bold = false) {
-  const html = `
-    <div class="message">
-      <p>${bold ? "<strong>" + text + "</strong>" : text}</p>
-    </div>
-  `;
-  chatBody.insertAdjacentHTML("beforeend", html);
+function addUserMessage(text) {
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message user">
+        <div class="bubble"><strong>${text}</strong></div>
+     </div>`
+  );
+  autoScroll();
+}
+
+function addVoiceMessage(text) {
+  const sideClass = activeVoice === "saira" ? "saira-msg" : "aayan-msg";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${sideClass}">
+        <div class="bubble">${text}</div>
+     </div>`
+  );
   autoScroll();
 }
 
@@ -40,15 +52,14 @@ function returnToWebsite() {
    INIT
 ========================= */
 function loadWelcome() {
-  chatBody.innerHTML = `
-    <div class="message">
-      <p>Hello.</p>
-      <p>This is a quiet space.</p>
-      <p>You can listen to our story through Saira or Aayan.</p>
-      <p>Our story is a contemporary romantic fiction.</p>
-      <p>When you’re ready, you can choose a voice.</p>
-    </div>
-  `;
+  chatBody.innerHTML = "";
+  activeVoice = null;
+
+  addVoiceMessage("Hello.");
+  addVoiceMessage("This is a quiet space.");
+  addVoiceMessage("You can listen to our story through Saira or Aayan.");
+  addVoiceMessage("Our story is a contemporary romantic fiction.");
+  addVoiceMessage("When you’re ready, you can choose a voice.");
 
   clearDock();
 
@@ -64,8 +75,6 @@ function loadWelcome() {
 
   dock.appendChild(sairaBtn);
   dock.appendChild(aayanBtn);
-
-  autoScroll();
 }
 
 /* =========================
@@ -80,7 +89,7 @@ function selectVoice(voice) {
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
       : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
-  addMessage(intro, true);
+  addVoiceMessage(intro);
   showFoundational();
 }
 
@@ -108,10 +117,10 @@ function showFoundational() {
 }
 
 function answerFoundational(q, btn) {
-  btn.remove(); // REMOVE from dock
+  btn.remove();
   foundationalAnswered++;
 
-  addMessage(q.text, true);
+  addUserMessage(q.text);
 
   const replies = {
     saira: {
@@ -130,7 +139,7 @@ function answerFoundational(q, btn) {
     }
   };
 
-  addMessage(replies[activeVoice][q.key]);
+  addVoiceMessage(replies[activeVoice][q.key]);
 
   if (foundationalAnswered === 5) {
     unlockLayer();
@@ -140,14 +149,13 @@ function answerFoundational(q, btn) {
 /* =========================
    CHARACTER LAYERS
 ========================= */
-
 function unlockLayer() {
   if (currentLayer >= characterLayers.length) return;
 
   clearDock();
 
   if (currentLayer > 0) {
-    addMessage("There’s more, if you'd like to continue.");
+    addVoiceMessage("There’s more, if you'd like to continue.");
   }
 
   characterLayers[currentLayer].forEach(item => {
@@ -162,11 +170,11 @@ function unlockLayer() {
 }
 
 function answerCharacter(item, btn) {
-  btn.remove(); // REMOVE from dock
+  btn.remove();
   characterAnswered++;
 
-  addMessage(item.q, true);
-  addMessage(item.a[activeVoice]);
+  addUserMessage(item.q);
+  addVoiceMessage(item.a[activeVoice]);
 
   if (characterAnswered === 5 || characterAnswered === 10) {
     unlockLayer();
@@ -180,14 +188,13 @@ function answerCharacter(item, btn) {
 /* =========================
    AUTHOR INVITE
 ========================= */
-
 function showAuthorInvitation() {
   clearDock();
 
-  addMessage("You’ve stayed with us until the end.");
-  addMessage("If you’d like to write to the author, you’re welcome to.");
-  addMessage("wheretheskyremembersus@gmail.com", true);
-  addMessage("Before you leave, may I ask you three quiet reflections?", true);
+  addVoiceMessage("You’ve stayed with us until the end.");
+  addVoiceMessage("If you’d like to write to the author, you’re welcome to.");
+  addVoiceMessage("wheretheskyremembersus@gmail.com");
+  addVoiceMessage("Before you leave, may I ask you three quiet reflections?");
 
   const yesBtn = document.createElement("button");
   yesBtn.className = "btn " + activeVoice;
@@ -206,10 +213,14 @@ function showAuthorInvitation() {
 /* =========================
    REFLECTION
 ========================= */
-
 function declineReflection() {
   clearDock();
-  addMessage(activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying.");
+
+  addVoiceMessage(
+    activeVoice === "saira"
+      ? "Thank you for sitting with us."
+      : "Thank you for staying."
+  );
 
   const backBtn = document.createElement("button");
   backBtn.className = "btn";
@@ -247,7 +258,7 @@ function nextReflection() {
   clearDock();
 
   const [question, emojis] = sets[activeVoice][reflectionStep];
-  addMessage(question);
+  addVoiceMessage(question);
 
   emojis.forEach(e => {
     const btn = document.createElement("button");
@@ -265,7 +276,6 @@ function nextReflection() {
 /* =========================
    SUBMIT
 ========================= */
-
 function submitReflection() {
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
@@ -275,7 +285,12 @@ function submitReflection() {
   document.getElementById("reflectionForm").submit();
 
   clearDock();
-  addMessage(activeVoice === "saira" ? "Thank you for sitting with us." : "Thank you for staying.");
+
+  addVoiceMessage(
+    activeVoice === "saira"
+      ? "Thank you for sitting with us."
+      : "Thank you for staying."
+  );
 
   const backBtn = document.createElement("button");
   backBtn.className = "btn";
@@ -288,5 +303,4 @@ function submitReflection() {
 /* =========================
    START
 ========================= */
-
 loadWelcome();
