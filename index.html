@@ -341,10 +341,10 @@ body {
 
       <h2 class="spaced">Privacy Note</h2>
       <p>
-  We value your privacy. Information you share through our feedback form -
-  such as your name, email, or message - is used solely to understand and
-  respond to your feedback. We do not use cookies, trackers, or third-party tools.
-</p>
+        We value your privacy. Information you share through our feedback form—
+        such as your name, email, or message—is used solely to understand and
+        respond to your feedback. We do not use cookies, trackers, or third-party tools.
+      </p>
 
       <p>
         For any questions, contact us at:<br>
@@ -383,7 +383,6 @@ body {
 /* =========================
    STATE
 ========================= */
-
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
@@ -393,14 +392,16 @@ let characterAnswered = 0;
 let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
-let isReplying = false;
 
 /* =========================
    HELPERS
 ========================= */
 
+/* ---------- Enable Enter Key ---------- */
+
 window.addEventListener("DOMContentLoaded", function () {
   const inputField = document.getElementById("userInput");
+
   if (inputField) {
     inputField.addEventListener("keydown", function (e) {
       if (e.key === "Enter") {
@@ -411,16 +412,18 @@ window.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+/* ---------- Auto Scroll ---------- */
+
 function autoScroll() {
+  if (!chatBody) return;
+
   chatBody.scrollTo({
     top: chatBody.scrollHeight,
     behavior: "smooth"
   });
 }
 
-function clearDock() {
-  dock.innerHTML = "";
-}
+/* ---------- Message Builders ---------- */
 
 function addUserMessage(text) {
   chatBody.insertAdjacentHTML(
@@ -446,6 +449,7 @@ function addVoiceMessage(text) {
         <div class="bubble">${text}</div>
      </div>`
   );
+
   autoScroll();
 }
 
@@ -459,8 +463,11 @@ function addSystemMessage(text) {
   autoScroll();
 }
 
+/* ---------- Animated Typing Indicator ---------- */
+
 function showTypingIndicator() {
-  removeTypingIndicator();
+  removeTypingIndicator(); // Prevent duplicates
+
   const side =
     activeVoice === "saira"
       ? "saira-msg"
@@ -472,10 +479,13 @@ function showTypingIndicator() {
     "beforeend",
     `<div class="message ${side}" id="typingIndicator">
         <div class="bubble typing-bubble">
-          <span></span><span></span><span></span>
+          <span></span>
+          <span></span>
+          <span></span>
         </div>
      </div>`
   );
+
   autoScroll();
 }
 
@@ -484,21 +494,84 @@ function removeTypingIndicator() {
   if (typing) typing.remove();
 }
 
-/* LOCKED + SAFE DELIVERY */
-function deliverReply(replyText, callback) {
-  if (!replyText || isReplying) return;
+/* ---------- Intelligent Reply Delivery ---------- */
 
-  isReplying = true;
+function deliverReply(replyText, callback) {
+  if (!replyText) return;
+
   showTypingIndicator();
 
-  const delay = Math.min(7000, Math.max(1200, replyText.length * 35));
+  const delay = Math.min(
+    7000,
+    Math.max(1200, replyText.length * 35)
+  );
 
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
-    isReplying = false;
-    if (callback) callback();
+
+    if (typeof callback === "function") {
+      callback();
+    }
   }, delay);
+}
+   
+/* ---------- Typed Input Handler ---------- */
+
+function sendTypedMessage() {
+  const input = document.getElementById("userInput");
+  if (!input) return;
+
+  const originalText = input.value.trim();
+ if (!originalText) return;
+
+if (!activeVoice) {
+  addSystemMessage("Please choose Saira or Aayan first.");
+  return;
+}
+  addUserMessage(originalText);
+  input.value = "";
+
+  const text = originalText.toLowerCase();
+  let reply;
+
+  if (text.includes("meet") || text.includes("first time")) {
+    reply = activeVoice === "saira"
+      ? "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still."
+      : "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long.";
+  }
+
+  else if (text.includes("love") || text.includes("feel")) {
+    reply = activeVoice === "saira"
+      ? "Love doesn’t always arrive loudly. Sometimes it grows quietly, without asking permission."
+      : "Love asks you to give up certainty. That was never easy for me.";
+  }
+
+  else if (text.includes("end") || text.includes("together")) {
+    reply = activeVoice === "saira"
+      ? "Not all stories end the way we imagine. Some simply change form."
+      : "What mattered didn’t disappear. It just stopped belonging to time.";
+  }
+
+  else if (text.includes("author") || text.includes("mohan")) {
+    reply = activeVoice === "saira"
+      ? "He wrote this story as something deeply personal — not loud, but honest."
+      : "He didn’t want to explain everything. Only to sit with what felt true.";
+  }
+
+  else {
+    reply = activeVoice === "saira"
+      ? "I don’t always have the right words — but I’m listening."
+      : "Some questions don’t need quick answers.";
+  }
+
+  deliverReply(reply);
+}
+
+/* ---------- Utility ---------- */
+
+function clearDock() {
+  if (dock) dock.innerHTML = "";
 }
 
 function returnToWebsite() {
@@ -506,26 +579,32 @@ function returnToWebsite() {
 }
 
 /* =========================
-   WELCOME
+   INIT
 ========================= */
 
 function loadWelcome() {
   chatBody.innerHTML = "";
 
+  // FULL RESET
   activeVoice = null;
   foundationalAnswered = new Set();
   characterAnswered = 0;
   currentLayer = 0;
   reflections = [];
   reflectionStep = 0;
-  isReplying = false;
 
-  [
+  const welcomeMessages = [
     "Hello.",
     "This is a quiet space.",
     "You can listen to our story through Saira or Aayan.",
-    "When you're ready, choose a voice."
-  ].forEach(addSystemMessage);
+    "Our story is a contemporary romantic fiction.",
+    "When you’re ready, you can choose a voice."
+  ];
+
+  // Neutral opening messages (no voice colour)
+  welcomeMessages.forEach(text => {
+  addSystemMessage(text);
+});
 
   clearDock();
 
@@ -533,38 +612,32 @@ function loadWelcome() {
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
     <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
   `;
+
+  autoScroll();
 }
 
 /* =========================
    VOICE SELECTION
 ========================= */
-
 function selectVoice(v) {
   activeVoice = v;
   clearDock();
+
+  // SHOW TYPING BOX
   document.getElementById("typingArea").style.display = "flex";
 
   const intro =
     v === "saira"
-      ? "Hello, this is Saira."
-      : "Hello. This is Aayan.";
+      ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
+      : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
   addVoiceMessage(intro);
   showFoundational();
 }
 
-function showVoiceOptions() {
-  clearDock();
-  dock.innerHTML = `
-    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-  `;
-}
-
 /* =========================
    FOUNDATIONAL
 ========================= */
-
 function showFoundational() {
   clearDock();
 
@@ -586,78 +659,182 @@ function showFoundational() {
 }
 
 function answerFoundational(q, btn) {
-  if (isReplying) {
-    addSystemMessage("Just a moment 🙂");
-    return;
-  }
-
   btn.remove();
   foundationalAnswered.add(q.key);
+
   addUserMessage(q.text);
 
   const replies = {
-    story: "It’s a contemporary romantic fiction.",
-    about: "It’s about love, memory and timing.",
-    for: "For readers who value emotional honesty.",
-    where: "Available in digital and print formats.",
-    author: "Written by Mohan R."
+    saira: {
+      story: "Our story is a contemporary romantic fiction, shaped by moments that arrive quietly and stay longer than expected.",
+      about: "It’s about me and Aayan — about love, distance, memory, and the choices we carry with us.",
+      for: "This story often finds readers who value reflection, atmosphere, and emotional honesty.",
+      where: "You can read it as a Kindle eBook, Paperback, Hardcover, or Audio edition.",
+      author: "Mohan R. wrote this as his debut novel."
+    },
+    aayan: {
+      story: "It’s a contemporary romantic fiction, but it stays where love and responsibility pull in different directions.",
+      about: "It’s about timing.",
+      for: "This story speaks to readers who understand complexity.",
+      where: "The story is available in digital, print, and audio formats.",
+      author: "Mohan R. wrote this story."
+    }
   };
 
-  deliverReply(replies[q.key], () => {
+  const reply = replies[activeVoice][q.key];
+
+  deliverReply(reply, function () {
+
     if (foundationalAnswered.size === 5) {
-      currentLayer = 0;
-      characterAnswered = 0;
       unlockNextLayer();
     }
+
   });
 }
 
 /* =========================
-   CHARACTER QUESTIONS
+   15 CHARACTER QUESTIONS
 ========================= */
 
 const characterLayers = [
+  // Layer 1 (5)
   [
-    { q: "Where did you first meet?", a: { saira: "In Mumbai.", aayan: "In Mumbai." }},
-    { q: "What did you first notice?", a: { saira: "His silence.", aayan: "Her presence." }},
-    { q: "Who admitted feelings first?", a: { saira: "He did.", aayan: "I did." }},
-    { q: "Was it easy?", a: { saira: "No.", aayan: "Never." }},
-    { q: "Did it change you?", a: { saira: "Yes.", aayan: "Completely." }}
+    {
+      q: "Where did you first meet?",
+      a: {
+        saira: "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still, as if everything else had stepped aside.",
+        aayan: "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long."
+      }
+    },
+    {
+      q: "What did you first notice?",
+      a: {
+        saira: "That he listened before he spoke. That stayed with me.",
+        aayan: "She didn’t try to be impressive. She was simply present. That was rare."
+      }
+    },
+    {
+      q: "When did you start feeling he might be the one?",
+      a: {
+        saira: "It wasn’t sudden — not even in Venice. It was the quiet kind of knowing, the kind that grows without asking permission.",
+        aayan: "I don’t think I believed in ‘the one.’ But I knew something had shifted."
+      }
+    },
+    {
+      q: "Who admitted their feelings first?",
+      a: {
+        saira: "I felt it first, but he was the one who said it. Though he had been carrying it just as long.",
+        aayan: "I did. But I think she knew before I did. I tend to weigh words before I let them go."
+      }
+    },
+    {
+      q: "Which was the first city you were together in?",
+      a: {
+        saira: "Mumbai. It held our beginning — loud, restless, unforgettable.",
+        aayan: "Mumbai. It didn’t give us space, but it gave us momentum."
+      }
+    }
   ],
+
+  // Layer 2 (5)
   [
-    { q: "Did you doubt it?", a: { saira: "Yes.", aayan: "Yes." }},
-    { q: "Were you afraid?", a: { saira: "Sometimes.", aayan: "Often." }},
-    { q: "Happiest memory?", a: { saira: "A quiet evening.", aayan: "A quiet silence." }},
-    { q: "Hardest moment?", a: { saira: "Letting go.", aayan: "Waiting." }},
-    { q: "Would you choose it again?", a: { saira: "Yes.", aayan: "Yes." }}
+    {
+      q: "Did you ever question your choice?",
+      a: {
+        saira: "Yes. Loving someone deeply doesn’t silence doubt — it makes it more complicated.",
+        aayan: "I questioned the timing more than the feeling."
+      }
+    },
+    {
+      q: "Were you ever afraid of loving her?",
+      a: {
+        saira: "I was afraid of losing him, not loving him.",
+        aayan: "Yes. Love asks you to give up control. That frightened me."
+      }
+    },
+    {
+      q: "What was your happiest moment together?",
+      a: {
+        saira: "It wasn’t dramatic. It was the night before we left Goa. Nothing extraordinary happened — except that we were both at peace.",
+        aayan: "Silence. Sitting beside her at Triveni Ghat, without needing to explain anything."
+      }
+    },
+    {
+      q: "What moment stayed with you the longest?",
+      a: {
+        saira: "The moments when fear tried to take the place of love.",
+        aayan: "The look she gave me when she understood what I couldn’t say."
+      }
+    },
+    {
+      q: "Which chapter feels closest to your heart?",
+      a: {
+        saira: "The one where everything felt possible.",
+        aayan: "The one where everything felt uncertain."
+      }
+    }
   ],
+
+  // Layer 3 (5)
   [
-    { q: "Did you meet again?", a: { saira: "Maybe.", aayan: "Not the way you expect." }},
-    { q: "Is it over?", a: { saira: "Stories never end.", aayan: "They change form." }},
-    { q: "Will there be more?", a: { saira: "Perhaps.", aayan: "Perhaps." }},
-    { q: "What did love teach you?", a: { saira: "Patience.", aayan: "Restraint." }},
-    { q: "Do you still think of each other?", a: { saira: "Yes.", aayan: "Yes." }}
+    {
+      q: "Did you finally meet again?",
+      a: {
+        saira: "Some meetings don’t need witnesses to be real.",
+        aayan: "Not all reunions look the way people expect."
+      }
+    },
+    {
+      q: "Is there more to your story?",
+      a: {
+        saira: "Stories don’t end. They change shape.",
+        aayan: "What mattered didn’t disappear."
+      }
+    },
+    {
+      q: "Will there be a part two?",
+      a: {
+        saira: "Only if the story still has something honest to say.",
+        aayan: "Not everything needs a sequel. But some silences deserve one."
+      }
+    },
+    {
+      q: "If readers could learn one thing from you?",
+      a: {
+        saira: "To listen to what feels true — even if it complicates your life.",
+        aayan: "That love isn’t always about arrival."
+      }
+    },
+    {
+      q: "Do you still think about each other?",
+      a: {
+        saira: "Some people don’t leave your thoughts. They simply change rooms.",
+        aayan: "Yes. Not with regret. With clarity."
+      }
+    }
   ]
 ];
 
 function unlockNextLayer() {
-  clearDock();
-  addSystemMessage("There’s more, if you’d like to continue.");
-
-  dock.innerHTML = `
-    <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-    <button class="btn" onclick="showVoiceOptions()">No</button>
-  `;
-}
-
-function showNextLayer() {
   if (currentLayer >= characterLayers.length) return;
 
   clearDock();
 
-  const layer = characterLayers[currentLayer];
+  addSystemMessage("There’s more, if you’d like to continue.");
 
-  layer.forEach(item => {
+  setTimeout(() => {
+    dock.innerHTML = `
+      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+      <button class="btn" onclick="loadWelcome()">No</button>
+    `;
+    autoScroll();
+  }, 600);
+}
+
+function showNextLayer() {
+  clearDock();
+
+  characterLayers[currentLayer].forEach(item => {
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
@@ -669,15 +846,13 @@ function showNextLayer() {
 }
 
 function answerCharacter(item, btn) {
-  if (isReplying) {
-    addSystemMessage("One at a time 🙂");
-    return;
-  }
-
   btn.remove();
+
   addUserMessage(item.q);
 
-  deliverReply(item.a[activeVoice], () => {
+  const reply = item.a[activeVoice];
+
+  deliverReply(reply, function () {
     characterAnswered++;
 
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
@@ -688,33 +863,6 @@ function answerCharacter(item, btn) {
       showAuthorInvitation();
     }
   });
-}
-
-/* =========================
-   TYPED INPUT
-========================= */
-
-function sendTypedMessage() {
-  const input = document.getElementById("userInput");
-  if (!input) return;
-
-  const text = input.value.trim();
-  if (!text) return;
-
-  if (!activeVoice) {
-    addSystemMessage("Please choose a voice first.");
-    return;
-  }
-
-  if (isReplying) {
-    addSystemMessage("Just a moment 🙂");
-    return;
-  }
-
-  addUserMessage(text);
-  input.value = "";
-
-  deliverReply("I’m listening.");
 }
 
 /* =========================
@@ -840,5 +988,3 @@ function submitReflection() {
 loadWelcome();
    
 </script>
-</body>
-</html>
