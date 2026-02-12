@@ -53,13 +53,33 @@ function returnToWebsite() {
 ========================= */
 function loadWelcome() {
   chatBody.innerHTML = "";
-  activeVoice = "aayan"; // temporary side for welcome
 
-  addVoiceMessage("Hello.");
-  addVoiceMessage("This is a quiet space.");
-  addVoiceMessage("You can listen to our story through Saira or Aayan.");
-  addVoiceMessage("Our story is a contemporary romantic fiction.");
-  addVoiceMessage("When you’re ready, you can choose a voice.");
+  // RESET EVERYTHING
+  activeVoice = null;
+  foundationalAnswered = 0;
+  characterAnswered = 0;
+  currentLayer = 0;
+  reflections = [];
+  reflectionStep = 0;
+
+  const welcomeMessages = [
+    "Hello.",
+    "This is a quiet space.",
+    "You can listen to our story through Saira or Aayan.",
+    "Our story is a contemporary romantic fiction.",
+    "When you’re ready, you can choose a voice."
+  ];
+
+  welcomeMessages.forEach(text => {
+    chatBody.insertAdjacentHTML(
+      "beforeend",
+      `<div class="message">
+         <div class="bubble" style="background:#f2f2f2; border-radius:14px;">
+           ${text}
+         </div>
+       </div>`
+    );
+  });
 
   clearDock();
 
@@ -75,6 +95,8 @@ function loadWelcome() {
 
   dock.appendChild(sairaBtn);
   dock.appendChild(aayanBtn);
+
+  autoScroll();
 }
 
 /* =========================
@@ -149,14 +171,31 @@ function answerFoundational(q, btn) {
 /* =========================
    CHARACTER LAYERS
 ========================= */
+
 function unlockLayer() {
   if (currentLayer >= characterLayers.length) return;
 
   clearDock();
 
-  if (currentLayer > 0) {
-    addVoiceMessage("There’s more, if you'd like to continue.");
-  }
+  // Ask permission before moving forward
+  addVoiceMessage("There’s more, if you’d like to continue.");
+
+  const yesBtn = document.createElement("button");
+  yesBtn.className = "btn " + activeVoice;
+  yesBtn.textContent = "Yes";
+  yesBtn.onclick = showNextLayer;
+
+  const noBtn = document.createElement("button");
+  noBtn.className = "btn";
+  noBtn.textContent = "No";
+  noBtn.onclick = loadWelcome;
+
+  dock.appendChild(yesBtn);
+  dock.appendChild(noBtn);
+}
+
+function showNextLayer() {
+  clearDock();
 
   characterLayers[currentLayer].forEach(item => {
     const btn = document.createElement("button");
