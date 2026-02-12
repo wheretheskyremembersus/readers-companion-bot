@@ -434,21 +434,21 @@ const characterLayers = [
   // Layer 1 (5)
   [
     {
-    q: "Where did you first meet?",
+      q: "Where did you first meet?",
       a: {
         saira: "We met in a city that never really slows down — Mumbai. But the moment itself felt strangely still, as if everything else had stepped aside.",
         aayan: "It was supposed to be an ordinary encounter in Mumbai. It didn’t remain ordinary for long."
       }
     },
     {
-     q: "What did you first notice?",
+      q: "What did you first notice?",
       a: {
         saira: "That he listened before he spoke. That stayed with me.",
         aayan: "She didn’t try to be impressive. She was simply present. That was rare."
       }
     },
     {
-      q: "when did you start feeling he might be the one?",
+      q: "When did you start feeling he might be the one?",
       a: {
         saira: "It wasn’t sudden — not even in Venice. It was the quiet kind of knowing, the kind that grows without asking permission.",
         aayan: "I don’t think I believed in ‘the one.’ But I knew something had shifted."
@@ -469,6 +469,7 @@ const characterLayers = [
       }
     }
   ],
+
   // Layer 2 (5)
   [
     {
@@ -502,11 +503,12 @@ const characterLayers = [
     {
       q: "Which chapter feels closest to your heart?",
       a: {
-        saira: "The one where everything felt possible. Though I carry a special tenderness for the chapters around our first trip to Manali, Spiti, and Shimla.",
-        aayan: "The one where everything felt uncertain. Perhaps the London restaurant event — where silence spoke more than conversation."
+        saira: "The one where everything felt possible.",
+        aayan: "The one where everything felt uncertain."
       }
     }
   ],
+
   // Layer 3 (5)
   [
     {
@@ -526,7 +528,7 @@ const characterLayers = [
     {
       q: "Will there be a part two?",
       a: {
-        saira: "Only if the story still has something honest to say. Some stories continue only when they’re meant to.",
+        saira: "Only if the story still has something honest to say.",
         aayan: "Not everything needs a sequel. But some silences deserve one."
       }
     },
@@ -534,7 +536,7 @@ const characterLayers = [
       q: "If readers could learn one thing from you?",
       a: {
         saira: "To listen to what feels true — even if it complicates your life.",
-        aayan: "That love isn’t always about arrival. Sometimes it’s about understanding."
+        aayan: "That love isn’t always about arrival."
       }
     },
     {
@@ -550,42 +552,39 @@ const characterLayers = [
 function unlockNextLayer() {
   if (currentLayer >= characterLayers.length) return;
 
-  if (currentLayer > 0) {
-    chatBody.insertAdjacentHTML(
-      "beforeend",
-      `<div class="message"><p>There’s more, if you’d like to continue.</p></div>`
-    );
+  clearDock();
+
+  if (characterAnswered > 0) {
+    addVoiceMessage("There’s more, if you’d like to continue.");
   }
 
+  dock.innerHTML = `
+    <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+    <button class="btn" onclick="loadWelcome()">No</button>
+  `;
+}
+
+function showNextLayer() {
+  clearDock();
+
   characterLayers[currentLayer].forEach(item => {
-    const b = document.createElement("button");
-    b.className = `btn ${activeVoice}`;
-    b.textContent = item.q;
-    b.onclick = () => answerCharacter(item, b);
-    dock.appendChild(b);
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = item.q;
+    btn.onclick = () => answerCharacter(item, btn);
+    dock.appendChild(btn);
   });
 
   currentLayer++;
-  autoScroll();
 }
 
 function answerCharacter(item, btn) {
-  const questionText = btn.textContent;
-btn.remove();
+  btn.remove();
 
-chatBody.insertAdjacentHTML(
-  "beforeend",
-  `<div class="message"><p><strong>${questionText}</strong></p></div>`
-);
+  addUserMessage(item.q);
+  addVoiceMessage(item.a[activeVoice]);
 
   characterAnswered++;
-
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message"><p>${item.a[activeVoice]}</p></div>`
-  );
-
-  autoScroll();
 
   if (characterAnswered === 5 || characterAnswered === 10) {
     unlockNextLayer();
