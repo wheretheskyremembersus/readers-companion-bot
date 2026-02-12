@@ -867,16 +867,15 @@ function answerCharacter(item, btn) {
   if (isReplying) {
     addSystemMessage(
       activeVoice === "saira"
-        ? "One moment please 😊 I want to answer you properly."
-        : "Give me a second 🙂 I’ll respond fully."
+        ? "Just a moment 😊 I want to answer you properly."
+        : "One at a time 🙂 I’ll respond fully."
     );
     return;
   }
 
-  // 🔒 Lock immediately
   isReplying = true;
 
-  // Disable all buttons instantly
+  // Disable all buttons immediately
   const buttons = dock.querySelectorAll("button");
   buttons.forEach(b => b.disabled = true);
 
@@ -896,7 +895,6 @@ function answerCharacter(item, btn) {
       showAuthorInvitation();
     }
 
-    // 🔓 Unlock
     isReplying = false;
   });
 }
