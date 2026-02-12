@@ -392,6 +392,7 @@ let characterAnswered = 0;
 let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
+let isReplying = false;
 
 /* =========================
    HELPERS
@@ -497,7 +498,9 @@ function removeTypingIndicator() {
 /* ---------- Intelligent Reply Delivery ---------- */
 
 function deliverReply(replyText, callback) {
-  if (!replyText) return;
+  if (!replyText || isReplying) return;
+
+  isReplying = true;
 
   showTypingIndicator();
 
@@ -510,12 +513,14 @@ function deliverReply(replyText, callback) {
     removeTypingIndicator();
     addVoiceMessage(replyText);
 
+    isReplying = false;
+
     if (typeof callback === "function") {
       callback();
     }
   }, delay);
 }
-   
+
 /* ---------- Typed Input Handler ---------- */
 
 function sendTypedMessage() {
