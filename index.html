@@ -602,15 +602,18 @@ function unlockNextLayer() {
   clearDock();
 
   if (characterAnswered > 0) {
-   addSystemMessage("There’s more, if you’d like to continue.");
+    addSystemMessage("There’s more, if you’d like to continue.");
+    autoScroll();  // ensures message is visible
   }
 
+  setTimeout(() => {
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
     <button class="btn" onclick="loadWelcome()">No</button>
   `;
+}, 400);
 }
-
+   
 function showNextLayer() {
   clearDock();
 
