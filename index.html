@@ -650,7 +650,6 @@ const reply = cleaned.length > 1
   return false;
 }
 
-
 /* ---------- Typed Input Handler ---------- */
 
 function sendTypedMessage() {
@@ -661,23 +660,23 @@ function sendTypedMessage() {
   const originalText = input.value.trim();
   if (!originalText) return;
 
+  // IMPORTANT: Voice must be selected
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or Aayan first.");
     return;
   }
 
-  // Show user message ONCE
-  addUserMessage(originalText);
+  addUserMessage(originalText);   // Only once
   input.value = "";
 
   const text = originalText.toLowerCase();
 
-  // 🔥 INTELLIGENCE ROUTER FIRST
+  // 🔥 Intelligence router first
   if (handleIntelligence(text, originalText)) {
     return;
   }
 
-  // 🔁 EXISTING MIRROR LOGIC
+  // 🔁 Existing mirror logic
 
   let reply;
 
