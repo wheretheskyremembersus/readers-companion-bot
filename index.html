@@ -703,7 +703,7 @@ function answerFoundational(q, btn) {
 
 const characterLayers = [
 
-  /* ---------- Layer 1 ---------- */
+  // Layer 1
   [
     {
       q: "Where did you first meet?",
@@ -722,7 +722,7 @@ const characterLayers = [
     {
       q: "When did you start feeling he might be the one?",
       a: {
-        saira: "It wasn’t sudden. It was the quiet kind of knowing — the kind that grows without asking permission.",
+        saira: "It wasn’t sudden — it was the quiet kind of knowing, the kind that grows without asking permission.",
         aayan: "I don’t think I believed in ‘the one.’ But I knew something had shifted."
       }
     },
@@ -742,7 +742,7 @@ const characterLayers = [
     }
   ],
 
-  /* ---------- Layer 2 ---------- */
+  // Layer 2
   [
     {
       q: "Did you ever question your choice?",
@@ -781,7 +781,7 @@ const characterLayers = [
     }
   ],
 
-  /* ---------- Layer 3 ---------- */
+  // Layer 3
   [
     {
       q: "Did you finally meet again?",
@@ -841,7 +841,7 @@ function unlockNextLayer() {
 }
 
 
-/* ---------- Voice Options + Return ---------- */
+/* ---------- Show Voice Options + Return ---------- */
 
 function showVoiceOptions() {
   clearDock();
@@ -867,11 +867,7 @@ function showNextLayer() {
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
-
-    btn.onclick = () => {
-      answerCharacter(item, btn);
-    };
-
+    btn.onclick = () => answerCharacter(item, btn);
     dock.appendChild(btn);
   });
 
@@ -883,18 +879,16 @@ function showNextLayer() {
 
 function answerCharacter(item, btn) {
 
-  /* Prevent multi-click spam */
   if (isReplying) {
     addSystemMessage(
       activeVoice === "saira"
-        ? "Just a moment 😊 I want to answer you properly."
-        : "One at a time 😊 I’ll respond fully."
+        ? "One moment please 😊 I want to answer you properly."
+        : "Give me a second 🙂 I’ll respond fully."
     );
     return;
   }
 
   btn.remove();
-
   addUserMessage(item.q);
 
   const reply = item.a[activeVoice];
