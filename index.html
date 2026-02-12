@@ -339,15 +339,37 @@ function returnToWebsite() {
 /* =========================
    INIT
 ========================= */
+
 function loadWelcome() {
   chatBody.innerHTML = "";
-  activeVoice = "aayan"; // temporary style
 
-  addVoiceMessage("Hello.");
-  addVoiceMessage("This is a quiet space.");
-  addVoiceMessage("You can listen to our story through Saira or Aayan.");
-  addVoiceMessage("Our story is a contemporary romantic fiction.");
-  addVoiceMessage("When you’re ready, you can choose a voice.");
+  // FULL RESET
+  activeVoice = null;
+  foundationalAnswered = new Set();
+  characterAnswered = 0;
+  currentLayer = 0;
+  reflections = [];
+  reflectionStep = 0;
+
+  const welcomeMessages = [
+    "Hello.",
+    "This is a quiet space.",
+    "You can listen to our story through Saira or Aayan.",
+    "Our story is a contemporary romantic fiction.",
+    "When you’re ready, you can choose a voice."
+  ];
+
+  // Neutral opening messages (no voice colour)
+  welcomeMessages.forEach(text => {
+    chatBody.insertAdjacentHTML(
+      "beforeend",
+      `<div class="message">
+         <div class="bubble" style="background:#f2f2f2;border-radius:14px;">
+           ${text}
+         </div>
+       </div>`
+    );
+  });
 
   clearDock();
 
@@ -355,6 +377,8 @@ function loadWelcome() {
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
     <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
   `;
+
+  autoScroll();
 }
 
 /* =========================
