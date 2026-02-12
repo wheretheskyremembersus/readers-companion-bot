@@ -18,6 +18,16 @@ function autoScroll() {
   chatBody.scrollTop = chatBody.scrollHeight;
 }
 
+function addMessage(text, bold = false) {
+  const html = `
+    <div class="message">
+      <p>${bold ? "<strong>" + text + "</strong>" : text}</p>
+    </div>
+  `;
+  chatBody.insertAdjacentHTML("beforeend", html);
+  autoScroll();
+}
+
 function clearDock() {
   dock.innerHTML = "";
 }
@@ -27,45 +37,16 @@ function returnToWebsite() {
 }
 
 /* =========================
-   MESSAGE ENGINE (BUBBLES)
-========================= */
-function addMessage(text, type = "system", voice = null) {
-
-  let bubbleClass = "bubble";
-
-  if (type === "question") {
-    bubbleClass += " question-bubble";
-  } 
-  else if (type === "answer") {
-    bubbleClass += " answer-bubble " + voice;
-  }
-
-  const html = `
-    <div class="message">
-      <div class="${bubbleClass}">
-        ${text}
-      </div>
-    </div>
-  `;
-
-  chatBody.insertAdjacentHTML("beforeend", html);
-  autoScroll();
-}
-
-/* =========================
    INIT
 ========================= */
 function loadWelcome() {
-
   chatBody.innerHTML = `
     <div class="message">
-      <div class="bubble">
-        <p>Hello.</p>
-        <p>This is a quiet space.</p>
-        <p>You can listen to our story through Saira or Aayan.</p>
-        <p>Our story is a contemporary romantic fiction.</p>
-        <p>When you’re ready, you can choose a voice.</p>
-      </div>
+      <p>Hello.</p>
+      <p>This is a quiet space.</p>
+      <p>You can listen to our story through Saira or Aayan.</p>
+      <p>Our story is a contemporary romantic fiction.</p>
+      <p>When you’re ready, you can choose a voice.</p>
     </div>
   `;
 
@@ -99,7 +80,7 @@ function selectVoice(voice) {
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
       : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
-  addMessage(intro, "answer", voice);
+  addMessage(intro, true);
   showFoundational();
 }
 
@@ -127,10 +108,10 @@ function showFoundational() {
 }
 
 function answerFoundational(q, btn) {
-  btn.remove();
+  btn.remove(); // REMOVE from dock
   foundationalAnswered++;
 
-  addMessage(q.text, "question");
+  addMessage(q.text, true);
 
   const replies = {
     saira: {
@@ -149,7 +130,7 @@ function answerFoundational(q, btn) {
     }
   };
 
-  addMessage(replies[activeVoice][q.key], "answer", activeVoice);
+  addMessage(replies[activeVoice][q.key]);
 
   if (foundationalAnswered === 5) {
     unlockLayer();
@@ -181,11 +162,11 @@ function unlockLayer() {
 }
 
 function answerCharacter(item, btn) {
-  btn.remove();
+  btn.remove(); // REMOVE from dock
   characterAnswered++;
 
-  addMessage(item.q, "question");
-  addMessage(item.a[activeVoice], "answer", activeVoice);
+  addMessage(item.q, true);
+  addMessage(item.a[activeVoice]);
 
   if (characterAnswered === 5 || characterAnswered === 10) {
     unlockLayer();
@@ -205,8 +186,8 @@ function showAuthorInvitation() {
 
   addMessage("You’ve stayed with us until the end.");
   addMessage("If you’d like to write to the author, you’re welcome to.");
-  addMessage("wheretheskyremembersus@gmail.com");
-  addMessage("Before you leave, may I ask you three quiet reflections?");
+  addMessage("wheretheskyremembersus@gmail.com", true);
+  addMessage("Before you leave, may I ask you three quiet reflections?", true);
 
   const yesBtn = document.createElement("button");
   yesBtn.className = "btn " + activeVoice;
