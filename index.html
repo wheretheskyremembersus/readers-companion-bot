@@ -841,7 +841,7 @@ function unlockNextLayer() {
   setTimeout(() => {
     dock.innerHTML = `
       <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-      <button class="btn" onclick="loadWelcome()">No</button>
+      <button class="btn" onclick="declineLayer()">No</button>
     `;
     autoScroll();
   }, 600);
@@ -918,7 +918,24 @@ setTimeout(() => {
   `;
 }, 1500);
 } 
-   
+   function declineLayer() {
+  clearDock();
+
+  addSystemMessage(
+    activeVoice === "saira"
+      ? "Thank you for sitting with us."
+      : "Thank you for staying."
+  );
+
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+    <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+  `;
+
+  autoScroll();
+}
+
 /* =========================
    REFLECTION
 ========================= */
