@@ -623,7 +623,17 @@ if (/(thank you|thankyou|thanks|thank|appreciate|great|thx|excellent|wonderful|f
   deliverReply("You’re welcome.");
   return true;
 }
-   
+   /* 1.7️⃣ EXIT / GOODBYE */
+
+if (/(bye|bye bye|cya|c u later|see you|see you soon|see you again|tata|tada|take care|goodbye)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "Goodbye. Take care."
+    : "Goodbye.";
+
+  deliverReply(reply);
+  return true;
+}
   /* 2️⃣ VOICE IDENTITY */
   if (/(what is your name|who are you|your name)/.test(lower)) {
     const reply = activeVoice === "saira"
