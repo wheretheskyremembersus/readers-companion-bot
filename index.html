@@ -619,7 +619,7 @@ if (/(i am|i'm|my name is)/.test(lower)) {
    
   /* 1.6️⃣ USER GRATITUDE */
 
-if (/(thank you|thankyou|thanks|thank|appreciate|great|thx|excellent|wonderful|fantastic|cheers)/i.test(lower)) {
+if (/(thank you|thankyou|thanks|thank|appreciate|great|thx|excellent|cheers)/i.test(lower)) {
   deliverReply("You’re welcome.");
   return true;
 }
@@ -634,6 +634,18 @@ if (/(bye|bye bye|cya|c u later|see you|see you soon|see you again|tata|tada|tak
   deliverReply(reply);
   return true;
 }
+   /* 1.6️⃣ COMPLIMENTS */
+
+if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|awesome|fantastic|perfect|proud of you)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "That’s kind of you."
+    : "I appreciate that.";
+
+  deliverReply(reply);
+  return true;
+}
+
   /* 2️⃣ VOICE IDENTITY */
   if (/(what is your name|who are you|your name)/.test(lower)) {
     const reply = activeVoice === "saira"
