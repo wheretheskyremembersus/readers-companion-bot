@@ -809,6 +809,15 @@ function sendTypedMessage() {
 
   deliverReply(reply);
 }
+/* ---------- Utility ---------- */
+
+function clearDock() {
+  if (dock) dock.innerHTML = "";
+}
+
+function returnToWebsite() {
+  window.location.href = "https://wheretheskyremembersus.com";
+}
 
 /* =========================
    INIT
