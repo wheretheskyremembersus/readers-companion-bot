@@ -616,7 +616,14 @@ if (/(i am|i'm|my name is)/.test(lower)) {
   deliverReply(reply);
   return true;
 }
-  
+   
+  /* 1.6️⃣ USER GRATITUDE */
+
+if (/(thank you|thankyou|thanks|thank|appreciate|grateful|thx|cheers)/i.test(lower)) {
+  deliverReply("You’re welcome.");
+  return true;
+}
+   
   /* 2️⃣ VOICE IDENTITY */
   if (/(what is your name|who are you|your name)/.test(lower)) {
     const reply = activeVoice === "saira"
