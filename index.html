@@ -103,7 +103,11 @@ body {
   line-height: 1.7;
   border-radius: 0 0 20px 20px;
 
-  background: linear-gradient(to bottom, #f8fbff, #eef3f8);
+ background-color: #f8fbff;
+ background-size: cover;
+ background-position: center;
+ background-repeat: no-repeat;
+ transition: background-image 0.8s ease;
 
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
@@ -1019,9 +1023,9 @@ if (v === "saira") {
    const chat = document.querySelector(".chat-body");
 
 if (v === "saira") {
-  chat.style.setProperty("--watermark", "'🌸'");
+  chat.style.backgroundImage = "url('Saira.jpg')";
 } else {
-  chat.style.setProperty("--watermark", "'🌙'");
+  chat.style.backgroundImage = "url('Aayan.jpg')";
 }
 
   clearDock();
