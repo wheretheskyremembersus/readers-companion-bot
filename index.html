@@ -121,11 +121,14 @@ body {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center top;
   background-repeat: no-repeat;
   opacity: 0;
-  transition: opacity 1.2s ease, transform 1.5s ease;
   animation: skyDrift 30s ease-in-out infinite;
+  filter: brightness(1) contrast(1) saturate(1);
+  transition:
+    opacity 1.2s ease,
+    transform 1.5s ease,
+    filter 1.5s ease;
   z-index: 0;
 }
 
@@ -474,7 +477,10 @@ body {
 <script>
    
 let skyLayer = document.getElementById("skyLayer");
-
+emotionalDepth = 0;
+skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+skyLayer.style.transform = "scale(1)";
+   
 // Preload sky images
 const preloadSaira = new Image();
 preloadSaira.src = "Saira.jpg";
@@ -666,10 +672,23 @@ function deliverReply(replyText, callback) {
     removeTypingIndicator();
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
-     skyLayer.style.transform = "scale(1.02)";
+     // Increase emotional progression
+emotionalDepth++;
+
+const depthFactor = Math.min(emotionalDepth * 0.03, 0.25);
+
+// Subtle evolution
+skyLayer.style.filter = `
+  brightness(${1 - depthFactor})
+  contrast(${1 + depthFactor})
+  saturate(${1 + depthFactor})
+`;
+
+// Gentle scale pulse
+skyLayer.style.transform = "scale(1.03)";
 setTimeout(() => {
   skyLayer.style.transform = "scale(1)";
-}, 600);
+}, 800);
 
     interactionLocked = false;
     setDockDisabled(false);
