@@ -59,64 +59,80 @@ body {
   color: #777;
 }
 
-.chat-body::before {
-  content: var(--watermark, "✨   🌙   ✨   🌙   ");
-  position: absolute;
-  inset: 0;
-  font-size: 30px;
-  line-height: 90px;
-  letter-spacing: 50px;
-  white-space: pre-wrap;
-  opacity: 0.05;
-  pointer-events: none;
-  z-index: 0;
+/* =========================
+   BOT SHELL
+========================= */
+.bot-shell {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow:
+    0 30px 70px rgba(0,0,0,0.15),
+    0 10px 25px rgba(0,0,0,0.08);
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.04);
 }
 
 /* =========================
    BOT HEADER
 ========================= */
-
 .bot-header {
-  background: linear-gradient(
-    135deg,
-    #f3f5f7,
-    #e9edf2
-  );
-  padding: 18px 22px;
-  margin: -24px -24px 18px -24px;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+  background: linear-gradient(135deg, #f3f5f7, #e9edf2);
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
   box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-  transition: background 0.4s ease, box-shadow 0.4s ease;
+  transition: background 0.4s ease;
 }
-   
+
 .bot-title {
-  font-size: 18px;
+  font-size: 20px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #2a2a2a;
   font-weight: 500;
 }
-   
-/* =========================
-   CHAT BUBBLE PREP
-========================= */
 
-   .bubble {
-  max-width: 80%;
-  padding: 14px 18px;
-  border-radius: 18px;
-  box-shadow: 
-    0 2px 6px rgba(0,0,0,0.06),
-    0 1px 0 rgba(255,255,255,0.4) inset;
-  word-wrap: break-word;
+/* =========================
+   CHAT BODY
+========================= */
+.chat-body {
+  position: relative;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 22px 24px 14px 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  border-radius: 0 0 20px 20px;
+
+  background: linear-gradient(to bottom, #f8fbff, #eef3f8);
+
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
+
+/* Emoji Sky Background */
+.chat-body::before {
+  content: var(--watermark, "☁️   🌙   ✨   ☁️");
+  position: absolute;
+  inset: 0;
+
+  font-size: 34px;
+  line-height: 110px;
+  letter-spacing: 90px;
+
+  white-space: pre-wrap;
+  opacity: 0.12;
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Messages float above background */
 .message {
+  position: relative;
   display: flex;
   width: 100%;
   margin-bottom: 14px;
   animation: fadeInMessage 0.35s ease forwards;
+  z-index: 1;
 }
 
 @keyframes fadeInMessage {
@@ -130,35 +146,44 @@ body {
   }
 }
 
+/* =========================
+   CHAT BUBBLES
+========================= */
+.bubble {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.06),
+    0 1px 0 rgba(255,255,255,0.4) inset;
+  word-wrap: break-word;
+}
+
+/* Alignments */
 .user {
   justify-content: flex-end;
 }
 
-.saira-msg {
-  justify-content: flex-start;
-}
-
-.aayan-msg {
-  justify-content: flex-start;
-}
+.saira-msg,
+.aayan-msg,
 .system-msg {
   justify-content: flex-start;
 }
 
+/* System Bubble (soft green) */
 .system-msg .bubble {
   background: linear-gradient(135deg, #f4faf5, #eaf6ef);
-  border-radius: 18px;
   border: 1px solid rgba(140, 190, 160, 0.18);
   box-shadow: 0 2px 6px rgba(120, 170, 140, 0.12);
 }
 
-/* User Question (grey) */
+/* User Bubble */
 .user .bubble {
   background: #e5e5ea;
   border-radius: 18px 18px 4px 18px;
 }
 
-/* Saira Reply (light shimmering pink) */
+/* Saira Bubble */
 .saira-msg .bubble {
   background: linear-gradient(135deg, #fff1f6, #fde2ec);
   border-radius: 18px 18px 4px 18px;
@@ -166,14 +191,13 @@ body {
   border: 1px solid rgba(255, 170, 200, 0.25);
 }
 
-/* Aayan Reply (light shimmering blue) */
+/* Aayan Bubble */
 .aayan-msg .bubble {
   background: linear-gradient(135deg, #eef5ff, #dde9ff);
   border-radius: 18px 18px 18px 4px;
   box-shadow: 0 2px 8px rgba(120, 160, 255, 0.18);
   border: 1px solid rgba(140, 170, 255, 0.25);
 }
-
 /* =========================
    QUESTION DOCK
 ========================= */
