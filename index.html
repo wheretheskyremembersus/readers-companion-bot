@@ -573,31 +573,35 @@ function removeTypingIndicator() {
   if (typing) typing.remove();
 }
 
-/* ---------- Reply Delivery ---------- */
-
 function deliverReply(replyText, callback) {
   if (!replyText) return;
 
   interactionLocked = true;
-
-  showTypingIndicator();
+  setDockDisabled(true);
 
   const delay = Math.min(
     3000,
     Math.max(700, replyText.length * 16)
   );
 
+  // micro pause before typing
+  setTimeout(() => {
+    showTypingIndicator();
+  }, 180);
+
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
-     playTone(420, 120, 0.025, 360);
+    playTone(420, 120, 0.025, 360);
+
     interactionLocked = false;
+    setDockDisabled(false);
 
     if (typeof callback === "function") {
       callback();
     }
 
-  }, delay);
+  }, delay + 180);
 }
 
 /* =========================
@@ -939,6 +943,13 @@ function selectVoice(v) {
   interactionLocked = false; // reset lock
 
   activeVoice = v;
+  const header = document.querySelector(".bot-header");
+
+if (v === "saira") {
+  header.style.background = "linear-gradient(135deg, #f8eef2, #f2e4ea)";
+} else {
+  header.style.background = "linear-gradient(135deg, #eef3fb, #e3ebf9)";
+}
   clearDock();
 
   document.getElementById("typingArea").style.display = "flex";
