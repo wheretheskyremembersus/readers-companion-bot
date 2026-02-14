@@ -458,7 +458,7 @@ body {
 
 <script>
    
-const skyLayer = document.getElementById("skyLayer");
+let skyLayer = document.getElementById("skyLayer");
 
 // Preload sky images
 const preloadSaira = new Image();
@@ -965,7 +965,8 @@ function returnToWebsite() {
 ========================= */
 
 function loadWelcome() {
-  chatBody.innerHTML = "";
+  chatBody.innerHTML = '<div class="sky-layer" id="skyLayer"></div>';
+  skyLayer = document.getElementById("skyLayer");
 
   // FULL RESET
   activeVoice = null;
