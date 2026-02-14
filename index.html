@@ -484,7 +484,7 @@ const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 
 // Initial atmosphere reset
-chatBody.style.setProperty("--overlayStrength", 0.45);
+chatBody.style.setProperty("--overlayStrength", 0.25);
 skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
    
 // Preload sky images
@@ -666,21 +666,20 @@ function deliverReply(replyText, callback) {
     // Increase emotional progression
 emotionalDepth++;
 
-const depthFactor = Math.min(emotionalDepth * 0.06, 0.45);
+const depthFactor = Math.min(emotionalDepth * 0.05, 0.4);
 
 // Stronger atmosphere evolution
-chatBody.style.setProperty(
+hatBody.style.setProperty(
   "--overlayStrength",
-  Math.max(0.08, 0.45 - depthFactor)
+  Math.max(0.05, 0.25 - depthFactor)
 );
 
 // Visible cinematic shift
 skyLayer.style.filter = `
-  brightness(${1 - depthFactor * 0.4})
-  contrast(${1 + depthFactor})
-  saturate(${1 + depthFactor})
+  brightness(${1 - depthFactor * 0.5})
+  contrast(${1 + depthFactor * 1.2})
+  saturate(${1 + depthFactor * 1.2})
 `;
-
     interactionLocked = false;
     setDockDisabled(false);
 
