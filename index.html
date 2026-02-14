@@ -426,6 +426,39 @@ let interactionLocked = false;
 let emotionalToggle = false;
 
 /* =========================
+   SOUND ENGINE
+========================= */
+
+let audioContext;
+
+function initAudio() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function playTone(frequency, duration, volume = 0.02) {
+  if (!audioContext) return;
+
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.type = "sine";
+  oscillator.frequency.value = frequency;
+
+  gainNode.gain.value = volume;
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.start();
+
+  setTimeout(() => {
+    oscillator.stop();
+  }, duration);
+}
+
+/* =========================
    HELPERS
 ========================= */
 
@@ -549,6 +582,7 @@ function deliverReply(replyText, callback) {
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
+     playTone(380, 90, 0.03);
     interactionLocked = false;
 
     if (typeof callback === "function") {
@@ -557,7 +591,6 @@ function deliverReply(replyText, callback) {
 
   }, delay);
 }
-
 
 /* =========================
    INTELLIGENCE ROUTER
@@ -793,8 +826,8 @@ function sendTypedMessage() {
     return;
   }
 
-  addUserMessage(originalText);   // Only once
-  input.value = "";
+  addUserMessage(originalText);
+playTone(520, 60, 0.025);
 
   const text = originalText.toLowerCase();
 
@@ -892,6 +925,8 @@ interactionLocked = false; // reset lock
    VOICE SELECTION
 ========================= */
 function selectVoice(v) {
+
+  initAudio();   // ← ADD THIS LINE
 
   interactionLocked = false; // reset lock
 
