@@ -94,23 +94,38 @@ body {
 .chat-body {
   position: relative;
   max-height: 420px;
-  overflow-y: auto;
+  overflow-y: auto;   /* keep scrolling */
+  overflow-x: hidden; /* prevent horizontal shift */
   padding: 22px 24px 14px 24px;
   font-size: 14px;
   line-height: 1.7;
   border-radius: 0 0 20px 20px;
-  background: #f8fbff;
+  background: transparent; /* IMPORTANT */
 }
 
 /* Sky layer */
+
+@keyframes skyDrift {
+  0% {
+    background-position: center top;
+  }
+  50% {
+    background-position: center 20px;
+  }
+  100% {
+    background-position: center top;
+  }
+}
+
 .sky-layer {
   position: absolute;
   inset: 0;
   background-size: cover;
-  background-position: center;
+  background-position: center top;
   background-repeat: no-repeat;
   opacity: 0;
-  transition: opacity 1.2s ease;
+  transition: opacity 1.2s ease, transform 1.5s ease;
+  animation: skyDrift 30s ease-in-out infinite;
   z-index: 0;
 }
 
@@ -119,8 +134,8 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(2px);
+  background: rgba(255,255,255,0.30); /* reduced from 0.75 */
+  backdrop-filter: blur(1.5px);
   pointer-events: none;
   z-index: 1;
 }
@@ -651,6 +666,10 @@ function deliverReply(replyText, callback) {
     removeTypingIndicator();
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
+     skyLayer.style.transform = "scale(1.02)";
+setTimeout(() => {
+  skyLayer.style.transform = "scale(1)";
+}, 600);
 
     interactionLocked = false;
     setDockDisabled(false);
