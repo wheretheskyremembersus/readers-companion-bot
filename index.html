@@ -675,13 +675,13 @@ function deliverReply(replyText, callback) {
      // Increase emotional progression
 emotionalDepth++;
 
-const depthFactor = Math.min(emotionalDepth * 0.03, 0.25);
+const depthFactor = Math.min(emotionalDepth * 0.06, 0.5);
 
 // Subtle evolution
 skyLayer.style.filter = `
   brightness(${1 - depthFactor})
-  contrast(${1 + depthFactor})
-  saturate(${1 + depthFactor})
+  contrast(${1 + depthFactor * 0.6})
+  saturate(${1 + depthFactor * 0.8})
 `;
 
 // Gentle scale pulse
