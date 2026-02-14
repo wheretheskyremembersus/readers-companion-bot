@@ -988,6 +988,7 @@ function answerFoundational(q, btn) {
   foundationalAnswered.add(q.key);
 
   addUserMessage(q.text);
+  playTone(520, 60, 0.02);
 
   const replies = {
   saira: {
@@ -1191,6 +1192,7 @@ function answerCharacter(item, btn) {
   btn.remove();
 
   addUserMessage(item.q);
+  playTone(520, 60, 0.02);
 
   const reply = item.a[activeVoice];
 
@@ -1235,7 +1237,10 @@ setTimeout(() => {
   `;
 }, 1500);
 } 
-   function declineLayer() {
+
+function declineLayer() {
+  playTone(520, 60, 0.02);
+
   clearDock();
 
   addSystemMessage(
@@ -1258,6 +1263,8 @@ setTimeout(() => {
 ========================= */
 
 function declineReflection() {
+  playTone(520, 60, 0.02);
+
   clearDock();
 
   addSystemMessage(
@@ -1270,8 +1277,10 @@ function declineReflection() {
     <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
   `;
 }
-
+   
 function startReflection() {
+  playTone(520, 60, 0.02);
+
   reflections = [];
   reflectionStep = 0;
   nextReflection();
@@ -1307,6 +1316,7 @@ function nextReflection() {
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
     btn.onclick = () => {
+      playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
       reflections.push(e);
       reflectionStep++;
       nextReflection();
