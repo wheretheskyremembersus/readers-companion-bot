@@ -116,6 +116,15 @@ body {
    CHAT BUBBLE PREP
 ========================= */
 
+   .bubble {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  box-shadow: 
+    0 2px 6px rgba(0,0,0,0.06),
+    0 1px 0 rgba(255,255,255,0.4) inset;
+  word-wrap: break-word;
+}
 .message {
   display: flex;
   width: 100%;
@@ -149,11 +158,6 @@ body {
   justify-content: flex-start;
 }
 
-.system-msg .bubble {
-  background: #f7f8f9;
-  border: 1px solid #f0f0f0;
-}
-   
 .system-msg .bubble {
   background: linear-gradient(135deg, #f4faf5, #eaf6ef);
   border-radius: 18px;
