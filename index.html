@@ -641,45 +641,69 @@ function removeTypingIndicator() {
   const typing = document.getElementById("typingIndicator");
   if (typing) typing.remove();
 }
-   
+
+/* ---------- Reply Delivery + Atmosphere Engine ---------- */
+
 function deliverReply(replyText, callback) {
-  if (!replyText) return;
+  if (!replyText || interactionLocked) return;
 
   interactionLocked = true;
   setDockDisabled(true);
 
   const delay = Math.min(
     3000,
-    Math.max(700, replyText.length * 16)
+    Math.max(700, replyText.length * 18)
   );
 
-  // small natural pause before typing starts
+  // Small natural pause before typing starts
   setTimeout(() => {
     showTypingIndicator();
   }, 180);
 
-  // deliver message after typing delay
   setTimeout(() => {
     removeTypingIndicator();
+
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
-    // Increase emotional progression
-emotionalDepth++;
 
-const depthFactor = Math.min(emotionalDepth * 0.05, 0.4);
+    /* =========================
+       ATMOSPHERE PROGRESSION
+    ========================= */
 
-// Stronger atmosphere evolution
-chatBody.style.setProperty(
-  "--overlayStrength",
-  Math.max(0.05, 0.25 - depthFactor)
-);
+    emotionalDepth++;
 
-// Visible cinematic shift
-skyLayer.style.filter = `
-  brightness(${1 - depthFactor * 0.5})
-  contrast(${1 + depthFactor * 1.2})
-  saturate(${1 + depthFactor * 1.2})
-`;
+    const depthFactor = Math.min(emotionalDepth * 0.08, 1);
+
+    // Overlay fades gradually
+    const overlayValue = Math.max(
+      0.03,
+      0.45 - depthFactor * 0.75
+    );
+
+    chatBody.style.setProperty(
+      "--overlayStrength",
+      overlayValue
+    );
+
+    // Sky cinematic evolution
+    if (skyLayer) {
+      skyLayer.style.filter = `
+        brightness(${1 - depthFactor * 0.6})
+        contrast(${1 + depthFactor * 1.5})
+        saturate(${1 + depthFactor * 1.4})
+      `;
+
+      // Gentle breathing motion
+      skyLayer.style.transform = "scale(1.04)";
+      setTimeout(() => {
+        skyLayer.style.transform = "scale(1)";
+      }, 1200);
+    }
+
+    /* =========================
+       UNLOCK INTERACTION
+    ========================= */
+
     interactionLocked = false;
     setDockDisabled(false);
 
@@ -689,8 +713,13 @@ skyLayer.style.filter = `
 
   }, delay + 180);
 }
+
+
+/* ---------- Dock Control ---------- */
+
 function setDockDisabled(state) {
   const buttons = dock.querySelectorAll("button");
+
   buttons.forEach(btn => {
     btn.disabled = state;
     btn.style.opacity = state ? "0.5" : "1";
