@@ -91,10 +91,6 @@ body {
   font-weight: 500;
 }
 
-/* =========================
-   CHAT BODY
-========================= */
-
 .chat-body {
   position: relative;
   max-height: 420px;
@@ -103,25 +99,22 @@ body {
   font-size: 14px;
   line-height: 1.7;
   border-radius: 0 0 20px 20px;
-
   background: #f8fbff;
 }
 
-/* Sky layer (actual background image) */
+/* Sky layer */
 .sky-layer {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   opacity: 0;
   transition: opacity 1.2s ease;
-
   z-index: 0;
 }
 
-/* Soft readability overlay */
+/* Overlay */
 .chat-body::before {
   content: "";
   position: absolute;
@@ -132,12 +125,14 @@ body {
   z-index: 1;
 }
 
-/* Messages above all layers */
+/* MESSAGE FIX */
 .message {
   position: relative;
+  display: flex;          /* THIS was likely lost */
+  width: 100%;
+  margin-bottom: 14px;    /* THIS fixes bubble touching */
   z-index: 2;
 }
-
 
 /* =========================
    CHAT BUBBLES
@@ -1021,19 +1016,20 @@ if (v === "saira") {
 } else {
   header.style.background = "linear-gradient(135deg, #eef3fb, #e3ebf9)";
 }
-  if (v === "saira") {
-  skyLayer.style.backgroundImage = "url('Saira.jpg')";
+ if (v === "saira") {
+  skyLayer.style.opacity = "0";
+  setTimeout(() => {
+    skyLayer.style.backgroundImage = "url('Saira.jpg')";
+    skyLayer.style.opacity = "1";
+  }, 200);
 } else {
-  skyLayer.style.backgroundImage = "url('Aayan.jpg')";
+  skyLayer.style.opacity = "0";
+  setTimeout(() => {
+    skyLayer.style.backgroundImage = "url('Aayan.jpg')";
+    skyLayer.style.opacity = "1";
+  }, 200);
 }
-
-// Trigger smooth fade
-requestAnimationFrame(() => {
-  skyLayer.style.opacity = "1";
-});
-
-  clearDock();
-
+   clearDock();
   document.getElementById("typingArea").style.display = "flex";
 
   const intro =
