@@ -93,6 +93,7 @@ body {
   border-top-right-radius: 16px;
   border-bottom: 1px solid rgba(0,0,0,0.04);
   box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: background 0.4s ease;
 }
 
 .bot-title {
@@ -110,6 +111,18 @@ body {
   display: flex;
   width: 100%;
   margin-bottom: 12px;
+  animation: fadeInMessage 0.35s ease forwards;
+}
+
+@keyframes fadeInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .user {
@@ -128,10 +141,10 @@ body {
 }
 
 .system-msg .bubble {
-  background: linear-gradient(135deg, #f4faf5, #e6f4ea);
+  background: #f5f5f5;
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(120, 180, 140, 0.15);
-  border: 1px solid rgba(140, 190, 160, 0.2);
+  border: 1px solid #ececec;
+  box-shadow: none;
 }
 
 .bubble {
@@ -604,6 +617,14 @@ function deliverReply(replyText, callback) {
 
   }, delay + 180);
 }
+function setDockDisabled(state) {
+  const buttons = dock.querySelectorAll("button");
+  buttons.forEach(btn => {
+    btn.disabled = state;
+    btn.style.opacity = state ? "0.5" : "1";
+    btn.style.pointerEvents = state ? "none" : "auto";
+  });
+}
 
 /* =========================
    INTELLIGENCE ROUTER
@@ -960,10 +981,19 @@ if (v === "saira") {
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
       : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
-  addVoiceMessage(intro);
-  showFoundational();
-}
+ setTimeout(() => {
+  showTypingIndicator();
 
+  setTimeout(() => {
+    removeTypingIndicator();
+    addVoiceMessage(intro);
+    showFoundational();
+  }, 900);
+
+}, 250);
+
+}
+   
 /* =========================
    FOUNDATIONAL
 ========================= */
