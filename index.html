@@ -78,6 +78,31 @@ body {
 }
    
 /* =========================
+   BOT HEADER
+========================= */
+
+.bot-header {
+  background: linear-gradient(
+    to right,
+    rgba(220, 225, 230, 0.6),
+    rgba(245, 247, 249, 0.6)
+  );
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bot-title {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #666;
+}
+   
+/* =========================
    CHAT BUBBLE PREP
 ========================= */
 
@@ -317,9 +342,14 @@ body {
 
   <div class="layout">
 
-    <!-- LEFT: BOT -->
-    <div class="left-column">
-    <div class="bot-shell">
+ <!-- LEFT: BOT -->
+<div class="left-column">
+<div class="bot-shell">
+
+  <div class="bot-header">
+    <span class="bot-title">Readers’ Companion</span>
+  </div>
+
   <div class="chat-body" id="chatBody"></div>
   <div class="question-dock" id="questionDock"></div>
 
