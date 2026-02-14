@@ -437,25 +437,33 @@ function initAudio() {
   }
 }
 
-function playTone(frequency, duration, volume = 0.02) {
+function playTone(startFreq, duration, volume = 0.02, glideTo = null) {
   if (!audioContext) return;
 
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
 
   oscillator.type = "sine";
-  oscillator.frequency.value = frequency;
+  oscillator.frequency.setValueAtTime(startFreq, audioContext.currentTime);
 
-  gainNode.gain.value = volume;
+  if (glideTo) {
+    oscillator.frequency.linearRampToValueAtTime(
+      glideTo,
+      audioContext.currentTime + duration / 1000
+    );
+  }
+
+  gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.001,
+    audioContext.currentTime + duration / 1000
+  );
 
   oscillator.connect(gainNode);
   gainNode.connect(audioContext.destination);
 
   oscillator.start();
-
-  setTimeout(() => {
-    oscillator.stop();
-  }, duration);
+  oscillator.stop(audioContext.currentTime + duration / 1000);
 }
 
 /* =========================
@@ -582,7 +590,7 @@ function deliverReply(replyText, callback) {
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
-     playTone(380, 90, 0.03);
+     playTone(420, 120, 0.025, 360);
     interactionLocked = false;
 
     if (typeof callback === "function") {
