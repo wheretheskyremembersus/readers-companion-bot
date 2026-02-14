@@ -672,23 +672,22 @@ function deliverReply(replyText, callback) {
     removeTypingIndicator();
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
-     // Increase emotional progression
+    // Increase emotional progression
 emotionalDepth++;
 
 const depthFactor = Math.min(emotionalDepth * 0.06, 0.5);
 
-// Subtle evolution
 skyLayer.style.filter = `
   brightness(${1 - depthFactor})
   contrast(${1 + depthFactor * 0.6})
   saturate(${1 + depthFactor * 0.8})
 `;
 
-// Gentle scale pulse
-skyLayer.style.transform = "scale(1.03)";
+// Single smooth cinematic pulse
+skyLayer.style.transform = "scale(1.04)";
 setTimeout(() => {
   skyLayer.style.transform = "scale(1)";
-}, 800);
+}, 900);
 
     interactionLocked = false;
     setDockDisabled(false);
