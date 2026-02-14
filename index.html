@@ -94,6 +94,7 @@ body {
 /* =========================
    CHAT BODY
 ========================= */
+
 .chat-body {
   position: relative;
   max-height: 420px;
@@ -103,52 +104,40 @@ body {
   line-height: 1.7;
   border-radius: 0 0 20px 20px;
 
- background-color: #f8fbff;
- background-size: cover;
- background-position: center;
- background-repeat: no-repeat;
- transition: background-image 0.8s ease;
-
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  background: #f8fbff;
 }
 
-/* Emoji Sky Background */
-.chat-body::before {
-  content: var(--watermark, "☁️   🌙   ✨   ☁️");
+/* Sky layer (actual background image) */
+.sky-layer {
   position: absolute;
   inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-  font-size: 34px;
-  line-height: 110px;
-  letter-spacing: 90px;
+  opacity: 0;
+  transition: opacity 1.2s ease;
 
-  white-space: pre-wrap;
-  opacity: 0.12;
-
-  pointer-events: none;
   z-index: 0;
 }
 
-/* Messages float above background */
-.message {
-  position: relative;
-  display: flex;
-  width: 100%;
-  margin-bottom: 14px;
-  animation: fadeInMessage 0.35s ease forwards;
+/* Soft readability overlay */
+.chat-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
   z-index: 1;
 }
 
-@keyframes fadeInMessage {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Messages above all layers */
+.message {
+  position: relative;
+  z-index: 2;
 }
+
 
 /* =========================
    CHAT BUBBLES
@@ -411,7 +400,9 @@ body {
   <span class="bot-title">Where the Sky Remembers Us | Companion</span>
 </div>
    
-  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-body" id="chatBody">
+  <div class="sky-layer" id="skyLayer"></div>
+</div>
   <div class="question-dock" id="questionDock"></div>
 
   <!-- TYPING AREA -->
@@ -472,6 +463,8 @@ body {
 
 <script>
    
+const skyLayer = document.getElementById("skyLayer");
+
 // Preload sky images
 const preloadSaira = new Image();
 preloadSaira.src = "Saira.jpg";
@@ -1028,13 +1021,16 @@ if (v === "saira") {
 } else {
   header.style.background = "linear-gradient(135deg, #eef3fb, #e3ebf9)";
 }
-   const chat = document.querySelector(".chat-body");
-
-if (v === "saira") {
-  chat.style.backgroundImage = "url('Saira.jpg')";
+  if (v === "saira") {
+  skyLayer.style.backgroundImage = "url('Saira.jpg')";
 } else {
-  chat.style.backgroundImage = "url('Aayan.jpg')";
+  skyLayer.style.backgroundImage = "url('Aayan.jpg')";
 }
+
+// Trigger smooth fade
+requestAnimationFrame(() => {
+  skyLayer.style.opacity = "1";
+});
 
   clearDock();
 
