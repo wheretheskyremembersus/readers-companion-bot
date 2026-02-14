@@ -292,24 +292,53 @@ body {
   box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
 }
 
-.typing-area button {
-  padding: 8px 16px;
+.btn {
+  padding: 7px 16px;
   border-radius: 18px;
-  border: none;
-  font-size: 13px;
-  font-weight: 600;   /* ← makes Send bold */
+  font-size: 14px;          /* slightly larger */
+  font-weight: 600;         /* bold */
+  letter-spacing: 0.04em;   /* subtle authority */
+  border: 1px solid #ddd;
+  background: #fff;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Stronger emphasis for voice + decisions */
+.btn.saira,
+.btn.aayan {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* Hover effect */
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* Disabled state */
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+#typingIndicator .bubble {
+  opacity: 0.8;
+  font-style: italic;
+}
+   
+   /* Send Button (Primary Action) */
+.typing-area button {
   background: #222;
   color: white;
-  transition: opacity 0.2s ease;
+  border: none;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 .typing-area button:hover {
   opacity: 0.85;
-}
-#typingIndicator .bubble {
-  opacity: 0.8;
-  font-style: italic;
 }
 
 /* =========================
