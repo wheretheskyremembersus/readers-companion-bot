@@ -666,12 +666,12 @@ function deliverReply(replyText, callback) {
     // Increase emotional progression
 emotionalDepth++;
 
-const depthFactor = Math.min(emotionalDepth * 0.15, 0.8);
+const depthFactor = Math.min(emotionalDepth * 0.06, 0.45);
 
 // Stronger atmosphere evolution
 chatBody.style.setProperty(
   "--overlayStrength",
-  0.45 - depthFactor
+  Math.max(0.08, 0.45 - depthFactor)
 );
 
 // Visible cinematic shift
@@ -996,6 +996,7 @@ function returnToWebsite() {
 function loadWelcome() {
   chatBody.innerHTML = '<div class="sky-layer" id="skyLayer"></div>';
   skyLayer = document.getElementById("skyLayer");
+   skyLayer.style.opacity = "1";
    
    emotionalDepth = 0;
 chatBody.style.setProperty("--overlayStrength", 0.45);
