@@ -292,53 +292,91 @@ body {
   box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
 }
 
+
+/* =========================
+   BASE BUTTON (Dock Questions)
+========================= */
+
 .btn {
   padding: 7px 16px;
   border-radius: 18px;
-  font-size: 14px;          /* slightly larger */
-  font-weight: 600;         /* bold */
-  letter-spacing: 0.04em;   /* subtle authority */
+  font-size: 14px;
+  font-weight: 500;          /* normal weight */
+  letter-spacing: 0.02em;
   border: 1px solid #ddd;
   background: #fff;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-/* Stronger emphasis for voice + decisions */
-.btn.saira,
-.btn.aayan {
-  font-weight: 700;
-  letter-spacing: 0.06em;
-}
-
-/* Hover effect */
 .btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-/* Disabled state */
 .btn:disabled {
   opacity: 0.45;
   cursor: default;
 }
 
-#typingIndicator .bubble {
-  opacity: 0.8;
-  font-style: italic;
+
+/* =========================
+   VOICE BUTTONS (Subtle Tint)
+========================= */
+
+.btn.saira {
+  background: linear-gradient(135deg, #fff1f6, #fde2ec);
+  border: 1px solid rgba(255,170,200,0.35);
+  font-weight: 600;
 }
-   
-   /* Send Button (Primary Action) */
+
+.btn.aayan {
+  background: linear-gradient(135deg, #eef5ff, #dde9ff);
+  border: 1px solid rgba(140,170,255,0.35);
+  font-weight: 600;
+}
+
+
+/* =========================
+   PRIMARY BUTTONS (Send + Return)
+========================= */
+
 .typing-area button {
+  padding: 8px 16px;      /* keeps original shape */
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 600;
   background: #222;
   color: white;
   border: none;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .typing-area button:hover {
   opacity: 0.85;
+}
+
+/* For Return to homepage */
+.btn.primary {
+  background: #222;
+  color: white;
+  border: none;
+  font-weight: 600;
+}
+
+.btn.primary:hover {
+  opacity: 0.85;
+}
+
+
+/* =========================
+   TYPING INDICATOR
+========================= */
+
+#typingIndicator .bubble {
+  opacity: 0.8;
+  font-style: italic;
 }
 
 /* =========================
@@ -1534,7 +1572,7 @@ function submitReflection() {
          ? "Thank you for sitting with us. It means more than you know."
          : "Thank you for staying. Not everyone chooses to listen this closely."}
        <br><br>
-       <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+       <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
      </div>
    </div>`
 );
