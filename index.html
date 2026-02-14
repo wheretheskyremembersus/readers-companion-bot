@@ -572,7 +572,7 @@ function removeTypingIndicator() {
   const typing = document.getElementById("typingIndicator");
   if (typing) typing.remove();
 }
-
+   
 function deliverReply(replyText, callback) {
   if (!replyText) return;
 
@@ -584,11 +584,12 @@ function deliverReply(replyText, callback) {
     Math.max(700, replyText.length * 16)
   );
 
-  // micro pause before typing
+  // small natural pause before typing starts
   setTimeout(() => {
     showTypingIndicator();
   }, 180);
 
+  // deliver message after typing delay
   setTimeout(() => {
     removeTypingIndicator();
     addVoiceMessage(replyText);
