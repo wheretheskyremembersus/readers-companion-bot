@@ -72,17 +72,21 @@ body {
 .chat-body {
   max-height: 420px;
   overflow-y: auto;
-  padding: 14px;
+  padding: 16px;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
   border-radius: 12px;
-   
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(0,0,0,0.015) 1px, transparent 1px),
-    radial-gradient(circle at 80% 60%, rgba(0,0,0,0.015) 1px, transparent 1px),
-    #fafafa;
 
-  background-size: 60px 60px;
+  background:
+    radial-gradient(1200px 400px at 20% -10%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(800px 300px at 90% 10%, rgba(255,255,255,0.4), transparent 60%),
+    llinear-gradient(to bottom, #fbfcfd, #edf2f5);
+
+  box-shadow:
+    inset 0 1px 3px rgba(0,0,0,0.05);
+  
+   background-blend-mode: overlay;
+
 }
    
 /* =========================
