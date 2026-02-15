@@ -201,8 +201,8 @@ body {
    QUESTION DOCK
 ========================= */
 .question-dock {
-  margin-top: 14px;
-  padding-top: 14px;
+  margin-top: 4px;          /* reduced */
+  padding: 10px 0 0 0;      /* tighter */
   border-top: 1px solid #eee;
   display: flex;
   flex-wrap: wrap;
@@ -292,7 +292,6 @@ body {
   box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
 }
 
-
 /* =========================
    BASE BUTTON (Dock Questions)
 ========================= */
@@ -318,7 +317,6 @@ body {
   opacity: 0.45;
   cursor: default;
 }
-
 
 /* =========================
    VOICE BUTTONS (Subtle Tint)
@@ -367,7 +365,6 @@ body {
 .btn.primary:hover {
   opacity: 0.85;
 }
-
 
 /* =========================
    TYPING INDICATOR
@@ -1089,7 +1086,6 @@ function loadWelcome() {
 chatBody.style.setProperty("--overlayStrength", 0.45);
 skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
 
-
   // FULL RESET
   activeVoice = null;
 foundationalAnswered = new Set();
@@ -1131,6 +1127,7 @@ chatBody.style.setProperty("--overlayStrength", 0.45);
 skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
    
   initAudio();   // ← ADD THIS LINE
+  playTone(520, 80, 0.03);
 
   interactionLocked = false; // reset lock
 
@@ -1168,8 +1165,8 @@ if (v === "saira") {
 
   setTimeout(() => {
     removeTypingIndicator();
-    addVoiceMessage(intro);
-    showFoundational();
+deliverReply(intro, showFoundational);
+
   }, 900);
 
 }, 250);
