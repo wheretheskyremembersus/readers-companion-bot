@@ -1686,12 +1686,12 @@ function submitReflection() {
 ========================= */
 
 function returnToWebsite() {
-   console.log("Return function triggered");
+
+  console.log("Return function triggered");
 
   interactionLocked = true;
   setDockDisabled(true);
 
-  // Darken overlay
   chatBody.style.setProperty("--overlayStrength", 0.65);
 
   if (skyLayer) {
@@ -1699,48 +1699,45 @@ function returnToWebsite() {
     skyLayer.style.transform = "scale(1.02)";
   }
 
-  // Create farewell message element (more reliable than insertAdjacentHTML)
-  const farewell = document.createElement("div");
-  farewell.className = "message system-msg";
-  farewell.innerHTML = `
-  <div class="bubble" style="
-    font-style: italic;
-    font-weight: 700;
-    font-size: 22px;
-    text-align: center;
-    letter-spacing: 0.06em;
-    opacity: 0;
-    transition: opacity 1.5s ease;
-  ">
-    “Until we meet again.” 🙂
-  </div>
-`;
+  const farewellOverlay = document.createElement("div");
+  farewellOverlay.style.position = "fixed";
+  farewellOverlay.style.inset = "0";
+  farewellOverlay.style.background = "rgba(0,0,0,0.6)";
+  farewellOverlay.style.display = "flex";
+  farewellOverlay.style.alignItems = "center";
+  farewellOverlay.style.justifyContent = "center";
+  farewellOverlay.style.opacity = "0";
+  farewellOverlay.style.transition = "opacity 1.8s ease";
+  farewellOverlay.style.zIndex = "9999";
 
-  chatBody.appendChild(farewell);
-  autoScroll();
+  farewellOverlay.innerHTML = `
+    <div style="
+      color: #ffffff;
+      font-family: 'Palatino Linotype', Palatino, serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      text-align: center;
+    ">
+      “Until we meet again.” 🙂
+    </div>
+  `;
 
-  // Fade message in gently
+  document.body.appendChild(farewellOverlay);
+
   setTimeout(() => {
-    farewell.querySelector(".bubble").style.opacity = "1";
+    farewellOverlay.style.opacity = "1";
   }, 100);
 
-  // Wait before fading page
   setTimeout(() => {
     document.body.style.transition = "opacity 1.8s ease";
     document.body.style.opacity = "0";
-  }, 2200);
+  }, 2400);
 
-// Redirect after everything finishes
-setTimeout(() => {
-
-  // Submit reflection form
-  const form = document.getElementById("reflectionForm");
-  if (form) form.submit();
-
-  window.location.href = "https://wheretheskyremembersus.com";
-
-}, 4200);
-
+  setTimeout(() => {
+    window.location.href = "https://wheretheskyremembersus.com";
+  }, 4200);
 }
 
 /* =========================
