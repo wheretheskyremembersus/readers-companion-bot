@@ -1485,23 +1485,23 @@ function showAuthorInvitation() {
 
   addSystemMessage("You’ve stayed with us until the end.");
 
-setTimeout(() => {
-  addSystemMessage(
-    "If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
-  );
-}, 500);
-
-setTimeout(() => {
-  addSystemMessage("Before you leave, may I ask you three quiet reflections?");
-}, 1300);
+  setTimeout(() => {
+    addSystemMessage(
+      "If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
+    );
+  }, 500);
 
   setTimeout(() => {
-  dock.innerHTML = `
-    <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
-   <button class="btn primary" onclick="declineReflection()">No</button>
-  `;
-}, 1500);
-} 
+    addSystemMessage("Before you leave, may I ask you three quiet reflections?");
+  }, 900);
+
+  setTimeout(() => {
+    dock.innerHTML = `
+      <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+      <button class="btn primary" onclick="declineReflection()">No</button>
+    `;
+  }, 1500);
+}
 
 function declineLayer() {
   playTone(520, 60, 0.02);
