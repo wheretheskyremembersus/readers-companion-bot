@@ -1685,31 +1685,46 @@ function nextReflection() {
 
 function submitReflection() {
 
+  // Prevent multiple submissions from same browser
+  if (localStorage.getItem("reflectionDone")) {
+    return;
+  }
+
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
   document.getElementById("r2").value = reflections[1];
   document.getElementById("r3").value = reflections[2];
   document.getElementById("formTime").value = new Date().toISOString();
 
+  const form = document.getElementById("reflectionForm");
+
+  fetch(form.action, {
+    method: "POST",
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(response => {})
+  .catch(error => {});
+
+  // Mark as completed
+  localStorage.setItem("reflectionDone", "true");
+
   dock.innerHTML = "";
 
   chatBody.insertAdjacentHTML(
-  "beforeend",
-  `<div class="message ${activeVoice === "saira" ? "saira-msg" : "aayan-msg"}">
-     <div class="bubble">
-       ${activeVoice === "saira"
-         ? "Thank you for sitting with us. It means more than you know."
-         : "Thank you for staying. Not everyone chooses to listen this closely."}
-       <br><br>
-       <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
-     </div>
-   </div>`
+    "beforeend",
+    `<div class="message ${activeVoice === "saira" ? "saira-msg" : "aayan-msg"}">
+       <div class="bubble">
+         ${activeVoice === "saira"
+           ? "Thank you for sitting with us. It means more than you know."
+           : "Thank you for staying. Not everyone chooses to listen this closely."}
+         <br><br>
+         <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+       </div>
+     </div>`
   );
 
   autoScroll();
-
- // We will submit after cinematic exit instead
-
 }
 
 /* =========================
