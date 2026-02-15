@@ -552,35 +552,52 @@ function addSystemMessage(text) {
   autoScroll();
 }
 
-/* ---------- Typing Indicator ---------- */
+/* =========================
+   TYPING INDICATOR (FIXED)
+========================= */
 
-function showTypingIndicator() {
-  removeTypingIndicator();
-
-  const side =
-    activeVoice === "saira"
-      ? "saira-msg"
-      : activeVoice === "aayan"
-      ? "aayan-msg"
-      : "system-msg";
-
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message ${side}" id="typingIndicator">
-        <div class="bubble typing-bubble">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-     </div>`
-  );
-
-  autoScroll();
+#typingIndicator {
+  position: relative;
+  z-index: 3; /* above overlay */
 }
 
-function removeTypingIndicator() {
-  const typing = document.getElementById("typingIndicator");
-  if (typing) typing.remove();
+#typingIndicator .bubble {
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Dot container */
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dots */
+.typing-bubble span {
+  width: 7px;
+  height: 7px;
+  background: #777;
+  border-radius: 50%;
+  display: inline-block;
+  animation: typingBlink 1.4s infinite ease-in-out both;
+}
+
+/* Stagger delay */
+.typing-bubble span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-bubble span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Animation */
+@keyframes typingBlink {
+  0%   { opacity: 0.25; transform: translateY(0px); }
+  20%  { opacity: 1;    transform: translateY(-2px); }
+  40%  { opacity: 0.6;  transform: translateY(0px); }
+  100% { opacity: 0.25; transform: translateY(0px); }
 }
 
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
