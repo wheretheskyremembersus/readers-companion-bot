@@ -707,15 +707,24 @@ function autoScroll() {
 
 /* ---------- Message Builders ---------- */
 
+function sanitize(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
 function addUserMessage(text) {
+  const safeText = sanitize(text);
+
   chatBody.insertAdjacentHTML(
     "beforeend",
     `<div class="message user">
-        <div class="bubble"><strong>${text}</strong></div>
+        <div class="bubble"><strong>${safeText}</strong></div>
      </div>`
   );
   autoScroll();
 }
+
 
 function addVoiceMessage(text) {
   const side =
