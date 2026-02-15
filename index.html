@@ -60,24 +60,20 @@ body {
 }
 
 /* =========================
-   BOT SHELL
+   BOT SHELL (STRUCTURE FIXED)
 ========================= */
-.chat-body {
-  position: relative;
-  height: 420px;            /* fixed height instead of max-height */
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 22px 24px 14px 24px;
-  font-size: 14px;
-  line-height: 1.7;
-  background: transparent;
 
-  flex: 1;                  /* KEY */
+.bot-shell {
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 /* =========================
    BOT HEADER
 ========================= */
+
 .bot-header {
   background: linear-gradient(135deg, #f3f5f7, #e9edf2);
   padding: 20px 24px;
@@ -94,22 +90,43 @@ body {
   font-weight: 500;
 }
 
+/* =========================
+   CHAT BODY (ONE VERSION ONLY)
+========================= */
+
 .chat-body {
   position: relative;
-  max-height: 420px;
+  height: 420px;
   overflow-y: auto;
   overflow-x: hidden;
-
-  padding: 22px 24px 48px 24px;   /* ← increased bottom padding */
-
+  padding: 22px 24px 24px 24px;
   font-size: 14px;
   line-height: 1.7;
-  border-radius: 0 0 20px 20px;
   background: transparent;
+  flex-shrink: 0;
 }
 
+/* =========================
+   QUESTION DOCK (FIXED)
+========================= */
+
+.question-dock {
+  padding: 18px 24px 20px 24px;
+  border-top: 1px solid #eee;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  background: #fff;
+}
+
+/* =========================
+   SKY LAYER
+========================= */
+
 .sky-layer {
-  position: fixed;          /* <-- THIS is the key change */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -119,8 +136,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 
-  z-index: -1;              /* sits behind everything */
-
+  z-index: -1;
   opacity: 0;
 
   transition:
@@ -129,7 +145,10 @@ body {
     filter 2s ease;
 }
 
-/* Overlay */
+/* =========================
+   CHAT OVERLAY
+========================= */
+
 .chat-body::before {
   content: "";
   position: absolute;
@@ -140,19 +159,23 @@ body {
   z-index: 1;
   transition: background 1.5s ease, backdrop-filter 1.5s ease;
 }
-   
-/* MESSAGE FIX */
+
+/* =========================
+   MESSAGE STRUCTURE
+========================= */
+
 .message {
   position: relative;
-  display: flex;          /* THIS was likely lost */
+  display: flex;
   width: 100%;
-  margin-bottom: 14px;    /* THIS fixes bubble touching */
+  margin-bottom: 14px;
   z-index: 2;
 }
 
 /* =========================
    CHAT BUBBLES
 ========================= */
+
 .bubble {
   max-width: 80%;
   padding: 14px 18px;
@@ -164,6 +187,7 @@ body {
 }
 
 /* Alignments */
+
 .user {
   justify-content: flex-end;
 }
@@ -174,7 +198,8 @@ body {
   justify-content: flex-start;
 }
 
-/* System Bubble (soft green) */
+/* System Bubble */
+
 .system-msg .bubble {
   background: linear-gradient(135deg, #f4faf5, #eaf6ef);
   border: 1px solid rgba(140, 190, 160, 0.18);
@@ -182,12 +207,14 @@ body {
 }
 
 /* User Bubble */
+
 .user .bubble {
   background: #e5e5ea;
   border-radius: 18px 18px 4px 18px;
 }
 
 /* Saira Bubble */
+
 .saira-msg .bubble {
   background: linear-gradient(135deg, #fff1f6, #fde2ec);
   border-radius: 18px 18px 4px 18px;
@@ -196,28 +223,23 @@ body {
 }
 
 /* Aayan Bubble */
+
 .aayan-msg .bubble {
   background: linear-gradient(135deg, #eef5ff, #dde9ff);
   border-radius: 18px 18px 18px 4px;
   box-shadow: 0 2px 8px rgba(120, 160, 255, 0.18);
   border: 1px solid rgba(140, 170, 255, 0.25);
 }
+
 /* =========================
-   QUESTION DOCK
+   BUTTON BASE
 ========================= */
-.question-dock {
-  padding: 12px 24px;
-  border-top: 1px solid #eee;
-}
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
 
 .btn {
   padding: 6px 14px;
   border-radius: 16px;
   font-size: 13px;
+  font-weight: 500;
   border: 1px solid #ddd;
   background: #fff;
   cursor: pointer;
@@ -234,14 +256,10 @@ body {
   cursor: default;
 }
 
-.saira {
-  box-shadow: 0 0 10px rgba(255,180,120,0.55);
-}
+/* =========================
+   TYPING ANIMATION
+========================= */
 
-.aayan {
-  box-shadow: 0 0 10px rgba(120,180,255,0.55);
-}
-   /* Typing Animation */
 .typing-bubble {
   display: flex;
   align-items: center;
@@ -269,7 +287,7 @@ body {
   20% { opacity: 1; }
   100% { opacity: 0.2; }
 }
-   
+
 /* =========================
    TYPING AREA
 ========================= */
