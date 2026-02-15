@@ -1059,7 +1059,10 @@ function sendTypedMessage() {
   addUserMessage(originalText);
 playTone(520, 60, 0.025);
 
-  const text = originalText.toLowerCase();
+// clear input after sending
+input.value = "";
+
+const text = originalText.toLowerCase();
 
   // 🔥 Intelligence router first
   if (handleIntelligence(text, originalText)) {
