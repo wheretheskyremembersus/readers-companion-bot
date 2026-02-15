@@ -791,38 +791,49 @@ function deliverReply(replyText, callback) {
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
 
-  /* =========================
+/* =========================
    ATMOSPHERE PROGRESSION
 ========================= */
 
 emotionalDepth++;
 
-// Emotional arc curve (Rise → Peak → Return)
+/*
+Emotional Arc:
+0 → 14  = deepen
+14 → 20 = hold intensity
+20+     = return slowly
+*/
 
-const peakPoint = 8;   // Peak earlier
 let depthFactor;
 
-if (emotionalDepth <= peakPoint) {
-  depthFactor = emotionalDepth / peakPoint;
-} else {
-  const returnProgress = emotionalDepth - peakPoint;
-  depthFactor = Math.max(0, 1 - returnProgress / peakPoint);
+if (emotionalDepth <= 14) {
+  // Rising intensity
+  depthFactor = emotionalDepth / 14;
+} 
+else if (emotionalDepth <= 20) {
+  // Hold peak tension
+  depthFactor = 1;
+} 
+else {
+  // Slow emotional return
+  const returnProgress = emotionalDepth - 20;
+  depthFactor = Math.max(0, 1 - returnProgress / 14);
 }
 
-// Softer darkness (not too heavy)
+// Overlay evolution (deep but not dead)
 const overlayValue = Math.max(
-  0.15,              // never too dark
-  0.40 - depthFactor * 0.40
+  0.05,
+  0.45 - depthFactor * 0.75
 );
 
 chatBody.style.setProperty("--overlayStrength", overlayValue);
 
-// Sky evolution (less dramatic)
+// Sky cinematic evolution
 if (skyLayer) {
   skyLayer.style.filter = `
-    brightness(${1 - depthFactor * 0.35})
-    contrast(${1 + depthFactor * 0.8})
-    saturate(${1 + depthFactor * 0.6})
+    brightness(${1 - depthFactor * 0.6})
+    contrast(${1 + depthFactor * 1.5})
+    saturate(${1 + depthFactor * 1.2})
   `;
 }
 
