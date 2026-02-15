@@ -1677,10 +1677,8 @@ function submitReflection() {
 
   autoScroll();
 
-  // Submit form slightly later so UI feels natural
-  setTimeout(() => {
-    document.getElementById("reflectionForm").submit();
-  }, 800);
+ // We will submit after cinematic exit instead
+
 }
 
 /* =========================
@@ -1688,6 +1686,7 @@ function submitReflection() {
 ========================= */
 
 function returnToWebsite() {
+   console.log("Return function triggered");
 
   interactionLocked = true;
   setDockDisabled(true);
@@ -1730,10 +1729,17 @@ function returnToWebsite() {
     document.body.style.opacity = "0";
   }, 2200);
 
-  // Redirect after everything finishes
-  setTimeout(() => {
-    window.location.href = "https://wheretheskyremembersus.com";
-  }, 4200);
+// Redirect after everything finishes
+setTimeout(() => {
+
+  // Submit reflection form
+  const form = document.getElementById("reflectionForm");
+  if (form) form.submit();
+
+  window.location.href = "https://wheretheskyremembersus.com";
+
+}, 4200);
+
 }
 
 /* =========================
