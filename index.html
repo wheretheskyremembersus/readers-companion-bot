@@ -598,21 +598,14 @@ function initAudio() {
   }
 }
 
-function playTone(startFreq = 650, duration = 70, volume = 0.14, glideTo = null) {
+function playTone(startFreq = 750, duration = 40, volume = 0.14) {
   if (!audioContext) return;
 
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
 
-  oscillator.type = "sine";
+  oscillator.type = "square"; // KEY CHANGE
   oscillator.frequency.setValueAtTime(startFreq, audioContext.currentTime);
-
-  if (glideTo) {
-    oscillator.frequency.linearRampToValueAtTime(
-      glideTo,
-      audioContext.currentTime + duration / 1000
-    );
-  }
 
   gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
   gainNode.gain.exponentialRampToValueAtTime(
