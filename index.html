@@ -97,13 +97,15 @@ body {
 .chat-body {
   position: relative;
   max-height: 420px;
-  overflow-y: auto;   /* keep scrolling */
-  overflow-x: hidden; /* prevent horizontal shift */
-  padding: 22px 24px 6px 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding: 22px 24px 48px 24px;   /* ← increased bottom padding */
+
   font-size: 14px;
   line-height: 1.7;
   border-radius: 0 0 20px 20px;
-  background: transparent; /* IMPORTANT */
+  background: transparent;
 }
 
 .sky-layer {
