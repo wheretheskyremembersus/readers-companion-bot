@@ -1483,24 +1483,52 @@ function answerCharacter(item, btn) {
 function showAuthorInvitation() {
   clearDock();
 
-  addSystemMessage("You’ve stayed with us until the end.");
+  interactionLocked = true;
+
+  // Line 1
+  showTypingIndicator();
 
   setTimeout(() => {
-    addSystemMessage(
-      "If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
-    );
-  }, 500);
+    removeTypingIndicator();
+    addVoiceMessage("You’ve stayed with us until the end.");
+    autoScroll();
 
-  setTimeout(() => {
-    addSystemMessage("Before you leave, may I ask you three quiet reflections?");
-  }, 900);
+    // Line 2
+    setTimeout(() => {
+      showTypingIndicator();
 
-  setTimeout(() => {
-    dock.innerHTML = `
-      <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
-      <button class="btn primary" onclick="declineReflection()">No</button>
-    `;
-  }, 1500);
+      setTimeout(() => {
+        removeTypingIndicator();
+        addVoiceMessage(
+          "If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
+        );
+        autoScroll();
+
+        // Line 3
+        setTimeout(() => {
+          showTypingIndicator();
+
+          setTimeout(() => {
+            removeTypingIndicator();
+            addVoiceMessage("Before you leave… may I ask you three quiet reflections?");
+            autoScroll();
+
+            interactionLocked = false;
+
+            dock.innerHTML = `
+              <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+              <button class="btn primary" onclick="declineReflection()">No</button>
+            `;
+
+          }, 1600); // typing for line 3
+
+        }, 1200); // pause before line 3
+
+      }, 2000); // typing for line 2
+
+    }, 1500); // pause before line 2
+
+  }, 1400); // typing for line 1
 }
 
 function declineLayer() {
