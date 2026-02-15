@@ -614,10 +614,9 @@ function playTone(startFreq, duration, volume = 0.11, glideTo = null) {
     );
   }
 
-  gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(
-    0.001,
-    audioContext.currentTime + duration / 1000
+ gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.01);
+gainNode.gain.linearRampToValueAtTime(0.0001, audioContext.currentTime + duration / 1000);
   );
 
   oscillator.connect(gainNode);
