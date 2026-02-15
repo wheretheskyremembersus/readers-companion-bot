@@ -587,7 +587,7 @@ const preloadAayan = new Image();
 preloadAayan.src = "Aayan.jpg";
 
 /* =========================
-   SOUND ENGINE
+   SOUND ENGINE (MAX SAFE)
 ========================= */
 
 let audioContext;
@@ -596,26 +596,29 @@ function initAudio() {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
-
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
-  }
 }
 
-function playTone(startFreq = 900, duration = 90, volume = 0.11) {
+function playTone(startFreq = 650, duration = 70, volume = 0.14, glideTo = null) {
   if (!audioContext) return;
 
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
 
-  oscillator.type = "square";  // sharper presence
+  // Brighter than sine (more audible)
+  oscillator.type = "triangle";
+
   oscillator.frequency.setValueAtTime(startFreq, audioContext.currentTime);
 
-  // Strong fast attack
+  if (glideTo) {
+    oscillator.frequency.linearRampToValueAtTime(
+      glideTo,
+      audioContext.currentTime + duration / 1000
+    );
+  }
+
+  // Strong but controlled attack
   gainNode.gain.setValueAtTime(0, audioContext.currentTime);
   gainNode.gain.linearRampToValueAtTime(volume, audioContext.currentTime + 0.005);
-
-  // Very fast decay (keypad style)
   gainNode.gain.exponentialRampToValueAtTime(
     0.0001,
     audioContext.currentTime + duration / 1000
@@ -627,6 +630,7 @@ function playTone(startFreq = 900, duration = 90, volume = 0.11) {
   oscillator.start();
   oscillator.stop(audioContext.currentTime + duration / 1000);
 }
+
 /* =========================
    HELPERS
 ========================= */
