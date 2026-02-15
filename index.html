@@ -615,6 +615,32 @@ function deliverReply(replyText, callback) {
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
 
+     /* =========================
+   TYPING INDICATOR FUNCTIONS
+========================= */
+
+function showTypingIndicator() {
+  if (document.getElementById("typingIndicator")) return;
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${activeVoice === "saira" ? "saira-msg" : activeVoice === "aayan" ? "aayan-msg" : "system-msg"}" id="typingIndicator">
+        <div class="bubble">
+          <div class="typing-bubble">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+     </div>`
+  );
+
+  autoScroll();
+}
+
+function removeTypingIndicator() {
+  const el = document.getElementById("typingIndicator");
+  if (el) el.remove();
+}
+
     /* =========================
        ATMOSPHERE PROGRESSION
     ========================= */
