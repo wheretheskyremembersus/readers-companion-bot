@@ -566,6 +566,43 @@ body {
   <input type="hidden" name="reflection_3" id="r3">
   <input type="hidden" name="timestamp" id="formTime">
 </form>
+   
+/* =========================
+   EXIT TRANSITION
+========================= */
+
+.exit-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0);
+  backdrop-filter: blur(0px);
+  z-index: 9999;
+  transition: background 1.5s ease, backdrop-filter 1.5s ease;
+}
+
+.exit-overlay.active {
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+}
+
+.exit-message {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+  font-size: 22px;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.exit-message.active {
+  opacity: 1;
+  transform: translateY(0px);
+}
 
 <script>
    
@@ -1616,12 +1653,12 @@ function nextReflection() {
 ========================= */
 
 function submitReflection() {
+
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
   document.getElementById("r2").value = reflections[1];
   document.getElementById("r3").value = reflections[2];
   document.getElementById("formTime").value = new Date().toISOString();
-  document.getElementById("reflectionForm").submit();
 
   dock.innerHTML = "";
 
@@ -1636,9 +1673,57 @@ function submitReflection() {
        <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
      </div>
    </div>`
-);
+  );
 
   autoScroll();
+
+  // Submit form slightly later so UI feels natural
+  setTimeout(() => {
+    document.getElementById("reflectionForm").submit();
+  }, 800);
+}
+
+/* =========================
+   RETURN TO WEBSITE (CINEMATIC EXIT)
+========================= */
+
+function returnToWebsite() {
+
+  // Lock interaction
+  interactionLocked = true;
+  setDockDisabled(true);
+
+  // Fade overlay darker
+  chatBody.style.setProperty("--overlayStrength", 0.65);
+
+  // Darken sky softly
+  if (skyLayer) {
+    skyLayer.style.filter = "brightness(0.7) contrast(1.1) saturate(0.9)";
+    skyLayer.style.transform = "scale(1.02)";
+  }
+
+  // Add farewell message
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message system-msg">
+       <div class="bubble" style="font-style: italic; font-size: 15px;">
+         Until we meet again.
+       </div>
+     </div>`
+  );
+
+  autoScroll();
+
+  // Fade whole page
+  setTimeout(() => {
+    document.body.style.transition = "opacity 1.5s ease";
+    document.body.style.opacity = "0";
+  }, 1200);
+
+  // Redirect
+  setTimeout(() => {
+    window.location.href = "https://wheretheskyremembersus.com";
+  }, 2600);
 }
 
 /* =========================
