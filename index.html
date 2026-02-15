@@ -13,6 +13,7 @@
 body {
   margin: 0;
   font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+  font-weight: 400;
   background: linear-gradient(
     to bottom,
     #bfc2c4 0%,
@@ -20,6 +21,8 @@ body {
     #ffffff 100%
   );
   color: #222;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .page-wrapper {
@@ -45,12 +48,12 @@ body {
 }
 
 .page-header h1 {
-  font-size: 22px;
-  font-weight: normal;
-  letter-spacing: 0.06em;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #555;
-  margin: 0 0 10px 0;
+  color: #444;
+  margin: 0 0 12px 0;
 }
 
 .page-header p {
@@ -70,7 +73,6 @@ body {
   border-radius: 20px;
   overflow: hidden;
   background: #ffffff;
-  position: relative;
 }
 
 /* =========================
@@ -115,17 +117,32 @@ body {
 ========================= */
 
 .sky-layer {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 0;
+
+  z-index: -1;
   opacity: 0;
+
   transition:
-    opacity 1.5s ease,
-    transform 2s ease,
-    filter 2s ease;
+    opacity 1.8s ease,
+    transform 3s ease,
+    filter 3s ease;
+}
+@keyframes skyDrift {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.sky-layer.active {
+  animation: skyDrift 18s ease-in-out infinite;
 }
 
 /* =========================
@@ -394,9 +411,10 @@ body {
   <span class="bot-title">Where the Sky Remembers Us | Companion</span>
 </div>
    
-  <div class="chat-body" id="chatBody">
-  <div class="sky-layer" id="skyLayer"></div>
+  <<div class="sky-layer" id="skyLayer"></div>
+<div class="chat-body" id="chatBody">
 </div>
+
   <div class="question-dock" id="questionDock"></div>
 
   <!-- TYPING AREA -->
@@ -1067,16 +1085,20 @@ if (v === "saira") {
   header.style.background = "linear-gradient(135deg, #eef3fb, #e3ebf9)";
 }
  if (v === "saira") {
+    skyLayer.classList.remove("active");   // ← ADD HERE
   skyLayer.style.opacity = "0";
   setTimeout(() => {
     skyLayer.style.backgroundImage = "url('Saira.jpg')";
     skyLayer.style.opacity = "1";
+    skyLayer.classList.add("active");
   }, 200);
 } else {
+     skyLayer.classList.remove("active"); 
   skyLayer.style.opacity = "0";
   setTimeout(() => {
     skyLayer.style.backgroundImage = "url('Aayan.jpg')";
     skyLayer.style.opacity = "1";
+    skyLayer.classList.add("active");
   }, 200);
 }
    clearDock();
