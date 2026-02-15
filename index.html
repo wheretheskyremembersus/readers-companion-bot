@@ -1776,6 +1776,11 @@ function returnToWebsite() {
    START
 ========================= */
 
+// Disable right click (soft deterrent)
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+});
+
 loadWelcome();
    
 </script>
