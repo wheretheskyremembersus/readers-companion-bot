@@ -301,7 +301,7 @@ body {
   padding: 7px 16px;
   border-radius: 18px;
   font-size: 14px;
-  font-weight: 500;          /* normal weight */
+  font-weight: 500;          /* NOT bold */
   letter-spacing: 0.02em;
   border: 1px solid #ddd;
   background: #fff;
@@ -338,16 +338,18 @@ body {
 
 
 /* =========================
-   PRIMARY BUTTONS (Send + Return)
+   PRIMARY ACTION BUTTONS
+   (Send + No + Return)
 ========================= */
 
+/* Send button */
 .typing-area button {
-  padding: 8px 16px;      /* keeps original shape */
+  padding: 8px 16px;          /* keeps original shape */
   border-radius: 18px;
   font-size: 13px;
-  font-weight: 600;
-  background: #222;
-  color: white;
+  font-weight: 700;           /* bold */
+  background: #2a2a2a;        /* charcoal */
+  color: #ffffff;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
@@ -357,12 +359,13 @@ body {
   opacity: 0.85;
 }
 
-/* For Return to homepage */
+/* No + Return buttons (use class="btn primary") */
 .btn.primary {
-  background: #222;
-  color: white;
+  background: #2a2a2a;        /* charcoal */
+  color: #ffffff;
   border: none;
-  font-weight: 600;
+  font-weight: 700;           /* bold */
+  letter-spacing: 0.04em;
 }
 
 .btn.primary:hover {
@@ -1384,7 +1387,7 @@ function unlockNextLayer() {
   setTimeout(() => {
     dock.innerHTML = `
       <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
-      <button class="btn" onclick="declineLayer()">No</button>
+     <button class="btn primary" onclick="declineLayer()">No</button>
     `;
     autoScroll();
   }, 600);
@@ -1458,7 +1461,7 @@ setTimeout(() => {
   setTimeout(() => {
   dock.innerHTML = `
     <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
-    <button class="btn" onclick="declineReflection()">No</button>
+   <button class="btn primary" onclick="declineReflection()">No</button>
   `;
 }, 1500);
 } 
@@ -1477,7 +1480,7 @@ function declineLayer() {
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
     <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-    <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+    <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
   `;
 
   autoScroll();
@@ -1499,7 +1502,7 @@ function declineReflection() {
 );
 
   dock.innerHTML = `
-    <button class="btn" onclick="returnToWebsite()">Return to the main site</button>
+    <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
   `;
 }
    
