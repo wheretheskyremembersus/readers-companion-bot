@@ -815,9 +815,9 @@ else if (emotionalDepth <= 20) {
   depthFactor = 1;
 } 
 else {
-  // Slow emotional return
+  // Faster emotional return (strong but graceful)
   const returnProgress = emotionalDepth - 20;
-  depthFactor = Math.max(0, 1 - returnProgress / 14);
+  depthFactor = Math.max(0, 1 - returnProgress / 6);
 }
 
 // Overlay evolution (deep but not dead)
@@ -831,7 +831,7 @@ chatBody.style.setProperty("--overlayStrength", overlayValue);
 // Sky cinematic evolution
 if (skyLayer) {
   skyLayer.style.filter = `
-    brightness(${1 - depthFactor * 0.6})
+    brightness(${1 - depthFactor * 0.7})
     contrast(${1 + depthFactor * 1.5})
     saturate(${1 + depthFactor * 1.2})
   `;
