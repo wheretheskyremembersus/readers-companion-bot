@@ -59,96 +59,283 @@ body {
   color: #777;
 }
 
-/* ========================= BOT SHELL (STRUCTURE FIXED) ========================= */ 
-.bot-shell { display: flex; flex-direction: column; border-radius: 20px; overflow: hidden; } 
+/* =========================
+   BOT SHELL
+========================= */
 
-/* ========================= BOT HEADER ========================= */ 
-.bot-header { background: linear-gradient(135deg, #f3f5f7, #e9edf2); padding: 20px 24px; border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: background 0.4s ease; } 
-.bot-title { font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: #2a2a2a; font-weight: 500; } 
+.bot-shell {
+  display: flex;
+  flex-direction: column;
+  height: 650px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+}
 
-/* ========================= CHAT BODY (ONE VERSION ONLY) ========================= */ 
-.chat-body { position: relative; height: 420px; overflow-y: auto; overflow-x: hidden; padding: 22px 24px 24px 24px; font-size: 14px; line-height: 1.7; background: transparent; flex-shrink: 0; } 
 
-/* ========================= QUESTION DOCK (FIXED) ========================= */ 
-.question-dock { padding: 18px 24px 20px 24px; border-top: 1px solid #eee; display: flex; flex-wrap: wrap; gap: 8px; background: #fff; } 
+/* =========================
+   BOT HEADER
+========================= */
 
-/* ========================= SKY LAYER ========================= */ 
-.sky-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; background-repeat: no-repeat; z-index: -1; opacity: 0; transition: opacity 1.5s ease, transform 2s ease, filter 2s ease; } 
+.bot-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f3f5f7, #e9edf2);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: background 0.4s ease;
+}
 
-/* ========================= CHAT OVERLAY ========================= */ 
-.chat-body::before { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,var(--overlayStrength,0.35)); backdrop-filter: blur(1.5px); pointer-events: none; z-index: 1; transition: background 1.5s ease, backdrop-filter 1.5s ease; } 
+.bot-title {
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2a2a2a;
+  font-weight: 500;
+}
 
-/* ========================= MESSAGE STRUCTURE ========================= */ 
-.message { position: relative; display: flex; width: 100%; margin-bottom: 14px; z-index: 2; } 
 
-/* ========================= CHAT BUBBLES ========================= */ 
-.bubble { max-width: 80%; padding: 14px 18px; border-radius: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.4) inset; word-wrap: break-word; } 
+/* =========================
+   CHAT BODY (Sky contained)
+========================= */
 
-/* Alignments */ 
-.user { justify-content: flex-end; } 
-.saira-msg, .aayan-msg, .system-msg { justify-content: flex-start; } 
+.chat-body {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 22px 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  background: transparent;
+}
 
-/* System Bubble */ 
-.system-msg .bubble { background: linear-gradient(135deg, #f4faf5, #eaf6ef); border: 1px solid rgba(140, 190, 160, 0.18); box-shadow: 0 2px 6px rgba(120, 170, 140, 0.12); } 
 
-/* User Bubble */ 
-.user .bubble { background: #e5e5ea; border-radius: 18px 18px 4px 18px; } 
+/* =========================
+   SKY LAYER (Contained)
+========================= */
 
-/* Saira Bubble */ 
-.saira-msg .bubble { background: linear-gradient(135deg, #fff1f6, #fde2ec); border-radius: 18px 18px 4px 18px; box-shadow: 0 2px 8px rgba(255, 160, 190, 0.18); border: 1px solid rgba(255, 170, 200, 0.25); } 
+.sky-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  opacity: 0;
+  transition:
+    opacity 1.5s ease,
+    transform 2s ease,
+    filter 2s ease;
+}
 
-/* Aayan Bubble */ 
-.aayan-msg .bubble { background: linear-gradient(135deg, #eef5ff, #dde9ff); border-radius: 18px 18px 18px 4px; box-shadow: 0 2px 8px rgba(120, 160, 255, 0.18); border: 1px solid rgba(140, 170, 255, 0.25); } 
 
-/* ========================= BUTTON BASE ========================= */ 
-.btn { padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 500; border: 1px solid #ddd; background: #fff; cursor: pointer; transition: all 0.2s ease; } 
-.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); } 
-.btn:disabled { opacity: 0.45; cursor: default; } 
+/* =========================
+   CHAT OVERLAY
+========================= */
 
-/* ========================= TYPING ANIMATION ========================= */ 
-.typing-bubble { display: flex; align-items: center; gap: 4px; } 
-.typing-bubble span { width: 6px; height: 6px; background: #999; border-radius: 50%; animation: blink 1.4s infinite both; } 
-.typing-bubble span:nth-child(2) { animation-delay: 0.2s; } 
-.typing-bubble span:nth-child(3) { animation-delay: 0.4s; } 
-@keyframes blink { 0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; } } 
+.chat-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,var(--overlayStrength,0.35));
+  backdrop-filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 1.5s ease;
+}
 
-/* ========================= TYPING AREA ========================= */ 
-.typing-area { margin-top: 12px; display: flex; gap: 8px; padding-top: 12px; border-top: 1px solid #eee; } 
-.typing-area input { flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid #ddd; font-size: 14px; outline: none; transition: all 0.2s ease; } 
-.typing-area input:focus { border-color: #bbb; box-shadow: 0 0 0 2px rgba(200,200,200,0.15); } 
 
-/* ========================= BASE BUTTON (Dock Questions) ========================= */ 
-.btn { padding: 7px 16px; border-radius: 18px; font-size: 14px; font-weight: 500; /* NOT bold */ letter-spacing: 0.02em; border: 1px solid #ddd; background: #fff; cursor: pointer; transition: all 0.2s ease; } 
-.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.08); } 
-.btn:disabled { opacity: 0.45; cursor: default; } 
+/* =========================
+   MESSAGE STRUCTURE
+========================= */
 
-/* ========================= VOICE BUTTONS (Subtle Tint) ========================= */ 
-.btn.saira { background: linear-gradient(135deg, #fff1f6, #fde2ec); border: 1px solid rgba(255,170,200,0.35); } 
-.btn.aayan { background: linear-gradient(135deg, #eef5ff, #dde9ff); border: 1px solid rgba(140,170,255,0.35); } 
+.message {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin-bottom: 14px;
+  z-index: 2;
+}
 
-/* ========================= PRIMARY ACTION BUTTONS (Send + No + Return) ========================= */ 
-/* Send button */ 
-.typing-area button { padding: 8px 16px; /* keeps original shape */ border-radius: 18px; font-size: 13px; font-weight: 700; /* bold */ background: #2a2a2a; /* charcoal */ color: #ffffff; border: none; cursor: pointer; transition: opacity 0.2s ease; } 
-.typing-area button:hover { opacity: 0.85; } 
+.bubble {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.06),
+    0 1px 0 rgba(255,255,255,0.4) inset;
+  word-wrap: break-word;
+}
 
-/* No + Return buttons (use class="btn primary") */ 
-.btn.primary { background: #2a2a2a; /* charcoal */ color: #ffffff; border: none; font-weight: 700; /* bold */ letter-spacing: 0.04em; } 
-.btn.primary:hover { opacity: 0.85; } 
 
-/* ========================= TYPING INDICATOR ========================= */ 
-#typingIndicator .bubble { opacity: 0.8; font-style: italic; } 
+/* Alignments */
 
-/* ========================= PERMISSION PROMPT ========================= */ 
-.reflection-prompt { background: #f6f1ea; border-left: 3px solid #d8cfc3; padding: 14px 16px; border-radius: 8px; } 
+.user {
+  justify-content: flex-end;
+}
 
-/* ========================= TRUST PANEL (RIGHT) ========================= */ 
-.right-column h2 { font-size: 22px; font-weight: normal; letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 18px; } 
-.right-column h2.spaced { margin-top: 48px; } 
-.right-column h3 { font-size: 13px; letter-spacing: 0.12em; margin: 0 0 6px; } 
-.right-column p { font-size: 15px; line-height: 1.7; margin: 0 0 18px; } 
+.saira-msg,
+.aayan-msg,
+.system-msg {
+  justify-content: flex-start;
+}
 
-/* ========================= FOOTER ========================= */ 
-.page-footer { margin-top: 80px; font-size: 13px; color: #888; }
+
+/* System Bubble */
+
+.system-msg .bubble {
+  background: linear-gradient(135deg, #f4faf5, #eaf6ef);
+  border: 1px solid rgba(140,190,160,0.18);
+}
+
+
+/* User Bubble */
+
+.user .bubble {
+  background: #e5e5ea;
+  border-radius: 18px 18px 4px 18px;
+}
+
+
+/* Saira Bubble */
+
+.saira-msg .bubble {
+  background: linear-gradient(135deg, #fff1f6, #fde2ec);
+  border-radius: 18px 18px 4px 18px;
+  border: 1px solid rgba(255,170,200,0.25);
+  box-shadow: 0 2px 8px rgba(255,160,190,0.18);
+}
+
+
+/* Aayan Bubble */
+
+.aayan-msg .bubble {
+  background: linear-gradient(135deg, #eef5ff, #dde9ff);
+  border-radius: 18px 18px 18px 4px;
+  border: 1px solid rgba(140,170,255,0.25);
+  box-shadow: 0 2px 8px rgba(120,160,255,0.18);
+}
+
+
+/* =========================
+   QUESTION DOCK
+========================= */
+
+.question-dock {
+  padding: 18px 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #ffffff;
+}
+
+
+/* =========================
+   BUTTON BASE (Dock questions NOT bold)
+========================= */
+
+.btn {
+  padding: 7px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+
+/* =========================
+   VOICE BUTTONS (Tint + Glow restored)
+========================= */
+
+.btn.saira {
+  background: linear-gradient(135deg, #fff1f6, #fde2ec);
+  border: 1px solid rgba(255,170,200,0.35);
+  box-shadow: 0 0 12px rgba(255,180,120,0.45);
+}
+
+.btn.aayan {
+  background: linear-gradient(135deg, #eef5ff, #dde9ff);
+  border: 1px solid rgba(140,170,255,0.35);
+  box-shadow: 0 0 12px rgba(120,180,255,0.45);
+}
+
+
+/* =========================
+   TYPING AREA
+========================= */
+
+.typing-area {
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+}
+
+.typing-area input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+}
+
+.typing-area input:focus {
+  border-color: #bbb;
+  box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
+}
+
+
+/* =========================
+   PRIMARY BUTTONS (Send / No / Return)
+========================= */
+
+.typing-area button,
+.btn.primary {
+  padding: 8px 18px;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.typing-area button:hover,
+.btn.primary:hover {
+  opacity: 0.85;
+}
+
+
+/* =========================
+   TYPING INDICATOR
+========================= */
+
+#typingIndicator .bubble {
+  opacity: 0.8;
+  font-style: italic;
+}
 
 /* =========================
    MOBILE
