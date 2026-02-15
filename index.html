@@ -792,51 +792,43 @@ function deliverReply(replyText, callback) {
     playTone(420, 120, 0.025, 360);
 
 /* =========================
-   ATMOSPHERE PROGRESSION
+   ATMOSPHERE PROGRESSION (SEAMLESS ARC)
 ========================= */
 
 emotionalDepth++;
 
 /*
-Emotional Arc:
-0 → 14  = deepen
-14 → 20 = hold intensity
-20+     = return slowly
+We use a smooth sine curve instead of linear math.
+This makes the transition invisible.
 */
 
-let depthFactor;
+const maxDepth = 28; // full arc length
+const arcPosition = Math.min(emotionalDepth, maxDepth);
 
-if (emotionalDepth <= 14) {
-  // Rising intensity
-  depthFactor = emotionalDepth / 14;
-} 
-else if (emotionalDepth <= 20) {
-  // Hold peak tension
-  depthFactor = 1;
-} 
-else {
-  // Faster emotional return (strong but graceful)
-  const returnProgress = emotionalDepth - 20;
-  depthFactor = Math.max(0, 1 - returnProgress / 6);
-}
+/*
+0 → π gives full rise and fall
+*/
+const depthFactor = Math.sin((arcPosition / maxDepth) * Math.PI);
 
-// Overlay evolution (deep but not dead)
-const overlayValue = Math.max(
-  0.05,
-  0.45 - depthFactor * 0.75
-);
+/*
+depthFactor now:
+0 → 1 → 0
+Smoothly. No visible break.
+*/
+
+// Overlay evolution (subtle)
+const overlayValue = 0.32 - depthFactor * 0.22;
 
 chatBody.style.setProperty("--overlayStrength", overlayValue);
 
-// Sky cinematic evolution
+// Sky evolution (gentle cinematic feel)
 if (skyLayer) {
   skyLayer.style.filter = `
-    brightness(${1 - depthFactor * 0.7})
-    contrast(${1 + depthFactor * 1.5})
-    saturate(${1 + depthFactor * 1.2})
+    brightness(${1 - depthFactor * 0.55})
+    contrast(${1 + depthFactor * 1.1})
+    saturate(${1 + depthFactor * 0.9})
   `;
 }
-
     /* =========================
        UNLOCK INTERACTION
     ========================= */
