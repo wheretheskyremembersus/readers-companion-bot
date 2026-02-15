@@ -1711,18 +1711,19 @@ function returnToWebsite() {
   farewellOverlay.style.zIndex = "9999";
 
   farewellOverlay.innerHTML = `
-    <div style="
-      color: #ffffff;
-      font-family: 'Palatino Linotype', Palatino, serif;
-      font-style: italic;
-      font-weight: 700;
-      font-size: 28px;
-      letter-spacing: 0.08em;
-      text-align: center;
-    ">
-      “Until we meet again.” 🙂
-    </div>
-  `;
+  <div style="
+    color: #ffffff;
+    font-family: 'Palatino Linotype', Palatino, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(48px, 8vw, 110px);
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-shadow: 0 0 25px rgba(255,255,255,0.35);
+  ">
+    “Until we meet again.” 🙂
+  </div>
+`;
 
   document.body.appendChild(farewellOverlay);
 
