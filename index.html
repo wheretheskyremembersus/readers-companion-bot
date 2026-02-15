@@ -615,11 +615,12 @@ function deliverReply(replyText, callback) {
     addVoiceMessage(replyText);
     playTone(420, 120, 0.025, 360);
 
-     /* =========================
+  /* =========================
    TYPING INDICATOR FUNCTIONS
 ========================= */
 
 function showTypingIndicator() {
+  if (!chatBody) return;
   if (document.getElementById("typingIndicator")) return;
 
   chatBody.insertAdjacentHTML(
