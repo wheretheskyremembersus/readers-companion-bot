@@ -1703,17 +1703,18 @@ function returnToWebsite() {
   const farewell = document.createElement("div");
   farewell.className = "message system-msg";
   farewell.innerHTML = `
-    <div class="bubble" style="
-      font-style: italic;
-      font-size: 16px;
-      text-align: center;
-      letter-spacing: 0.04em;
-      opacity: 0;
-      transition: opacity 1.2s ease;
-    ">
-      Until we meet again.
-    </div>
-  `;
+  <div class="bubble" style="
+    font-style: italic;
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+  ">
+    “Until we meet again.” 🙂
+  </div>
+`;
 
   chatBody.appendChild(farewell);
   autoScroll();
