@@ -1486,12 +1486,10 @@ function showAuthorInvitation() {
   addSystemMessage("You’ve stayed with us until the end.");
 
 setTimeout(() => {
-  addSystemMessage("If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.");
+  addSystemMessage(
+    "If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong>"
+  );
 }, 500);
-
-setTimeout(() => {
-  addSystemMessage("wheretheskyremembersus@gmail.com");
-}, 900);
 
 setTimeout(() => {
   addSystemMessage("Before you leave, may I ask you three quiet reflections?");
