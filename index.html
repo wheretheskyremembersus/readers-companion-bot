@@ -1692,7 +1692,7 @@ function returnToWebsite() {
   interactionLocked = true;
   setDockDisabled(true);
 
-  // Darken overlay gradually
+  // Darken overlay
   chatBody.style.setProperty("--overlayStrength", 0.65);
 
   if (skyLayer) {
@@ -1700,33 +1700,40 @@ function returnToWebsite() {
     skyLayer.style.transform = "scale(1.02)";
   }
 
-  // Add farewell message FIRST
-  chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message system-msg">
-       <div class="bubble" style="
-         font-style: italic;
-         font-size: 16px;
-         text-align: center;
-         letter-spacing: 0.04em;
-       ">
-         Until we meet again.
-       </div>
-     </div>`
-  );
+  // Create farewell message element (more reliable than insertAdjacentHTML)
+  const farewell = document.createElement("div");
+  farewell.className = "message system-msg";
+  farewell.innerHTML = `
+    <div class="bubble" style="
+      font-style: italic;
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    ">
+      Until we meet again.
+    </div>
+  `;
 
+  chatBody.appendChild(farewell);
   autoScroll();
 
-  // Give the message time to breathe
+  // Fade message in gently
+  setTimeout(() => {
+    farewell.querySelector(".bubble").style.opacity = "1";
+  }, 100);
+
+  // Wait before fading page
   setTimeout(() => {
     document.body.style.transition = "opacity 1.8s ease";
     document.body.style.opacity = "0";
-  }, 1800);
+  }, 2200);
 
-  // Redirect after fade completes
+  // Redirect after everything finishes
   setTimeout(() => {
     window.location.href = "https://wheretheskyremembersus.com";
-  }, 3600);
+  }, 4200);
 }
 
 /* =========================
