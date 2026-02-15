@@ -66,7 +66,7 @@ body {
 .bot-shell {
   display: flex;
   flex-direction: column;
-  height: 650px;          /* overall shell height */
+  height: 650px;
   border-radius: 20px;
   overflow: hidden;
   background: #ffffff;
@@ -95,13 +95,12 @@ body {
 
 
 /* =========================
-   CHAT BODY
-   (Sky contained inside)
+   CHAT BODY (Sky contained)
 ========================= */
 
 .chat-body {
   position: relative;
-  flex: 1;                      /* grows naturally */
+  flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 22px 24px;
@@ -112,23 +111,20 @@ body {
 
 
 /* =========================
-   SKY LAYER (CONTAINED)
+   SKY LAYER (Contained)
 ========================= */
 
 .sky-layer {
-  position: absolute;            /* NOT fixed */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   z-index: 0;
   opacity: 0;
-
   transition:
     opacity 1.5s ease,
     transform 2s ease,
@@ -148,7 +144,7 @@ body {
   backdrop-filter: blur(1.5px);
   pointer-events: none;
   z-index: 1;
-  transition: background 1.5s ease, backdrop-filter 1.5s ease;
+  transition: background 1.5s ease;
 }
 
 
@@ -239,14 +235,14 @@ body {
 
 
 /* =========================
-   BUTTON BASE
+   BUTTON BASE (Dock questions NOT bold)
 ========================= */
 
 .btn {
   padding: 7px 16px;
   border-radius: 18px;
   font-size: 14px;
-  font-weight: 500;      /* NOT bold */
+  font-weight: 500;
   letter-spacing: 0.02em;
   border: 1px solid #ddd;
   background: #fff;
@@ -266,7 +262,7 @@ body {
 
 
 /* =========================
-   VOICE BUTTONS (Tint + Glow)
+   VOICE BUTTONS (Tint + Glow restored)
 ========================= */
 
 .btn.saira {
@@ -287,7 +283,7 @@ body {
 ========================= */
 
 .typing-area {
-  padding: 16px 24px 20px 24px;
+  padding: 16px 24px;
   border-top: 1px solid #eee;
   display: flex;
   gap: 8px;
@@ -310,10 +306,11 @@ body {
 
 
 /* =========================
-   PRIMARY BUTTONS
+   PRIMARY BUTTONS (Send / No / Return)
 ========================= */
 
-.typing-area button {
+.typing-area button,
+.btn.primary {
   padding: 8px 18px;
   border-radius: 18px;
   font-size: 13px;
@@ -322,49 +319,22 @@ body {
   color: #ffffff;
   border: none;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
-.typing-area button:hover {
-  opacity: 0.85;
-}
-
-.btn.primary {
-  background: #2a2a2a;
-  color: #ffffff;
-  border: none;
-  font-weight: 700;
-}
-
+.typing-area button:hover,
 .btn.primary:hover {
   opacity: 0.85;
 }
 
 
 /* =========================
-   TYPING ANIMATION
+   TYPING INDICATOR
 ========================= */
 
-.typing-bubble {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.typing-bubble span {
-  width: 6px;
-  height: 6px;
-  background: #999;
-  border-radius: 50%;
-  animation: blink 1.4s infinite both;
-}
-
-.typing-bubble span:nth-child(2) { animation-delay: 0.2s; }
-.typing-bubble span:nth-child(3) { animation-delay: 0.4s; }
-
-@keyframes blink {
-  0% { opacity: 0.2; }
-  20% { opacity: 1; }
-  100% { opacity: 0.2; }
+#typingIndicator .bubble {
+  opacity: 0.8;
+  font-style: italic;
 }
 
 /* =========================
