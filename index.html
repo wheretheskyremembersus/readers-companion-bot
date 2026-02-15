@@ -293,7 +293,53 @@ body {
   border-color: #bbb;
   box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
 }
+/* =========================
+   TYPING INDICATOR (FIXED)
+========================= */
 
+#typingIndicator {
+  position: relative;
+  z-index: 3; /* above overlay */
+}
+
+#typingIndicator .bubble {
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Dot container */
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dots */
+.typing-bubble span {
+  width: 7px;
+  height: 7px;
+  background: #777;
+  border-radius: 50%;
+  display: inline-block;
+  animation: typingBlink 1.4s infinite ease-in-out both;
+}
+
+/* Stagger delay */
+.typing-bubble span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-bubble span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Animation */
+@keyframes typingBlink {
+  0%   { opacity: 0.25; transform: translateY(0px); }
+  20%  { opacity: 1;    transform: translateY(-2px); }
+  40%  { opacity: 0.6;  transform: translateY(0px); }
+  100% { opacity: 0.25; transform: translateY(0px); }
+}
 /* =========================
    PRIMARY BUTTONS
 ========================= */
@@ -324,7 +370,6 @@ body {
   opacity: 0.8;
   font-style: italic;
 }
-
 
 /* =========================
    MOBILE
@@ -553,54 +598,6 @@ function addSystemMessage(text) {
      </div>`
   );
   autoScroll();
-}
-
-/* =========================
-   TYPING INDICATOR (FIXED)
-========================= */
-
-#typingIndicator {
-  position: relative;
-  z-index: 3; /* above overlay */
-}
-
-#typingIndicator .bubble {
-  opacity: 0.9;
-  font-style: italic;
-}
-
-/* Dot container */
-.typing-bubble {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* Dots */
-.typing-bubble span {
-  width: 7px;
-  height: 7px;
-  background: #777;
-  border-radius: 50%;
-  display: inline-block;
-  animation: typingBlink 1.4s infinite ease-in-out both;
-}
-
-/* Stagger delay */
-.typing-bubble span:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.typing-bubble span:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-/* Animation */
-@keyframes typingBlink {
-  0%   { opacity: 0.25; transform: translateY(0px); }
-  20%  { opacity: 1;    transform: translateY(-2px); }
-  40%  { opacity: 0.6;  transform: translateY(0px); }
-  100% { opacity: 0.25; transform: translateY(0px); }
 }
 
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
