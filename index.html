@@ -1468,6 +1468,7 @@ function normalizeWord(word) {
 }
 
 function detectEmotionalPillar(text) {
+let scores = {};
 
   const lower = text.toLowerCase();
 
@@ -1490,7 +1491,6 @@ function detectEmotionalPillar(text) {
 ];
 
   pillarOrder.forEach(pillar => {
-
     let score = 0;
 
     emotionalPillars[pillar].forEach(keyword => {
@@ -1519,7 +1519,18 @@ console.log("Pillar:", pillar, "Score:", score);
 console.log("Highest Pillar:", highest, "Highest Score:", highestScore);
 
   // Strong match
-  if (highestScore >= 2) return highest;
+  const sorted = Object.entries(scores)
+  .sort((a, b) => b[1] - a[1]);
+
+const primary = sorted[0];
+const secondary = sorted[1];
+
+if (primary[1] >= 1) {
+  return {
+    primary: primary[0],
+    secondary: secondary && secondary[1] > 0 ? secondary[0] : null
+  };
+}
 
   // Single meaningful emotional match
   if (highestScore === 1) {
@@ -1682,7 +1693,9 @@ console.log("=== EMOTIONAL ENGINE ENTERED ===");
 
     meaningfulCount++;
 
-  const pillar = detectedPillar;
+  const pillar = detectedPillar.primary;
+const secondary = detectedPillar.secondary;
+
 /* =========================
      7-STAGE MOMENTUM SYSTEM
   ========================= */
@@ -1764,7 +1777,14 @@ console.log("Final Momentum:", voiceStage.momentum);
   }
 
   if (/\?$/.test(originalText.trim())) {
-  deliverReply(`${anchor} ${emotionalLine}`);
+  let finalReply = `${anchor} ${emotionalLine}`;
+
+if (blendLine) {
+  finalReply += " " + blendLine;
+}
+
+deliverReply(finalReply);
+
 } else {
   deliverReply(`${emotionalLine}`);
 }
