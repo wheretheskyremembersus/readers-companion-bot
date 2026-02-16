@@ -1291,8 +1291,6 @@ const generalQuestionBank = [
    80% APPROXIMATE MATCH RULE
 ========================= */
 
-if (matchedGeneral) { ... }
-
 for (let question of generalQuestionBank) {
   if (isEightyPercentMatch(lower, question)) {
 
@@ -1301,10 +1299,9 @@ for (let question of generalQuestionBank) {
       : "That sounds like something I’ve been asked before…";
 
     deliverReply(humanLead);
-    return true;   // ✅ REQUIRED
+    return true;
   }
 }
-
 
 /* 1️⃣ SPECIFIC GREETINGS FIRST */
 
