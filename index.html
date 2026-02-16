@@ -1699,9 +1699,6 @@ console.log("Target Stage:", targetStage);
 console.log("Current Stage Before:", voiceStage.currentStage);
 console.log("Momentum Before:", JSON.stringify(voiceStage.momentum));
 
-console.log("Current Stage After:", voiceStage.currentStage);
-console.log("Momentum After:", JSON.stringify(voiceStage.momentum));
-
   // Increase momentum
   if (targetStage > 1) {
     voiceStage.momentum[targetStage]++;
@@ -1749,7 +1746,10 @@ if (voiceStage.momentum[targetStage] >= requiredMomentum) {
 
   voiceStage.momentum[targetStage] = 0;
 }
-
+console.log("Required Momentum:", requiredMomentum);
+console.log("Final Stage:", voiceStage.currentStage);
+console.log("Final Momentum:", voiceStage.momentum);
+         
   const anchor = emotionalAnchors[activeVoice][pillar];
 
   const index = emotionalIndex[activeVoice][pillar] ?? 0;
