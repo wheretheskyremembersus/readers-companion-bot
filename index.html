@@ -1111,27 +1111,6 @@ if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|incredib
   return true;
 }
 
-  /* 9️⃣ FOREIGN / RANDOM */
-         
-if (!/[a-z]/i.test(originalText)) {
-
-  foreignInputCount++;
-
-  if (foreignInputCount >= foreignLimit) {
-    returnToWebsite();
-    return true;
-  }
-
-  const reply = activeVoice === "saira"
-    ? "I may not understand that — but I’m still here."
-    : "Some words don’t reach me. Try again.";
-
-  deliverReply(reply);
-  return true;
-}
-
-return false;
-}
 
 /* ---------- Typed Input Handler ---------- */
 
@@ -1209,10 +1188,18 @@ lastUserInput = text;
 }
 
   else {
-    reply = activeVoice === "saira"
-      ? "I don’t always have the right words — but I’m listening."
-      : "Some questions don’t need quick answers.";
+
+  foreignInputCount++;
+
+  if (foreignInputCount >= foreignLimit) {
+    returnToWebsite();
+    return;
   }
+
+  reply = activeVoice === "saira"
+    ? "I may not fully understand that — but I’m still here."
+    : "Some words don’t reach me. Try again.";
+}
 
   deliverReply(reply);
 }
