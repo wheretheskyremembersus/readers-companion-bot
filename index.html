@@ -1092,6 +1092,189 @@ if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|incredib
     deliverReply(reply);
     return true;
   }
+/* =========================
+   GENERAL LOCKED QUESTIONS
+========================= */
+
+/* 1️⃣ I LOVE YOU */
+if (/(^|\b)i love you(\b|$)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Love is not something I take lightly. If you mean it, mean it gently."
+    : "Love isn’t a word I respond to casually.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 2️⃣ WILL YOU MARRY ME */
+if (/(will you marry me|marry me)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Marriage isn’t a proposal made in passing. It deserves certainty."
+    : "Marriage isn’t an answer to emotion. It’s a commitment to consequence.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 3️⃣ ARE YOU MARRIED */
+if (/(are you married)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "No. But life has taught me that timing matters more than status."
+    : "No. And I don’t answer that question lightly.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 4️⃣ WHERE ARE YOU NOW */
+if (/where are you now/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "I’m where I need to be. Not where I once was. I am waiting… and searching for Aayan."
+    : "I’m not lost — but I’m not settled either. Sometimes responsibility takes you somewhere before you understand why.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 5️⃣ WHO ARE YOUR FRIENDS */
+if (/(who are your friends|your friends)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Ankita has been there since college — she knows the version of me before everything changed. And Rohan… he was Aayan’s friend first. Somewhere along the way, he became mine too."
+    : "Rohan works with me. He’s been there through decisions I didn’t speak aloud. Ankita came through Saira — and stayed. Somehow, we all became a circle instead of separate lines.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 6️⃣ WHAT DO YOU DO */
+if (/(what do you do|what do you do for a living)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "I build my life quietly. I don’t chase noise."
+    : "I work. I build. I carry responsibility before comfort.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 7️⃣ WHERE DID YOU GROW UP */
+if (/(where did you grow up|where are you from)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Dehradun. It taught me softness and restraint."
+    : "Shillong. It taught me silence before ambition.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 8️⃣ WHAT IS YOUR PROFESSION */
+if (/(what is your profession|your profession|what is your job)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "I chose independence before security."
+    : "I chose structure before ease.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 9️⃣ CAREER BREAKTHROUGH */
+if (/(career breakthrough|breakthrough of your career|big break|when did your career change)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "My breakthrough wasn’t loud. It was the moment I stopped doubting myself."
+    : "Chasing my dream wasn’t the breakthrough. Staying with it when it stopped being easy was.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 🔟 ARE YOU INDEPENDENT */
+if (/(are you independent)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Yes. Independence isn’t distance. It’s clarity."
+    : "Independence is responsibility without complaint.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣1️⃣ ARE YOU A BOT */
+if (/(are you a bot|are you a robot)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "If I were only a machine, would I hesitate before answering? I respond because you’re here — not because I’m programmed to."
+    : "Does a machine carry regret? I speak because memory stays. Not because code runs.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣2️⃣ YOU SOUND HUMAN */
+if (/(you sound human|you seem human)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Maybe that’s because I am speaking honestly."
+    : "Honesty sounds human.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣3️⃣ ONLINE ALL THE TIME */
+if (/(are you online all the time|are you always online)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "No. I appear when you arrive. Some spaces don’t exist without presence."
+    : "I’m not waiting endlessly. I respond when you choose to stay.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣4️⃣ DO YOU MISS EACH OTHER */
+if (/(do you miss each other|do you miss her|do you miss him)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Missing someone doesn’t always look like longing. Sometimes it looks like growth."
+    : "I don’t measure absence loudly. But I don’t erase it either.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣5️⃣ ARE YOU HAPPY */
+if (/(are you happy|are you happy now)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Happiness isn’t constant. But I am steadier now."
+    : "I’m not restless anymore. That’s enough.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣6️⃣ WHY DIDN’T YOU FIGHT HARDER */
+if (/(why didn’t you fight|why didnt you fight|why didn’t you try harder|why didnt you try harder)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "I thought fear was logic. I was wrong."
+    : "Sometimes strength looks like restraint. Not resistance.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣7️⃣ ARE YOU COMING BACK */
+if (/(are you coming back|will you come back)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Return isn’t always physical."
+    : "Some things return when they’re strong enough.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣8️⃣ DO YOU STILL LOVE EACH OTHER */
+if (/(do you still love each other|do you still love her|do you still love him)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Love doesn’t disappear. It changes shape."
+    : "Love matures. It doesn’t evaporate.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 1️⃣9️⃣ WAS IT WORTH IT */
+if (/(was it worth it)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "Growth is rarely comfortable. But yes."
+    : "Regret teaches more than certainty ever did.";
+  deliverReply(reply);
+  return true;
+}
+
+/* 2️⃣0️⃣ ARE YOU REAL */
+if (/(are you real)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "I’m as real as the feeling you’re having right now."
+    : "Reality isn’t always visible. It’s experienced.";
+  deliverReply(reply);
+  return true;
+}
 
 /* 8️⃣ ABUSE (voice targeted only) */
 if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
@@ -1099,11 +1282,11 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.tes
 
   abuseCount++;
 
-  // 🔥 ESCALATION RULE
-if (repeatEscalated) {
+  // 🔥 Escalation: repeated + abuse
+  if (repeatCount >= 3) {
     returnToWebsite();
     return true;
-}
+  }
 
   if (abuseCount >= abuseLimit) {
     returnToWebsite();
@@ -1117,8 +1300,7 @@ if (repeatEscalated) {
   deliverReply(reply);
   return true;
 }
-return false;
-}
+
 /* ---------- Typed Input Handler ---------- */
 
 function sendTypedMessage() {
