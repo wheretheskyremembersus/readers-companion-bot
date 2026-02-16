@@ -951,7 +951,7 @@ function setDockDisabled(state) {
 ========================= */
 console.log("Match ratio:", ratio, "for target:", targetText);
 
-function isEightyPercentMatch(userText, targetText) {
+function isSixtyPercentMatch(userText, targetText) {
 
   const cleanUser = userText
     .toLowerCase()
@@ -977,7 +977,16 @@ function isEightyPercentMatch(userText, targetText) {
 
   const ratio = matchCount / cleanTarget.length;
 
-  return ratio >= 0.6;
+ const ratio = matchCount / cleanTarget.length;
+
+console.log("USER WORDS:", cleanUser);
+console.log("TARGET WORDS:", cleanTarget);
+console.log("MATCH COUNT:", matchCount);
+console.log("RATIO:", ratio);
+
+return ratio >= 0.6;
+
+
 }
 
  /* =========================
@@ -1463,11 +1472,11 @@ if (detectedPillar && activeVoice) {
 
 
   /* =================================================
-     6️⃣ 80% FUZZY MATCH (SAFE LAST)
+     6️⃣ 60% FUZZY MATCH (SAFE LAST)
   ================================================= */
 
   for (let question of generalQuestionBank) {
-    if (isEightyPercentMatch(lower, question)) {
+    if (isSixtyPercentMatch(lower, question)) {
 
       const humanLead = activeVoice === "saira"
         ? "You’re asking something that feels familiar…"
