@@ -942,6 +942,70 @@ function isEightyPercentMatch(userText, targetText) {
 
 function detectEmotionalPillar(lower) {
 
+         /* =========================
+   ADVANCED HYBRID — EMOTIONAL PILLARS
+========================= */
+
+const emotionalPillars = {
+  loss: [
+    "lost", "left", "gone", "separated", "distance",
+    "alone", "miss", "missing", "absence", "ended",
+    "without you", "after you left"
+  ],
+  regret: [
+    "regret", "should have", "could have",
+    "why didn’t", "why didnt", "mistake",
+    "too late", "wish", "if only"
+  ],
+  vulnerability: [
+    "afraid", "scared", "fear", "hurt",
+    "broken", "weak", "uncertain",
+    "confused", "anxious"
+  ],
+  growth: [
+    "changed", "learned", "stronger",
+    "moved on", "healed", "better now",
+    "grown", "understand now"
+  ],
+  destiny: [
+    "fate", "destiny", "meant to be",
+    "meant for", "come back", "return",
+    "again someday", "future together"
+  ]
+};
+
+function detectEmotionalPillar(userText) {
+
+  const text = userText.toLowerCase();
+  const scores = {};
+
+  Object.keys(emotionalPillars).forEach(pillar => {
+    scores[pillar] = 0;
+
+    emotionalPillars[pillar].forEach(keyword => {
+      if (text.includes(keyword)) {
+        scores[pillar] += keyword.includes(" ") ? 2 : 1;
+      }
+    });
+  });
+
+  let highest = null;
+  let highestScore = 0;
+
+  Object.keys(scores).forEach(pillar => {
+    if (scores[pillar] > highestScore) {
+      highest = pillar;
+      highestScore = scores[pillar];
+    }
+  });
+
+  if (highestScore >= 2) {
+    return highest;
+  }
+
+  return null;
+}
+
   // Helper
   function has(word) {
     return lower.includes(word);
@@ -1046,6 +1110,42 @@ const generalQuestionBank = [
   if (interactionLocked) return false;
 
   const lower = text.toLowerCase().trim();
+         
+/* =========================
+   EMOTIONAL SCORING LAYER
+========================= */
+
+const detectedPillar = detectEmotionalPillar(lower);
+
+if (detectedPillar) {
+
+  meaningfulCount++;
+
+  const emotionalReplies = {
+    loss: activeVoice === "saira"
+      ? "Loss doesn’t always look dramatic… sometimes it’s quiet. I understand that more than I admit."
+      : "Some distances aren’t measured in miles… they’re measured in what changed after.",
+
+    regret: activeVoice === "saira"
+      ? "Regret can be heavier than heartbreak… it stays longer than we expect."
+      : "If we could return to that moment… we might choose differently. But growth rarely comes without consequence.",
+
+    vulnerability: activeVoice === "saira"
+      ? "It’s not weakness to admit fear… it’s honesty. And honesty takes courage."
+      : "Fear doesn’t make you small… hiding from it does.",
+
+    growth: activeVoice === "saira"
+      ? "Growth isn’t loud… it’s subtle. And sometimes painful before it becomes strength."
+      : "Change rarely asks permission… it demands endurance first.",
+
+    destiny: activeVoice === "saira"
+      ? "Some connections don’t disappear… they wait for the right version of us."
+      : "If something is meant to return… it will. But stronger than before."
+  };
+
+  deliverReply(emotionalReplies[detectedPillar]);
+  return true;
+}
          
 /* =========================
    SILENT MEANINGFUL TRACKING
