@@ -1343,14 +1343,17 @@ if (/(are you real)/i.test(lower)) {
   return true;
 }
          
-/* 21.CAN YOU KNOW MORE ABOUT THE STORY */
+/* 21️⃣ CAN YOU KNOW MORE ABOUT THE STORY */
 if (/(tell me more|know more|more about (your )?story|read more|how can i know more|is there any way i can know more)/i.test(lower)) {
 
   const reply = activeVoice === "saira"
-    ? "I could tell you pieces… but stories lose something when they’re taken apart too much. Some emotions need time, not summaries… If you truly want to know more, you should experience it the way it was meant to unfold — gently, page by page.<br><br>You can read a preview here, only if you feel ready:<br><a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view' target='_blank' style='color:#000; text-decoration:underline;'>Preview the first pages</a>"
-    : "There’s more… but not everything can be explained in fragments. Some things only make sense when you walk through them slowly. If you want to understand what stayed with us, you’ll need to meet the full story.<br><br>You can begin here, if you choose:<br><a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view' target='_blank' style='color:#000; text-decoration:underline;'>Read the preview</a>";
+    ? "I could tell you pieces… but stories lose something when they’re taken apart too much. Some emotions need time, not summaries…"
+    : "There’s more… but not everything can be explained in fragments. Some things only make sense when you walk through them slowly…";
 
-  deliverReply(reply);
+  deliverReply(reply, function () {
+    showAuthorInvitation();  // 🔥 SAME END FLOW
+  });
+
   return true;
 }
 
