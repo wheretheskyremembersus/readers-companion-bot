@@ -972,37 +972,109 @@ function isEightyPercentMatch(userText, targetText) {
   return ratio >= 0.8;
 }
 
-   /* =========================
-   ADVANCED HYBRID — EMOTIONAL PILLARS
+ /* =========================
+   REFINED EMOTIONAL PILLARS (HIGH ACCURACY)
 ========================= */
 
 const emotionalPillars = {
+
   loss: [
-    "lost","left","gone","separated","distance",
-    "alone","miss","missing","absence","ended",
-    "without you","after you left"
+    // Core loss words
+    "lost", "left", "gone", "ended", "apart",
+    "separated", "distance", "absence",
+    "miss", "missing",
+
+    // Common emotional phrasing
+    "without you",
+    "after you left",
+    "since you left",
+    "still love",
+    "still think about",
+    "let her go",
+    "let him go",
+    "couldn't keep",
+    "had to leave"
   ],
+
   regret: [
-    "regret","should have","could have",
-    "why didn’t","why didnt","mistake",
-    "too late","wish","if only"
+    // Core regret words
+    "regret", "mistake", "fault",
+    "too late", "wish", "if only",
+
+    // Hesitation / delay language
+    "hesitate", "hesitated",
+    "waited too long",
+    "should have",
+    "could have",
+    "would have",
+
+    // Question phrasing
+    "why didnt",
+    "why didn’t",
+    "why did you not",
+    "acted sooner",
+    "try harder",
+    "fight harder"
   ],
+
   vulnerability: [
-    "afraid","scared","fear","hurt",
-    "broken","weak","uncertain",
-    "confused","anxious"
+    // Core fear / doubt words
+    "afraid", "scared", "fear",
+    "hurt", "broken", "weak",
+    "uncertain", "unsure",
+    "confused", "anxious",
+
+    // Emotional exposure
+    "open up",
+    "open your heart",
+    "let her in",
+    "let him in",
+    "emotionally",
+    "vulnerable",
+    "not ready",
+    "not strong enough"
   ],
+
   growth: [
-    "changed","learned","stronger",
-    "moved on","healed","better now",
-    "grown","understand now"
+    // Change language
+    "changed", "learned", "grown",
+    "stronger", "better now",
+    "healed", "healing",
+    "moved on", "move on",
+    "understand now",
+
+    // Maturity language
+    "different now",
+    "more mature",
+    "became stronger",
+    "became better",
+    "improved",
+    "worked on yourself"
   ],
+
   destiny: [
-    "fate","destiny","meant to be",
-    "meant for","come back","return",
-    "again someday","future together"
+    // Fate language
+    "fate", "destiny",
+    "meant to be",
+    "meant for each other",
+
+    // Return language
+    "come back",
+    "coming back",
+    "return",
+    "second chance",
+    "another chance",
+    "again someday",
+
+    // Future bonding
+    "future together",
+    "end up together",
+    "cross paths again",
+    "unfinished"
   ]
+
 };
+
 
          const emotionalResponseBank = {
 
