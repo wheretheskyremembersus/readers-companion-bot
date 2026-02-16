@@ -1715,18 +1715,20 @@ console.log("Momentum After:", JSON.stringify(voiceStage.momentum));
   // Advance stage after 2 confirmations
   if (voiceStage.momentum[targetStage] >= 2) {
 
-    // Gate destiny until stage 5
-    if (targetStage === 7 && voiceStage.currentStage < 5) {
-      // Do not advance yet
-    } else {
-      if (targetStage === voiceStage.currentStage + 1) {
-  voiceStage.currentStage = targetStage;
-}
+  // Destiny gate
+  if (targetStage === 7 && voiceStage.currentStage < 5) {
+    // do not advance
+  } else {
 
+    // Advance only ONE level at a time
+    if (voiceStage.currentStage < targetStage) {
+      voiceStage.currentStage += 1;
     }
 
-    voiceStage.momentum[targetStage] = 0;
   }
+
+  voiceStage.momentum[targetStage] = 0;
+}
 
 
   const anchor = emotionalAnchors[activeVoice][pillar];
