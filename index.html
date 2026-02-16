@@ -1136,7 +1136,7 @@ if (/where are you now/i.test(lower)) {
 if (/(who are your friends|your friends)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "Ankita has been there since college — she knows the version of me before everything changed. And Rohan… he was Aayan’s friend first. Somewhere along the way, he became mine too."
-    : "Rohan works with me. He’s been there through decisions I didn’t speak aloud. Ankita came through Saira — and stayed. Somehow, we all became a circle instead of separate lines.";
+    : "Rohan and I built things side by side — work first, friendship later. Ankita came through Saira. What began as separate circles slowly became shared memories. Some bonds aren’t chosen loudly — they grow into place.";
   deliverReply(reply);
   return true;
 }
@@ -1145,7 +1145,7 @@ if (/(who are your friends|your friends)/i.test(lower)) {
 if (/(what do you do|what do you do for a living)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "I build my life quietly. I don’t chase noise."
-    : "I work. I build. I carry responsibility before comfort.";
+    : "I build things that are meant to last. Responsibility shaped me before ambition did.";
   deliverReply(reply);
   return true;
 }
@@ -1154,25 +1154,17 @@ if (/(what do you do|what do you do for a living)/i.test(lower)) {
 if (/(where did you grow up|where are you from)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "Dehradun. It taught me softness and restraint."
-    : "Shillong. It taught me silence before ambition.";
+    : "Shillong. It taught me stillness — and how to carry storms quietly.";
   deliverReply(reply);
   return true;
 }
 
-/* 8️⃣ WHAT IS YOUR PROFESSION */
-if (/(what is your profession|your profession|what is your job)/i.test(lower)) {
-  const reply = activeVoice === "saira"
-    ? "I chose independence before security."
-    : "I chose structure before ease.";
-  deliverReply(reply);
-  return true;
-}
 
 /* 9️⃣ CAREER BREAKTHROUGH */
-if (/(career breakthrough|breakthrough of your career|big break|when did your career change)/i.test(lower)) {
+if (/(what is your profession|your profession|what is your job|career breakthrough|breakthrough of your career|big break|when did your career change)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "My breakthrough wasn’t loud. It was the moment I stopped doubting myself."
-    : "Chasing my dream wasn’t the breakthrough. Staying with it when it stopped being easy was.";
+    ? "I chose independence before security. My breakthrough wasn’t loud — it was the moment I stopped doubting myself. That changed everything."
+    : "I chose structure before ease. Chasing my dream wasn’t the breakthrough — staying with it when it stopped being easy was.";
   deliverReply(reply);
   return true;
 }
