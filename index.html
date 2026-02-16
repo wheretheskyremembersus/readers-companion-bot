@@ -1039,6 +1039,17 @@ if (/^(hi|hello|hey)\b/i.test(lower)) {
   return false;
 }
 
+/* ❓ HOW ARE YOU */
+if (/(how are you|how are you doing|how do you feel)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "That depends on the day… but today, I’m steady. Thank you for asking. It’s rare that someone does."
+    : "I’m alright… not untouched by everything — but stronger than before. And you?";
+
+  deliverReply(reply);
+  return true;
+}
+
  /* 1.5️⃣ USER INTRODUCTION */
 if (/(i am|i'm|my name is)/.test(lower)) {
 
