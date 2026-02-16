@@ -995,16 +995,6 @@ function detectEmotionalPillar(text) {
 
 
   /* =========================
-     ORIGIN PILLAR
-  ========================= */
-  if (
-    (has("meet") || has("met") || has("first")) &&
-    (has("how") || has("when") || has("where"))
-  ) {
-    return "origin";
-  }
-
-  /* =========================
      VULNERABILITY PILLAR
   ========================= */
   if (
@@ -1128,22 +1118,6 @@ if (detectedPillar) {
 
   deliverReply(emotionalReplies[detectedPillar]);
   return true;
-}
-
-         
-/* =========================
-   SILENT MEANINGFUL TRACKING
-========================= */
-
-const detectedPillar = detectEmotionalPillar(lower);
-
-if (detectedPillar) {
-  meaningfulCount++;
-
-  // Safety cap
-  if (meaningfulCount > 6) {
-    meaningfulCount = 6;
-  }
 }
 
 /* =========================
