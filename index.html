@@ -63,13 +63,6 @@ content="default-src 'self';
   transform: translateY(0px);
 }
 
-         /* =========================
-   ABUSE STRIKE SYSTEM
-========================= */
-
-let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes")) || 0;
-let blockUntil = parseInt(localStorage.getItem("blockUntil")) || 0;
-
          
 /* =========================
    GLOBAL PAGE (RESTORE)
@@ -646,6 +639,13 @@ body {
 let skyLayer = document.getElementById("skyLayer");
 let emotionalDepth = 0;
 
+               /* =========================
+   ABUSE STRIKE SYSTEM
+========================= */
+
+let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes")) || 0;
+let blockUntil = parseInt(localStorage.getItem("blockUntil")) || 0;
+         
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
 /* =========================
