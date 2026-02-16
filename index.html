@@ -2294,8 +2294,19 @@ function checkBlockStatus() {
   return false;
 }
 
+/* =========================
+   START
+========================= */
+
+// Disable right click
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+});
+
+// 👇 IMPORTANT: Use block check here
 if (!checkBlockStatus()) {
   loadWelcome();
 }
+
    
 </script>
