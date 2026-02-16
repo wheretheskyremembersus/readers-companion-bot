@@ -639,7 +639,7 @@ body {
 let skyLayer = document.getElementById("skyLayer");
 let emotionalDepth = 0;
 
-               /* =========================
+/* =========================
    ABUSE STRIKE SYSTEM
 ========================= */
 
@@ -660,7 +660,7 @@ let emotionalToggle = false;
          
 let lastUserInput = "";
 
-         /* =========================
+/* =========================
    CORE STATE VARIABLES (REQUIRED)
 ========================= */
 
@@ -1679,6 +1679,7 @@ const detectedPillar = detectEmotionalPillar(lower);
   ================================================= */
 
 if (detectedPillar && activeVoice) {
+console.log("=== EMOTIONAL ENGINE ENTERED ===");
 
     meaningfulCount++;
 
@@ -1690,18 +1691,23 @@ if (detectedPillar && activeVoice) {
   const voiceStage = stageState[activeVoice];
   const targetStage = pillarToStage[pillar];
 
+console.log("Active Voice:", activeVoice);
+console.log("Voice Stage Object:", voiceStage);
+console.log("Target Stage:", targetStage);
+
 console.log("Target Stage:", targetStage);
 console.log("Current Stage Before:", voiceStage.currentStage);
 console.log("Momentum Before:", JSON.stringify(voiceStage.momentum));
 
- console.log("Current Stage After:", voiceStage.currentStage);
+console.log("Current Stage After:", voiceStage.currentStage);
 console.log("Momentum After:", JSON.stringify(voiceStage.momentum));
 
   // Increase momentum
   if (targetStage > 1) {
     voiceStage.momentum[targetStage]++;
   }
-
+console.log("Momentum After Increment:", voiceStage.momentum);
+         
   // Decay other stages
   Object.keys(voiceStage.momentum).forEach(stage => {
     if (parseInt(stage) !== targetStage) {
