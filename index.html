@@ -949,7 +949,6 @@ function setDockDisabled(state) {
 /* =========================
    60% WORD MATCH ENGINE
 ========================= */
-console.log("Match ratio:", ratio, "for target:", targetText);
 
 function isSixtyPercentMatch(userText, targetText) {
 
@@ -977,15 +976,12 @@ function isSixtyPercentMatch(userText, targetText) {
 
   const ratio = matchCount / cleanTarget.length;
 
- const ratio = matchCount / cleanTarget.length;
-
 console.log("USER WORDS:", cleanUser);
 console.log("TARGET WORDS:", cleanTarget);
 console.log("MATCH COUNT:", matchCount);
 console.log("RATIO:", ratio);
 
 return ratio >= 0.6;
-
 
 }
 
