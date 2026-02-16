@@ -1276,34 +1276,30 @@ if (/(are you real)/i.test(lower)) {
   return true;
 }
 
-/* 8️⃣ ABUSE (voice targeted only) */
-if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
-    && /(you|saira|aayan)/.test(lower)) {
+ /* 7️⃣ ABUSE */
+  if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
+      && /(you|saira|aayan)/.test(lower)) {
 
-  abuseCount++;
+    abuseCount++;
 
-  // 🔥 Escalation: repeated + abuse
-  if (repeatCount >= 3) {
-    returnToWebsite();
+    if (repeatCount >= 3 || abuseCount >= abuseLimit) {
+      returnToWebsite();
+      return true;
+    }
+
+    const reply = activeVoice === "saira"
+      ? "I won’t stay where respect isn’t present."
+      : "If this turns careless, I’ll remain silent.";
+
+    deliverReply(reply);
     return true;
   }
 
-  if (abuseCount >= abuseLimit) {
-    returnToWebsite();
-    return true;
-  }
-
-  const reply = activeVoice === "saira"
-    ? "I won’t stay where respect isn’t present."
-    : "If this turns careless, I’ll remain silent.";
-
-  deliverReply(reply);
-  return true;
+  return false; // 🔥 VERY IMPORTANT
 }
-return false;
-}
-
-/* ---------- Typed Input Handler ---------- */
+/* =========================
+   TYPED INPUT HANDLER
+========================= */
 
 function sendTypedMessage() {
 
@@ -1313,76 +1309,51 @@ function sendTypedMessage() {
   const originalText = input.value.trim();
   if (!originalText) return;
 
-  // IMPORTANT: Voice must be selected
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or Aayan first.");
     return;
   }
 
   addUserMessage(originalText);
-playTone(520, 60, 0.025);
+  playTone(520, 60, 0.025);
 
-// clear input after sending
-input.value = "";
+  input.value = "";
 
-const text = originalText.toLowerCase();
+  const text = originalText.toLowerCase();
 
-/* =========================
-   REPEAT DETECTION
-========================= */
+  /* =========================
+     REPEAT DETECTION
+  ========================= */
 
-if (text === lastUserInput) {
-  repeatCount++;
+  if (text === lastUserInput) {
+    repeatCount++;
 
-  if (repeatCount >= 3) {
-    repeatEscalated = true;   // 🔥 mark escalation
+    if (repeatCount >= 3) {
+      // escalate if abuse follows
+    }
+
+    if (repeatCount >= repeatLimit) {
+      returnToWebsite();
+      return;
+    }
+
+  } else {
+    repeatCount = 0;
   }
 
-  if (repeatCount >= repeatLimit) {
-    returnToWebsite();
-    return;
-  }
+  lastUserInput = text;
 
-} else {
-  repeatCount = 0;
-}
+  /* =========================
+     INTELLIGENCE ROUTER
+  ========================= */
 
-lastUserInput = text;
-
-  // 🔥 Intelligence router first
   if (handleIntelligence(text, originalText)) {
     return;
   }
 
-  // 🔁 Existing mirror logic
-
-  let reply;
-
-  if (text.includes("meet") || text.includes("first time")) {
-    reply = activeVoice === "saira"
-      ? "We didn’t meet gently. It began with headlights and argument."
-      : "It started with brakes and irritation. Not romance.";
-  }
-
-  else if (text.includes("love") || text.includes("feel")) {
-    reply = activeVoice === "saira"
-      ? "Love arrived quietly. It didn’t ask permission."
-      : "Love requires surrender. That wasn’t easy for me.";
-  }
-
-  else if (text.includes("end") || text.includes("together")) {
-    reply = activeVoice === "saira"
-      ? "Not all endings are conclusions."
-      : "What mattered didn’t disappear.";
-  }
-
- else if (/(who.*author|about.*author|who wrote|author)/.test(text)) {
-  reply = activeVoice === "saira"
-    ? "He wrote this honestly. That was enough."
-    : "He chose truth over comfort.";
-}
-
-else {
+  /* =========================
+     DEFAULT FALLBACK
+  ========================= */
 
   foreignInputCount++;
 
@@ -1391,13 +1362,13 @@ else {
     return;
   }
 
-  reply = activeVoice === "saira"
+  const reply = activeVoice === "saira"
     ? "I may not fully understand that — but I’m still here."
     : "Some words don’t reach me. Try again.";
+
+  deliverReply(reply);
 }
 
-deliverReply(reply);
-}
 
 /* ---------- Utility ---------- */
 
