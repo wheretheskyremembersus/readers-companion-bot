@@ -639,7 +639,8 @@ const dock = document.getElementById("questionDock");
 let foreignInputCount = 0;
 let repeatCount = 0;
 let abuseCount = 0;
-
+let repeatEscalated = false;
+         
 let lastUserInput = "";
 
 const foreignLimit = 5;
@@ -1099,10 +1100,10 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.tes
   abuseCount++;
 
   // 🔥 ESCALATION RULE
-  if (repeatCount >= 3) {
+if (repeatEscalated) {
     returnToWebsite();
     return true;
-  }
+}
 
   if (abuseCount >= abuseLimit) {
     returnToWebsite();
@@ -1148,6 +1149,10 @@ const text = originalText.toLowerCase();
 
 if (text === lastUserInput) {
   repeatCount++;
+
+  if (repeatCount >= 3) {
+    repeatEscalated = true;   // 🔥 mark escalation
+  }
 
   if (repeatCount >= repeatLimit) {
     returnToWebsite();
