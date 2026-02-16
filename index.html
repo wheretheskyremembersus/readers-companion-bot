@@ -1284,11 +1284,12 @@ function detectEmotionalPillar(text) {
 
   });
 
-  if (highestScore >= 2) return highest;
+ if (highestScore >= 2) return highest;
 
-  if (highestScore === 1 && lower.split(" ").length <= 4) {
-    return highest;
-  }
+// allow single strong keyword in emotional questions
+if (highestScore === 1 && /\?/.test(text)) {
+  return highest;
+}
 
   return null;
 }
