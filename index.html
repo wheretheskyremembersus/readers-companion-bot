@@ -2243,42 +2243,50 @@ document.addEventListener("contextmenu", function(e) {
 });
          
 /* =========================
-   24 HOUR BLOCK CHECK
+   24 HOUR BLOCK CHECK (SAFE OVERLAY)
 ========================= */
 
 function checkBlockStatus() {
 
   const blockUntil = parseInt(localStorage.getItem("blockUntil")) || 0;
 
-if (Date.now() >= blockUntil && blockUntil !== 0) {
-  localStorage.removeItem("exitStrikes");
-  localStorage.removeItem("blockUntil");
-}
+  // Reset if expired
+  if (Date.now() >= blockUntil && blockUntil !== 0) {
+    localStorage.removeItem("exitStrikes");
+    localStorage.removeItem("blockUntil");
+    return false;
+  }
 
   if (Date.now() < blockUntil) {
 
-    document.body.innerHTML = `
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.inset = "0";
+    overlay.style.background = "rgba(0,0,0,0.75)";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.zIndex = "99999";
+    overlay.style.backdropFilter = "blur(6px)";
+
+    overlay.innerHTML = `
       <div style="
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        height:100vh;
         font-family:'Palatino Linotype', Palatino, serif;
-        background:#111;
-        color:#fff;
         text-align:center;
+        color:#ffffff;
+        max-width:600px;
         padding:40px;
       ">
-        <div>
-          <div style="font-size:22px; font-style:italic; margin-bottom:20px;">
-            This space remains quiet for now.
-          </div>
-          <div style="opacity:0.7; font-size:14px;">
-            It will reopen after 24 hours.
-          </div>
+        <div style="font-size:22px; font-style:italic; margin-bottom:16px;">
+          This space remains quiet for now.
+        </div>
+        <div style="opacity:0.75; font-size:14px;">
+          It will reopen after 24 hours.
         </div>
       </div>
     `;
+
+    document.body.appendChild(overlay);
 
     return true;
   }
