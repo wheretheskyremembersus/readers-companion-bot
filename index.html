@@ -899,19 +899,84 @@ function setDockDisabled(state) {
     btn.style.pointerEvents = state ? "none" : "auto";
   });
 }
+         
+/* =========================
+   80% WORD MATCH ENGINE
+========================= */
+
+function isEightyPercentMatch(userText, targetText) {
+
+  const cleanUser = userText
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .split(" ")
+    .filter(w => w.length > 2);
+
+  const cleanTarget = targetText
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .split(" ")
+    .filter(w => w.length > 2);
+
+  if (cleanTarget.length === 0) return false;
+
+  let matchCount = 0;
+
+  cleanTarget.forEach(word => {
+    if (cleanUser.includes(word)) {
+      matchCount++;
+    }
+  });
+
+  const ratio = matchCount / cleanTarget.length;
+
+  return ratio >= 0.8;
+}
 
 /* =========================
    INTELLIGENCE ROUTER
 ========================= */
 
 function handleIntelligence(text, originalText) {
+         
+const generalQuestionBank = [
+  "where are you now",
+  "who are your friends",
+  "what do you do",
+  "where did you grow up",
+  "what is your profession",
+  "are you independent",
+  "are you a bot",
+  "you sound human",
+  "do you miss each other",
+  "are you happy"
+];
 
   // Prevent overlapping replies while typing
   if (interactionLocked) return false;
 
   const lower = text.toLowerCase().trim();
 
- /* 1️⃣ SPECIFIC GREETINGS FIRST */
+/* =========================
+   80% APPROXIMATE MATCH RULE
+========================= */
+
+for (let question of generalQuestionBank) {
+
+  if (isEightyPercentMatch(lower, question)) {
+
+    const humanLead = activeVoice === "saira"
+      ? "You’re asking something that feels familiar…"
+      : "That sounds like something I’ve been asked before…";
+
+    deliverReply(humanLead);
+
+    return false; 
+    // Let the normal router below handle the actual answer
+  }
+}
+
+/* 1️⃣ SPECIFIC GREETINGS FIRST */
 
 /* 1.1️⃣ HEY THERE / HELLO THERE */
 if (/^(hey there|hello there)\b/i.test(lower)) {
