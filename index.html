@@ -1479,16 +1479,15 @@ function detectEmotionalPillar(text) {
   let highest = null;
   let highestScore = 0;
 
-  const pillarOrder = [
+  cconst pillarOrder = [
   "affection",
-  "vulnerability",
   "fear",
+  "vulnerability",
   "regret",
   "loss",
   "growth",
   "destiny"
 ];
-
 
   pillarOrder.forEach(pillar => {
 
@@ -1497,9 +1496,9 @@ function detectEmotionalPillar(text) {
     emotionalPillars[pillar].forEach(keyword => {
 
       if (keyword.includes(" ")) {
-        if (lower.includes(keyword)) {
-          score += 2;
-        }
+  if (lower.includes(keyword)) {
+    score += 3; // phrases stronger
+  }
       } else {
         const keywordRoot = normalizeWord(keyword);
         if (userWords.some(w => w === keywordRoot)) {
@@ -1765,10 +1764,10 @@ console.log("Final Momentum:", voiceStage.momentum);
   }
 
   if (/\?$/.test(originalText.trim())) {
-    deliverReply(`${anchor} ${emotionalLine}`);
-  } else {
-    deliverReply(emotionalLine);
-  }
+  deliverReply(`${anchor} ${emotionalLine}`);
+} else {
+  deliverReply(`${emotionalLine}`);
+}
 
   return true;
 }
