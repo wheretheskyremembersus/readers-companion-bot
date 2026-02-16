@@ -936,6 +936,67 @@ function isEightyPercentMatch(userText, targetText) {
   return ratio >= 0.8;
 }
 
+         /* =========================
+   EMOTIONAL PILLAR DETECTION (SILENT)
+========================= */
+
+function detectEmotionalPillar(lower) {
+
+  const pillars = {
+
+    origin: [
+      "meet", "first met", "first time", "beginning", "how it started",
+      "how did it start", "start between you", "initial",
+      "early days", "when did it begin", "spark",
+      "chemistry", "connection start", "first impression"
+    ],
+
+    vulnerability: [
+      "afraid", "fear", "scared", "doubt", "uncertain",
+      "question your choice", "regret choosing",
+      "hesitate", "why didn’t you fight", "why didnt you fight",
+      "why didn’t you try", "why didnt you try",
+      "was it a mistake", "commitment issues",
+      "were you unsure", "why pull away"
+    ],
+
+    depth: [
+      "happiest", "best moment", "favorite memory",
+      "most special", "closest moment", "deepest",
+      "when did you know", "when did you realize",
+      "meaningful moment", "strongest moment",
+      "most intimate", "most real moment"
+    ],
+
+    loss: [
+      "miss", "still love", "still care",
+      "lost", "separation", "why did it end",
+      "why break up", "apart", "did it hurt",
+      "painful", "worth it", "would you change it",
+      "if you could go back"
+    ],
+
+    future: [
+      "more to story", "what happens next",
+      "part two", "sequel", "future",
+      "come back", "reunion", "meet again",
+      "second chance", "continue",
+      "unfinished", "another chapter"
+    ]
+
+  };
+
+  for (let key in pillars) {
+    for (let phrase of pillars[key]) {
+      if (lower.includes(phrase)) {
+        return key;
+      }
+    }
+  }
+
+  return null;
+}
+
 /* =========================
    INTELLIGENCE ROUTER
 ========================= */
@@ -959,6 +1020,21 @@ const generalQuestionBank = [
   if (interactionLocked) return false;
 
   const lower = text.toLowerCase().trim();
+         
+/* =========================
+   SILENT MEANINGFUL TRACKING
+========================= */
+
+const detectedPillar = detectEmotionalPillar(lower);
+
+if (detectedPillar) {
+  meaningfulCount++;
+
+  // Safety cap
+  if (meaningfulCount > 6) {
+    meaningfulCount = 6;
+  }
+}
 
 /* =========================
    80% APPROXIMATE MATCH RULE
