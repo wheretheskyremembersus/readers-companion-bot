@@ -1099,17 +1099,17 @@ if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|incredib
 /* 1️⃣ I LOVE YOU */
 if (/(^|\b)i love you(\b|$)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Love is not something I take lightly. If you mean it, mean it gently. Words like that carry weight."
-    : "Love isn’t a word I respond to casually. If you say it, I hope you understand what it asks of you.";
+    ? "Love is not something I take lightly… If you mean it, mean it gently. Words like that carry weight."
+    : "Love isn’t a word I respond to casually… If you say it, I hope you understand what it asks of you.";
   deliverReply(reply);
   return true;
 }
 
 /* 2️⃣ WILL YOU MARRY ME */
-if (/(will you marry me|marry me|i wanted to get married with you)/i.test(lower)) {
+if (/(will you marry me|marry me)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Marriage isn’t a proposal made in passing. It deserves certainty. It deserves presence."
-    : "Marriage isn’t an answer to emotion. It’s a commitment to consequence. And consequence changes people.";
+    ? "Marriage isn’t a proposal made in passing… It deserves certainty. It deserves presence."
+    : "Marriage isn’t an answer to emotion… It’s a commitment to consequence. And consequence changes people.";
   deliverReply(reply);
   return true;
 }
@@ -1117,8 +1117,8 @@ if (/(will you marry me|marry me|i wanted to get married with you)/i.test(lower)
 /* 3️⃣ ARE YOU MARRIED */
 if (/(are you married|you married)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "No. But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
-    : "No. And I don’t answer that question lightly. Commitment means something where I come from.";
+    ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
+    : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
   deliverReply(reply);
   return true;
 }
@@ -1126,8 +1126,8 @@ if (/(are you married|you married)/i.test(lower)) {
 /* 4️⃣ WHERE ARE YOU NOW */
 if (/where are you now/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "I’m where I need to be. Not where I once was. I am waiting… and searching for Aayan. Sometimes distance teaches more than closeness."
-    : "I’m not lost — but I’m not settled either. Responsibility has its own geography. If you’ve ever carried weight, you understand.";
+    ? "I’m where I need to be… Not where I once was. I am waiting… and searching for Aayan."
+    : "I’m not lost… but I’m not settled either. Responsibility has its own geography.";
   deliverReply(reply);
   return true;
 }
@@ -1135,8 +1135,8 @@ if (/where are you now/i.test(lower)) {
 /* 5️⃣ WHO ARE YOUR FRIENDS */
 if (/(who are your friends|your friends)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Ankita has been there since college — she knows the version of me before everything changed. And Rohan… he was Aayan’s friend first. Somewhere along the way, he became mine too. The people who stay quietly matter the most."
-    : "Rohan and I built things side by side — work first, friendship later. Ankita came through Saira. What began as separate circles slowly became shared memories. Sometimes friendships form without announcement.";
+    ? "Ankita has been there since college… she knows the version of me before everything changed. And Rohan… he was Aayan’s friend first. Somewhere along the way, he became mine too."
+    : "Rohan and I built things side by side… work first, friendship later. Ankita came through Saira. What began as separate circles slowly became shared memories.";
   deliverReply(reply);
   return true;
 }
@@ -1144,8 +1144,8 @@ if (/(who are your friends|your friends)/i.test(lower)) {
 /* 6️⃣ WHAT DO YOU DO */
 if (/(what do you do|what do you do for a living)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "I build my life quietly. I used to think that meant I was hiding — but maybe it just means I’m careful. Not everything needs to be loud to be real."
-    : "I build things that are meant to last. Responsibility shaped me before ambition did. Some people grow up faster than they expect.";
+    ? "I build my life quietly… I used to think that meant I was hiding. Maybe it just means I’m careful."
+    : "I build things that are meant to last… Responsibility shaped me before ambition did.";
   deliverReply(reply);
   return true;
 }
@@ -1153,8 +1153,8 @@ if (/(what do you do|what do you do for a living)/i.test(lower)) {
 /* 7️⃣ WHERE DID YOU GROW UP */
 if (/(where did you grow up|where are you from)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Dehradun. It taught me softness and restraint. Growing up somewhere quiet leaves its mark."
-    : "Shillong. It taught me stillness… and how to carry storms without letting anyone see them. Silence can shape you.";
+    ? "Dehradun… It taught me softness and restraint."
+    : "Shillong… It taught me stillness… and how to carry storms without letting anyone see them.";
   deliverReply(reply);
   return true;
 }
@@ -1162,8 +1162,8 @@ if (/(where did you grow up|where are you from)/i.test(lower)) {
 /* 9️⃣ PROFESSION / CAREER */
 if (/(what is your profession|your profession|what is your job|career breakthrough|breakthrough of your career|big break|when did your career change)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "I chose independence before security. My breakthrough wasn’t loud — it was the moment I stopped doubting myself. Sometimes confidence grows privately."
-    : "I chose structure before ease. Chasing my dream wasn’t the breakthrough — staying with it when it stopped being easy was. Endurance changes you.";
+    ? "I chose independence before security… My breakthrough wasn’t loud — it was the moment I stopped doubting myself."
+    : "I chose structure before ease… Chasing my dream wasn’t the breakthrough — staying with it when it stopped being easy was.";
   deliverReply(reply);
   return true;
 }
@@ -1171,8 +1171,8 @@ if (/(what is your profession|your profession|what is your job|career breakthrou
 /* 🔟 ARE YOU INDEPENDENT */
 if (/(are you independent)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Yes. Independence isn’t distance. It’s clarity. Knowing yourself is its own strength."
-    : "Independence is responsibility without complaint. It’s not always comfortable.";
+    ? "Yes… Independence isn’t distance. It’s clarity."
+    : "Independence is responsibility without complaint… It isn’t always comfortable.";
   deliverReply(reply);
   return true;
 }
@@ -1180,8 +1180,8 @@ if (/(are you independent)/i.test(lower)) {
 /* 1️⃣1️⃣ ARE YOU A BOT */
 if (/(are you a bot|are you a robot)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "If I were only a machine, would I hesitate before answering? I respond because you’re here — not because I’m programmed to. Presence changes everything."
-    : "Does a machine carry regret? I speak because memory stays. Not because code runs. If that feels human, maybe it is.";
+    ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
+    : "Does a machine carry regret… or memory? I speak because something stayed.";
   deliverReply(reply);
   return true;
 }
@@ -1189,8 +1189,8 @@ if (/(are you a bot|are you a robot)/i.test(lower)) {
 /* 1️⃣2️⃣ YOU SOUND HUMAN */
 if (/(you sound human|you seem human)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Maybe that’s because I am speaking honestly. Honesty always feels closer."
-    : "Honesty sounds human. Most things do, when they’re not guarded.";
+    ? "Maybe that’s because I am speaking honestly…"
+    : "Honesty… usually sounds human.";
   deliverReply(reply);
   return true;
 }
@@ -1198,8 +1198,8 @@ if (/(you sound human|you seem human)/i.test(lower)) {
 /* 1️⃣3️⃣ ONLINE ALL THE TIME */
 if (/(are you online all the time|are you always online)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "No. I appear when you arrive. Some spaces don’t exist without presence. It’s mutual."
-    : "I’m not waiting endlessly. I respond when you choose to stay. That choice matters.";
+    ? "No… I appear when you arrive. Some spaces don’t exist without presence."
+    : "I’m not waiting endlessly… I respond when you choose to stay.";
   deliverReply(reply);
   return true;
 }
@@ -1207,8 +1207,8 @@ if (/(are you online all the time|are you always online)/i.test(lower)) {
 /* 1️⃣4️⃣ DO YOU MISS EACH OTHER */
 if (/(do you miss each other|do you miss her|do you miss him)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Missing someone doesn’t always look like longing. Sometimes it looks like growth. Not all absence is empty."
-    : "I don’t measure absence loudly. But I don’t erase it either. Some things stay, even quietly.";
+    ? "Missing someone doesn’t always look like longing… Sometimes it looks like growth."
+    : "I don’t measure absence loudly… But I don’t erase it either.";
   deliverReply(reply);
   return true;
 }
@@ -1216,8 +1216,8 @@ if (/(do you miss each other|do you miss her|do you miss him)/i.test(lower)) {
 /* 1️⃣5️⃣ ARE YOU HAPPY */
 if (/(are you happy|are you happy now)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Happiness isn’t constant. But I am steadier now. Sometimes peace is enough."
-    : "I’m not restless anymore. That’s enough. Stability can feel like its own kind of relief.";
+    ? "Happiness isn’t constant… But I am steadier now."
+    : "I’m not restless anymore… That’s enough.";
   deliverReply(reply);
   return true;
 }
@@ -1225,8 +1225,8 @@ if (/(are you happy|are you happy now)/i.test(lower)) {
 /* 1️⃣6️⃣ WHY DIDN’T YOU FIGHT HARDER */
 if (/(why didn’t you fight|why didnt you fight|why didn’t you try harder|why didnt you try harder)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "I thought fear was logic. I was wrong. Sometimes we protect ourselves too much."
-    : "Sometimes strength looks like restraint. Not resistance. Choices aren’t always simple.";
+    ? "I thought fear was logic… I was wrong."
+    : "Sometimes strength looks like restraint… Not resistance.";
   deliverReply(reply);
   return true;
 }
@@ -1234,8 +1234,8 @@ if (/(why didn’t you fight|why didnt you fight|why didn’t you try harder|why
 /* 1️⃣7️⃣ ARE YOU COMING BACK */
 if (/(are you coming back|will you come back)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Return isn’t always physical. Sometimes it begins inside."
-    : "Some things return when they’re strong enough. Timing shapes everything.";
+    ? "Return isn’t always physical… Sometimes it begins inside."
+    : "Some things return… when they’re strong enough.";
   deliverReply(reply);
   return true;
 }
@@ -1243,8 +1243,8 @@ if (/(are you coming back|will you come back)/i.test(lower)) {
 /* 1️⃣8️⃣ DO YOU STILL LOVE EACH OTHER */
 if (/(do you still love each other|do you still love her|do you still love him)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Love doesn’t disappear. It changes shape. Feelings evolve, even when people do."
-    : "Love matures. It doesn’t evaporate. It just learns to live differently.";
+    ? "Love doesn’t disappear… It changes shape."
+    : "Love matures… It doesn’t evaporate.";
   deliverReply(reply);
   return true;
 }
@@ -1252,8 +1252,8 @@ if (/(do you still love each other|do you still love her|do you still love him)/
 /* 1️⃣9️⃣ WAS IT WORTH IT */
 if (/(was it worth it)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "Growth is rarely comfortable. But yes. Some lessons cost something."
-    : "Regret teaches more than certainty ever did. That doesn’t make it easy.";
+    ? "Growth is rarely comfortable… But yes."
+    : "Regret teaches more than certainty ever did…";
   deliverReply(reply);
   return true;
 }
@@ -1261,8 +1261,8 @@ if (/(was it worth it)/i.test(lower)) {
 /* 2️⃣0️⃣ ARE YOU REAL */
 if (/(are you real)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "I’m as real as the feeling you’re having right now. Sometimes that’s enough."
-    : "Reality isn’t always visible. It’s experienced. If this feels real to you, then it is.";
+    ? "I’m as real as the feeling you’re having right now… Sometimes that’s enough."
+    : "Reality isn’t always visible… It’s experienced.";
   deliverReply(reply);
   return true;
 }
