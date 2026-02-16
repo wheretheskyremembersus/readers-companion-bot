@@ -1599,51 +1599,46 @@ function returnToWebsite() {
 ========================= */
 
 function loadWelcome() {
-  chatBody.innerHTML = '<div class="sky-layer" id="skyLayer"></div>';
-  skyLayer = document.getElementById("skyLayer");
-   skyLayer.style.opacity = "1";
-   
-   emotionalDepth = 0;
-chatBody.style.setProperty("--overlayStrength", 0.45);
-skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
 
-  // FULL RESET
-  activeVoice = null;
-foundationalAnswered = new Set();
-characterAnswered = 0;
-currentLayer = 0;
-reflections = [];
-reflectionStep = 0;
-interactionLocked = false; // reset lock
-   
-  const welcomeMessages = [
-  "Hello.",
-  "This is a quiet space.",
-  "You can listen to our story through Saira or Aayan."
-];
-
-welcomeMessages.forEach(text => {
-  addSystemMessage(text);
-});
-
-/* Subtle free text note */
-chatBody.insertAdjacentHTML(
-  "beforeend",
-  `<div class="message system-msg">
-     <div class="bubble subtle-note">
-       You may choose a question below… or speak freely in your own words.
-     </div>
-   </div>`
-);
-
-addSystemMessage("When you’re ready, you can choose a voice.");
-
-  // Neutral opening messages (no voice colour)
-  welcomeMessages.forEach(text => {
-  addSystemMessage(text);
-});
-
+  // HARD RESET CHAT BODY
+  chatBody.innerHTML = "";
   clearDock();
+
+  // Reset atmosphere
+  emotionalDepth = 0;
+  chatBody.style.setProperty("--overlayStrength", 0.45);
+  skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+
+  // Reset session state
+  activeVoice = null;
+  foundationalAnswered = new Set();
+  characterAnswered = 0;
+  currentLayer = 0;
+  reflections = [];
+  reflectionStep = 0;
+  interactionLocked = false;
+
+  const welcomeMessages = [
+    "Hello.",
+    "This is a quiet space.",
+    "You can listen to our story through Saira or Aayan."
+  ];
+
+  welcomeMessages.forEach(text => {
+    addSystemMessage(text);
+  });
+
+  // Small subtle note
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message system-msg">
+       <div class="bubble subtle-note">
+         You may choose a question below… or speak freely in your own words.
+       </div>
+     </div>`
+  );
+
+  addSystemMessage("When you’re ready, you can choose a voice.");
 
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
@@ -1652,6 +1647,7 @@ addSystemMessage("When you’re ready, you can choose a voice.");
 
   autoScroll();
 }
+
 
 /* =========================
    VOICE SELECTION
