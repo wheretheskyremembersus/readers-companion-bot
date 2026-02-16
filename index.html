@@ -63,6 +63,14 @@ content="default-src 'self';
   transform: translateY(0px);
 }
 
+         /* =========================
+   ABUSE STRIKE SYSTEM
+========================= */
+
+let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes")) || 0;
+let blockUntil = parseInt(localStorage.getItem("blockUntil")) || 0;
+
+         
 /* =========================
    GLOBAL PAGE (RESTORE)
 ========================= */
@@ -1496,6 +1504,16 @@ if (/(tell me more|know more|more about (your )?story|read more|how can i know m
 
     abuseCount++;
 
+           // Increase strike count
+exitStrikeCount++;
+localStorage.setItem("exitStrikes", exitStrikeCount);
+
+// If 3 strikes → block for 24 hours
+if (exitStrikeCount >= 3) {
+  const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+  localStorage.setItem("blockUntil", blockTime);
+}
+
     if (repeatCount >= 3 || abuseCount >= abuseLimit) {
       returnToWebsite();
       return true;
@@ -2223,7 +2241,53 @@ function returnToWebsite() {
 document.addEventListener("contextmenu", function(e) {
   e.preventDefault();
 });
+         
+/* =========================
+   24 HOUR BLOCK CHECK
+========================= */
 
-loadWelcome();
+function checkBlockStatus() {
+
+  const blockUntil = parseInt(localStorage.getItem("blockUntil")) || 0;
+
+if (Date.now() >= blockUntil && blockUntil !== 0) {
+  localStorage.removeItem("exitStrikes");
+  localStorage.removeItem("blockUntil");
+}
+
+  if (Date.now() < blockUntil) {
+
+    document.body.innerHTML = `
+      <div style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        height:100vh;
+        font-family:'Palatino Linotype', Palatino, serif;
+        background:#111;
+        color:#fff;
+        text-align:center;
+        padding:40px;
+      ">
+        <div>
+          <div style="font-size:22px; font-style:italic; margin-bottom:20px;">
+            This space remains quiet for now.
+          </div>
+          <div style="opacity:0.7; font-size:14px;">
+            It will reopen after 24 hours.
+          </div>
+        </div>
+      </div>
+    `;
+
+    return true;
+  }
+
+  return false;
+}
+
+if (!checkBlockStatus()) {
+  loadWelcome();
+}
    
 </script>
