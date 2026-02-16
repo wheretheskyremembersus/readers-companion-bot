@@ -717,7 +717,7 @@ preloadAayan.src = "Aayan.jpg";
 /* =========================
    7-STAGE HUMAN PROGRESSION
 ========================= */
-let stageState = {
+var stageState = {
   saira: {
     currentStage: 1,
     momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
@@ -728,9 +728,7 @@ let stageState = {
   }
 };
 
-// 🔥 MOVE IT HERE — RIGHT HERE
-globalThis.stageState = stageState;
-console.log("Stage attached globally:", globalThis.stageState);
+console.log("Stage attached globally:", stageState);
 
 /* =========================
    EMOTIONAL RESPONSE TRACKER
