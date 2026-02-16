@@ -994,22 +994,6 @@ function detectEmotionalPillar(text) {
 
 
   /* =========================
-     VULNERABILITY PILLAR
-  ========================= */
-  if (
-    has("afraid") ||
-    has("fear") ||
-    has("scared") ||
-    has("doubt") ||
-    has("hesitate") ||
-    (has("why") && (has("fight") || has("try"))) ||
-    has("regret") ||
-    has("mistake")
-  ) {
-    return "vulnerability";
-  }
-
-  /* =========================
      DEPTH PILLAR
   ========================= */
   if (
