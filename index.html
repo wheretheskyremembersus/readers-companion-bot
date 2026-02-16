@@ -1716,6 +1716,35 @@ if (/(tell me more|know more|more about (your )?story|read more|how can i know m
   }
 }
          
+/* =========================
+   EMOTIONAL SCORING LAYER
+========================= */
+
+const detectedPillar = detectEmotionalPillar(lower);
+
+if (detectedPillar && activeVoice) {
+
+  meaningfulCount++;
+
+  const pillar = detectedPillar;
+  const voice = activeVoice;
+
+  let index = emotionalIndex[voice][pillar] ?? 0;
+  const responses = emotionalResponseBank[pillar][voice];
+
+  const reply = responses[index];
+
+  deliverReply(reply);
+
+  emotionalIndex[voice][pillar]++;
+
+  if (emotionalIndex[voice][pillar] >= responses.length) {
+    emotionalIndex[voice][pillar] = 0;
+  }
+
+  return true;
+}
+         
  /* 7️⃣ ABUSE */
   if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
       && /(you|saira|aayan)/.test(lower)) {
@@ -2201,34 +2230,6 @@ function answerCharacter(item, btn) {
   });
 }
          
-/* =========================
-   EMOTIONAL SCORING LAYER
-========================= */
-
-const detectedPillar = detectEmotionalPillar(lower);
-
-if (detectedPillar && activeVoice) {
-
-  meaningfulCount++;
-
-  const pillar = detectedPillar;
-  const voice = activeVoice;
-
-  let index = emotionalIndex[voice][pillar] ?? 0;
-  const responses = emotionalResponseBank[pillar][voice];
-
-  const reply = responses[index];
-
-  deliverReply(reply);
-
-  emotionalIndex[voice][pillar]++;
-
-  if (emotionalIndex[voice][pillar] >= responses.length) {
-    emotionalIndex[voice][pillar] = 0;
-  }
-
-  return true;
-}
 
 /* =========================
    AUTHOR INVITATION
