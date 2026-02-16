@@ -993,56 +993,6 @@ function detectEmotionalPillar(text) {
 }
 
 
-  /* =========================
-     DEPTH PILLAR
-  ========================= */
-  if (
-    (has("when") && (has("realize") || has("realise") || has("know"))) ||
-    has("happiest") ||
-    has("deepest") ||
-    has("closest") ||
-    has("special moment") ||
-    has("favorite moment") ||
-    has("favourite moment")
-  ) {
-    return "depth";
-  }
-
-  /* =========================
-     LOSS PILLAR
-  ========================= */
-  if (
-    has("miss") ||
-    has("lost") ||
-    has("separation") ||
-    has("break up") ||
-    has("apart") ||
-    (has("still") && has("love")) ||
-    has("worth it") ||
-    has("pain")
-  ) {
-    return "loss";
-  }
-
-  /* =========================
-     FUTURE PILLAR
-  ========================= */
-  if (
-    has("future") ||
-    has("what happens next") ||
-    has("more to story") ||
-    has("sequel") ||
-    has("part two") ||
-    has("second chance") ||
-    has("reunion") ||
-    has("come back")
-  ) {
-    return "future";
-  }
-
-  return null;
-}
-
 /* =========================
    INTELLIGENCE ROUTER
 ========================= */
