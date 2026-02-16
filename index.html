@@ -1093,7 +1093,8 @@ if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|incredib
   }
 
   /* 8️⃣ ABUSE (voice targeted only) */
- if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
+/* 8️⃣ ABUSE (voice targeted only) */
+if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
     && /(you|saira|aayan)/.test(lower)) {
 
   abuseCount++;
@@ -1111,6 +1112,8 @@ if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|incredib
   return true;
 }
 
+return false;
+}
 
 /* ---------- Typed Input Handler ---------- */
 
@@ -1181,13 +1184,13 @@ lastUserInput = text;
       : "What mattered didn’t disappear.";
   }
 
-  else if (/(who.*author|about.*author|who wrote|author)/.test(text)) {
+ else if (/(who.*author|about.*author|who wrote|author)/.test(text)) {
   reply = activeVoice === "saira"
     ? "He wrote this honestly. That was enough."
     : "He chose truth over comfort.";
 }
 
-  else {
+else {
 
   foreignInputCount++;
 
@@ -1201,8 +1204,9 @@ lastUserInput = text;
     : "Some words don’t reach me. Try again.";
 }
 
-  deliverReply(reply);
+deliverReply(reply);
 }
+
 /* ---------- Utility ---------- */
 
 function clearDock() {
