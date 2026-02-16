@@ -936,80 +936,63 @@ function isEightyPercentMatch(userText, targetText) {
   return ratio >= 0.8;
 }
 
-       /* =========================
-   EMOTIONAL PILLAR DETECTION (SMART VERSION)
-========================= */
-
-function detectEmotionalPillar(lower) {
-
-         /* =========================
+   /* =========================
    ADVANCED HYBRID — EMOTIONAL PILLARS
 ========================= */
 
 const emotionalPillars = {
   loss: [
-    "lost", "left", "gone", "separated", "distance",
-    "alone", "miss", "missing", "absence", "ended",
-    "without you", "after you left"
+    "lost","left","gone","separated","distance",
+    "alone","miss","missing","absence","ended",
+    "without you","after you left"
   ],
   regret: [
-    "regret", "should have", "could have",
-    "why didn’t", "why didnt", "mistake",
-    "too late", "wish", "if only"
+    "regret","should have","could have",
+    "why didn’t","why didnt","mistake",
+    "too late","wish","if only"
   ],
   vulnerability: [
-    "afraid", "scared", "fear", "hurt",
-    "broken", "weak", "uncertain",
-    "confused", "anxious"
+    "afraid","scared","fear","hurt",
+    "broken","weak","uncertain",
+    "confused","anxious"
   ],
   growth: [
-    "changed", "learned", "stronger",
-    "moved on", "healed", "better now",
-    "grown", "understand now"
+    "changed","learned","stronger",
+    "moved on","healed","better now",
+    "grown","understand now"
   ],
   destiny: [
-    "fate", "destiny", "meant to be",
-    "meant for", "come back", "return",
-    "again someday", "future together"
+    "fate","destiny","meant to be",
+    "meant for","come back","return",
+    "again someday","future together"
   ]
 };
 
-function detectEmotionalPillar(userText) {
+function detectEmotionalPillar(text) {
 
-  const text = userText.toLowerCase();
-  const scores = {};
-
-  Object.keys(emotionalPillars).forEach(pillar => {
-    scores[pillar] = 0;
-
-    emotionalPillars[pillar].forEach(keyword => {
-      if (text.includes(keyword)) {
-        scores[pillar] += keyword.includes(" ") ? 2 : 1;
-      }
-    });
-  });
-
+  const lower = text.toLowerCase();
   let highest = null;
   let highestScore = 0;
 
-  Object.keys(scores).forEach(pillar => {
-    if (scores[pillar] > highestScore) {
+  Object.keys(emotionalPillars).forEach(pillar => {
+
+    let score = 0;
+
+    emotionalPillars[pillar].forEach(keyword => {
+      if (lower.includes(keyword)) {
+        score += keyword.includes(" ") ? 2 : 1;
+      }
+    });
+
+    if (score > highestScore) {
       highest = pillar;
-      highestScore = scores[pillar];
+      highestScore = score;
     }
   });
 
-  if (highestScore >= 2) {
-    return highest;
-  }
-
-  return null;
+  return highestScore >= 2 ? highest : null;
 }
 
-  // Helper
-  function has(word) {
-    return lower.includes(word);
-  }
 
   /* =========================
      ORIGIN PILLAR
@@ -1128,24 +1111,25 @@ if (detectedPillar) {
 
     regret: activeVoice === "saira"
       ? "Regret can be heavier than heartbreak… it stays longer than we expect."
-      : "If we could return to that moment… we might choose differently. But growth rarely comes without consequence.",
+      : "If we could return to that moment… we might choose differently.",
 
     vulnerability: activeVoice === "saira"
-      ? "It’s not weakness to admit fear… it’s honesty. And honesty takes courage."
+      ? "It’s not weakness to admit fear… it’s honesty."
       : "Fear doesn’t make you small… hiding from it does.",
 
     growth: activeVoice === "saira"
-      ? "Growth isn’t loud… it’s subtle. And sometimes painful before it becomes strength."
-      : "Change rarely asks permission… it demands endurance first.",
+      ? "Growth isn’t loud… it’s subtle."
+      : "Change rarely asks permission… it demands endurance.",
 
     destiny: activeVoice === "saira"
-      ? "Some connections don’t disappear… they wait for the right version of us."
-      : "If something is meant to return… it will. But stronger than before."
+      ? "Some connections don’t disappear… they wait."
+      : "If something is meant to return… it will."
   };
 
   deliverReply(emotionalReplies[detectedPillar]);
   return true;
 }
+
          
 /* =========================
    SILENT MEANINGFUL TRACKING
