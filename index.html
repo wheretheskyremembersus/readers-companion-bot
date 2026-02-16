@@ -1448,9 +1448,9 @@ function detectEmotionalPillar(text) {
 
   if (highestScore >= 2) return highest;
 
-  if (highestScore === 1 && /\?/.test(text)) {
-    return highest;
-  }
+if (highestScore === 1) {
+  return highest;
+}
 
   return null;
 }
