@@ -676,6 +676,27 @@ preloadSaira.src = "Saira.jpg";
 const preloadAayan = new Image();
 preloadAayan.src = "Aayan.jpg";
 
+         /* =========================
+   EMOTIONAL RESPONSE TRACKER
+========================= */
+
+let emotionalIndex = {
+  saira: {
+    loss: 0,
+    regret: 0,
+    vulnerability: 0,
+    growth: 0,
+    destiny: 0
+  },
+  aayan: {
+    loss: 0,
+    regret: 0,
+    vulnerability: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+
 /* =========================
    SOUND ENGINE (MAX SAFE)
 ========================= */
@@ -983,6 +1004,156 @@ const emotionalPillars = {
   ]
 };
 
+         const emotionalResponseBank = {
+
+  loss: {
+
+    saira: [
+      "Loss isn’t always loud… sometimes it’s a quiet shift inside you.",
+      "I’ve learned that missing someone doesn’t fade just because time moves.",
+      "There are absences that sit beside you… even in full rooms.",
+      "Some goodbyes don’t echo. They settle.",
+      "When something leaves, it leaves space behind… and space has weight.",
+      "I used to think loss meant weakness. It doesn’t.",
+      "Sometimes we grieve the version of ourselves that existed with them.",
+      "Loss teaches patience in the most painful way.",
+      "You don’t always cry when you lose something important.",
+      "Some connections don’t disappear… they just change form."
+    ],
+
+    aayan: [
+      "Distance reshapes people… not always in visible ways.",
+      "Loss doesn’t announce itself. It reveals itself slowly.",
+      "There are things you stop reaching for… even if you still feel them.",
+      "Absence has its own discipline.",
+      "What leaves doesn’t always weaken you. Sometimes it sharpens you.",
+      "I measure loss in silence, not noise.",
+      "You can function… and still feel something missing.",
+      "Some departures define you more than arrivals.",
+      "You don’t erase memory. You learn to carry it.",
+      "What remains after loss… is clarity."
+    ]
+  },
+
+ regret: {
+
+    saira: [
+      "Regret is heavier than heartbreak… it lingers longer.",
+      "Sometimes I replay moments I wish I had handled differently.",
+      "‘If only’ is a dangerous sentence.",
+      "There are words I should have said sooner.",
+      "Fear often disguises itself as logic.",
+      "Regret teaches, but it doesn’t comfort.",
+      "I learned that hesitation has consequences.",
+      "Silence can become a decision without meaning to.",
+      "We don’t always realise the cost of delay.",
+      "If courage had come earlier… things might have shifted."
+    ],
+
+    aayan: [
+      "I don’t regret loving. I regret hesitating.",
+      "Timing isn’t always neutral.",
+      "You can make the rational choice… and still question it later.",
+      "There were moments I should have acted sooner.",
+      "Control sometimes blocks opportunity.",
+      "Responsibility can feel safer than vulnerability.",
+      "I weighed decisions too long.",
+      "Some doors close quietly.",
+      "You don’t always get a second version of the same moment.",
+      "Regret doesn’t shout. It settles."
+    ]
+  },
+
+  vulnerability: {
+
+    saira: [
+      "Admitting fear takes more strength than hiding it.",
+      "I wasn’t always as steady as I appeared.",
+      "Some days I felt smaller than my doubts.",
+      "Being honest with yourself is uncomfortable.",
+      "I didn’t always trust my own heart.",
+      "Opening up felt dangerous.",
+      "I learned softness is not weakness.",
+      "It’s hard to let someone see you unsure.",
+      "Courage begins where certainty ends.",
+      "Sometimes being fragile is the most truthful thing you can be."
+    ],
+
+    aayan: [
+      "I was taught not to show uncertainty.",
+      "Control felt safer than exposure.",
+      "It took me time to admit I was afraid.",
+      "Strength doesn’t eliminate fear.",
+      "Letting someone in disrupts structure.",
+      "I rarely allowed myself to hesitate openly.",
+      "Vulnerability doesn’t come naturally to me.",
+      "There were moments I felt unprepared.",
+      "It’s easier to build walls than conversations.",
+      "Being seen fully… changes you."
+    ]
+  },
+
+  growth: {
+
+    saira: [
+      "Growth is rarely visible in the beginning.",
+      "I changed quietly.",
+      "Some lessons hurt before they heal.",
+      "Becoming stronger isn’t dramatic.",
+      "Healing isn’t linear.",
+      "I stopped blaming timing.",
+      "Independence taught me steadiness.",
+      "You evolve without announcing it.",
+      "Peace feels different after chaos.",
+      "Growth is choosing differently the next time."
+    ],
+
+    aayan: [
+      "Growth required discomfort.",
+      "Structure doesn’t prevent transformation.",
+      "I learned to prioritise what matters.",
+      "Discipline without emotion is incomplete.",
+      "Change demanded patience.",
+      "I became more intentional.",
+      "Strength matured into awareness.",
+      "Ambition softened.",
+      "I no longer confuse silence with control.",
+      "Growth clarified what I once avoided."
+    ]
+  },
+                  
+  destiny: {
+
+    saira: [
+      "Some connections return in unexpected forms.",
+      "Timing rearranges more than we expect.",
+      "I don’t believe everything is accidental.",
+      "Certain people feel written into you.",
+      "Paths cross for reasons we don’t see yet.",
+      "If something is meant to stay, it adapts.",
+      "Fate isn’t loud.",
+      "Some meetings feel inevitable.",
+      "You recognise certain souls instantly.",
+      "Not everything unfinished is over."
+    ],
+
+    aayan: [
+      "I believe in preparation meeting opportunity.",
+      "Return requires readiness.",
+      "Some stories pause, they don’t end.",
+      "Destiny respects effort.",
+      "The future is shaped, not wished.",
+      "Not all departures are permanent.",
+      "What matters finds alignment eventually.",
+      "I don’t dismiss coincidence easily.",
+      "Some paths circle back.",
+      "If something is strong enough, it survives delay."
+    ]
+  }
+
+};
+
+         
 function detectEmotionalPillar(text) {
 
   const lower = text.toLowerCase();
@@ -1039,35 +1210,32 @@ const generalQuestionBank = [
 
 const detectedPillar = detectEmotionalPillar(lower);
 
-if (detectedPillar) {
+if (detectedPillar && activeVoice) {
 
   meaningfulCount++;
 
-  const emotionalReplies = {
-    loss: activeVoice === "saira"
-      ? "Loss doesn’t always look dramatic… sometimes it’s quiet. I understand that more than I admit."
-      : "Some distances aren’t measured in miles… they’re measured in what changed after.",
+  const pillar = detectedPillar;
+  const voice = activeVoice;
 
-    regret: activeVoice === "saira"
-      ? "Regret can be heavier than heartbreak… it stays longer than we expect."
-      : "If we could return to that moment… we might choose differently.",
+  let index = emotionalIndex[voice][pillar];
 
-    vulnerability: activeVoice === "saira"
-      ? "It’s not weakness to admit fear… it’s honesty."
-      : "Fear doesn’t make you small… hiding from it does.",
+  const responses = emotionalResponseBank[pillar][voice];
 
-    growth: activeVoice === "saira"
-      ? "Growth isn’t loud… it’s subtle."
-      : "Change rarely asks permission… it demands endurance.",
+  const reply = responses[index];
 
-    destiny: activeVoice === "saira"
-      ? "Some connections don’t disappear… they wait."
-      : "If something is meant to return… it will."
-  };
+  deliverReply(reply);
 
-  deliverReply(emotionalReplies[detectedPillar]);
+  // increment safely
+  emotionalIndex[voice][pillar]++;
+
+  // reset after full cycle
+  if (emotionalIndex[voice][pillar] >= responses.length) {
+    emotionalIndex[voice][pillar] = 0;
+  }
+
   return true;
 }
+
 
 /* =========================
    80% APPROXIMATE MATCH RULE
