@@ -1446,15 +1446,24 @@ function detectEmotionalPillar(text) {
 
   });
 
-  if (highestScore >= 2) return highest;
+  // Strong match
+if (highestScore >= 2) return highest;
 
+// Single strong emotional keyword should count
 if (highestScore === 1) {
+
+  // Ignore extremely short inputs
+  if (text.trim().length < 12) return null;
+
+  // Ignore pure greetings
+  if (/^(hi|hello|hey|ok|okay|yes|no)$/i.test(text.trim())) return null;
+
   return highest;
 }
 
-  return null;
-}
+return null;
 
+}
 
 /* =========================
    INTELLIGENCE ROUTER (CLEAN ORDER)
