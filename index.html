@@ -1760,14 +1760,40 @@ console.log("Final Momentum:", voiceStage.momentum);
     emotionalIndex[activeVoice][pillar] = 0;
   }
 
+  const stage = voiceStage.currentStage;
+
+let finalReply = "";
+
+// Stage 1–2 → guarded
+if (stage <= 2) {
+  finalReply = emotionalLine;
+}
+
+// Stage 3–4 → controlled opening
+else if (stage <= 4) {
   if (/\?$/.test(originalText.trim())) {
-  let finalReply = `${anchor} ${emotionalLine}`;
+    finalReply = `${anchor} ${emotionalLine}`;
+  } else {
+    finalReply = emotionalLine;
+  }
+}
+
+// Stage 5 → honest admission
+else if (stage === 5) {
+  finalReply = `${anchor} ${emotionalLine}`;
+}
+
+// Stage 6 → reflective
+else if (stage === 6) {
+  finalReply = `${anchor} ${emotionalLine} It took time to understand that.`;
+}
+
+// Stage 7 → integrated calm
+else {
+  finalReply = `${anchor} ${emotionalLine} I see it more clearly now.`;
+}
 
 deliverReply(finalReply);
-
-} else {
-  deliverReply(`${emotionalLine}`);
-}
 
   return true;
 }
