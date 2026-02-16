@@ -1016,6 +1016,41 @@ function isSixtyPercentMatch(userText, targetText) {
   const ratio = matchCount / cleanTarget.length;
   return ratio >= 0.6;
 }
+function applyStageAtmosphere(stage) {
+
+  if (!chatBody || !skyLayer) return;
+
+  const overlayMap = {
+    1: 0.30,
+    2: 0.28,
+    3: 0.25,
+    4: 0.22,
+    5: 0.20,
+    6: 0.18,
+    7: 0.16
+  };
+
+  const brightnessMap = {
+    1: 1,
+    2: 0.95,
+    3: 0.9,
+    4: 0.85,
+    5: 0.8,
+    6: 0.75,
+    7: 0.7
+  };
+
+  chatBody.style.setProperty(
+    "--overlayStrength",
+    overlayMap[stage] ?? 0.30
+  );
+
+  skyLayer.style.filter = `
+    brightness(${brightnessMap[stage]})
+    contrast(${1 + stage * 0.05})
+    saturate(${1 + stage * 0.08})
+  `;
+}
 
  /* =========================
    REFINED EMOTIONAL PILLARS (HIGH ACCURACY)
@@ -1741,6 +1776,8 @@ if (voiceStage.momentum[targetStage] >= requiredMomentum) {
   }
 
   voiceStage.momentum[targetStage] = 0;
+// Persist stage memory
+localStorage.setItem("stageState", JSON.stringify(stageState));
 }
 console.log("Required Momentum:", requiredMomentum);
 console.log("Final Stage:", voiceStage.currentStage);
@@ -1761,6 +1798,7 @@ console.log("Final Momentum:", voiceStage.momentum);
   }
 
 const stage = voiceStage.currentStage;
+applyStageAtmosphere(stage);
 
 let finalReply = emotionalLine;
 
@@ -1778,29 +1816,32 @@ if (/\?$/.test(originalText.trim())) {
 
 // Stage 1–2 → guarded (no change)
 
-if (stage === 3) {
-  // slight emotional openness
-  finalReply += activeVoice === "saira"
-    ? " I’m beginning to understand that."
-    : " I’ve started to see that more clearly.";
-}
+const stageModifiers = {
+  3: {
+    saira: " I’m beginning to understand that.",
+    aayan: " I’ve started to see that more clearly."
+  },
+  4: {
+    saira: " I don’t speak about that easily.",
+    aayan: " It wasn’t simple for me."
+  },
+  6: {
+    saira: " It took time to understand that.",
+    aayan: " It took discipline to understand that."
+  },
+  7: {
+    saira: " I see it more clearly now.",
+    aayan: " I see it differently now."
+  }
+};
 
-else if (stage === 4) {
-  finalReply += activeVoice === "saira"
-    ? " I don’t speak about that easily."
-    : " It wasn’t simple for me.";
-}
-
-else if (stage === 5) {
+// Stage 5+ becomes anchored
+if (stage >= 5) {
   finalReply = `${anchor} ${emotionalLine}`;
 }
 
-else if (stage === 6) {
-  finalReply = `${anchor} ${emotionalLine} It took time to understand that.`;
-}
-
-else if (stage === 7) {
-  finalReply = `${anchor} ${emotionalLine} I see it more clearly now.`;
+if (stageModifiers[stage]) {
+  finalReply += stageModifiers[stage][activeVoice];
 }
 
 /* =========================
@@ -1987,6 +2028,16 @@ skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
   interactionLocked = false; // reset lock
 
   activeVoice = v;
+ // Restore saved stage
+const saved = localStorage.getItem("stageState");
+if (saved) {
+  const parsed = JSON.parse(saved);
+  if (parsed[v]) {
+    stageState[v] = parsed[v];
+  }
+}
+
+applyStageAtmosphere(stageState[v].currentStage);
   const header = document.querySelector(".bot-header");
 
 if (v === "saira") {
