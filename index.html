@@ -1718,15 +1718,29 @@ console.log("Momentum After Increment:", voiceStage.momentum);
     }
   });
 
-  // Advance stage after 2 confirmations
-  if (voiceStage.momentum[targetStage] >= 2) {
+  /* =========================
+   HYBRID STAGE ADVANCEMENT
+========================= */
 
-  // Destiny gate
+let requiredMomentum = 2; // default mid-speed
+
+// Fast early progression
+if (voiceStage.currentStage < 3) {
+  requiredMomentum = 1;
+}
+
+// Slow deep stages
+if (voiceStage.currentStage >= 5) {
+  requiredMomentum = 3;
+}
+
+if (voiceStage.momentum[targetStage] >= requiredMomentum) {
+
+  // Destiny gate (must reach stage 5 first)
   if (targetStage === 7 && voiceStage.currentStage < 5) {
-    // do not advance
+    // blocked intentionally
   } else {
 
-    // Advance only ONE level at a time
     if (voiceStage.currentStage < targetStage) {
       voiceStage.currentStage += 1;
     }
@@ -1735,7 +1749,6 @@ console.log("Momentum After Increment:", voiceStage.momentum);
 
   voiceStage.momentum[targetStage] = 0;
 }
-
 
   const anchor = emotionalAnchors[activeVoice][pillar];
 
