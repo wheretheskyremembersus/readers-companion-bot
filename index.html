@@ -26,7 +26,7 @@ content="default-src 'self';
 
 <style>
 
-         /* =========================
+ /* =========================
    EXIT TRANSITION
 ========================= */
 
@@ -165,6 +165,14 @@ body {
   margin: 0;
   font-size: 15px;
   color: #777;
+}
+
+ .subtle-note {
+  font-size: 12px;
+  color: #b34747;  /* soft muted red */
+  font-style: italic;
+  margin-top: 6px;
+  opacity: 0.9;
 }
 
  /* =========================
@@ -1609,12 +1617,26 @@ reflectionStep = 0;
 interactionLocked = false; // reset lock
    
   const welcomeMessages = [
-    "Hello.",
-    "This is a quiet space.",
-    "You can listen to our story through Saira or Aayan.",
-    "Our story is a contemporary romantic fiction.",
-    "When you’re ready, you can choose a voice."
-  ];
+  "Hello.",
+  "This is a quiet space.",
+  "You can listen to our story through Saira or Aayan."
+];
+
+welcomeMessages.forEach(text => {
+  addSystemMessage(text);
+});
+
+/* Subtle free text note */
+chatBody.insertAdjacentHTML(
+  "beforeend",
+  `<div class="message system-msg">
+     <div class="bubble subtle-note">
+       You may choose a question below… or speak freely in your own words.
+     </div>
+   </div>`
+);
+
+addSystemMessage("When you’re ready, you can choose a voice.");
 
   // Neutral opening messages (no voice colour)
   welcomeMessages.forEach(text => {
