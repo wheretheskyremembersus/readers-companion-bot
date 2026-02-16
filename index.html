@@ -684,6 +684,9 @@ let emotionalIndex = {
     loss: 0,
     growth: 0,
     destiny: 0
+           affection: "There was a time I didn’t realise how much I cared.",
+fear: "I don’t like admitting this, but fear was part of it."
+
   },
   aayan: {
     regret: 0,
@@ -691,6 +694,9 @@ let emotionalIndex = {
     loss: 0,
     growth: 0,
     destiny: 0
+           affection: "I don’t attach easily. When I do, it matters.",
+fear: "Fear doesn’t show on me easily. But it was there."
+
   }
 };
 
@@ -1019,7 +1025,29 @@ function isSixtyPercentMatch(userText, targetText) {
 
 const emotionalPillars = {
 
-  loss: [
+affection: [
+  "like you",
+  "care about",
+  "feel close",
+  "connected",
+  "drawn to",
+  "attached",
+  "important to me",
+  "special to me"
+],
+
+fear: [
+  "scared",
+  "terrified",
+  "fear",
+  "afraid to",
+  "afraid of losing",
+  "worried",
+  "panic",
+  "anxious about"
+],
+  
+loss: [
     // Core loss words
     "lost", "left", "gone", "ended", "apart",
     "separated", "distance", "absence",
@@ -1415,7 +1443,16 @@ function detectEmotionalPillar(text) {
   let highest = null;
   let highestScore = 0;
 
-  const pillarOrder = ["regret", "vulnerability", "loss", "growth", "destiny"];
+  const pillarOrder = [
+  "affection",
+  "vulnerability",
+  "fear",
+  "regret",
+  "loss",
+  "growth",
+  "destiny"
+];
+
 
   pillarOrder.forEach(pillar => {
 
@@ -1607,7 +1644,7 @@ if (detectedPillar && activeVoice) {
     meaningfulCount++;
 
   const pillar = detectedPillar;
-           /* =========================
+/* =========================
      7-STAGE MOMENTUM SYSTEM
   ========================= */
 
