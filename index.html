@@ -1423,14 +1423,11 @@ function detectEmotionalPillar(text) {
 
     emotionalPillars[pillar].forEach(keyword => {
 
-      // Phrase detection (multi-word)
       if (keyword.includes(" ")) {
         if (lower.includes(keyword)) {
           score += 2;
         }
-      } 
-      // Root-based single-word detection
-      else {
+      } else {
         const keywordRoot = normalizeWord(keyword);
         if (userWords.some(w => w === keywordRoot)) {
           score += 1;
@@ -1447,22 +1444,19 @@ function detectEmotionalPillar(text) {
   });
 
   // Strong match
-if (highestScore >= 2) return highest;
+  if (highestScore >= 2) return highest;
 
-// Single strong emotional keyword should count
-if (highestScore === 1) {
+  // Single meaningful emotional match
+  if (highestScore === 1) {
 
-  // Ignore extremely short inputs
-  if (text.trim().length < 12) return null;
+    if (text.trim().length < 12) return null;
 
-  // Ignore pure greetings
-  if (/^(hi|hello|hey|ok|okay|yes|no)$/i.test(text.trim())) return null;
+    if (/^(hi|hello|hey|ok|okay|yes|no)$/i.test(text.trim())) return null;
 
-  return highest;
-}
+    return highest;
+  }
 
-return null;
-
+  return null;
 }
 
 /* =========================
