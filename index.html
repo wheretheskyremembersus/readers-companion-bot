@@ -728,7 +728,8 @@ var stageState = {
   }
 };
 
-console.log("Stage attached globally:", stageState);
+window.stageState = stageState; // ✅ ONLY THIS
+
 
 /* =========================
    EMOTIONAL RESPONSE TRACKER
