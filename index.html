@@ -1513,8 +1513,11 @@ function detectEmotionalPillar(text) {
       highest = pillar;
       highestScore = score;
     }
+console.log("Pillar:", pillar, "Score:", score);
 
   });
+         
+console.log("Highest Pillar:", highest, "Highest Score:", highestScore);
 
   // Strong match
   if (highestScore >= 2) return highest;
@@ -1686,6 +1689,13 @@ if (detectedPillar && activeVoice) {
 
   const voiceStage = stageState[activeVoice];
   const targetStage = pillarToStage[pillar];
+
+console.log("Target Stage:", targetStage);
+console.log("Current Stage Before:", voiceStage.currentStage);
+console.log("Momentum Before:", JSON.stringify(voiceStage.momentum));
+
+ console.log("Current Stage After:", voiceStage.currentStage);
+console.log("Momentum After:", JSON.stringify(voiceStage.momentum));
 
   // Increase momentum
   if (targetStage > 1) {
