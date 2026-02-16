@@ -1288,35 +1288,6 @@ const generalQuestionBank = [
   const lower = text.toLowerCase().trim();
          
 /* =========================
-   EMOTIONAL SCORING LAYER
-========================= */
-
-const detectedPillar = detectEmotionalPillar(lower);
-
-if (detectedPillar && activeVoice) {
-
-  meaningfulCount++;
-
-  const pillar = detectedPillar;
-  const voice = activeVoice;
-
-  let index = emotionalIndex[voice][pillar] ?? 0;
-  const responses = emotionalResponseBank[pillar][voice];
-
-  const reply = responses[index];
-
-  deliverReply(reply);
-
-  emotionalIndex[voice][pillar]++;
-
-  if (emotionalIndex[voice][pillar] >= responses.length) {
-    emotionalIndex[voice][pillar] = 0;
-  }
-
-  return true;
-}
-
-/* =========================
    80% APPROXIMATE MATCH RULE
 ========================= */
 
@@ -2228,6 +2199,35 @@ function answerCharacter(item, btn) {
       showAuthorInvitation();
     }
   });
+}
+         
+/* =========================
+   EMOTIONAL SCORING LAYER
+========================= */
+
+const detectedPillar = detectEmotionalPillar(lower);
+
+if (detectedPillar && activeVoice) {
+
+  meaningfulCount++;
+
+  const pillar = detectedPillar;
+  const voice = activeVoice;
+
+  let index = emotionalIndex[voice][pillar] ?? 0;
+  const responses = emotionalResponseBank[pillar][voice];
+
+  const reply = responses[index];
+
+  deliverReply(reply);
+
+  emotionalIndex[voice][pillar]++;
+
+  if (emotionalIndex[voice][pillar] >= responses.length) {
+    emotionalIndex[voice][pillar] = 0;
+  }
+
+  return true;
 }
 
 /* =========================
