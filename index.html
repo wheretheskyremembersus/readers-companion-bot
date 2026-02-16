@@ -631,7 +631,21 @@ let emotionalDepth = 0;
 
 const chatBody = document.getElementById("chatBody");
 const dock = document.getElementById("questionDock");
+/* =========================
+   SESSION CONTAINMENT COUNTERS
+========================= */
 
+let foreignInputCount = 0;
+let repeatCount = 0;
+let abuseCount = 0;
+let repeatEscalated = false;
+         
+let lastUserInput = "";
+
+const foreignLimit = 5;
+const repeatLimit = 5;
+const abuseLimit = 3;
+         
 // Initial atmosphere reset
 chatBody.style.setProperty("--overlayStrength", 0.25);
 skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
@@ -1078,31 +1092,32 @@ if (/(beautiful|lovely|amazing|great|wonderful|inspiring|brilliant|nice|incredib
     return true;
   }
 
-  /* 8️⃣ ABUSE (voice targeted only) */
-  if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
-      && /(you|saira|aayan)/.test(lower)) {
+/* 8️⃣ ABUSE (voice targeted only) */
+if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
+    && /(you|saira|aayan)/.test(lower)) {
 
-    const reply = activeVoice === "saira"
-      ? "I won’t stay where respect isn’t present."
-      : "If this turns careless, I’ll remain silent.";
+  abuseCount++;
 
-    deliverReply(reply);
+  // 🔥 ESCALATION RULE
+if (repeatEscalated) {
+    returnToWebsite();
     return true;
-  }
-
-  /* 9️⃣ FOREIGN / RANDOM */
-  if (!/[a-z]/i.test(originalText)) {
-    const reply = activeVoice === "saira"
-      ? "I may not understand that — but I’m still here."
-      : "Some words don’t reach me. Try again.";
-
-    deliverReply(reply);
-    return true;
-  }
-
-  return false;
 }
 
+  if (abuseCount >= abuseLimit) {
+    returnToWebsite();
+    return true;
+  }
+
+  const reply = activeVoice === "saira"
+    ? "I won’t stay where respect isn’t present."
+    : "If this turns careless, I’ll remain silent.";
+
+  deliverReply(reply);
+  return true;
+}
+return false;
+}
 /* ---------- Typed Input Handler ---------- */
 
 function sendTypedMessage() {
@@ -1126,6 +1141,28 @@ playTone(520, 60, 0.025);
 input.value = "";
 
 const text = originalText.toLowerCase();
+
+/* =========================
+   REPEAT DETECTION
+========================= */
+
+if (text === lastUserInput) {
+  repeatCount++;
+
+  if (repeatCount >= 3) {
+    repeatEscalated = true;   // 🔥 mark escalation
+  }
+
+  if (repeatCount >= repeatLimit) {
+    returnToWebsite();
+    return;
+  }
+
+} else {
+  repeatCount = 0;
+}
+
+lastUserInput = text;
 
   // 🔥 Intelligence router first
   if (handleIntelligence(text, originalText)) {
@@ -1154,20 +1191,29 @@ const text = originalText.toLowerCase();
       : "What mattered didn’t disappear.";
   }
 
-  else if (/(who.*author|about.*author|who wrote|author)/.test(text)) {
+ else if (/(who.*author|about.*author|who wrote|author)/.test(text)) {
   reply = activeVoice === "saira"
     ? "He wrote this honestly. That was enough."
     : "He chose truth over comfort.";
 }
 
-  else {
-    reply = activeVoice === "saira"
-      ? "I don’t always have the right words — but I’m listening."
-      : "Some questions don’t need quick answers.";
+else {
+
+  foreignInputCount++;
+
+  if (foreignInputCount >= foreignLimit) {
+    returnToWebsite();
+    return;
   }
 
-  deliverReply(reply);
+  reply = activeVoice === "saira"
+    ? "I may not fully understand that — but I’m still here."
+    : "Some words don’t reach me. Try again.";
 }
+
+deliverReply(reply);
+}
+
 /* ---------- Utility ---------- */
 
 function clearDock() {
