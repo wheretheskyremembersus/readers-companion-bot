@@ -736,9 +736,9 @@ window.stageState = stageState; // ✅ ONLY THIS
 ========================= */
 
 const pillarToStage = {
-  affection: 2,      // will be added later
+  affection: 2,
   vulnerability: 3,
-  fear: 4,           // will be added later
+  fear: 4,
   regret: 5,
   loss: 5,
   growth: 6,
@@ -1636,10 +1636,10 @@ if (detectedPillar && activeVoice) {
     if (targetStage === 7 && voiceStage.currentStage < 5) {
       // Do not advance yet
     } else {
-      voiceStage.currentStage = Math.max(
-        voiceStage.currentStage,
-        targetStage
-      );
+      if (targetStage === voiceStage.currentStage + 1) {
+  voiceStage.currentStage = targetStage;
+}
+
     }
 
     voiceStage.momentum[targetStage] = 0;
