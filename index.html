@@ -679,9 +679,14 @@ const repeatLimit = 5;
 const abuseLimit = 3;
          
 // Initial atmosphere reset
-chatBody.style.setProperty("--overlayStrength", 0.25);
-skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
-   
+if (chatBody) {
+  chatBody.style.setProperty("--overlayStrength", 0.25);
+}
+
+if (skyLayer) {
+  skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+}
+
 // Preload sky images
 const preloadSaira = new Image();
 preloadSaira.src = "Saira.jpg";
