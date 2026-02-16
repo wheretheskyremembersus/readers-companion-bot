@@ -1586,8 +1586,14 @@ function loadWelcome() {
 
   // Reset atmosphere
   emotionalDepth = 0;
-  chatBody.style.setProperty("--overlayStrength", 0.45);
-  skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+
+  if (chatBody) {
+    chatBody.style.setProperty("--overlayStrength", 0.45);
+  }
+
+  if (skyLayer) {
+    skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+  }
 
   // Reset session state
   activeVoice = null;
