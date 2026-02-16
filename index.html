@@ -1342,7 +1342,17 @@ if (/(are you real)/i.test(lower)) {
   deliverReply(reply);
   return true;
 }
+         
+/* 📖 CAN YOU TELL ME MORE ABOUT YOUR STORY */
+if (/(tell me more about your story|know more about your story|can i know more|more about your story)/i.test(lower)) {
 
+  const reply = activeVoice === "saira"
+    ? "I could tell you pieces… but stories lose something when they’re taken apart too much. Some emotions need time, not summaries. If you truly want to know more, you should experience it the way it was meant to unfold… gently, page by page.<br><br>You can read a preview here — only if you feel ready:<br><a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view' target='_blank' style='color:#000; text-decoration:underline;'>Preview the first pages</a>"
+    : "There’s more… but not everything can be explained in fragments. Some things only make sense when you walk through them slowly. If you want to understand what stayed with us, you’ll need to meet the full story.<br><br>You can begin here, if you choose:<br><a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view' target='_blank' style='color:#000; text-decoration:underline;'>Read the preview</a>";
+
+  deliverReply(reply);
+  return true;
+}
 
  /* 7️⃣ ABUSE */
   if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
