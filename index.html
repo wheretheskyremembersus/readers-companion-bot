@@ -24,6 +24,44 @@ content="default-src 'self';
          connect-src https://formspree.io;">
 
 <style>
+
+         /* =========================
+   EXIT TRANSITION
+========================= */
+
+.exit-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0);
+  backdrop-filter: blur(0px);
+  z-index: 9999;
+  transition: background 1.5s ease, backdrop-filter 1.5s ease;
+}
+
+.exit-overlay.active {
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+}
+
+.exit-message {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+  font-size: 22px;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.exit-message.active {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
 /* =========================
    GLOBAL PAGE (RESTORE)
 ========================= */
@@ -585,42 +623,6 @@ body {
   <input type="hidden" name="timestamp" id="formTime">
 </form>
    
-/* =========================
-   EXIT TRANSITION
-========================= */
-
-.exit-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0);
-  backdrop-filter: blur(0px);
-  z-index: 9999;
-  transition: background 1.5s ease, backdrop-filter 1.5s ease;
-}
-
-.exit-overlay.active {
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(6px);
-}
-
-.exit-message {
-  font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
-  font-size: 22px;
-  font-style: italic;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 1.2s ease, transform 1.2s ease;
-}
-
-.exit-message.active {
-  opacity: 1;
-  transform: translateY(0px);
-}
 
 <script>
    
