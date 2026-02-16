@@ -947,7 +947,7 @@ function setDockDisabled(state) {
 }
          
 /* =========================
-   80% WORD MATCH ENGINE
+   60% WORD MATCH ENGINE
 ========================= */
 
 function isEightyPercentMatch(userText, targetText) {
@@ -976,7 +976,7 @@ function isEightyPercentMatch(userText, targetText) {
 
   const ratio = matchCount / cleanTarget.length;
 
-  return ratio >= 0.8;
+  return ratio >= 0.6;
 }
 
  /* =========================
