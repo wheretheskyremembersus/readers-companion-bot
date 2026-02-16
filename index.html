@@ -1365,11 +1365,30 @@ const emotionalAnchors = {
   }
 
 };
-
          
+function normalizeWord(word) {
+  return word
+    .toLowerCase()
+    .replace(/[^a-z]/g, "")
+    .replace(/(ing|ed|ly|es|s)$/i, ""); 
+}
+         
+function normalizeWord(word) {
+  return word
+    .toLowerCase()
+    .replace(/[^a-z]/g, "")
+    .replace(/(ing|ed|ly|es|s)$/i, "");
+}
+
 function detectEmotionalPillar(text) {
 
   const lower = text.toLowerCase();
+
+  const userWords = lower
+    .replace(/[^\w\s]/g, "")
+    .split(" ")
+    .map(w => normalizeWord(w));
+
   let highest = null;
   let highestScore = 0;
 
@@ -1381,8 +1400,18 @@ function detectEmotionalPillar(text) {
 
     emotionalPillars[pillar].forEach(keyword => {
 
-      if (lower.includes(keyword)) {
-        score += keyword.includes(" ") ? 2 : 1;
+      // Phrase detection (multi-word)
+      if (keyword.includes(" ")) {
+        if (lower.includes(keyword)) {
+          score += 2;
+        }
+      } 
+      // Root-based single-word detection
+      else {
+        const keywordRoot = normalizeWord(keyword);
+        if (userWords.some(w => w === keywordRoot)) {
+          score += 1;
+        }
       }
 
     });
@@ -1394,12 +1423,11 @@ function detectEmotionalPillar(text) {
 
   });
 
- if (highestScore >= 2) return highest;
+  if (highestScore >= 2) return highest;
 
-// allow single strong keyword in emotional questions
-if (highestScore === 1 && /\?/.test(text)) {
-  return highest;
-}
+  if (highestScore === 1 && /\?/.test(text)) {
+    return highest;
+  }
 
   return null;
 }
