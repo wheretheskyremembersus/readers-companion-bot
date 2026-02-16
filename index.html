@@ -1057,20 +1057,26 @@ if (detectedPillar) {
    80% APPROXIMATE MATCH RULE
 ========================= */
 
+let matchedGeneral = false;
+
 for (let question of generalQuestionBank) {
-
   if (isEightyPercentMatch(lower, question)) {
-
-    const humanLead = activeVoice === "saira"
-      ? "You’re asking something that feels familiar…"
-      : "That sounds like something I’ve been asked before…";
-
-    deliverReply(humanLead);
-
-    return false; 
-    // Let the normal router below handle the actual answer
+    matchedGeneral = true;
+    break;
   }
 }
+
+if (matchedGeneral) {
+
+  const humanLead = activeVoice === "saira"
+    ? "You’re asking something that feels familiar…"
+    : "That sounds like something I’ve been asked before…";
+
+  deliverReply(humanLead, function() {
+    // do nothing — let next rule trigger naturally
+  });
+}
+
 
 /* 1️⃣ SPECIFIC GREETINGS FIRST */
 
