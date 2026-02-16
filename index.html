@@ -729,8 +729,8 @@ let stageState = {
 };
 
 // 🔥 MOVE IT HERE — RIGHT HERE
-window.stageState = stageState;
-console.log("Stage system attached to window");
+globalThis.stageState = stageState;
+console.log("Stage attached globally:", globalThis.stageState);
 
 /* =========================
    EMOTIONAL RESPONSE TRACKER
