@@ -1760,43 +1760,56 @@ console.log("Final Momentum:", voiceStage.momentum);
     emotionalIndex[activeVoice][pillar] = 0;
   }
 
-  const stage = voiceStage.currentStage;
+const stage = voiceStage.currentStage;
 
-let finalReply = "";
+let finalReply = emotionalLine;
 
-// Stage 1–2 → guarded
-if (stage <= 2) {
-  finalReply = emotionalLine;
+/* =========================
+   QUESTION ANCHOR
+========================= */
+
+if (/\?$/.test(originalText.trim())) {
+  finalReply = `${anchor} ${emotionalLine}`;
 }
 
-// Stage 3–4 → controlled opening
-else if (stage <= 4) {
-  if (/\?$/.test(originalText.trim())) {
-    finalReply = `${anchor} ${emotionalLine}`;
-  } else {
-    finalReply = emotionalLine;
-  }
+/* =========================
+   STAGE EVOLUTION
+========================= */
+
+// Stage 1–2 → guarded (no change)
+
+if (stage === 3) {
+  // slight emotional openness
+  finalReply += activeVoice === "saira"
+    ? " I’m beginning to understand that."
+    : " I’ve started to see that more clearly.";
 }
 
-// Stage 5 → honest admission
+else if (stage === 4) {
+  finalReply += activeVoice === "saira"
+    ? " I don’t speak about that easily."
+    : " It wasn’t simple for me.";
+}
+
 else if (stage === 5) {
   finalReply = `${anchor} ${emotionalLine}`;
 }
 
-// Stage 6 → reflective
 else if (stage === 6) {
   finalReply = `${anchor} ${emotionalLine} It took time to understand that.`;
 }
 
-// Stage 7 → integrated calm
-else {
+else if (stage === 7) {
   finalReply = `${anchor} ${emotionalLine} I see it more clearly now.`;
 }
 
-deliverReply(finalReply);
+/* =========================
+   SEND FINAL REPLY
+========================= */
 
-  return true;
-}
+deliverReply(finalReply);
+return true;
+
 /* =================================================
    6️⃣ 60% FUZZY MATCH (SAFE LAST)
 ================================================= */
