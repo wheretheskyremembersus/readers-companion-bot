@@ -640,6 +640,8 @@ let foreignInputCount = 0;
 let repeatCount = 0;
 let abuseCount = 0;
 let repeatEscalated = false;
+let meaningfulCount = 0;
+let previewOffered = false;
          
 let lastUserInput = "";
 
@@ -1343,21 +1345,43 @@ if (/(are you real)/i.test(lower)) {
   return true;
 }
          
-/* 21️⃣ CAN YOU KNOW MORE ABOUT THE STORY */
-if (/(tell me more|know more|more about (your )?story|read more|how can i know more|is there any way i can know more)/i.test(lower)) {
+/* 21️⃣ STORY DEPTH / KNOW MORE */
+if (/(tell me more|know more|more about (your )?story|read more|how can i know more|is there any way i can know more|what happens next|is there more)/i.test(lower)) {
 
-  const reply = activeVoice === "saira"
-    ? "I could tell you pieces… but stories lose something when they’re taken apart too much. Some emotions need time, not summaries…"
-    : "There’s more… but not everything can be explained in fragments. Some things only make sense when you walk through them slowly…";
+  meaningfulCount++;
 
-  deliverReply(reply, function () {
-    showAuthorInvitation();  // 🔥 SAME END FLOW
-  });
+  if (meaningfulCount >= 4 && !previewOffered) {
 
-  return true;
-}
+    previewOffered = true;
 
+    /* 🌫 SOFT ATMOSPHERE FADE (ONLY HERE) */
 
+    chatBody.style.setProperty("--overlayStrength", 0.48);
+
+    if (skyLayer) {
+      skyLayer.style.transition = "filter 1.6s ease, transform 2s ease";
+      skyLayer.style.filter = "brightness(0.92) contrast(1.02) saturate(0.95)";
+      skyLayer.style.transform = "scale(1.015)";
+    }
+
+    const reply = activeVoice === "saira"
+      ? "You’ve stayed with this longer than most… and I can feel that you’re not asking casually anymore.<br><br>If you’d like to experience it the way it was meant to unfold — gently, without fragments — you can begin here:<br><br><a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view' target='_blank' style='color:#000; text-decoration:underline;'>Preview the first pages</a><br><br>But I’m still here with you… If you’d rather continue talking, we can."
+      : "You’re not asking out of curiosity anymore… there’s intention in it now.<br><br>If you want to understand what remained between us — not in pieces, but fully — you can begin here:<br><br><a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view' target='_blank' style='color:#000; text-decoration:underline;'>Read the preview</a><br><br>And if you choose to stay instead… I’m still here.";
+
+    deliverReply(reply);
+    return true;
+
+  } else {
+
+    const softReply = activeVoice === "saira"
+      ? "There is more… but stories lose something when they’re rushed. Stay a little longer. I’m here."
+      : "There’s more… but not everything should be unfolded too quickly. I’m not going anywhere.";
+
+    deliverReply(softReply);
+    return true;
+  }
+
+         
  /* 7️⃣ ABUSE */
   if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/.test(lower)
       && /(you|saira|aayan)/.test(lower)) {
