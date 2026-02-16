@@ -673,6 +673,26 @@ let currentLayer = 0;
 
 let reflections = [];
 let reflectionStep = 0;
+/* =========================
+   EMOTIONAL ROTATION INDEX
+========================= */
+
+let emotionalIndex = {
+  saira: {
+    regret: 0,
+    vulnerability: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  aayan: {
+    regret: 0,
+    vulnerability: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
 
 const foreignLimit = 5;
 const repeatLimit = 5;
@@ -694,25 +714,33 @@ preloadSaira.src = "Saira.jpg";
 const preloadAayan = new Image();
 preloadAayan.src = "Aayan.jpg";
 
-         /* =========================
+/* =========================
+   7-STAGE HUMAN PROGRESSION
+========================= */
+
+let stageState = {
+  saira: {
+    currentStage: 1,
+    momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+  },
+  aayan: {
+    currentStage: 1,
+    momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+  }
+};
+
+/* =========================
    EMOTIONAL RESPONSE TRACKER
 ========================= */
 
-let emotionalIndex = {
-  saira: {
-    loss: 0,
-    regret: 0,
-    vulnerability: 0,
-    growth: 0,
-    destiny: 0
-  },
-  aayan: {
-    loss: 0,
-    regret: 0,
-    vulnerability: 0,
-    growth: 0,
-    destiny: 0
-  }
+const pillarToStage = {
+  affection: 2,      // will be added later
+  vulnerability: 3,
+  fear: 4,           // will be added later
+  regret: 5,
+  loss: 5,
+  growth: 6,
+  destiny: 7
 };
 
 /* =========================
@@ -1365,14 +1393,7 @@ const emotionalAnchors = {
   }
 
 };
-         
-function normalizeWord(word) {
-  return word
-    .toLowerCase()
-    .replace(/[^a-z]/g, "")
-    .replace(/(ing|ed|ly|es|s)$/i, ""); 
-}
-         
+                  
 function normalizeWord(word) {
   return word
     .toLowerCase()
@@ -1569,31 +1590,71 @@ function handleIntelligence(text, originalText) {
     deliverReply(reply);
     return true;
   }
+         
+const detectedPillar = detectEmotionalPillar(lower);
 
   /* =================================================
      5️⃣ EMOTIONAL PILLAR ENGINE
   ================================================= */
 
-  const detectedPillar = detectEmotionalPillar(lower);
-
 if (detectedPillar && activeVoice) {
 
-  meaningfulCount++;
+    meaningfulCount++;
 
   const pillar = detectedPillar;
+           /* =========================
+     7-STAGE MOMENTUM SYSTEM
+  ========================= */
+
+  const voiceStage = stageState[activeVoice];
+  const targetStage = pillarToStage[pillar];
+
+  // Increase momentum
+  if (targetStage > 1) {
+    voiceStage.momentum[targetStage]++;
+  }
+
+  // Decay other stages
+  Object.keys(voiceStage.momentum).forEach(stage => {
+    if (parseInt(stage) !== targetStage) {
+      voiceStage.momentum[stage] = Math.max(
+        0,
+        voiceStage.momentum[stage] - 1
+      );
+    }
+  });
+
+  // Advance stage after 2 confirmations
+  if (voiceStage.momentum[targetStage] >= 2) {
+
+    // Gate destiny until stage 5
+    if (targetStage === 7 && voiceStage.currentStage < 5) {
+      // Do not advance yet
+    } else {
+      voiceStage.currentStage = Math.max(
+        voiceStage.currentStage,
+        targetStage
+      );
+    }
+
+    voiceStage.momentum[targetStage] = 0;
+  }
+
 
   const anchor = emotionalAnchors[activeVoice][pillar];
 
   const index = emotionalIndex[activeVoice][pillar] ?? 0;
-  const emotionalLine = emotionalResponseBank[pillar][activeVoice][index];
+  const emotionalLine =
+    emotionalResponseBank[pillar][activeVoice][index];
 
-  // Rotate index
   emotionalIndex[activeVoice][pillar]++;
-  if (emotionalIndex[activeVoice][pillar] >= emotionalResponseBank[pillar][activeVoice].length) {
+  if (
+    emotionalIndex[activeVoice][pillar] >=
+    emotionalResponseBank[pillar][activeVoice].length
+  ) {
     emotionalIndex[activeVoice][pillar] = 0;
   }
 
-  // If user asked as a question → blend anchor + emotional line
   if (/\?$/.test(originalText.trim())) {
     deliverReply(`${anchor} ${emotionalLine}`);
   } else {
@@ -1602,25 +1663,22 @@ if (detectedPillar && activeVoice) {
 
   return true;
 }
+/* =================================================
+   6️⃣ 60% FUZZY MATCH (SAFE LAST)
+================================================= */
 
+for (let question of generalQuestionBank) {
+  if (isSixtyPercentMatch(lower, question)) {
 
-  /* =================================================
-     6️⃣ 60% FUZZY MATCH (SAFE LAST)
-  ================================================= */
+    const humanLead = activeVoice === "saira"
+      ? "You’re asking something that feels familiar…"
+      : "That sounds like something I’ve been asked before…";
 
-  for (let question of generalQuestionBank) {
-    if (isSixtyPercentMatch(lower, question)) {
-
-      const humanLead = activeVoice === "saira"
-        ? "You’re asking something that feels familiar…"
-        : "That sounds like something I’ve been asked before…";
-
-      deliverReply(humanLead);
-      return true;
-    }
+    deliverReply(humanLead);
+    return true;
   }
-
-  return false;
+}
+ return false;
 }
 
 /* =========================
@@ -1676,6 +1734,7 @@ function sendTypedMessage() {
   if (handleIntelligence(text, originalText)) {
     return;
   }
+
 
   /* =========================
      DEFAULT FALLBACK
