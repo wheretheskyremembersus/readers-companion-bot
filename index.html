@@ -948,9 +948,12 @@ chatBody.style.setProperty("--overlayStrength", overlayValue);
 
 // Sky evolution (gentle cinematic feel)
 if (skyLayer) {
-  skyLayer.style.filter = "brightness(1)";
+  skyLayer.style.filter = `
+    brightness(${1 - depthFactor * 0.55})
+    contrast(${1 + depthFactor * 1.1})
+    saturate(${1 + depthFactor * 0.9})
+  `;
 }
-
     /* =========================
        UNLOCK INTERACTION
     ========================= */
