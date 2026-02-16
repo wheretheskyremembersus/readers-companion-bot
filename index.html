@@ -1468,7 +1468,6 @@ function normalizeWord(word) {
 }
 
 function detectEmotionalPillar(text) {
-let scores = {};
 
   const lower = text.toLowerCase();
 
@@ -1477,28 +1476,28 @@ let scores = {};
     .split(" ")
     .map(w => normalizeWord(w));
 
-  let highest = null;
-  let highestScore = 0;
+  const pillarOrder = [
+    "affection",
+    "fear",
+    "vulnerability",
+    "regret",
+    "loss",
+    "growth",
+    "destiny"
+  ];
 
-  cconst pillarOrder = [
-  "affection",
-  "fear",
-  "vulnerability",
-  "regret",
-  "loss",
-  "growth",
-  "destiny"
-];
+  let scores = {};
 
   pillarOrder.forEach(pillar => {
+
     let score = 0;
 
     emotionalPillars[pillar].forEach(keyword => {
 
       if (keyword.includes(" ")) {
-  if (lower.includes(keyword)) {
-    score += 3; // phrases stronger
-  }
+        if (lower.includes(keyword)) {
+          score += 3; // strong phrase
+        }
       } else {
         const keywordRoot = normalizeWord(keyword);
         if (userWords.some(w => w === keywordRoot)) {
@@ -1508,38 +1507,23 @@ let scores = {};
 
     });
 
-    if (score > highestScore) {
-      highest = pillar;
-      highestScore = score;
-    }
-console.log("Pillar:", pillar, "Score:", score);
+    scores[pillar] = score;
 
   });
-         
-console.log("Highest Pillar:", highest, "Highest Score:", highestScore);
 
-  // Strong match
   const sorted = Object.entries(scores)
-  .sort((a, b) => b[1] - a[1]);
+    .sort((a, b) => b[1] - a[1]);
 
-const primary = sorted[0];
-const secondary = sorted[1];
+  const primary = sorted[0];
+  const secondary = sorted[1];
 
-if (primary[1] >= 1) {
-  return {
-    primary: primary[0],
-    secondary: secondary && secondary[1] > 0 ? secondary[0] : null
-  };
-}
-
-  // Single meaningful emotional match
-  if (highestScore === 1) {
-
-    if (text.trim().length < 12) return null;
-
-    if (/^(hi|hello|hey|ok|okay|yes|no)$/i.test(text.trim())) return null;
-
-    return highest;
+  if (primary[1] >= 1) {
+    return {
+      primary: primary[0],
+      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+      primaryScore: primary[1],
+      secondaryScore: secondary ? secondary[1] : 0
+    };
   }
 
   return null;
@@ -1778,10 +1762,6 @@ console.log("Final Momentum:", voiceStage.momentum);
 
   if (/\?$/.test(originalText.trim())) {
   let finalReply = `${anchor} ${emotionalLine}`;
-
-if (blendLine) {
-  finalReply += " " + blendLine;
-}
 
 deliverReply(finalReply);
 
