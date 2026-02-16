@@ -1081,8 +1081,28 @@ const emotionalPillars = {
   ]
 
 };
+         
+         /* =========================
+   EMOTIONAL ANCHORS
+========================= */
 
-
+const emotionalAnchors = {
+  saira: {
+    regret: "I thought I was being careful.",
+    vulnerability: "I wasn’t as steady as I seemed.",
+    loss: "Losing something real changes you quietly.",
+    growth: "I had to learn the hard way.",
+    destiny: "Some things don’t disappear just because we hesitate."
+  },
+  aayan: {
+    regret: "I believed restraint was maturity.",
+    vulnerability: "Control felt safer than exposure.",
+    loss: "Distance reshapes more than we expect.",
+    growth: "Discipline taught me more than comfort did.",
+    destiny: "Not all unfinished things are over."
+  }
+};
+         
          const emotionalResponseBank = {
 
   loss: {
@@ -1413,22 +1433,33 @@ function handleIntelligence(text, originalText) {
 
   const detectedPillar = detectEmotionalPillar(lower);
 
-  if (detectedPillar && activeVoice) {
+if (detectedPillar && activeVoice) {
 
-    meaningfulCount++;
+  meaningfulCount++;
 
-    const index = emotionalIndex[activeVoice][detectedPillar] ?? 0;
-    const responses = emotionalResponseBank[detectedPillar][activeVoice];
+  const pillar = detectedPillar;
 
-    deliverReply(responses[index]);
+  const anchor = emotionalAnchors[activeVoice][pillar];
 
-    emotionalIndex[activeVoice][detectedPillar]++;
-    if (emotionalIndex[activeVoice][detectedPillar] >= responses.length) {
-      emotionalIndex[activeVoice][detectedPillar] = 0;
-    }
+  const index = emotionalIndex[activeVoice][pillar] ?? 0;
+  const emotionalLine = emotionalResponseBank[pillar][activeVoice][index];
 
-    return true;
+  // Rotate index
+  emotionalIndex[activeVoice][pillar]++;
+  if (emotionalIndex[activeVoice][pillar] >= emotionalResponseBank[pillar][activeVoice].length) {
+    emotionalIndex[activeVoice][pillar] = 0;
   }
+
+  // If user asked as a question → blend anchor + emotional line
+  if (/\?$/.test(originalText.trim())) {
+    deliverReply(`${anchor} ${emotionalLine}`);
+  } else {
+    deliverReply(emotionalLine);
+  }
+
+  return true;
+}
+
 
   /* =================================================
      6️⃣ 80% FUZZY MATCH (SAFE LAST)
