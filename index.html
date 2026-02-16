@@ -1115,7 +1115,7 @@ if (/(will you marry me|marry me)/i.test(lower)) {
 }
 
 /* 3️⃣ ARE YOU MARRIED */
-if (/(are you married)/i.test(lower)) {
+if (/(are you married|you married)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "No. But life has taught me that timing matters more than status."
     : "No. And I don’t answer that question lightly.";
@@ -1144,7 +1144,7 @@ if (/(who are your friends|your friends)/i.test(lower)) {
 /* 6️⃣ WHAT DO YOU DO */
 if (/(what do you do|what do you do for a living)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "I build my life quietly. I don’t chase noise."
+    ? "I build my life quietly. I used to think that meant I was hiding — but maybe it just means I’m careful."
     : "I build things that are meant to last. Responsibility shaped me before ambition did.";
   deliverReply(reply);
   return true;
@@ -1154,7 +1154,7 @@ if (/(what do you do|what do you do for a living)/i.test(lower)) {
 if (/(where did you grow up|where are you from)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "Dehradun. It taught me softness and restraint."
-    : "Shillong. It taught me stillness — and how to carry storms quietly.";
+    : "Shillong. It taught me stillness… and how to carry storms without letting anyone see them.";
   deliverReply(reply);
   return true;
 }
