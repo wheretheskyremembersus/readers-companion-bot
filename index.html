@@ -1232,23 +1232,34 @@ function detectEmotionalPillar(text) {
   let highest = null;
   let highestScore = 0;
 
-  Object.keys(emotionalPillars).forEach(pillar => {
+  const pillarOrder = ["regret", "vulnerability", "loss", "growth", "destiny"];
+
+  pillarOrder.forEach(pillar => {
 
     let score = 0;
 
     emotionalPillars[pillar].forEach(keyword => {
+
       if (lower.includes(keyword)) {
         score += keyword.includes(" ") ? 2 : 1;
       }
+
     });
 
     if (score > highestScore) {
       highest = pillar;
       highestScore = score;
     }
+
   });
 
-  return highestScore >= 2 ? highest : null;
+  if (highestScore >= 2) return highest;
+
+  if (highestScore === 1 && lower.split(" ").length <= 4) {
+    return highest;
+  }
+
+  return null;
 }
 
 
@@ -1289,25 +1300,21 @@ if (detectedPillar && activeVoice) {
   const pillar = detectedPillar;
   const voice = activeVoice;
 
-  let index = emotionalIndex[voice][pillar];
-
+  let index = emotionalIndex[voice][pillar] ?? 0;
   const responses = emotionalResponseBank[pillar][voice];
 
   const reply = responses[index];
 
   deliverReply(reply);
 
-  // increment safely
   emotionalIndex[voice][pillar]++;
 
-  // reset after full cycle
   if (emotionalIndex[voice][pillar] >= responses.length) {
     emotionalIndex[voice][pillar] = 0;
   }
 
   return true;
 }
-
 
 /* =========================
    80% APPROXIMATE MATCH RULE
