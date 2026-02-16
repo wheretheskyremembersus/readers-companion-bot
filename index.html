@@ -1370,7 +1370,7 @@ function handleIntelligence(text, originalText) {
     return true;
   }
 
-  if (/(bye|goodbye|see you|take care|cya|tata)/i.test(lower)) {
+ if (/^(bye|goodbye|see you|take care|cya|tata)\b/i.test(lower)) {
     deliverReply(activeVoice === "saira" ? "Goodbye. Take care." : "Goodbye.");
     return true;
   }
