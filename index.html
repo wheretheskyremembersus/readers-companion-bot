@@ -1474,6 +1474,31 @@ function handleIntelligence(text, originalText) {
   }
 ];
 
+/* =========================
+   DIRECT SELF NAME CALL
+========================= */
+
+if (
+  activeVoice &&
+  new RegExp(`^${activeVoice}\\b[\\.?…!]*$`, "i").test(lower)
+) {
+  deliverReply("I’m here.");
+  return true;
+}
+/* =========================
+   CROSS CHARACTER NAME MENTION
+========================= */
+
+if (activeVoice === "saira" && /\baayan\b/i.test(lower)) {
+  deliverReply("You’re thinking about him.");
+  return true;
+}
+
+if (activeVoice === "aayan" && /\bsaira\b/i.test(lower)) {
+  deliverReply("You’re thinking about her.");
+  return true;
+}
+
          
 /* =================================================
    1️⃣ GREETINGS (FINAL – Fully Guarded + Voice Aware)
@@ -1655,23 +1680,6 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.te
   deliverReply(reply);
   return true;
 }
-    /* =========================
-   DIRECT VOICE ADDRESS (SAFE CATCH)
-========================= */
-
-if (
-  activeVoice &&
-  new RegExp(`\\b${activeVoice}\\b`, "i").test(lower)
-) {
-
-  const reply = activeVoice === "saira"
-    ? "I’m here."
-    : "I’m here.";
-
-  deliverReply(reply);
-  return true;
-}
-
 
 /* =========================
    POSITIVE / PRAISE CLUSTER (TIERED)
