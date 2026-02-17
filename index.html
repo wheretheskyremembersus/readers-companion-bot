@@ -1082,231 +1082,89 @@ function applyStageAtmosphere(stage) {
 const emotionalPillars = {
 
 affection: [
-  "like you",
-  "care about",
-  "feel close",
-  "connected",
-  "drawn to",
+  "caring",
+  "started meaning",
+  "became important",
+  "mattered to me",
+  "felt something",
+  "growing on",
+  "close to me",
   "attached",
-  "important to me",
-  "special to me"
+  "couldn't ignore"
+
+],
+
+vulnerability: [
+  "exposed",
+  "unguarded",
+  "not steady",
+  "felt small",
+  "doubting myself",
+  "didn’t know how",
+  "emotionally open",
+  "let them see",
+  "uncertain about myself"
 ],
 
 fear: [
-  "scared",
-  "terrified",
-  "fear",
-  "afraid to",
-  "afraid of losing",
-  "worried",
+  "losing",
+  "lose it",
+  "what if",
+  "fall apart",
   "panic",
-  "anxious about"
+  "overwhelmed",
+  "didn’t want it to break",
+  "scared to lose",
+  "fear of losing"
 ],
-  
+
+regret: [
+  "too late",
+  "waited too long",
+  "should have",
+  "could have",
+  "missed the moment",
+  "didn't act",
+  "wish i had",
+  "handled differently",
+  "hesitated"
+],
+
 loss: [
-    // Core loss words
-    "lost", "left", "gone", "ended", "apart",
-    "separated", "distance", "absence",
-    "miss", "missing",
+  "ended",
+  "gone",
+  "drifted",
+  "distance",
+  "absence",
+  "quiet after",
+  "empty without",
+  "left behind",
+  "slipped away"
+],
 
-    // Common emotional phrasing
-    "without you",
-    "after you left",
-    "since you left",
-    "still love",
-    "still think about",
-    "let her go",
-    "let him go",
-    "couldn't keep",
-    "had to leave",
-           // Subtle separation
-"drifted",
-"drifted apart",
-"slipped away",
-"faded",
-"faded away",
-"grew apart",
+growth: [
+  "changed",
+  "learned",
+  "stronger now",
+  "wiser",
+  "different person",
+  "built myself",
+  "understood later",
+  "matured",
+  "became better"
+],
 
-// Memory language
-"memory",
-"memories",
-"reminds you",
-"still think of",
-
-// Silent departure
-"quiet goodbye",
-"goodbye",
-"silent goodbye",
-"ended quietly"
-  ],
-
-  regret: [
-    // Core regret words
-    "regret", "mistake", "fault",
-    "too late", "wish", "if only",
-
-    // Hesitation / delay language
-    "hesitate", "hesitated",
-    "waited too long",
-    "should have",
-    "could have",
-    "would have",
-
-    // Question phrasing
-    "why didnt",
-    "why didn’t",
-    "why did you not",
-    "acted sooner",
-    "try harder",
-    "fight harder",
-           // Decision / reversal language
-"undo",
-"redo",
-"rewrite",
-"turn back",
-"change it",
-"change things",
-"do differently",
-"handled differently",
-
-// Missed opportunity
-"missed chance",
-"missed opportunity",
-"lost chance",
-"wasted chance",
-
-// Inaction phrasing
-"didn't act",
-"did not act",
-"didn't try",
-"did not try",
-"didn't choose",
-"did not choose",
-
-// Realisation timing
-"realised too late",
-"realized too late",
-"too slow",
-"waited too long",
-"shouldn't have",
-"should not have"
-  ],
-
-  vulnerability: [
-    // Core fear / doubt words
-    "afraid", "scared", "fear",
-    "hurt", "broken", "weak",
-    "uncertain", "unsure",
-    "confused", "anxious",
-
-    // Emotional exposure
-    "open up",
-    "open your heart",
-    "let her in",
-    "let him in",
-    "emotionally",
-    "vulnerable",
-    "not ready",
-    "not strong enough",
-           
-// Emotional exposure
-"exposed",
-"emotionally exposed",
-"guarded",
-"defensive",
-"walls",
-"built walls",
-"protected yourself",
-
-// Internal instability
-"insecure",
-"intimidated",
-"overwhelmed",
-"unprepared",
-"not ready for love",
-"not ready emotionally",
-
-// Control vs emotion
-"control",
-"controlled",
-"hid your feelings",
-"hiding feelings"
-  ],
-
-  growth: [
-    // Change language
-    "changed", "learned", "grown",
-    "stronger", "better now",
-    "healed", "healing",
-    "moved on", "move on",
-    "understand now",
-
-    // Maturity language
-    "different now",
-    "more mature",
-    "became stronger",
-    "became better",
-    "improved",
-    "worked on yourself",
-           
-// Personal development
-"became different",
-"evolved",
-"evolution",
-"changed as a person",
-"improved yourself",
-
-// Learning language
-"lesson",
-"taught you",
-"what did you learn",
-"what have you learned",
-
-// Strength shift
-"more aware",
-"more self aware",
-"matured",
-"became wiser"
-  ],
-
-  destiny: [
-    // Fate language
-    "fate", "destiny",
-    "meant to be",
-    "meant for each other",
-
-    // Return language
-    "come back",
-    "coming back",
-    "return",
-    "second chance",
-    "another chance",
-    "again someday",
-
-    // Future bonding
-    "future together",
-    "end up together",
-    "cross paths again",
-    "unfinished",
-           // Inevitability
-"inevitable",
-"written",
-"written in",
-"coincidence",
-"meant to return",
-
-// Circular time
-"come back to each other",
-"circle back",
-"find each other again",
-
-// Unfinished tone
-"unfinished business",
-"not over",
-"not finished",
-"pause not end"
-
-  ]
+destiny: [
+  "meant to",
+  "unfinished",
+  "come back",
+  "return",
+  "cross paths",
+  "circle back",
+  "inevitable",
+  "not over",
+  "second chance"
+]
 
 };
 
@@ -1576,7 +1434,8 @@ function detectEmotionalPillar(text) {
   const primary = sorted[0];
   const secondary = sorted[1];
 
-  if (primary[1] >= 1) {
+if (primary[1] >= 1 || (secondary && secondary[1] >= 1))
+ {
     return {
       primary: primary[0],
       secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
@@ -1730,7 +1589,25 @@ function handleIntelligence(text, originalText) {
     deliverReply(reply);
     return true;
   }
-         
+
+// =========================
+// GENERIC EMOTION RULES
+// =========================
+
+if (/\blove\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira"
+    ? "Love is not something I take lightly."
+    : "Love isn’t a word I respond to casually.");
+  return true;
+}
+
+if (/\bafraid\b|\bfear\b|\bscared\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira"
+    ? "Fear changes the way we choose."
+    : "Fear doesn’t always show on the surface.");
+  return true;
+}
+
 const detectedPillar = detectEmotionalPillar(lower);
 
   /* =================================================
