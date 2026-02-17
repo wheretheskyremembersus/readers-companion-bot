@@ -1474,6 +1474,7 @@ function handleIntelligence(text, originalText) {
   }
 ];
 
+         
 /* =================================================
    1️⃣ GREETINGS (FINAL – Fully Guarded + Voice Aware)
 ================================================= */
@@ -1654,6 +1655,21 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.te
   deliverReply(reply);
   return true;
 }
+         /* =========================
+   DIRECT VOICE ADDRESS CLUSTER
+========================= */
+
+if (/^(saira|aayan)\b/i.test(lower)) {
+
+  if (activeVoice === "saira") {
+    deliverReply("I’m here.");
+  } else if (activeVoice === "aayan") {
+    deliverReply("Yes.");
+  }
+
+  return true;
+}
+
 /* =========================
    POSITIVE / PRAISE CLUSTER (TIERED)
 ========================= */
