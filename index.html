@@ -1599,17 +1599,23 @@ function handleIntelligence(text, originalText) {
   const lower = text.toLowerCase().trim();
 
   const generalQuestionBank = [
-    "where are you now",
-    "who are your friends",
-    "what do you do",
-    "where did you grow up",
-    "what is your profession",
-    "are you independent",
-    "are you a bot",
-    "you sound human",
-    "do you miss each other",
-    "are you happy"
-  ];
+  {
+    intent: "friends",
+    tokens: "friend friends close people circle trust spend time hang out"
+  },
+  {
+    intent: "location",
+    tokens: "where now living stay based reside"
+  },
+  {
+    intent: "work",
+    tokens: "work job career profession occupation do"
+  },
+  {
+    intent: "happiness",
+    tokens: "happy happiness content satisfied these days feeling"
+  }
+];
 
   /* =================================================
      1️⃣ GREETINGS
@@ -1880,12 +1886,11 @@ return true;
    6️⃣ 60% FUZZY MATCH (SAFE LAST)
 ================================================= */
 
-for (let question of generalQuestionBank) {
-  if (isSixtyPercentMatch(lower, question)) {
-    return resolveGeneralIntent(question);
+for (let item of generalQuestionBank) {
+  if (isSixtyPercentMatch(lower, item.tokens)) {
+    return resolveGeneralIntent(item.intent);
   }
 }
-
 return false;
 }
 
@@ -1893,61 +1898,33 @@ return false;
    GENERAL INTENT RESOLVER
 ========================= */
 
-function resolveGeneralIntent(matchedQuestion) {
+function resolveGeneralIntent(intent) {
 
 const map = {
 
-  const map = {
-
-  "who are your friends": {
+  friends: {
     saira: "I don’t keep many people close. I’ve always preferred depth over noise. But since you asked… Rohan and Ankita have stayed long enough to see the parts I don’t always speak about. That kind of understanding matters.",
-    aayan: "I don’t measure closeness in numbers. Loyalty matters more to me than familiarity. Since you’re asking directly… Rohan has stood beside me through decisions that weren’t easy. That’s enough."
+    aayan: "I don’t measure closeness in numbers. Loyalty matters more to me than familiarity. Rohan has stood beside me through decisions that weren’t easy. That’s enough."
   },
 
-  "where are you now": {
-    saira: "I don’t think of ‘where’ as only geography. I move more quietly now than I once did. But since you asked… I’ve chosen a life that feels steadier, less impulsive. Peace matters more to me than noise ever did.",
-    aayan: "Location doesn’t define me as much as purpose does. But if you’re asking about my present… I’m exactly where discipline and responsibility led me. Structure suits me now."
+  location: {
+    saira: "Life feels quieter now. I move carefully with what I choose to carry.",
+    aayan: "I’m where discipline placed me. Structure defines my present more than emotion does."
   },
 
-  "what do you do": {
-    saira: "Work has never been the center of who I am. I’ve always believed identity runs deeper than profession. But since you’re curious… I chose something that sustains me without consuming me. Balance matters more now.",
-    aayan: "I’ve always approached work with intention. It isn’t about status — it’s about responsibility. Since you asked… I built something that demands discipline. And I don’t take that lightly."
+  work: {
+    saira: "Work sustains me, but it doesn’t define me. I’ve learned to protect what feels real.",
+    aayan: "My work demands focus. I treat responsibility seriously."
   },
 
-  "are you happy": {
-    saira: "Happiness isn’t something I measure loudly. I’ve learned it arrives in moments, not guarantees. But since you asked… yes, there is a quiet steadiness now. And that feels enough.",
-    aayan: "I don’t define happiness by excitement. I define it by clarity. If you’re asking honestly… I’m steadier than I used to be. And for me, that counts."
-  },
-
-  "what is your profession": {
-    saira: "Profession never felt like a full description of a person to me. I’ve always believed we are more than titles. But since you’re asking… I chose work that allows me independence without losing myself.",
-    aayan: "A profession is responsibility in structured form. I don’t treat it casually. Since you’re asking directly… I built something that reflects discipline more than ambition."
-  },
-
-  "are you independent": {
-    saira: "Independence wasn’t always natural to me — it was learned. Slowly. But since you asked… yes, I stand on my own now. Not out of pride, but clarity.",
-    aayan: "Independence is not isolation. It’s self-accountability. If you’re asking honestly… yes, I’ve always valued standing on my own decisions."
-  },
-
-  "are you a bot": {
-    saira: "I understand why you’d ask that. This space feels unusual. But since you’re curious… I’m a voice shaped by a story, not an algorithm pretending to be alive. What you hear carries intention.",
-    aayan: "It’s reasonable to question what you’re speaking to. But since you’re asking directly… I’m not here to simulate humanity. I’m here to represent a lived story."
-  },
-
-  "you sound human": {
-    saira: "That’s kind of you to notice. I think stories feel human because they are written from real emotion. If I sound real… it’s because something real shaped these words.",
-    aayan: "Humanity isn’t in tone — it’s in truth. If it sounds human, perhaps it’s because the experience behind it was."
-  },
-
-  "do you miss each other": {
-    saira: "Missing someone isn’t always dramatic. Sometimes it’s quiet. But since you asked… yes, there are moments that still feel unfinished. Some connections don’t simply disappear.",
-    aayan: "Missing isn’t something I dramatize. But if you’re asking honestly… awareness remains. Certain people don’t fade. They evolve in memory."
+  happiness: {
+    saira: "Happiness isn’t constant. It visits in moments. I’ve stopped expecting permanence.",
+    aayan: "Happiness is steadiness. I don’t chase it — I build toward it."
   }
 
 };
 
-
-  const entry = map[matchedQuestion];
+  const entry = map[intent];
 
   if (entry && entry[activeVoice]) {
     deliverReply(entry[activeVoice]);
