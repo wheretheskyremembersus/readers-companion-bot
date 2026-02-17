@@ -1100,14 +1100,13 @@ vulnerability: [
   "not steady",
   "felt small",
   "doubting myself",
-  "didn’t know how",
+  "didn't know how",
   "emotionally open",
   "let them see",
   "uncertain about myself"
 ],
 
 fear: [
-  "losing",
   "lose it",
   "what if",
   "fall apart",
@@ -1198,13 +1197,13 @@ destiny: [
  affection: {
   saira: [
     "Some feelings grow quietly before we name them.",
-    "I didn’t realise how deeply I had started caring.",
+    "I didn't realise how deeply I had started caring.",
     "Closeness isn’t always loud. Sometimes it’s steady.",
     "It’s strange how certain people begin to feel essential.",
     "Attachment doesn’t announce itself."
   ],
   aayan: [
-    "I don’t invest lightly.",
+    "I didn't invest lightly.",
     "When I begin to care, I do it intentionally.",
     "Attachment isn’t weakness — it’s alignment.",
     "Connection builds slowly for me.",
@@ -1233,7 +1232,7 @@ fear: {
 
     saira: [
       "Loss isn’t always loud… sometimes it’s a quiet shift inside you.",
-      "I’ve learned that missing someone doesn’t fade just because time moves.",
+      "I've learned that missing someone doesn’t fade just because time moves.",
       "There are absences that sit beside you… even in full rooms.",
       "Some goodbyes don’t echo. They settle.",
       "When something leaves, it leaves space behind… and space has weight.",
@@ -1291,10 +1290,10 @@ fear: {
 
     saira: [
       "Admitting fear takes more strength than hiding it.",
-      "I wasn’t always as steady as I appeared.",
+      "I wasn't always as steady as I appeared.",
       "Some days I felt smaller than my doubts.",
       "Being honest with yourself is uncomfortable.",
-      "I didn’t always trust my own heart.",
+      "I didn't always trust my own heart.",
       "Opening up felt dangerous.",
       "I learned softness is not weakness.",
       "It’s hard to let someone see you unsure.",
@@ -1434,15 +1433,14 @@ function detectEmotionalPillar(text) {
   const primary = sorted[0];
   const secondary = sorted[1];
 
-if (primary[1] >= 1 || (secondary && secondary[1] >= 1))
- {
-    return {
-      primary: primary[0],
-      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
-      primaryScore: primary[1],
-      secondaryScore: secondary ? secondary[1] : 0
-    };
-  }
+if (primary[1] >= 1) {
+  return {
+    primary: primary[0],
+    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+    primaryScore: primary[1],
+    secondaryScore: secondary ? secondary[1] : 0
+  };
+}
 
   return null;
 }
@@ -1516,12 +1514,19 @@ function handleIntelligence(text, originalText) {
     return true;
   }
 
-  if (/(i am|i'm|my name is)/i.test(lower)) {
-    const words = originalText.split(" ");
-    const name = words[words.length - 1].replace(/[^a-zA-Z]/g, "");
-    deliverReply(name.length > 1 ? `It’s good to meet you, ${name}.` : "It’s good to meet you.");
-    return true;
+  if (/^(i am|i'm|my name is)\s+/i.test(lower)) {
+
+  const nameMatch = originalText.match(/^(i am|i'm|my name is)\s+([a-zA-Z]+)/i);
+
+  if (nameMatch && nameMatch[2]) {
+    const name = nameMatch[2];
+    deliverReply(`It’s good to meet you, ${name}.`);
+  } else {
+    deliverReply("It’s good to meet you.");
   }
+
+  return true;
+}
 
   if (/(thank you|thankyou|thanks|appreciate|thx|cheers)/i.test(lower)) {
     deliverReply("You’re welcome.");
@@ -1589,24 +1594,6 @@ function handleIntelligence(text, originalText) {
     deliverReply(reply);
     return true;
   }
-
-// =========================
-// GENERIC EMOTION RULES
-// =========================
-
-if (/\blove\b/i.test(lower)) {
-  deliverReply(activeVoice === "saira"
-    ? "Love is not something I take lightly."
-    : "Love isn’t a word I respond to casually.");
-  return true;
-}
-
-if (/\bafraid\b|\bfear\b|\bscared\b/i.test(lower)) {
-  deliverReply(activeVoice === "saira"
-    ? "Fear changes the way we choose."
-    : "Fear doesn’t always show on the surface.");
-  return true;
-}
 
 const detectedPillar = detectEmotionalPillar(lower);
 
@@ -1758,6 +1745,24 @@ if (stageModifiers[stage]) {
 deliverReply(finalReply);
 return true;
 }
+
+  // =========================
+// GENERIC EMOTION RULES
+// =========================
+
+if (!detectedPillar && /\blove\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira"
+    ? "Love is not something I take lightly."
+    : "Love isn’t a word I respond to casually.");
+  return true;
+}
+
+if (!detectedPillar && /\b(afraid|fear|scared)\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira"
+    ? "Fear changes the way we choose."
+    : "Fear doesn’t always show on the surface.");
+  return true;
+}
          
 /* =================================================
    6️⃣ 60% FUZZY MATCH (SAFE LAST)
@@ -1864,8 +1869,19 @@ function sendTypedMessage() {
   if (handleIntelligence(text, originalText)) {
     return;
   }
+         
 
-  /* =========================
+if (text.length > 6)
+{
+  deliverReply(
+    activeVoice === "saira"
+      ? "I may not have understood that fully… but tell me more."
+      : "I might be missing something. Say it differently."
+  );
+  return true;
+}
+
+/* =========================
      DEFAULT FALLBACK
   ========================= */
 
@@ -1893,6 +1909,7 @@ function clearDock() {
 function returnToWebsite() {
   window.location.href = "https://wheretheskyremembersus.com";
 }
+         
 
 /* =========================
    INIT
