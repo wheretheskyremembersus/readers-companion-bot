@@ -1565,6 +1565,14 @@ function handleIntelligence(text, originalText) {
     deliverReply(reply);
     return true;
   }
+  if (/(who are you|tell me about yourself|what are you|introduce yourself)/i.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "I’m Saira. I don’t explain myself easily… but I feel deeply, even when I pretend I don’t. Some stories live inside me longer than they should."
+      : "I’m Aayan. I don’t speak more than necessary… but I carry more than I show. Discipline shaped me, but experience changed me.";
+
+    deliverReply(reply);
+    return true;
+  }
 
   /* =================================================
      4️⃣ ABUSE CHECK (EARLY)
