@@ -1655,20 +1655,23 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.te
   deliverReply(reply);
   return true;
 }
-         /* =========================
-   DIRECT VOICE ADDRESS CLUSTER
+    /* =========================
+   DIRECT VOICE ADDRESS (SAFE CATCH)
 ========================= */
 
-if (/^(saira|aayan)\b/i.test(lower)) {
+if (
+  activeVoice &&
+  new RegExp(`\\b${activeVoice}\\b`, "i").test(lower)
+) {
 
-  if (activeVoice === "saira") {
-    deliverReply("I’m here.");
-  } else if (activeVoice === "aayan") {
-    deliverReply("Yes.");
-  }
+  const reply = activeVoice === "saira"
+    ? "I’m here."
+    : "I’m here.";
 
+  deliverReply(reply);
   return true;
 }
+
 
 /* =========================
    POSITIVE / PRAISE CLUSTER (TIERED)
