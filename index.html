@@ -1654,6 +1654,19 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.te
   deliverReply(reply);
   return true;
 }
+/* =========================
+   POSITIVE / PRAISE CLUSTER (EXPANDED 90%)
+========================= */
+
+if (/(great|excellent|amazing|beautiful|wonderful|lovely|perfect|brilliant|nice|wow|incredible|impressive|fantastic|awesome|so good|really good|very good|well done|powerful|moving|touching|emotional|intense|deep|meaningful|relatable|felt real|love it|i love this|this is good|this is amazing|so beautiful|so powerful|well written|beautifully written)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "I’m glad it reached you. Some reactions don’t need explanation — they’re simply felt."
+    : "I appreciate that. If it stayed with you, then it did what it was meant to do.";
+
+  deliverReply(reply);
+  return true;
+}
 
 /* =================================================
    5️⃣ EMOTIONAL PILLAR PRE-CHECK
