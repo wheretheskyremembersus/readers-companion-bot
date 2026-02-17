@@ -1569,33 +1569,43 @@ if (
     return true;
   }
 
-  /* =================================================
-     3️⃣ LOCKED HIGH PRIORITY QUESTIONS
-  ================================================= */
+ /* =================================================
+   3️⃣ LOCKED HIGH PRIORITY QUESTIONS (FINAL – STABLE)
+================================================= */
 
-  if (/(^|\b)i love you(\b|$)/i.test(lower)) {
-    const reply = activeVoice === "saira"
-      ? "Love is not something I take lightly… If you mean it, mean it gently. Words like that carry weight."
-      : "Love isn’t a word I respond to casually… If you say it, I hope you understand what it asks of you.";
-    deliverReply(reply);
-    return true;
-  }
+/* ---------- Love Declaration ---------- */
+if (/(^|\b)i\s+love\s+you(\b|$)/i.test(lower)) {
 
-  if (/(will you marry me|marry me)/i.test(lower)) {
-    const reply = activeVoice === "saira"
-      ? "Marriage isn’t a proposal made in passing… It deserves certainty. It deserves presence."
-      : "Marriage isn’t an answer to emotion… It’s a commitment to consequence. And consequence changes people.";
-    deliverReply(reply);
-    return true;
-  }
-
-  if (/(are you married|you married)/i.test(lower)) {
   const reply = activeVoice === "saira"
-    ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
-    : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
+    ? "Love is not something I take lightly… If you mean it, mean it gently. Words like that carry weight."
+    : "Love isn’t a word I respond to casually… If you say it, I hope you understand what it asks of you.";
+
   deliverReply(reply);
   return true;
 }
+
+/* ---------- Marriage Proposal ---------- */
+if (/(will\s+you\s+marry\s+me|marry\s+me)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "Marriage isn’t a proposal made in passing… It deserves certainty. It deserves presence."
+    : "Marriage isn’t an answer to emotion… It’s a commitment to consequence. And consequence changes people.";
+
+  deliverReply(reply);
+  return true;
+}
+
+/* ---------- Married Status ---------- */
+if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
+    : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
+
+  deliverReply(reply);
+  return true;
+}
+
 
 /* =========================
    INTRODUCTION / IDENTITY CLUSTER (IMMERSIVE)
