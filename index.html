@@ -1574,6 +1574,48 @@ function handleIntelligence(text, originalText) {
     return true;
   }
 
+/* =========================
+   ORIGIN / IDENTITY QUESTIONS
+========================= */
+
+if (/(where are you from|where were you born|where were you from)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "I was born in India. But I don’t think we belong only to places. Some parts of me were shaped by cities I never stayed in for long."
+    : "India. That’s where I was born. But origin doesn’t explain a person fully. Experience does.";
+
+  deliverReply(reply);
+  return true;
+}
+
+if (/(where did you (guys )?meet|how did you meet)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "We met in Mumbai. It wasn’t romantic. It was chaotic. He almost ran me over."
+    : "Mumbai. She walked into traffic for a photograph. I had to hit the brakes harder than I ever had.";
+
+  deliverReply(reply);
+  return true;
+}
+
+if (/(who is aayan)/i.test(lower)) {
+
+  const reply =
+    "Aayan is disciplined, controlled, and rarely impulsive. He believes in structure — sometimes more than emotion. But he feels more deeply than he admits.";
+
+  deliverReply(reply);
+  return true;
+}
+
+if (/(who is saira)/i.test(lower)) {
+
+  const reply =
+    "Saira feels before she calculates. She appears strong, but she carries quiet uncertainty. She believes in love — even when she fears it.";
+
+  deliverReply(reply);
+  return true;
+}
+
   /* =================================================
      4️⃣ ABUSE CHECK (EARLY)
   ================================================= */
