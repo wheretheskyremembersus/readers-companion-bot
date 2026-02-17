@@ -991,31 +991,54 @@ function setDockDisabled(state) {
 
 function isSixtyPercentMatch(userText, targetText) {
 
-  const cleanUser = userText
+  const stopWords = [
+    "the","a","an","to","of","in","on","at","for",
+    "and","is","are","was","were","did","do","does",
+    "you","your"
+  ];
+
+  const userWords = userText
     .toLowerCase()
     .replace(/[^\w\s]/g, "")
     .split(" ")
-    .filter(w => w.length > 2);
+    .map(w => normalizeWord(w))
+    .filter(w => w.length > 2 && !stopWords.includes(w));
 
-  const cleanTarget = targetText
+  const targetWords = targetText
     .toLowerCase()
     .replace(/[^\w\s]/g, "")
     .split(" ")
-    .filter(w => w.length > 2);
+    .map(w => normalizeWord(w))
+    .filter(w => w.length > 2 && !stopWords.includes(w));
 
-  if (cleanTarget.length === 0) return false;
+  if (targetWords.length === 0) return false;
 
-  let matchCount = 0;
+  let matchScore = 0;
 
-  cleanTarget.forEach(word => {
-    if (cleanUser.includes(word)) {
-      matchCount++;
-    }
+  targetWords.forEach(targetWord => {
+    userWords.forEach(userWord => {
+
+      // exact match
+      if (userWord === targetWord) {
+        matchScore += 2;
+      }
+
+      // partial similarity (first 4 letters match)
+      else if (
+        userWord.substring(0,4) === targetWord.substring(0,4)
+      ) {
+        matchScore += 1;
+      }
+
+    });
   });
 
-  const ratio = matchCount / cleanTarget.length;
-  return ratio >= 0.6;
+  const maxScore = targetWords.length * 2;
+  const ratio = matchScore / maxScore;
+
+  return ratio >= 0.5; 
 }
+
 function applyStageAtmosphere(stage) {
 
   if (!chatBody || !skyLayer) return;
@@ -1499,7 +1522,8 @@ function normalizeWord(word) {
   return word
     .toLowerCase()
     .replace(/[^a-z]/g, "")
-    .replace(/(ing|ed|ly|es|s)$/i, "");
+    .replace(/(ing|ed|ly|es|s)$/i, "")
+    .replace(/(ment|tion|ness)$/i, "");
 }
 
 function detectEmotionalPillar(text) {
