@@ -1664,6 +1664,49 @@ if (
   return true;
 }
 
+/* =========================
+   CROSS VOICE LOCATION CLUSTER (EMOTIONALLY CORRECTED)
+========================= */
+
+if (
+  /(where\s+is\s+a+yaan|where\s+is\s+aayan|where\s+is\s+he(\s+now)?|where\s+did\s+he\s+go)/i.test(lower)
+  && activeVoice === "saira"
+) {
+
+  const reply =
+    "I don’t know where he stands now. Distance does strange things to certainty. Sometimes love doesn’t disappear — it just becomes harder to reach.";
+
+  deliverReply(reply);
+  return true;
+}
+
+if (
+  /(where\s+is\s+saira|where\s+is\s+she(\s+now)?|where\s+did\s+she\s+go)/i.test(lower)
+  && activeVoice === "aayan"
+) {
+
+  const reply =
+    "I don’t know where she is now. Some distances are not measured in miles. They’re measured in timing… and the courage we didn’t have when it mattered.";
+
+  deliverReply(reply);
+  return true;
+}
+/* =========================
+   SELF LOCATION CLUSTER
+========================= */
+
+if (
+  /(where\s+are\s+you\s+now|where\s+do\s+you\s+live|where\s+are\s+you\s+living|where\s+are\s+you\s+based)/i.test(lower)
+) {
+
+  const reply = activeVoice === "saira"
+    ? "I’m still here. Some parts of me are waiting… some parts are searching. I haven’t stopped looking."
+    : "I’m still where responsibility placed me. But being steady doesn’t mean being settled. Some things remain unfinished.";
+
+  deliverReply(reply);
+  return true;
+}
+
 /* =================================================
    4️⃣ ABUSE CHECK
 ================================================= */
