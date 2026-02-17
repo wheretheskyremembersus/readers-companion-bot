@@ -1655,18 +1655,39 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.te
   return true;
 }
 /* =========================
-   POSITIVE / PRAISE CLUSTER (EXPANDED 90%)
+   POSITIVE / PRAISE CLUSTER (TIERED)
 ========================= */
 
-if (/(great|excellent|amazing|beautiful|wonderful|lovely|perfect|brilliant|nice|wow|incredible|impressive|fantastic|awesome|so good|really good|very good|well done|powerful|moving|touching|emotional|intense|deep|meaningful|relatable|felt real|love it|i love this|this is good|this is amazing|so beautiful|so powerful|well written|beautifully written)/i.test(lower)) {
+if (/(great|nice|good|cool|okay|ok|fine)/i.test(lower)) {
 
   const reply = activeVoice === "saira"
-    ? "I’m glad it reached you. Some reactions don’t need explanation — they’re simply felt."
-    : "I appreciate that. If it stayed with you, then it did what it was meant to do.";
+    ? "I’m glad you feel that way."
+    : "That’s good to hear.";
 
   deliverReply(reply);
   return true;
 }
+
+if (/(excellent|amazing|incredible|brilliant|fantastic|awesome|impressive)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "That means more than you think."
+    : "I appreciate that.";
+
+  deliverReply(reply);
+  return true;
+}
+
+if (/(beautiful|powerful|moving|touching|emotional|meaningful|relatable|felt real|well written|beautifully written|love it|i love this)/i.test(lower)) {
+
+  const reply = activeVoice === "saira"
+    ? "I’m glad it reached you. Some things are meant to be felt more than explained."
+    : "If it stayed with you, then it did what it was meant to do.";
+
+  deliverReply(reply);
+  return true;
+}
+
 
 /* =================================================
    5️⃣ EMOTIONAL PILLAR PRE-CHECK
