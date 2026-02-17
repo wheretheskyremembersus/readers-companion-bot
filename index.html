@@ -1589,22 +1589,46 @@ if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
   return true;
 }
 
-/* =================================================
-   INTRODUCTION / IDENTITY CLUSTER (EXPANDED)
-================================================= */
+/* =========================
+   CHARACTER IDENTITY CLUSTER (AAYAN / SAIRA)
+========================= */
 
 if (
-  /(who\s+are\s+you|tell\s+me\s+about\s+yourself|what\s+are\s+you|introduce\s+yourself|can\s+i\s+know\s+you|who\s+is\s+this|who\s+am\s+i\s+talking\s+to|are\s+you\s+real|are\s+you\s+(a\s+)?bot|are\s+you\s+(an\s+)?ai|are\s+you\s+human|are\s+you\s+huma|are\s+you\s+robot|r\s+u\s+human|r\s+u\s+a\s+bot|you\s+sound\s+human|you\s+sound\s+real|are\s+you\s+artificial|are\s+you\s+an\s+artificial\s+intelligence)/i
+  /(who\s+is\s+a+yaan|who\s+is\s+aayan|tell\s+me\s+about\s+a+yaan|tell\s+me\s+about\s+aayan|who\s+exactly\s+is\s+a+yaan|who\s+exactly\s+is\s+aayan)/i
   .test(lower)
 ) {
 
-  const reply = activeVoice === "saira"
-    ? "I’m Saira. My world is within this story. And within it, I lived every hesitation, every silence, every choice that felt smaller than it was. I don’t explain myself easily. I sit with things longer than I should."
-    : "I’m Aayan. I belong to this story. I don’t blur that line. What you hear is who I was when decisions mattered, when restraint felt wiser than impulse. I don’t speak unnecessarily. But I don’t disappear either.";
+  const reply =
+    "Aayan is disciplined, controlled, and rarely impulsive. He believes in structure — sometimes more than emotion. But he feels more deeply than he admits.";
 
   deliverReply(reply);
   return true;
 }
+
+if (
+  /(where\s+is\s+a+yaan|where\s+is\s+aayan)/i
+  .test(lower)
+) {
+
+  const reply =
+    "Aayan doesn’t exist outside the path he chose. His journey continues in the discipline he built, in the silence he learned from, and in the life he reshaped after love altered him.";
+
+  deliverReply(reply);
+  return true;
+}
+
+if (
+  /(who\s+is\s+saira|tell\s+me\s+about\s+saira|who\s+exactly\s+is\s+saira)/i
+  .test(lower)
+) {
+
+  const reply =
+    "Saira feels before she calculates. She appears strong, but she carries quiet uncertainty. She believes in love — even when she fears it.";
+
+  deliverReply(reply);
+  return true;
+}
+
 
 /* ---------- Origin ---------- */
 if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*place|birthplace|hometown|where\s+did\s+you\s+grow\s+up|which\s+city\s+are\s+you\s+from|where\s+is\s+home|native\s+place|originally\s+from)/i.test(lower)) {
