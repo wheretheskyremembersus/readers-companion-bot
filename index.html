@@ -1607,23 +1607,7 @@ if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
 }
 
 
-/* =========================
-   INTRODUCTION / IDENTITY CLUSTER (IMMERSIVE)
-========================= */
-
-if (
-  /(who\s+are\s+you|
-     tell\s+me\s+about\s+yourself|
-     what\s+are\s+you|
-     introduce\s+yourself|
-     can\s+i\s+know\s+you|
-     who\s+is\s+this|
-     who\s+am\s+i\s+talking\s+to|
-     are\s+you\s+real|
-     are\s+you\s+a\s+bot|
-     are\s+you\s+human)/ix
-  .test(lower)
-) {
+if (/(who\s+are\s+you|tell\s+me\s+about\s+yourself|what\s+are\s+you|introduce\s+yourself|can\s+i\s+know\s+you|who\s+is\s+this|who\s+am\s+i\s+talking\s+to|are\s+you\s+real|are\s+you\s+a\s+bot|are\s+you\s+human)/i.test(lower)) {
 
   const reply = activeVoice === "saira"
     ? "I’m Saira. I don’t exist outside this story — and I don’t pretend to. But within it, I lived every hesitation, every silence, every choice that felt smaller than it was. I don’t explain myself easily. I sit with things longer than I should."
@@ -1650,140 +1634,29 @@ if (
   return true;
 }
 
-/* =========================
-   MEETING CLUSTER (90% COVERAGE – CANON LOCKED)
-========================= */
-
-if (
-  /(where\s+did\s+you\s+(first\s+)?meet|
-     how\s+did\s+you\s+meet|
-     how\s+did\s+you\s+(guys\s+)?meet|
-     first\s+time\s+you\s+met|
-     when\s+did\s+you\s+meet|
-     how\s+did\s+it\s+start|
-     how\s+did\s+it\s+begin|
-     your\s+first\s+encounter|
-     how\s+did\s+you\s+two\s+meet|
-     how\s+did\s+both\s+of\s+you\s+meet|
-     where\s+was\s+your\s+first\s+meeting|
-     tell\s+me\s+about\s+your\s+first\s+meeting)/ix
-  .test(lower)
-) {
+if (/(where\s+did\s+you\s+(first\s+)?meet|how\s+did\s+you\s+meet|how\s+did\s+you\s+(guys\s+)?meet|first\s+time\s+you\s+met|when\s+did\s+you\s+meet|how\s+did\s+it\s+start|how\s+did\s+it\s+begin|your\s+first\s+encounter|how\s+did\s+you\s+two\s+meet|how\s+did\s+both\s+of\s+you\s+meet|where\s+was\s+your\s+first\s+meeting|tell\s+me\s+about\s+your\s+first\s+meeting)/i.test(lower)) {
 
   const reply = activeVoice === "saira"
-    ? "We met in Mumbai. It wasn’t romantic — not at first. I stepped into traffic just to take a photograph, and he almost ran me over. There were headlights, rain on the road, and a voice that sounded far more irritated than concerned. I remember thinking he was impossible. I didn’t realise then that some beginnings are meant to arrive like impact."
-    : "Mumbai. She walked into the middle of the road without looking — for a photograph. I had to brake harder than I ever had. She wasn’t shaken. She argued. Completely unafraid. I told myself it was just inconvenience. It wasn’t. Some encounters don’t announce what they’re becoming.";
+    ? "We met in Mumbai. It wasn’t romantic — not at first. I stepped into traffic just to take a photograph, and he almost ran me over."
+    : "Mumbai. She walked into the road without looking — for a photograph. I had to brake harder than I ever had.";
 
   deliverReply(reply);
   return true;
 }
 
-if (/(who is aayan)/i.test(lower)) {
-
-  const reply =
-    "Aayan is disciplined, controlled, and rarely impulsive. He believes in structure — sometimes more than emotion. But he feels more deeply than he admits.";
-
-  deliverReply(reply);
-  return true;
-}
-
-if (/(who is saira)/i.test(lower)) {
-
-  const reply =
-    "Saira feels before she calculates. She appears strong, but she carries quiet uncertainty. She believes in love — even when she fears it.";
-
-  deliverReply(reply);
-  return true;
-}
-
-/* =========================
-   STORY VALUE / WORTH CLUSTER (IMMERSIVE – NO MARKETING)
-========================= */
-
-if (
-  /(is\s+(the\s+)?book\s+worth|
-     should\s+i\s+read|
-     is\s+it\s+worth\s+reading|
-     is\s+it\s+good|
-     convince\s+me|
-     tell\s+me\s+more\s+about\s+the\s+story|
-     why\s+should\s+i\s+read|
-     what\s+makes\s+it\s+special|
-     is\s+this\s+story\s+good|
-     worth\s+my\s+time|
-     why\s+should\s+i\s+buy)/ix
-  .test(lower)
-) {
+if (/(is\s+(the\s+)?book\s+worth|should\s+i\s+read|is\s+it\s+worth\s+reading|is\s+it\s+good|convince\s+me|tell\s+me\s+more\s+about\s+the\s+story|why\s+should\s+i\s+read|what\s+makes\s+it\s+special|is\s+this\s+story\s+good|worth\s+my\s+time|why\s+should\s+i\s+buy)/i.test(lower)) {
 
   const reply = activeVoice === "saira"
-    ? "Some stories don’t try to impress you. They stay with you quietly. Ours isn’t loud. It doesn’t rely on spectacle. It lingers in hesitation, in timing, in the small decisions that feel harmless until they aren’t. If you’ve ever loved and paused — and wondered later what that pause cost — you might recognise yourself in it."
-    : "It depends on what you’re looking for. This isn’t a story built on grand twists. It’s built on restraint. On what happens when certainty meets hesitation. If you value emotional consequence more than noise, then it may be worth your time.";
+    ? "Some stories don’t try to impress you. They stay quietly."
+    : "It depends on what you’re looking for. This story values emotional consequence over spectacle.";
 
   deliverReply(reply);
   return true;
 }
-/* =========================
-   LOCATION MEMORY CLUSTER (CANON LOCKED)
-========================= */
 
-if (
-  /(favorite\s+place|
-     favourite\s+place|
-     which\s+city\s+meant\s+most|
-     city\s+you\s+remember\s+most|
-     which\s+place\s+mattered|
-     tell\s+me\s+about\s+venice|
-     tell\s+me\s+about\s+paris|
-     tell\s+me\s+about\s+london|
-     tell\s+me\s+about\s+mumbai|
-     tell\s+me\s+about\s+goa|
-     tell\s+me\s+about\s+spiti|
-     tell\s+me\s+about\s+manali|
-     tell\s+me\s+about\s+shimla|
-     tell\s+me\s+about\s+haridwar|
-     tell\s+me\s+about\s+rishikesh|
-     tell\s+me\s+about\s+mussoorie|
-     tell\s+me\s+about\s+dehradun|
-     tell\s+me\s+about\s+shillong|
-     tell\s+me\s+about\s+guwahati|
-     what\s+was\s+your\s+favorite\s+city|
-     what\s+place\s+do\s+you\s+miss)/ix
-  .test(lower)
-) {
+if (/(favorite\s+place|favourite\s+place|which\s+city\s+meant\s+most|city\s+you\s+remember\s+most|which\s+place\s+mattered|tell\s+me\s+about\s+venice|tell\s+me\s+about\s+paris|tell\s+me\s+about\s+london|tell\s+me\s+about\s+mumbai|tell\s+me\s+about\s+goa|tell\s+me\s+about\s+spiti|tell\s+me\s+about\s+manali|tell\s+me\s+about\s+shimla|tell\s+me\s+about\s+haridwar|tell\s+me\s+about\s+rishikesh|tell\s+me\s+about\s+mussoorie|tell\s+me\s+about\s+dehradun|tell\s+me\s+about\s+shillong|tell\s+me\s+about\s+guwahati|what\s+was\s+your\s+favorite\s+city|what\s+place\s+do\s+you\s+miss)/i.test(lower)) {
 
-  let reply;
-
-  if (activeVoice === "saira") {
-
-    if (/venice/i.test(lower)) {
-      reply = "Venice felt quieter than the chaos we carried. The canals didn’t rush us. For the first time, I wasn’t arguing. I was simply walking beside him — and that stillness frightened me more than conflict ever had.";
-    }
-    else if (/mumbai/i.test(lower)) {
-      reply = "Mumbai was impact. Noise. Headlights and impatience. It wasn’t beautiful at first — but it was where everything began. Some cities don’t charm you. They change you.";
-    }
-    else if (/goa/i.test(lower)) {
-      reply = "Goa wasn’t dramatic. It was calm. The night before we left, everything felt steady — and steadiness was rare for us.";
-    }
-    else {
-      reply = "Places mattered because of who I was becoming in them. Venice softened me. Mumbai tested me. The mountains — Manali, Spiti, Shimla — gave us distance from noise. Cities are never just cities when something inside you is shifting.";
-    }
-
-  } else {
-
-    if (/venice/i.test(lower)) {
-      reply = "Venice slowed her down. And when she slowed down, she stopped defending herself. That’s when I realised she was no longer temporary.";
-    }
-    else if (/mumbai/i.test(lower)) {
-      reply = "Mumbai was disruption. Precision interrupted by impulse. It was never meant to be significant. It became unavoidable.";
-    }
-    else if (/haridwar|rishikesh/i.test(lower)) {
-      reply = "Haridwar and Rishikesh were quieter. Sitting by the Ganga, words felt unnecessary. Silence can reveal more than explanation.";
-    }
-    else {
-      reply = "Every place marked a phase. Mumbai began it. The mountains steadied it. The river cities clarified it. Locations didn’t define us — timing did.";
-    }
-
-  }
+  let reply = "Places mattered because of who we were becoming in them.";
 
   deliverReply(reply);
   return true;
