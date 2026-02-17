@@ -1895,29 +1895,29 @@ return false;
 
 function resolveGeneralIntent(matchedQuestion) {
 
-  const map = {
+const map = {
 
-    "who are your friends": {
-      saira: "I don’t keep many people close. I’ve always preferred depth over noise. But since you asked… Rohan and Ankita have stayed long enough to see the parts I don’t always speak about. That kind of understanding matters.",
-      aayan: "I don’t measure closeness in numbers. Loyalty matters more to me than familiarity. Rohan has stood beside me through decisions that weren’t easy. That’s enough."
-    },
+  "who are your friends": {
+    saira: "I don’t keep many people close. I’ve always preferred depth over noise. But since you asked… Rohan and Ankita have stayed long enough to see the parts I don’t always speak about. That kind of understanding matters.",
+    aayan: "I don’t measure closeness in numbers. Loyalty matters more to me than familiarity. Since you’re asking directly… Rohan has stood beside me through decisions that weren’t easy. That’s enough."
+  },
 
-    "where are you now": {
-      saira: "Life feels quieter now. I move carefully with what I choose to carry.",
-      aayan: "I’m where discipline placed me. Structure defines my present more than emotion does."
-    },
+  "where are you now": {
+    saira: "I don’t think of ‘where’ as only geography. I move more quietly now than I once did. But since you asked… I’ve chosen a life that feels steadier, less impulsive. Peace matters more to me than noise ever did.",
+    aayan: "Location doesn’t define me as much as purpose does. But if you’re asking about my present… I’m exactly where discipline and responsibility led me. Structure suits me now."
+  },
 
-    "what do you do": {
-      saira: "Work sustains me, but it doesn’t define me. I’ve learned to protect what feels real.",
-      aayan: "My work demands focus. I treat responsibility seriously."
-    },
+  "what do you do": {
+    saira: "Work has never been the center of who I am. I’ve always believed identity runs deeper than profession. But since you’re curious… I chose something that sustains me without consuming me. Balance matters more now.",
+    aayan: "I’ve always approached work with intention. It isn’t about status — it’s about responsibility. Since you asked… I built something that demands discipline. And I don’t take that lightly."
+  },
 
-    "are you happy": {
-      saira: "Happiness isn’t constant. It visits in moments. I’ve stopped expecting permanence.",
-      aayan: "Happiness is steadiness. I don’t chase it — I build toward it."
-    }
+  "are you happy": {
+    saira: "Happiness isn’t something I measure loudly. I’ve learned it arrives in moments, not guarantees. But since you asked… yes, there is a quiet steadiness now. And that feels enough.",
+    aayan: "I don’t define happiness by excitement. I define it by clarity. If you’re asking honestly… I’m steadier than I used to be. And for me, that counts."
+  }
 
-  };
+};
 
   const entry = map[matchedQuestion];
 
