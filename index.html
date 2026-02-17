@@ -1474,31 +1474,6 @@ function handleIntelligence(text, originalText) {
   }
 ];
 
-/* =========================
-   DIRECT SELF NAME CALL
-========================= */
-
-if (
-  activeVoice &&
-  new RegExp(`^${activeVoice}\\b[\\.?…!]*$`, "i").test(lower)
-) {
-  deliverReply("I’m here.");
-  return true;
-}
-/* =========================
-   CROSS CHARACTER NAME MENTION
-========================= */
-
-if (activeVoice === "saira" && /\baayan\b/i.test(lower)) {
-  deliverReply("You’re thinking about him.");
-  return true;
-}
-
-if (activeVoice === "aayan" && /\bsaira\b/i.test(lower)) {
-  deliverReply("You’re thinking about her.");
-  return true;
-}
-
          
 /* =================================================
    1️⃣ GREETINGS (FINAL – Fully Guarded + Voice Aware)
@@ -1622,11 +1597,41 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
   return true;
 }
 
+         /* =========================
+   DIRECT WHERE IS HE / SHE (CROSS GENDER SAFE)
+========================= */
+
+if (/\bwhere\s+is\s+(he|she)(\s+now)?\b/i.test(lower)) {
+
+  let reply;
+
+  if (activeVoice === "saira") {
+
+    if (/\bshe\b/i.test(lower)) {
+      reply = "I think you’re referring to him. I don’t know where he is now… or who stands beside him. Not knowing is the hardest part. But wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be.";
+    } else {
+      reply = "I don’t know where he is now… or who stands beside him. Not knowing is the hardest part. But wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be.";
+    }
+
+  } else {
+
+    if (/\bhe\b/i.test(lower)) {
+      reply = "I think you’re referring to her. I don’t know where she stands now, or what her life looks like. But wherever she is… I hope she is protected. I hope she is at peace.";
+    } else {
+      reply = "I don’t know where she stands now, or what her life looks like. But wherever she is… I hope she is protected. I hope she is at peace.";
+    }
+
+  }
+
+  deliverReply(reply);
+  return true;
+}
+
 /* =========================
    CROSS GENDER + STILL FEEL CLUSTER (CLEAN SAFE VERSION)
 ========================= */
 
-if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waiting|have\s+you\s+moved\s+on|did\s+you\s+move\s+on|are\s+you\s+over\s+(him|her)|do\s+you\s+miss\s+(him|her)|where\s+is\s+(he|she)(\s+now)?|where\s+are\s+they\s+now|do\s+you\s+still\s+think\s+about|do\s+you\s+pray\s+for|are\s+you\s+still\s+in\s+love)/i.test(lower)) {
+if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waiting|have\s+you\s+moved\s+on|did\s+you\s+move\s+on|are\s+you\s+over\s+(him|her)|do\s+you\s+miss\s+(him|her)|where\s+are\s+they\s+now|do\s+you\s+still\s+think\s+about|do\s+you\s+pray\s+for|are\s+you\s+still\s+in\s+love)/i.test(lower))
 
   let reply;
 
