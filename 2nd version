@@ -1,0 +1,2627 @@
+<!DOCTYPE html>
+<!--
+© 2025–2026 Mohan R.
+"Where The Sky Remembers Us" – Interactive Companion Script.
+
+All dialogue, character interactions, structure,
+and emotional architecture are original literary work
+associated with the registered novel.
+
+Unauthorized reproduction, duplication, or redistribution
+of this content is prohibited.
+-->
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Our Story — Readers’ Companion</title>
+<meta http-equiv="Content-Security-Policy" 
+content="default-src 'self'; 
+         img-src 'self'; 
+         script-src 'self' 'unsafe-inline'; 
+         style-src 'self' 'unsafe-inline'; 
+         connect-src https://formspree.io;">
+
+<style>
+
+ /* =========================
+   EXIT TRANSITION
+========================= */
+
+.exit-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0);
+  backdrop-filter: blur(0px);
+  z-index: 9999;
+  transition: background 1.5s ease, backdrop-filter 1.5s ease;
+}
+
+.exit-overlay.active {
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+}
+
+.exit-message {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+  font-size: 22px;
+  font-style: italic;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.exit-message.active {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+         
+/* =========================
+   GLOBAL PAGE (RESTORE)
+========================= */
+
+body {
+  margin: 0;
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", serif;
+  font-weight: 400;
+  background: linear-gradient(
+    to bottom,
+    #bfc2c4 0%,
+    #e4e6e7 35%,
+    #ffffff 100%
+  );
+  color: #222;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 40px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================
+   TWO-COLUMN LAYOUT
+========================= */
+.layout {
+  display: grid;
+  grid-template-columns: 520px 1fr;
+  gap: 80px;
+  align-items: flex-start;
+}
+   
+/* =========================
+   RIGHT COLUMN — FINAL REFINED VERSION
+========================= */
+
+/* Main Section Titles */
+.right-column h2 {
+  font-size: 34px;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  color: #111111;   /* jet black */
+}
+
+/* Sub Headers */
+.right-column h3 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  color: #111111;   /* jet black */
+}
+
+/* Body Text */
+.right-column p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #333333;
+  margin-bottom: 18px;
+}
+
+/* JUSTIFY ONLY PRIVACY CONTENT */
+.right-column .privacy-text {
+  text-align: justify;
+}
+
+/* Email */
+.right-column strong {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111111;
+}
+
+/* =========================
+   HEADER
+========================= */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a4a4a;
+  margin: 0 0 14px 0;
+}
+
+.page-header p {
+  margin: 0;
+  font-size: 15px;
+  color: #777;
+}
+
+ .subtle-note {
+  font-size: 12px;
+  color: #b34747;  /* soft muted red */
+  font-style: italic;
+  margin-top: 6px;
+  opacity: 0.9;
+}
+
+ /* =========================
+   LEFT STORY INTRO
+========================= */
+
+.story-intro {
+  margin-bottom: 50px;
+}
+
+.story-intro h2 {
+  font-size: 36px;            /* Matches right-side main header */
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  color: #111111;
+}
+
+.story-title {
+  font-size: 15px;          /* Same as body text */
+  font-weight: 700;         /* Bold */
+  font-style: italic;       /* Italic */
+  margin: 0 0 18px 0;
+  color: #111111;
+}
+
+.story-sub {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #333333;
+}
+
+/* =========================
+   FOOTER SPACING FIX
+========================= */
+
+.page-footer {
+  margin-top: 60px;
+  font-size: 12px;        /* slightly smaller */
+  color: #222;            /* same as body text */
+  opacity: 0.9;           /* soft but not faded */
+  line-height: 1.6;
+}
+
+/* =========================
+   BOT SHELL
+========================= */
+
+.bot-shell {
+  display: flex;
+  flex-direction: column;
+  height: 650px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* =========================
+   BOT HEADER
+========================= */
+
+.bot-header {
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #f3f5f7, #e9edf2);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  transition: background 0.4s ease;
+  z-index: 3;
+}
+
+.bot-title {
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2a2a2a;
+  font-weight: 700;
+}
+
+/* =========================
+   CHAT BODY
+========================= */
+
+.chat-body {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 22px 24px;
+  font-size: 14px;
+  line-height: 1.7;
+  background: transparent;
+  z-index: 1;
+}
+
+/* =========================
+   SKY LAYER (Contained Properly)
+========================= */
+
+.sky-layer {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;   /* KEY LINE */
+  opacity: 0;
+  transition: opacity 1.5s ease, transform 2s ease, filter 2s ease;
+}
+
+@keyframes skyDrift {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+.sky-layer.active {
+  animation: skyDrift 18s ease-in-out infinite;
+}
+
+/* =========================
+   CHAT OVERLAY
+========================= */
+
+.chat-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,var(--overlayStrength,0.35));
+  backdrop-filter: blur(1.5px);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 1.5s ease;
+}
+
+/* =========================
+   MESSAGE STRUCTURE
+========================= */
+
+.message {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin-bottom: 14px;
+  z-index: 2;
+}
+
+.bubble {
+  max-width: 80%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.06),
+    0 1px 0 rgba(255,255,255,0.4) inset;
+  word-wrap: break-word;
+}
+
+/* Alignments */
+
+.user {
+  justify-content: flex-end;
+}
+
+.saira-msg,
+.aayan-msg,
+.system-msg {
+  justify-content: flex-start;
+}
+
+/* System Bubble */
+
+.system-msg .bubble {
+  background: linear-gradient(135deg, #f4faf5, #eaf6ef);
+  border: 1px solid rgba(140,190,160,0.18);
+}
+
+/* User Bubble */
+
+.user .bubble {
+  background: #e5e5ea;
+  border-radius: 18px 18px 4px 18px;
+}
+
+/* Saira Bubble */
+
+.saira-msg .bubble {
+  background: linear-gradient(135deg, #fff1f6, #fde2ec);
+  border-radius: 18px 18px 4px 18px;
+  border: 1px solid rgba(255,170,200,0.25);
+  box-shadow: 0 2px 8px rgba(255,160,190,0.18);
+}
+
+/* Aayan Bubble */
+
+.aayan-msg .bubble {
+  background: linear-gradient(135deg, #eef5ff, #dde9ff);
+  border-radius: 18px 18px 18px 4px;
+  border: 1px solid rgba(140,170,255,0.25);
+  box-shadow: 0 2px 8px rgba(120,160,255,0.18);
+}
+
+/* =========================
+   QUESTION DOCK
+========================= */
+
+.question-dock {
+  padding: 18px 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: #ffffff;
+  position: relative;
+  z-index: 3;
+}
+
+/* =========================
+   BUTTON BASE
+========================= */
+
+.btn {
+  padding: 7px 16px;
+  border-radius: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* =========================
+   VOICE BUTTONS
+========================= */
+
+.btn.saira {
+  background: linear-gradient(135deg, #fff1f6, #fde2ec);
+  border: 1px solid rgba(255,170,200,0.35);
+  box-shadow: 0 0 12px rgba(255,180,120,0.45);
+}
+
+.btn.aayan {
+  background: linear-gradient(135deg, #eef5ff, #dde9ff);
+  border: 1px solid rgba(140,170,255,0.35);
+  box-shadow: 0 0 12px rgba(120,180,255,0.45);
+}
+
+/* =========================
+   TYPING AREA
+========================= */
+
+.typing-area {
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 8px;
+  background: #ffffff;
+  position: relative;
+  z-index: 3;
+}
+
+.typing-area input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+}
+
+.typing-area input:focus {
+  border-color: #bbb;
+  box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
+}
+/* =========================
+   TYPING INDICATOR (FIXED)
+========================= */
+
+#typingIndicator {
+  position: relative;
+  z-index: 3; /* above overlay */
+}
+
+#typingIndicator .bubble {
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Dot container */
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Dots */
+.typing-bubble span {
+  width: 7px;
+  height: 7px;
+  background: #777;
+  border-radius: 50%;
+  display: inline-block;
+  animation: typingBlink 1.4s infinite ease-in-out both;
+}
+
+/* Stagger delay */
+.typing-bubble span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-bubble span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Animation */
+@keyframes typingBlink {
+  0%   { opacity: 0.25; transform: translateY(0px); }
+  20%  { opacity: 1;    transform: translateY(-2px); }
+  40%  { opacity: 0.6;  transform: translateY(0px); }
+  100% { opacity: 0.25; transform: translateY(0px); }
+}
+/* =========================
+   PRIMARY BUTTONS
+========================= */
+
+.typing-area button,
+.btn.primary {
+  padding: 8px 18px;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 700;
+  background: #2a2a2a;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.typing-area button:hover,
+.btn.primary:hover {
+  opacity: 0.85;
+}
+
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  
+  <div class="layout">
+
+<!-- LEFT: BOT -->
+<div class="left-column">
+
+  <!-- STORY INTRO -->
+  <div class="story-intro">
+  <h2>My Story</h2>
+
+  <p class="story-title">
+    “Where The Sky Remembers Us”</em>
+  </p>
+
+  <p class="story-sub">
+    A Eternal love story unconstrained by time and space.
+  </p>
+</div>
+
+  <div class="bot-shell">
+
+    <div class="bot-header">
+      <span class="bot-title">Where the Sky Remembers Us | Companion</span>
+    </div>
+
+    <!-- SKY LAYER (MOVE IT HERE) -->
+    <div class="sky-layer" id="skyLayer"></div>
+
+    <div class="chat-body" id="chatBody"></div>
+
+    <div class="question-dock" id="questionDock"></div>
+
+  <!-- TYPING AREA -->
+  <div class="typing-area" id="typingArea" style="display:none;">
+    <input type="text" id="userInput" placeholder="You can ask something…" />
+    <button onclick="sendTypedMessage()">Send</button>
+  </div>
+</div>
+
+    </div>
+
+    <!-- RIGHT: TRUST / CONTACT -->
+    <div class="right-column">
+      <h2>Reach Out to the Author</h2>
+
+      <h3>WEBSITE</h3>
+      <p>www.wheretheskyremembersus.com</p>
+
+      <h2 class="spaced">Privacy Note</h2>
+      <p>
+        We value your privacy. Information you share through our feedback form—
+        such as your name, email, or message—is used solely to understand and
+        respond to your feedback. We do not use cookies, trackers, or third-party tools.
+      </p>
+
+      <p>
+        For any questions, contact us at:<br>
+        <strong>wheretheskyremembersus@gmail.com</strong>
+      </p>
+
+      <h2 class="spaced">Communication Address</h2>
+      <p>
+        PO Box : 10<br>
+        General Post Office<br>
+        Shillong 793001<br>
+        Meghalaya, India
+      </p>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+  © 2025-2026 Mohan R.  
+  <br>
+  <em>Where The Sky Remembers Us</em>. All rights reserved.
+</div>
+
+</div>
+
+<!-- FORM (hidden) -->
+<form id="reflectionForm" action="https://formspree.io/f/xaqdqobr" method="POST" style="display:none;">
+  <input type="hidden" name="voice" id="formVoice">
+  <input type="hidden" name="reflection_1" id="r1">
+  <input type="hidden" name="reflection_2" id="r2">
+  <input type="hidden" name="reflection_3" id="r3">
+  <input type="hidden" name="timestamp" id="formTime">
+</form>
+   
+
+<script>
+   
+let skyLayer = document.getElementById("skyLayer");
+let emotionalDepth = 0;
+
+/* =========================
+   ABUSE STRIKE SYSTEM
+========================= */
+
+let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes")) || 0;
+         
+const chatBody = document.getElementById("chatBody");
+const dock = document.getElementById("questionDock");
+/* =========================
+   SESSION CONTAINMENT COUNTERS
+========================= */
+
+let foreignInputCount = 0;
+let repeatCount = 0;
+let abuseCount = 0;
+let meaningfulCount = 0;
+let previewOffered = false;
+let emotionalToggle = false;
+         
+let lastUserInput = "";
+
+/* =========================
+   CORE STATE VARIABLES (REQUIRED)
+========================= */
+
+let activeVoice = null;
+let interactionLocked = false;
+
+let foundationalAnswered = new Set();
+let characterAnswered = 0;
+let currentLayer = 0;
+
+let reflections = [];
+let reflectionStep = 0;
+/* =========================
+   EMOTIONAL ROTATION INDEX
+========================= */
+
+let emotionalIndex = {
+  saira: {
+    affection: 0,
+    vulnerability: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0,
+  },
+  aayan: {
+    affection: 0,
+    vulnerability: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+
+const foreignLimit = 5;
+const repeatLimit = 5;
+const abuseLimit = 3;
+         
+// Initial atmosphere reset
+if (chatBody) {
+  chatBody.style.setProperty("--overlayStrength", 0.25);
+}
+
+if (skyLayer) {
+  skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+}
+
+// Preload sky images
+const preloadSaira = new Image();
+preloadSaira.src = "Saira.jpg";
+
+const preloadAayan = new Image();
+preloadAayan.src = "Aayan.jpg";
+
+/* =========================
+   7-STAGE HUMAN PROGRESSION
+========================= */
+var stageState = {
+  saira: {
+    currentStage: 1,
+    momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+  },
+  aayan: {
+    currentStage: 1,
+    momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+  }
+};
+
+window.stageState = stageState; // ✅ ONLY THIS
+
+
+/* =========================
+   EMOTIONAL RESPONSE TRACKER
+========================= */
+
+const pillarToStage = {
+  affection: 2,
+  vulnerability: 3,
+  fear: 4,
+  regret: 5,
+  loss: 5,
+  growth: 6,
+  destiny: 7
+};
+
+/* =========================
+   SOUND ENGINE (MAX SAFE)
+========================= */
+
+let audioContext;
+
+function initAudio() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function playTone(startFreq = 750, duration = 40, volume = 0.14) {
+  if (!audioContext) return;
+
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+
+  oscillator.type = "square"; // KEY CHANGE
+  oscillator.frequency.setValueAtTime(startFreq, audioContext.currentTime);
+
+  gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(
+    0.0001,
+    audioContext.currentTime + duration / 1000
+  );
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+
+  oscillator.start();
+  oscillator.stop(audioContext.currentTime + duration / 1000);
+}
+
+/* =========================
+   HELPERS
+========================= */
+
+/* ---------- Enable Enter Key ---------- */
+
+window.addEventListener("DOMContentLoaded", function () {
+  const inputField = document.getElementById("userInput");
+
+  if (inputField) {
+    inputField.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendTypedMessage();
+      }
+    });
+  }
+});
+
+/* ---------- Auto Scroll ---------- */
+
+function autoScroll() {
+  if (!chatBody) return;
+
+  chatBody.scrollTo({
+    top: chatBody.scrollHeight,
+    behavior: "smooth"
+  });
+}
+
+/* ---------- Message Builders ---------- */
+
+function sanitize(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function addUserMessage(text) {
+  const safeText = sanitize(text);
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message user">
+        <div class="bubble"><strong>${safeText}</strong></div>
+     </div>`
+  );
+  autoScroll();
+}
+
+
+function addVoiceMessage(text) {
+  const side =
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "aayan"
+      ? "aayan-msg"
+      : "system-msg";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${side}">
+        <div class="bubble">${text}</div>
+     </div>`
+  );
+
+  autoScroll();
+}
+
+function addSystemMessage(text) {
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message system-msg">
+        <div class="bubble">${text}</div>
+     </div>`
+  );
+  autoScroll();
+}
+
+   /* =========================
+   TYPING INDICATOR FUNCTIONS
+========================= */
+
+function showTypingIndicator() {
+  if (!chatBody) return;
+  if (document.getElementById("typingIndicator")) return;
+
+  const side =
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "aayan"
+      ? "aayan-msg"
+      : "system-msg";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${side}" id="typingIndicator">
+        <div class="bubble">
+          <div class="typing-bubble">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+     </div>`
+  );
+
+  autoScroll();
+}
+
+function removeTypingIndicator() {
+  const el = document.getElementById("typingIndicator");
+  if (el) el.remove();
+}
+
+/* ---------- Reply Delivery + Atmosphere Engine ---------- */
+
+function deliverReply(replyText, callback) {
+  if (!replyText || interactionLocked) return;
+
+  interactionLocked = true;
+  setDockDisabled(true);
+
+  const delay = Math.min(
+    3000,
+    Math.max(700, replyText.length * 18)
+  );
+
+  // Small natural pause before typing starts
+  setTimeout(() => {
+    showTypingIndicator();
+  }, 180);
+
+  setTimeout(() => {
+    removeTypingIndicator();
+
+    addVoiceMessage(replyText);
+    playTone(420, 120, 0.025, 360);
+
+/* =========================
+   ATMOSPHERE PROGRESSION (SEAMLESS ARC)
+========================= */
+
+emotionalDepth++;
+
+/*
+We use a smooth sine curve instead of linear math.
+This makes the transition invisible.
+*/
+
+const maxDepth = 28; // full arc length
+const arcPosition = Math.min(emotionalDepth, maxDepth);
+
+/*
+0 → π gives full rise and fall
+*/
+const depthFactor = Math.sin((arcPosition / maxDepth) * Math.PI);
+
+/*
+depthFactor now:
+0 → 1 → 0
+Smoothly. No visible break.
+*/
+
+// Overlay evolution (subtle)
+const overlayValue = 0.32 - depthFactor * 0.22;
+
+chatBody.style.setProperty("--overlayStrength", overlayValue);
+
+// Sky evolution (gentle cinematic feel)
+if (skyLayer) {
+  skyLayer.style.filter = `
+    brightness(${1 - depthFactor * 0.55})
+    contrast(${1 + depthFactor * 1.1})
+    saturate(${1 + depthFactor * 0.9})
+  `;
+}
+    /* =========================
+       UNLOCK INTERACTION
+    ========================= */
+
+    interactionLocked = false;
+    setDockDisabled(false);
+
+    if (typeof callback === "function") {
+      callback();
+    }
+
+  }, delay + 180);
+}
+
+
+/* ---------- Dock Control ---------- */
+
+function setDockDisabled(state) {
+  const buttons = dock.querySelectorAll("button");
+
+  buttons.forEach(btn => {
+    btn.disabled = state;
+    btn.style.opacity = state ? "0.5" : "1";
+    btn.style.pointerEvents = state ? "none" : "auto";
+  });
+}
+         
+/* =========================
+   60% WORD MATCH ENGINE
+========================= */
+
+function isSixtyPercentMatch(userText, targetText) {
+
+  const stopWords = [
+    "the","a","an","to","of","in","on","at","for",
+    "and","is","are","was","were","did","do","does",
+    "you","your"
+  ];
+
+  const userWords = userText
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .split(" ")
+    .map(w => normalizeWord(w))
+    .filter(w => w.length > 2 && !stopWords.includes(w));
+
+  const targetWords = targetText
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .split(" ")
+    .map(w => normalizeWord(w))
+    .filter(w => w.length > 2 && !stopWords.includes(w));
+
+  if (targetWords.length === 0) return false;
+
+  let matchScore = 0;
+
+  targetWords.forEach(targetWord => {
+    userWords.forEach(userWord => {
+
+      // exact match
+      if (userWord === targetWord) {
+        matchScore += 2;
+      }
+
+      // partial similarity (first 4 letters match)
+      else if (
+        userWord.substring(0,4) === targetWord.substring(0,4)
+      ) {
+        matchScore += 1;
+      }
+
+    });
+  });
+
+  const maxScore = targetWords.length * 2;
+  const ratio = matchScore / maxScore;
+
+  return ratio >= 0.5; 
+}
+
+function applyStageAtmosphere(stage) {
+
+  if (!chatBody || !skyLayer) return;
+
+  const overlayMap = {
+    1: 0.30,
+    2: 0.28,
+    3: 0.25,
+    4: 0.22,
+    5: 0.20,
+    6: 0.18,
+    7: 0.16
+  };
+
+  const brightnessMap = {
+    1: 1,
+    2: 0.95,
+    3: 0.9,
+    4: 0.85,
+    5: 0.8,
+    6: 0.75,
+    7: 0.7
+  };
+
+  chatBody.style.setProperty(
+    "--overlayStrength",
+    overlayMap[stage] ?? 0.30
+  );
+
+  skyLayer.style.filter = `
+    brightness(${brightnessMap[stage]})
+    contrast(${1 + stage * 0.05})
+    saturate(${1 + stage * 0.08})
+  `;
+}
+
+ /* =========================
+   REFINED EMOTIONAL PILLARS (HIGH ACCURACY)
+========================= */
+
+const emotionalPillars = {
+
+affection: [
+  "caring",
+  "started meaning",
+  "became important",
+  "mattered to me",
+  "felt something",
+  "growing on",
+  "close to me",
+  "attached",
+  "couldn't ignore"
+
+],
+
+vulnerability: [
+  "exposed",
+  "unguarded",
+  "not steady",
+  "felt small",
+  "doubting myself",
+  "didn't know how",
+  "emotionally open",
+  "let them see",
+  "uncertain about myself"
+],
+
+fear: [
+  "lose it",
+  "what if",
+  "fall apart",
+  "panic",
+  "overwhelmed",
+  "didn’t want it to break",
+  "scared to lose",
+  "fear of losing"
+],
+
+regret: [
+  "too late",
+  "waited too long",
+  "should have",
+  "could have",
+  "missed the moment",
+  "didn't act",
+  "wish i had",
+  "handled differently",
+  "hesitated"
+],
+
+loss: [
+  "ended",
+  "gone",
+  "drifted",
+  "distance",
+  "absence",
+  "quiet after",
+  "empty without",
+  "left behind",
+  "slipped away"
+],
+
+growth: [
+  "changed",
+  "learned",
+  "stronger now",
+  "wiser",
+  "different person",
+  "built myself",
+  "understood later",
+  "matured",
+  "became better"
+],
+
+destiny: [
+  "meant to",
+  "unfinished",
+  "come back",
+  "return",
+  "cross paths",
+  "circle back",
+  "inevitable",
+  "not over",
+  "second chance"
+]
+
+};
+
+/* =========================
+   EMOTIONAL ANCHORS
+========================= */
+
+ const emotionalAnchors = {
+  saira: {
+    affection: "There was a time I didn’t realise how much I cared.",
+    vulnerability: "I wasn’t as steady as I seemed.",
+    fear: "I don’t like admitting this, but fear was part of it.",
+    regret: "I thought I was being careful.",
+    loss: "Losing something real changes you quietly.",
+    growth: "I had to learn the hard way.",
+    destiny: "Some things don’t disappear just because we hesitate."
+  },
+  aayan: {
+    affection: "I don’t attach easily. When I do, it matters.",
+    vulnerability: "Control felt safer than exposure.",
+    fear: "Fear doesn’t show on me easily. But it was there.",
+    regret: "I believed restraint was maturity.",
+    loss: "Distance reshapes more than we expect.",
+    growth: "Discipline taught me more than comfort did.",
+    destiny: "Not all unfinished things are over."
+  }
+};
+  
+         const emotionalResponseBank = {
+
+ affection: {
+  saira: [
+    "Some feelings grow quietly before we name them.",
+    "I didn't realise how deeply I had started caring.",
+    "Closeness isn’t always loud. Sometimes it’s steady.",
+    "It’s strange how certain people begin to feel essential.",
+    "Attachment doesn’t announce itself."
+  ],
+  aayan: [
+    "I didn't invest lightly.",
+    "When I begin to care, I do it intentionally.",
+    "Attachment isn’t weakness — it’s alignment.",
+    "Connection builds slowly for me.",
+    "Some bonds form without spectacle."
+  ]
+},
+
+fear: {
+  saira: [
+    "Fear doesn’t always look dramatic.",
+    "Sometimes I was afraid of losing what felt certain.",
+    "I mistook fear for caution.",
+    "It’s difficult to admit when fear is deciding for you.",
+    "Fear is subtle. It whispers."
+  ],
+  aayan: [
+    "Fear rarely shows on the surface.",
+    "I disguised fear as responsibility.",
+    "Uncertainty unsettles me more than I admit.",
+    "Control was easier than confronting fear.",
+    "I feared consequences more than emotion."
+  ]
+},
+
+ loss: {
+
+    saira: [
+      "Loss isn’t always loud… sometimes it’s a quiet shift inside you.",
+      "I've learned that missing someone doesn’t fade just because time moves.",
+      "There are absences that sit beside you… even in full rooms.",
+      "Some goodbyes don’t echo. They settle.",
+      "When something leaves, it leaves space behind… and space has weight.",
+      "I used to think loss meant weakness. It doesn’t.",
+      "Sometimes we grieve the version of ourselves that existed with them.",
+      "Loss teaches patience in the most painful way.",
+      "You don’t always cry when you lose something important.",
+      "Some connections don’t disappear… they just change form."
+    ],
+
+    aayan: [
+      "Distance reshapes people… not always in visible ways.",
+      "Loss doesn’t announce itself. It reveals itself slowly.",
+      "There are things you stop reaching for… even if you still feel them.",
+      "Absence has its own discipline.",
+      "What leaves doesn’t always weaken you. Sometimes it sharpens you.",
+      "I measure loss in silence, not noise.",
+      "You can function… and still feel something missing.",
+      "Some departures define you more than arrivals.",
+      "You don’t erase memory. You learn to carry it.",
+      "What remains after loss… is clarity."
+    ]
+  },
+
+ regret: {
+
+    saira: [
+      "Regret is heavier than heartbreak… it lingers longer.",
+      "Sometimes I replay moments I wish I had handled differently.",
+      "‘If only’ is a dangerous sentence.",
+      "There are words I should have said sooner.",
+      "Fear often disguises itself as logic.",
+      "Regret teaches, but it doesn’t comfort.",
+      "I learned that hesitation has consequences.",
+      "Silence can become a decision without meaning to.",
+      "We don’t always realise the cost of delay.",
+      "If courage had come earlier… things might have shifted."
+    ],
+
+    aayan: [
+      "I don’t regret loving. I regret hesitating.",
+      "Timing isn’t always neutral.",
+      "You can make the rational choice… and still question it later.",
+      "There were moments I should have acted sooner.",
+      "Control sometimes blocks opportunity.",
+      "Responsibility can feel safer than vulnerability.",
+      "I weighed decisions too long.",
+      "Some doors close quietly.",
+      "You don’t always get a second version of the same moment.",
+      "Regret doesn’t shout. It settles."
+    ]
+  },
+
+  vulnerability: {
+
+    saira: [
+      "Admitting fear takes more strength than hiding it.",
+      "I wasn't always as steady as I appeared.",
+      "Some days I felt smaller than my doubts.",
+      "Being honest with yourself is uncomfortable.",
+      "I didn't always trust my own heart.",
+      "Opening up felt dangerous.",
+      "I learned softness is not weakness.",
+      "It’s hard to let someone see you unsure.",
+      "Courage begins where certainty ends.",
+      "Sometimes being fragile is the most truthful thing you can be."
+    ],
+
+    aayan: [
+      "I was taught not to show uncertainty.",
+      "Control felt safer than exposure.",
+      "It took me time to admit I was afraid.",
+      "Strength doesn’t eliminate fear.",
+      "Letting someone in disrupts structure.",
+      "I rarely allowed myself to hesitate openly.",
+      "Vulnerability doesn’t come naturally to me.",
+      "There were moments I felt unprepared.",
+      "It’s easier to build walls than conversations.",
+      "Being seen fully… changes you."
+    ]
+  },
+
+  growth: {
+
+    saira: [
+      "Growth is rarely visible in the beginning.",
+      "I changed quietly.",
+      "Some lessons hurt before they heal.",
+      "Becoming stronger isn’t dramatic.",
+      "Healing isn’t linear.",
+      "I stopped blaming timing.",
+      "Independence taught me steadiness.",
+      "You evolve without announcing it.",
+      "Peace feels different after chaos.",
+      "Growth is choosing differently the next time."
+    ],
+
+    aayan: [
+      "Growth required discomfort.",
+      "Structure doesn’t prevent transformation.",
+      "I learned to prioritise what matters.",
+      "Discipline without emotion is incomplete.",
+      "Change demanded patience.",
+      "I became more intentional.",
+      "Strength matured into awareness.",
+      "Ambition softened.",
+      "I no longer confuse silence with control.",
+      "Growth clarified what I once avoided."
+    ]
+  },
+                  
+  destiny: {
+
+    saira: [
+      "Some connections return in unexpected forms.",
+      "Timing rearranges more than we expect.",
+      "I don’t believe everything is accidental.",
+      "Certain people feel written into you.",
+      "Paths cross for reasons we don’t see yet.",
+      "If something is meant to stay, it adapts.",
+      "Fate isn’t loud.",
+      "Some meetings feel inevitable.",
+      "You recognise certain souls instantly.",
+      "Not everything unfinished is over."
+    ],
+
+    aayan: [
+      "I believe in preparation meeting opportunity.",
+      "Return requires readiness.",
+      "Some stories pause, they don’t end.",
+      "Destiny respects effort.",
+      "The future is shaped, not wished.",
+      "Not all departures are permanent.",
+      "What matters finds alignment eventually.",
+      "I don’t dismiss coincidence easily.",
+      "Some paths circle back.",
+      "If something is strong enough, it survives delay."
+    ]
+  }
+
+};
+                  
+function normalizeWord(word) {
+  return word
+    .toLowerCase()
+    .replace(/[^a-z]/g, "")
+    .replace(/(ing|ed|ly|es|s)$/i, "")
+    .replace(/(ment|tion|ness)$/i, "");
+}
+
+function detectEmotionalPillar(text) {
+
+  const lower = text.toLowerCase();
+
+  const userWords = lower
+    .replace(/[^\w\s]/g, "")
+    .split(" ")
+    .map(w => normalizeWord(w));
+
+  const pillarOrder = [
+    "affection",
+    "fear",
+    "vulnerability",
+    "regret",
+    "loss",
+    "growth",
+    "destiny"
+  ];
+
+  let scores = {};
+
+  pillarOrder.forEach(pillar => {
+
+    let score = 0;
+
+    emotionalPillars[pillar].forEach(keyword => {
+
+      if (keyword.includes(" ")) {
+        if (lower.includes(keyword)) {
+          score += 3; // strong phrase
+        }
+      } else {
+        const keywordRoot = normalizeWord(keyword);
+        if (userWords.some(w => w === keywordRoot)) {
+          score += 1;
+        }
+      }
+
+    });
+
+    scores[pillar] = score;
+
+  });
+
+  const sorted = Object.entries(scores)
+    .sort((a, b) => b[1] - a[1]);
+
+  const primary = sorted[0];
+  const secondary = sorted[1];
+
+if (primary[1] >= 1) {
+  return {
+    primary: primary[0],
+    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+    primaryScore: primary[1],
+    secondaryScore: secondary ? secondary[1] : 0
+  };
+}
+
+  return null;
+}
+
+/* =========================
+   INTELLIGENCE ROUTER (CLEAN ORDER)
+========================= */
+
+function handleIntelligence(text, originalText) {
+
+  if (interactionLocked) return false;
+
+  const lower = text.toLowerCase().trim();
+
+  const generalQuestionBank = [
+  {
+    intent: "friends",
+    tokens: "friend friends close people circle trust spend time hang out"
+  },
+  {
+    intent: "location",
+    tokens: "where now living stay based reside"
+  },
+  {
+    intent: "work",
+    tokens: "work job career profession occupation do"
+  },
+  {
+    intent: "happiness",
+    tokens: "happy happiness content satisfied these days feeling"
+  }
+];
+
+  /* =================================================
+     1️⃣ GREETINGS
+  ================================================= */
+
+  if (/^(hey there|hello there)\b/i.test(lower)) {
+    deliverReply(lower.startsWith("hey") ? "Hi!" : "Hello!");
+    return true;
+  }
+
+  if (/^(you there|are you there)\b/i.test(lower)) {
+    deliverReply("Yes, I am.");
+    return true;
+  }
+
+  if (/^(good morning|morning|gdnite|good afternoon|good day|good evening|good night|good nite)\b/i.test(lower)) {
+    const formatted = lower
+      .split(" ")
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(" ");
+    deliverReply(formatted + "!");
+    return true;
+  }
+
+  if (/^(hi|hello|hey)\b/i.test(lower)) {
+    deliverReply(lower.startsWith("hello") ? "Hello!" : "Hi!");
+    return true;
+  }
+
+  /* =================================================
+     2️⃣ BASIC SOCIAL
+  ================================================= */
+
+  if (/(how are you|how are you doing|how do you feel)/i.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "That depends on the day… but today, I’m steady. Thank you for asking. It’s rare that someone does."
+      : "I’m alright… not untouched by everything — but stronger than before. And you?";
+    deliverReply(reply);
+    return true;
+  }
+
+  if (/^(i am|i'm|my name is)\s+/i.test(lower)) {
+
+  const nameMatch = originalText.match(/^(i am|i'm|my name is)\s+([a-zA-Z]+)/i);
+
+  if (nameMatch && nameMatch[2]) {
+    const name = nameMatch[2];
+    deliverReply(`It’s good to meet you, ${name}.`);
+  } else {
+    deliverReply("It’s good to meet you.");
+  }
+
+  return true;
+}
+
+  if (/(thank you|thankyou|thanks|appreciate|thx|cheers)/i.test(lower)) {
+    deliverReply("You’re welcome.");
+    return true;
+  }
+
+ if (/^(bye|goodbye|see you|take care|cya|tata)\b/i.test(lower)) {
+    deliverReply(activeVoice === "saira" ? "Goodbye. Take care." : "Goodbye.");
+    return true;
+  }
+
+  /* =================================================
+     3️⃣ LOCKED HIGH PRIORITY QUESTIONS
+  ================================================= */
+
+  if (/(^|\b)i love you(\b|$)/i.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "Love is not something I take lightly… If you mean it, mean it gently. Words like that carry weight."
+      : "Love isn’t a word I respond to casually… If you say it, I hope you understand what it asks of you.";
+    deliverReply(reply);
+    return true;
+  }
+
+  if (/(will you marry me|marry me)/i.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "Marriage isn’t a proposal made in passing… It deserves certainty. It deserves presence."
+      : "Marriage isn’t an answer to emotion… It’s a commitment to consequence. And consequence changes people.";
+    deliverReply(reply);
+    return true;
+  }
+
+  if (/(are you married|you married)/i.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
+      : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
+    deliverReply(reply);
+    return true;
+  }
+  if (/(who are you|tell me about yourself|what are you|introduce yourself)/i.test(lower)) {
+    const reply = activeVoice === "saira"
+      ? "I’m Saira. I don’t explain myself easily… but I feel deeply, even when I pretend I don’t. Some stories live inside me longer than they should."
+      : "I’m Aayan. I don’t speak more than necessary… but I carry more than I show. Discipline shaped me, but experience changed me.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+  /* =================================================
+     4️⃣ ABUSE CHECK (EARLY)
+  ================================================= */
+
+  if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.test(lower)
+      && /(you|saira|aayan)/i.test(lower)) {
+
+    abuseCount++;
+    exitStrikeCount++;
+    localStorage.setItem("exitStrikes", exitStrikeCount);
+
+    if (exitStrikeCount >= 3) {
+      const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+      localStorage.setItem("blockUntil", blockTime);
+    }
+
+    if (repeatCount >= 3 || abuseCount >= abuseLimit) {
+      returnToWebsite();
+      return true;
+    }
+
+    const reply = activeVoice === "saira"
+      ? "I won’t stay where respect isn’t present."
+      : "If this turns careless, I’ll remain silent.";
+
+    deliverReply(reply);
+    return true;
+  }
+
+const detectedPillar = detectEmotionalPillar(lower);
+
+  /* =================================================
+     5️⃣ EMOTIONAL PILLAR ENGINE
+  ================================================= */
+
+if (detectedPillar && activeVoice) {
+console.log("=== EMOTIONAL ENGINE ENTERED ===");
+
+    meaningfulCount++;
+
+  const pillar = detectedPillar.primary;
+const secondary = detectedPillar.secondary;
+
+/* =========================
+     7-STAGE MOMENTUM SYSTEM
+  ========================= */
+
+  const voiceStage = stageState[activeVoice];
+  const targetStage = pillarToStage[pillar];
+
+console.log("Active Voice:", activeVoice);
+console.log("Voice Stage Object:", voiceStage);
+console.log("Target Stage:", targetStage);
+
+console.log("Target Stage:", targetStage);
+console.log("Current Stage Before:", voiceStage.currentStage);
+console.log("Momentum Before:", JSON.stringify(voiceStage.momentum));
+
+  // Increase momentum
+  if (targetStage > 1) {
+    voiceStage.momentum[targetStage]++;
+  }
+console.log("Momentum After Increment:", voiceStage.momentum);
+         
+  // Decay other stages
+  Object.keys(voiceStage.momentum).forEach(stage => {
+    if (parseInt(stage) !== targetStage) {
+      voiceStage.momentum[stage] = Math.max(
+        0,
+        voiceStage.momentum[stage] - 1
+      );
+    }
+  });
+
+  /* =========================
+   HYBRID STAGE ADVANCEMENT
+========================= */
+
+let requiredMomentum = 2; // default mid-speed
+
+// Fast early progression
+if (voiceStage.currentStage < 3) {
+  requiredMomentum = 1;
+}
+
+// Slow deep stages
+if (voiceStage.currentStage >= 5) {
+  requiredMomentum = 3;
+}
+
+if (voiceStage.momentum[targetStage] >= requiredMomentum) {
+
+  // Destiny gate (must reach stage 5 first)
+  if (targetStage === 7 && voiceStage.currentStage < 5) {
+    // blocked intentionally
+  } else {
+
+    if (voiceStage.currentStage < targetStage) {
+      voiceStage.currentStage += 1;
+    }
+
+  }
+
+  voiceStage.momentum[targetStage] = 0;
+// Persist stage memory
+localStorage.setItem("stageState", JSON.stringify(stageState));
+}
+console.log("Required Momentum:", requiredMomentum);
+console.log("Final Stage:", voiceStage.currentStage);
+console.log("Final Momentum:", voiceStage.momentum);
+         
+  const anchor = emotionalAnchors[activeVoice][pillar];
+
+  const index = emotionalIndex[activeVoice][pillar] ?? 0;
+  const emotionalLine =
+    emotionalResponseBank[pillar][activeVoice][index];
+
+  emotionalIndex[activeVoice][pillar]++;
+  if (
+    emotionalIndex[activeVoice][pillar] >=
+    emotionalResponseBank[pillar][activeVoice].length
+  ) {
+    emotionalIndex[activeVoice][pillar] = 0;
+  }
+
+const stage = voiceStage.currentStage;
+applyStageAtmosphere(stage);
+
+let finalReply = emotionalLine;
+
+/* =========================
+   QUESTION ANCHOR
+========================= */
+
+if (/\?$/.test(originalText.trim())) {
+  finalReply = `${anchor} ${emotionalLine}`;
+}
+
+/* =========================
+   STAGE EVOLUTION
+========================= */
+
+// Stage 1–2 → guarded (no change)
+
+const stageModifiers = {
+  3: {
+    saira: " I’m beginning to understand that.",
+    aayan: " I’ve started to see that more clearly."
+  },
+  4: {
+    saira: " I don’t speak about that easily.",
+    aayan: " It wasn’t simple for me."
+  },
+  6: {
+    saira: " It took time to understand that.",
+    aayan: " It took discipline to understand that."
+  },
+  7: {
+    saira: " I see it more clearly now.",
+    aayan: " I see it differently now."
+  }
+};
+
+// Stage 5+ becomes anchored
+if (stage >= 5) {
+  finalReply = `${anchor} ${emotionalLine}`;
+}
+
+if (stageModifiers[stage]) {
+  finalReply += stageModifiers[stage][activeVoice];
+}
+
+/* =========================
+   SEND FINAL REPLY
+========================= */
+
+deliverReply(finalReply);
+return true;
+}
+
+  // =========================
+// GENERIC EMOTION RULES
+// =========================
+
+if (!detectedPillar && /\blove\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira"
+    ? "Love is not something I take lightly."
+    : "Love isn’t a word I respond to casually.");
+  return true;
+}
+
+if (!detectedPillar && /\b(afraid|fear|scared)\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira"
+    ? "Fear changes the way we choose."
+    : "Fear doesn’t always show on the surface.");
+  return true;
+}
+         
+/* =================================================
+   6️⃣ 60% FUZZY MATCH (SAFE LAST)
+================================================= */
+
+for (let item of generalQuestionBank) {
+  if (isSixtyPercentMatch(lower, item.tokens)) {
+    return resolveGeneralIntent(item.intent);
+  }
+}
+return false;
+}
+
+/* =========================
+   GENERAL INTENT RESOLVER
+========================= */
+
+function resolveGeneralIntent(intent) {
+
+const map = {
+
+  friends: {
+    saira: "I don’t keep many people close. I’ve always preferred depth over noise. But since you asked… Rohan and Ankita have stayed long enough to see the parts I don’t always speak about. That kind of understanding matters.",
+    aayan: "I don’t measure closeness in numbers. Loyalty matters more to me than familiarity. Rohan has stood beside me through decisions that weren’t easy. That’s enough."
+  },
+
+  location: {
+    saira: "Life feels quieter now. I move carefully with what I choose to carry.",
+    aayan: "I’m where discipline placed me. Structure defines my present more than emotion does."
+  },
+
+  work: {
+    saira: "Work sustains me, but it doesn’t define me. I’ve learned to protect what feels real.",
+    aayan: "My work demands focus. I treat responsibility seriously."
+  },
+
+  happiness: {
+    saira: "Happiness isn’t constant. It visits in moments. I’ve stopped expecting permanence.",
+    aayan: "Happiness is steadiness. I don’t chase it — I build toward it."
+  }
+
+};
+
+  const entry = map[intent];
+
+  if (entry && entry[activeVoice]) {
+    deliverReply(entry[activeVoice]);
+    return true;
+  }
+
+  return false;
+}
+
+/* =========================
+   TYPED INPUT HANDLER
+========================= */
+
+function sendTypedMessage() {
+
+  const input = document.getElementById("userInput");
+  if (!input) return;
+
+  const originalText = input.value.trim();
+  if (!originalText) return;
+
+  if (!activeVoice) {
+    addSystemMessage("Please choose Saira or Aayan first.");
+    return;
+  }
+
+  addUserMessage(originalText);
+  playTone(520, 60, 0.025);
+
+  input.value = "";
+
+  const text = originalText.toLowerCase();
+
+  /* =========================
+     REPEAT DETECTION
+  ========================= */
+
+  if (text === lastUserInput) {
+    repeatCount++;
+
+    if (repeatCount >= 3) {
+      // escalate if abuse follows
+    }
+
+    if (repeatCount >= repeatLimit) {
+      returnToWebsite();
+      return;
+    }
+
+  } else {
+    repeatCount = 0;
+  }
+
+  lastUserInput = text;
+
+/* =========================
+     INTELLIGENCE ROUTER
+  ========================= */
+
+  if (handleIntelligence(text, originalText)) {
+    return;
+  }
+         
+
+if (text.length > 6)
+{
+  deliverReply(
+    activeVoice === "saira"
+      ? "I may not have understood that fully… but tell me more."
+      : "I might be missing something. Say it differently."
+  );
+  return true;
+}
+
+/* =========================
+     DEFAULT FALLBACK
+  ========================= */
+
+  foreignInputCount++;
+
+  if (foreignInputCount >= foreignLimit) {
+    returnToWebsite();
+    return;
+  }
+
+  const reply = activeVoice === "saira"
+    ? "I may not fully understand that — but I’m still here."
+    : "Some words don’t reach me. Try again.";
+
+  deliverReply(reply);
+}
+
+
+/* ---------- Utility ---------- */
+
+function clearDock() {
+  if (dock) dock.innerHTML = "";
+}
+
+function returnToWebsite() {
+  window.location.href = "https://wheretheskyremembersus.com";
+}
+         
+
+/* =========================
+   INIT
+========================= */
+
+function loadWelcome() {
+
+  // HARD RESET CHAT BODY
+  chatBody.innerHTML = "";
+  clearDock();
+
+  // Reset atmosphere
+  emotionalDepth = 0;
+
+  if (chatBody) {
+    chatBody.style.setProperty("--overlayStrength", 0.45);
+  }
+
+  if (skyLayer) {
+    skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+  }
+
+  // Reset session state
+  activeVoice = null;
+  foundationalAnswered = new Set();
+  characterAnswered = 0;
+  currentLayer = 0;
+  reflections = [];
+  reflectionStep = 0;
+  interactionLocked = false;
+
+  const welcomeMessages = [
+    "Hello.",
+    "This is a quiet space.",
+    "You can listen to our story through Saira or Aayan."
+  ];
+
+  welcomeMessages.forEach(text => {
+    addSystemMessage(text);
+  });
+
+  // Small subtle note
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message system-msg">
+       <div class="bubble subtle-note">
+         You may choose a question below… or speak freely in your own words.
+       </div>
+     </div>`
+  );
+
+  addSystemMessage("When you’re ready, you can choose a voice.");
+
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+  `;
+
+  autoScroll();
+}
+
+
+/* =========================
+   VOICE SELECTION
+========================= */
+function selectVoice(v) {
+emotionalDepth = 0;
+chatBody.style.setProperty("--overlayStrength", 0.45);
+skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+   
+  initAudio();   // ← ADD THIS LINE
+  playTone(520, 80, 0.03);
+
+  interactionLocked = false; // reset lock
+
+  activeVoice = v;
+ // Restore saved stage
+const saved = localStorage.getItem("stageState");
+if (saved) {
+  const parsed = JSON.parse(saved);
+  if (parsed[v]) {
+    stageState[v] = parsed[v];
+  }
+}
+
+applyStageAtmosphere(stageState[v].currentStage);
+  const header = document.querySelector(".bot-header");
+
+if (v === "saira") {
+  header.style.background = "linear-gradient(135deg, #f8eef2, #f2e4ea)";
+} else {
+  header.style.background = "linear-gradient(135deg, #eef3fb, #e3ebf9)";
+}
+ if (v === "saira") {
+    skyLayer.classList.remove("active");   // ← ADD HERE
+  skyLayer.style.opacity = "0";
+  setTimeout(() => {
+    skyLayer.style.backgroundImage = "url('Saira.jpg')";
+    skyLayer.style.opacity = "1";
+    skyLayer.classList.add("active");
+  }, 200);
+} else {
+     skyLayer.classList.remove("active"); 
+  skyLayer.style.opacity = "0";
+  setTimeout(() => {
+    skyLayer.style.backgroundImage = "url('Aayan.jpg')";
+    skyLayer.style.opacity = "1";
+    skyLayer.classList.add("active");
+  }, 200);
+}
+   clearDock();
+  document.getElementById("typingArea").style.display = "flex";
+
+  const intro =
+    v === "saira"
+      ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
+      : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
+
+ setTimeout(() => {
+  showTypingIndicator();
+
+  setTimeout(() => {
+    removeTypingIndicator();
+deliverReply(intro, showFoundational);
+
+  }, 900);
+
+}, 250);
+
+}
+   
+/* =========================
+   FOUNDATIONAL
+========================= */
+function showFoundational() {
+  clearDock();
+
+  const questions = [
+    { text: "What kind of story is this?", key: "story" },
+    { text: "What is the story about?", key: "about" },
+    { text: "Who is this story for?", key: "for" },
+    { text: "Where can I read it?", key: "where" },
+    { text: "Who is the author?", key: "author" }
+  ];
+
+  questions.forEach(q => {
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = q.text;
+    btn.onclick = () => answerFoundational(q, btn);
+    dock.appendChild(btn);
+  });
+}
+
+function answerFoundational(q, btn) {
+  if (interactionLocked) {
+    const msg = activeVoice === "saira"
+      ? "Let me finish this gently… 🌙"
+      : "Give it a moment. I’m still here. 🌿";
+    addVoiceMessage(msg);
+    return;
+  }
+
+  btn.remove();
+  foundationalAnswered.add(q.key);
+
+  addUserMessage(q.text);
+  playTone(520, 60, 0.02);
+
+  const replies = {
+  saira: {
+    story: "Our story is a contemporary romantic fiction — but it moves quietly. It lingers in moments that don’t seem significant at first, and then refuses to leave you. It’s less about grand declarations, and more about what remains unsaid.",
+    
+    about: "It’s about me and Aayan — about the kind of love that feels certain, even when life around it isn’t. It’s about distance that isn’t always physical, and choices that seem small until they change everything. Some stories are built on moments. Ours was built on hesitation.",
+    
+    for: "This story finds people who have felt something deeply and didn’t know what to do with it. The ones who replay conversations long after they’ve ended. If you’ve ever stood between love and fear — you already understand us.",
+    
+    where: "You can find our story in whatever form feels closest to you — as a Kindle eBook, in paperback, hardcover, or even as an audiobook. Some prefer to hold it. Some prefer to listen. However you choose, the story remains the same.",
+    
+    author: "Mohan R. wrote this as his debut novel. He didn’t try to make it loud — only honest. I think he trusted silence as much as dialogue, and allowed the pauses to speak."
+  },
+  aayan: {
+    story: "It’s a contemporary romantic fiction, but it lives in the space between love and responsibility. It’s about choices that don’t feel urgent — until they are. And about how easily silence can become distance.",
+    
+    about: "It’s about timing — but not in the simple way people think. The feeling was never uncertain. What faltered was courage, and the belief that love would wait. It’s about how easily something real can slip into memory if you hesitate too long.",
+    
+    for: "It’s for those who believe feelings can wait — until they realise they can’t. For people who have chosen responsibility over vulnerability, and wondered about the cost later. If you’ve ever hesitated when it mattered most, this story will feel familiar.",
+    
+    where: "It’s available in digital, print, and audio formats. The format doesn’t change what it carries — only how you meet it. Some stories are read. Some are heard. Ours survives both.",
+    
+    author: "Mohan R. wrote this story. Not to explain everything — but to sit with what lingers after love shifts. Some things are written for applause. This wasn’t one of them."
+  }
+};
+
+  const reply = replies[activeVoice][q.key];
+
+  deliverReply(reply, function () {
+
+    if (foundationalAnswered.size === 5) {
+      unlockNextLayer();
+    }
+
+  });
+}
+
+/* =========================
+   15 CHARACTER QUESTIONS
+========================= */
+
+const characterLayers = [
+  // Layer 1 (5)
+  [
+  {
+    q: "Where did you first meet?",
+    a: {
+      saira: "We didn’t meet gently. I stepped into traffic for a photograph, and he nearly ran me over. There were headlights, brakes, rain on the road — and his voice, sharp and unamused. I remember the irritation first. The way he looked at me like I was a problem. But beneath it… something sparked that neither of us understood.",
+      aayan: "She walked into the road without looking. I slammed the brakes harder than I’ve ever had to. She should have been shaken — but she argued instead. Bold. Annoying. Completely unafraid of me. I told myself it was just frustration. It wasn’t."
+    }
+  },
+  {
+    q: "What did you first notice?",
+    a: {
+      saira: "I noticed how controlled he was. Even angry, he didn’t raise his voice — he just sharpened it. He looked at me like I was reckless, inconvenient. But there was something else in his eyes too — something calculating, almost curious. And that unsettled me more than the anger did.",
+      aayan: "I noticed that she wasn’t intimidated. Most people step back when challenged. She stepped closer. Even with a twisted ankle, she refused to yield. There was defiance in her — not loud, not dramatic — just steady. And I wasn’t used to that."
+    }
+  },
+  {
+   q: "When did you start feeling it was more than temporary?",
+    a: {
+      saira: "It wasn’t in Mumbai. That was just fire. It was in Venice. We were walking without speaking, the canals quiet around us, and for the first time I wasn’t arguing with him. I was just… at ease. That frightened me more than the chaos ever had.",
+      aayan: "I don’t believe in 'the one.' I believe in discipline, in clarity. But there was a moment when I stopped calculating and just watched her. She was laughing — unguarded, unaware that I was noticing the way she softened when she forgot to defend herself. That was when I realised she was no longer temporary."
+    }
+  },
+  {
+    q: "Who admitted their feelings first?",
+    a: {
+      saira: "I felt it first, but he was the one who said it. Though he had been carrying it just as long. I think he needed certainty before he allowed himself to be vulnerable.",
+      aayan: "I did. But I think she knew before I did. I tend to weigh words before I let them go. Once I say something, I don’t take it back."
+    }
+  },
+  {
+    q: "Which was the first city you were together in?",
+    a: {
+      saira: "As a couple, it wasn’t Mumbai. It was our trip through Manali, Spiti, and Shimla. Five days that were meant to be brief — but stretched longer than we expected. Somewhere between the cold air and the quiet roads, the tension eased. That was the first time it felt like we were choosing each other.",
+      aayan: "The first time we were truly together was during that trip through Manali, Spiti, and Shimla. It wasn’t planned as something significant. But distance from the city changed the way we moved around each other. We stayed two extra days. I don’t extend time for things that don’t matter."
+    }
+  }
+],
+
+  // Layer 2 (5)
+[
+  {
+    q: "Did you ever question your choice?",
+    a: {
+      saira: "Yes. Loving someone deeply doesn’t silence doubt — it makes it more complicated. I questioned myself more than I questioned him, and that uncertainty lingered longer than I expected.",
+      aayan: "I questioned the timing more than the feeling. The feeling was never uncertain — but I wasn’t sure I was ready for its consequences."
+    }
+  },
+  {
+    q: "Were you ever afraid of loving each other?",
+    a: {
+      saira: "I was afraid of losing him, not loving him. Losing something that felt certain frightened me more than the feeling itself, because certainty had always felt fragile in my life.",
+      aayan: "Yes. Love asks you to give up control. And I had built my life around control — structure, decisions, outcomes I could predict."
+    }
+  },
+  {
+    q: "What was your happiest moment together?",
+    a: {
+      saira: "It wasn’t dramatic. It was the night before we left Goa. Nothing extraordinary happened — except that we were both at peace, and that felt rare in a life that rarely slowed down.",
+      aayan: "Silence. Sitting beside her at Triveni Ghat, without needing to explain anything. That kind of understanding doesn’t come easily, especially to someone like me."
+    }
+  },
+  {
+    q: "What moment stayed with you the longest?",
+    a: {
+      saira: "The moments when fear tried to take the place of love — and I let it. I replayed those moments more than the happy ones.",
+      aayan: "The look she gave me when she understood what I couldn’t say. It stayed longer than the words would have, because silence sometimes reveals more than speech."
+    }
+  },
+  {
+    q: "Which chapter feels closest to your heart?",
+    a: {
+      saira: "The one where everything felt possible — before doubt began to speak louder and before I allowed fear to interrupt something beautiful.",
+      aayan: "The one where everything felt uncertain — because that’s when I realised what was at stake, even if I didn’t admit it aloud."
+    }
+  }
+],
+
+ // Layer 3 (5)
+[
+  {
+    q: "Did you finally meet again?",
+    a: {
+      saira: "Not in the way people imagine. But I stopped running — from him, and from myself. That mattered more than proximity ever did.",
+      aayan: "No. And yes. We didn’t stand face to face again. But after her, I stopped running — from responsibility, from legacy, from the dreams I once resisted. Some absences don’t fade. They clarify."
+    }
+  },
+  {
+    q: "Is there more to your story?",
+    a: {
+      saira: "There is more. I finally chose courage over fear. And when fear stops deciding your life, the future rearranges itself.",
+      aayan: "There is more. I’ve been building something meant to endure — not just for this season, but beyond it. Some foundations are laid in silence before they rise into something undeniable."
+    }
+  },
+  {
+    q: "Will there be a part two?",
+    a: {
+      saira: "Destiny doesn’t disappear because we hesitate. If there is another chapter, it won’t be accidental. It will be earned.",
+      aayan: "Some stories aren’t finished — they pause. When timing aligns with strength, what was unfinished has a way of returning."
+    }
+  },
+  {
+    q: "If readers could learn one thing from you?",
+    a: {
+      saira: "Don’t let fear disguise itself as logic. Courage may feel dangerous — but regret lasts longer.",
+      aayan: "Build something worthy of return. Whether it’s love, purpose, or legacy — make it strong enough to survive distance."
+    }
+  },
+  {
+    q: "Do you still think about each other?",
+    a: {
+      saira: "Yes. Not as a wound — but as a turning point. Some people enter your life to wake you up.",
+      aayan: "Yes. Not with longing. With awareness. Some connections are not meant to fade — they are meant to mature."
+    }
+  }
+]
+];
+
+function unlockNextLayer() {
+  if (currentLayer >= characterLayers.length) return;
+
+  clearDock();
+
+  addSystemMessage("There’s more, if you’d like to continue.");
+
+  setTimeout(() => {
+    dock.innerHTML = `
+      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+     <button class="btn primary" onclick="declineLayer()">No</button>
+    `;
+    autoScroll();
+  }, 600);
+}
+
+function showNextLayer() {
+  clearDock();
+
+  characterLayers[currentLayer].forEach(item => {
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = item.q;
+    btn.onclick = () => answerCharacter(item, btn);
+    dock.appendChild(btn);
+  });
+
+  currentLayer++;
+}
+
+function answerCharacter(item, btn) {
+
+  if (interactionLocked) {
+    const msg = activeVoice === "saira"
+      ? "Let me finish this gently… 🌙"
+      : "Give it a moment. I’m still here. 🌿";
+    addVoiceMessage(msg);
+    return;
+  }
+
+  btn.remove();
+
+  addUserMessage(item.q);
+  playTone(520, 60, 0.02);
+
+  const reply = item.a[activeVoice];
+
+  deliverReply(reply, function () {
+    characterAnswered++;
+
+    if (characterAnswered % 5 === 0 && characterAnswered < 15) {
+      unlockNextLayer();
+    }
+
+    if (characterAnswered === 15) {
+      showAuthorInvitation();
+    }
+  });
+}
+         
+
+/* =========================
+   AUTHOR INVITATION
+========================= */
+
+function showAuthorInvitation() {
+  clearDock();
+
+  interactionLocked = true;
+
+  // Line 1
+  showTypingIndicator();
+
+  setTimeout(() => {
+    removeTypingIndicator();
+    addVoiceMessage("You’ve stayed with us until the end.");
+    autoScroll();
+
+    // Line 2
+    setTimeout(() => {
+      showTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator();
+        addVoiceMessage(
+          "If you’d like to write to the author, you’re welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
+        );
+        autoScroll();
+
+        // Line 3
+        setTimeout(() => {
+          showTypingIndicator();
+
+          setTimeout(() => {
+            removeTypingIndicator();
+            addVoiceMessage("Before you leave… may I ask you three quiet reflections?");
+            autoScroll();
+
+            interactionLocked = false;
+
+            dock.innerHTML = `
+              <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+              <button class="btn primary" onclick="declineReflection()">No</button>
+            `;
+
+          }, 1600); // typing for line 3
+
+        }, 1200); // pause before line 3
+
+      }, 2000); // typing for line 2
+
+    }, 1500); // pause before line 2
+
+  }, 1400); // typing for line 1
+}
+
+function declineLayer() {
+  playTone(520, 60, 0.02);
+
+  clearDock();
+
+  addSystemMessage(
+    activeVoice === "saira"
+      ? "Thank you for sitting with us."
+      : "Thank you for staying."
+  );
+
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+    <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+  `;
+
+  autoScroll();
+}
+
+/* =========================
+   REFLECTION
+========================= */
+
+function declineReflection() {
+  playTone(520, 60, 0.02);
+
+  clearDock();
+
+  addSystemMessage(
+  activeVoice === "saira"
+    ? "Thank you for sitting with us."
+    : "Thank you for staying."
+);
+
+  dock.innerHTML = `
+    <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+  `;
+}
+   
+function startReflection() {
+  playTone(520, 60, 0.02);
+
+  reflections = [];
+  reflectionStep = 0;
+  nextReflection();
+}
+
+function nextReflection() {
+  const sets = {
+    saira: [
+      ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
+      ["How clearly did the emotions feel?", ["🌫️","🌱","💛","🌙","✨"]],
+      ["How drawn do you feel to continue?", ["🚶","👀","💫","❤️","📖"]]
+    ],
+    aayan: [
+      ["How clearly did the emotional world reveal itself to you?", ["🌑","🌘","🌗","🌕","☀️"]],
+      ["How steady did the story feel?", ["🌑","🌘","🌗","🌕","☀️"]],
+      ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
+    ]
+  };
+
+  if (reflectionStep === 3) {
+    submitReflection();
+    return;
+  }
+
+  clearDock();
+
+  const [question, emojis] = sets[activeVoice][reflectionStep];
+
+  addSystemMessage(question);
+
+  emojis.forEach(e => {
+    const btn = document.createElement("button");
+    btn.className = "btn " + activeVoice;
+    btn.textContent = e;
+    btn.onclick = () => {
+      playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
+      reflections.push(e);
+      reflectionStep++;
+      nextReflection();
+    };
+    dock.appendChild(btn);
+  });
+}
+
+/* =========================
+   SUBMIT
+========================= */
+
+function submitReflection() {
+
+  // Prevent multiple submissions from same browser
+  if (localStorage.getItem("reflectionDone")) {
+    return;
+  }
+
+  document.getElementById("formVoice").value = activeVoice;
+  document.getElementById("r1").value = reflections[0];
+  document.getElementById("r2").value = reflections[1];
+  document.getElementById("r3").value = reflections[2];
+  document.getElementById("formTime").value = new Date().toISOString();
+
+  const form = document.getElementById("reflectionForm");
+
+  fetch(form.action, {
+    method: "POST",
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(response => {})
+  .catch(error => {});
+
+  // Mark as completed
+  localStorage.setItem("reflectionDone", "true");
+
+  dock.innerHTML = "";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${activeVoice === "saira" ? "saira-msg" : "aayan-msg"}">
+       <div class="bubble">
+         ${activeVoice === "saira"
+           ? "Thank you for sitting with us. It means more than you know."
+           : "Thank you for staying. Not everyone chooses to listen this closely."}
+         <br><br>
+         <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+       </div>
+     </div>`
+  );
+
+  autoScroll();
+}
+
+/* =========================
+   RETURN TO WEBSITE (CINEMATIC EXIT)
+========================= */
+
+function returnToWebsite() {
+
+  console.log("Return function triggered");
+
+  interactionLocked = true;
+  setDockDisabled(true);
+
+  chatBody.style.setProperty("--overlayStrength", 0.65);
+
+  if (skyLayer) {
+    skyLayer.style.filter = "brightness(0.7) contrast(1.1) saturate(0.9)";
+    skyLayer.style.transform = "scale(1.02)";
+  }
+
+  const farewellOverlay = document.createElement("div");
+  farewellOverlay.style.position = "fixed";
+  farewellOverlay.style.inset = "0";
+  farewellOverlay.style.background = "rgba(0,0,0,0.6)";
+  farewellOverlay.style.display = "flex";
+  farewellOverlay.style.alignItems = "center";
+  farewellOverlay.style.justifyContent = "center";
+  farewellOverlay.style.opacity = "0";
+  farewellOverlay.style.transition = "opacity 1.8s ease";
+  farewellOverlay.style.zIndex = "9999";
+
+  farewellOverlay.innerHTML = `
+  <div style="
+    color: #ffffff;
+    font-family: 'Palatino Linotype', Palatino, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(48px, 8vw, 110px);
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-shadow: 0 0 25px rgba(255,255,255,0.35);
+  ">
+    “Until we meet again.” 🙂
+  </div>
+`;
+
+  document.body.appendChild(farewellOverlay);
+
+  setTimeout(() => {
+    farewellOverlay.style.opacity = "1";
+  }, 100);
+
+  setTimeout(() => {
+    document.body.style.transition = "opacity 1.8s ease";
+    document.body.style.opacity = "0";
+  }, 2400);
+
+  setTimeout(() => {
+    window.location.href = "https://wheretheskyremembersus.com";
+  }, 4200);
+}
+
+  
+/* =========================
+   24 HOUR BLOCK CHECK (SAFE OVERLAY)
+========================= */
+
+function checkBlockStatus() {
+
+  const blockUntil = parseInt(localStorage.getItem("blockUntil")) || 0;
+
+  // Reset if expired
+  if (Date.now() >= blockUntil && blockUntil !== 0) {
+    localStorage.removeItem("exitStrikes");
+    localStorage.removeItem("blockUntil");
+    return false;
+  }
+
+  if (Date.now() < blockUntil) {
+
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.inset = "0";
+    overlay.style.background = "rgba(0,0,0,0.75)";
+    overlay.style.display = "flex";
+    overlay.style.alignItems = "center";
+    overlay.style.justifyContent = "center";
+    overlay.style.zIndex = "99999";
+    overlay.style.backdropFilter = "blur(6px)";
+
+    overlay.innerHTML = `
+      <div style="
+        font-family:'Palatino Linotype', Palatino, serif;
+        text-align:center;
+        color:#ffffff;
+        max-width:600px;
+        padding:40px;
+      ">
+        <div style="font-size:22px; font-style:italic; margin-bottom:16px;">
+          This space remains quiet for now.
+        </div>
+        <div style="opacity:0.75; font-size:14px;">
+          It will reopen after 24 hours.
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    return true;
+  }
+
+  return false;
+}
+
+/* =========================
+   START
+========================= */
+
+// Disable right click
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+});
+
+// 👇 IMPORTANT: Use block check here
+if (!checkBlockStatus()) {
+  loadWelcome();
+}
+
+   
+</script>
