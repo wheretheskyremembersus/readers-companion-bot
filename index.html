@@ -1596,52 +1596,31 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
   return true;
 }
 
-         /* =========================
-   CROSS GENDER CORRECTION LAYER
+  /* =========================
+   CROSS GENDER CORRECTION + STILL FEEL (FINAL WORKING VERSION)
 ========================= */
 
-if (
-  /(her)/i.test(lower) &&
-  activeVoice === "saira"
-) {
-  lower = lower.replace(/\bher\b/gi, "him");
-}
-
-if (
-  /(him)/i.test(lower) &&
-  activeVoice === "aayan"
-) {
-  lower = lower.replace(/\bhim\b/gi, "her");
-}
-
-         /* =========================
-   CROSS GENDER CORRECTION (EMOTIONAL)
-========================= */
-
-if (/(her)/i.test(lower) && activeVoice === "saira") {
-
-  deliverReply("You mean him…");
-
-  setTimeout(() => {
-    // Let main emotional block handle full response
-  }, 400);
-
-  lower = lower.replace(/\bher\b/gi, "him");
-}
-
-if (/(him)/i.test(lower) && activeVoice === "aayan") {
-
-  deliverReply("You mean her…");
-
-  setTimeout(() => {
-    // Let main emotional block handle full response
-  }, 400);
-
-  lower = lower.replace(/\bhim\b/gi, "her");
-}
-
-/* ---------- Still Feel / Waiting / Moved On ---------- */
 if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waiting|have\s+you\s+moved\s+on|did\s+you\s+move\s+on|are\s+you\s+over\s+(him|her)|do\s+you\s+miss\s+(him|her)|where\s+is\s+(he|she)\s+now|where\s+are\s+they\s+now|do\s+you\s+still\s+think\s+about|do\s+you\s+pray\s+for|are\s+you\s+still\s+in\s+love)/i.test(lower)) {
+
+  // CROSS GENDER CORRECTION (spoken, not silent)
+
+  if (activeVoice === "saira" && /\bher\b/i.test(lower)) {
+    deliverReply("You mean him…");
+    setTimeout(() => {
+      deliverReply("Yes. I still feel for him. Some feelings don’t fade just because time moves. I don’t know where he is now… or who stands beside him. But my search never really ended. Not loudly. Not desperately. Just quietly — in the way your heart keeps listening for something it once recognised. And wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be. Sometimes, without even realising, I still pray for him.");
+    }, 600);
+    return true;
+  }
+
+  if (activeVoice === "aayan" && /\bhim\b/i.test(lower)) {
+    deliverReply("You mean her…");
+    setTimeout(() => {
+      deliverReply("She is always there with me. Not in a way the world can see — but in the spaces that shaped me. I don’t know where she stands now, or what her life looks like. But some connections don’t dissolve. They settle into you. I haven’t erased her. I don’t think I ever will. And wherever she is… I hope she is protected. I hope she is at peace. Some prayers are not about return. They are simply about love that never wished harm.");
+    }, 600);
+    return true;
+  }
+
+  // NORMAL MATCH (no correction needed)
 
   const reply = activeVoice === "saira"
     ? "Yes. I still feel for him. Some feelings don’t fade just because time moves. I don’t know where he is now… or who stands beside him. But my search never really ended. Not loudly. Not desperately. Just quietly — in the way your heart keeps listening for something it once recognised. And wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be. Sometimes, without even realising, I still pray for him."
@@ -1650,6 +1629,7 @@ if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waitin
   deliverReply(reply);
   return true;
 }
+
 
 /* =================================================
    4️⃣ ABUSE CHECK
