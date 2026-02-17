@@ -1590,11 +1590,13 @@ if (
   }
 
   if (/(are you married|you married)/i.test(lower)) {
-    const reply = activeVoice === "saira"
-      ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
-      : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
-    deliverReply(reply);
-    return true;
+  const reply = activeVoice === "saira"
+    ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
+    : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
+  deliverReply(reply);
+  return true;
+}
+
 /* =========================
    INTRODUCTION / IDENTITY CLUSTER (IMMERSIVE)
 ========================= */
