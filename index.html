@@ -1475,32 +1475,33 @@ function handleIntelligence(text, originalText) {
 ];
 
   /* =================================================
-     1️⃣ GREETINGS
-  ================================================= */
+   1️⃣ GREETINGS (Expanded Coverage)
+================================================= */
 
-  if (/^(hey there|hello there)\b/i.test(lower)) {
-    deliverReply(lower.startsWith("hey") ? "Hi!" : "Hello!");
-    return true;
-  }
+// Casual / standard greetings
+if (/^(hi|hii|hiii|hey|heyy|hello|hello there|hey there|hola|yo|sup|wassup)\b/i.test(lower)) {
+  deliverReply(lower.startsWith("hello") ? "Hello!" : "Hi!");
+  return true;
+}
 
-  if (/^(you there|are you there)\b/i.test(lower)) {
-    deliverReply("Yes, I am.");
-    return true;
-  }
+// Time-based greetings (text only, no time awareness logic)
+if (/(^|\b)(good morning|good afternoon|good evening|good night|morning|evening|gm|gn)\b/i.test(lower)) {
+  deliverReply("Hello!");
+  return true;
+}
 
-  if (/^(good morning|morning|gdnite|good afternoon|good day|good evening|good night|good nite)\b/i.test(lower)) {
-    const formatted = lower
-      .split(" ")
-      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
-    deliverReply(formatted + "!");
-    return true;
-  }
+// Presence checks
+if (/(you there|are you there|still there|anyone there|can you hear me)\b/i.test(lower)) {
+  deliverReply("Yes.");
+  return true;
+}
 
-  if (/^(hi|hello|hey)\b/i.test(lower)) {
-    deliverReply(lower.startsWith("hello") ? "Hello!" : "Hi!");
-    return true;
-  }
+// Soft entry statements
+if (/(just saying hi|came to say hi|thought i’d say hi|thought i'd say hi|i’m here|im here)\b/i.test(lower)) {
+  deliverReply("Hello.");
+  return true;
+}
+
 
   /* =================================================
      2️⃣ BASIC SOCIAL
