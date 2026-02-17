@@ -1578,11 +1578,6 @@ if (/(who\s+is\s+a+yaan|who\s+is\s+aayan|tell\s+me\s+about\s+a+yaan|tell\s+me\s+
   return true;
 }
 
-if (/(where\s+is\s+a+yaan|where\s+is\s+aayan)/i.test(lower)) {
-  deliverReply("Aayan doesn’t exist outside the path he chose. His journey continues in the discipline he built, in the silence he learned from, and in the life he reshaped after love altered him.");
-  return true;
-}
-
 if (/(who\s+is\s+saira|tell\s+me\s+about\s+saira|who\s+exactly\s+is\s+saira)/i.test(lower)) {
   deliverReply("Saira feels before she calculates. She appears strong, but she carries quiet uncertainty. She believes in love — even when she fears it.");
   return true;
@@ -1597,7 +1592,35 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
   return true;
 }
 
-         /* =========================
+/* =========================
+   CROSS CHARACTER NAME (QUESTION SPECIFIC)
+========================= */
+
+// When asking WHERE about the other by name
+
+if (activeVoice === "saira" && /\bwhere\s+is\s+aayan\b/i.test(lower)) {
+  deliverReply("I don’t know where he is now… or who stands beside him. But wherever he is… I hope he is safe.");
+  return true;
+}
+
+if (activeVoice === "aayan" && /\bwhere\s+is\s+saira\b/i.test(lower)) {
+  deliverReply("I don’t know where she stands now. But wherever she is… I hope she is protected.");
+  return true;
+}
+
+// When just mentioning the other casually
+
+if (activeVoice === "saira" && /\baayan\b/i.test(lower)) {
+  deliverReply("You’re thinking about him.");
+  return true;
+}
+
+if (activeVoice === "aayan" && /\bsaira\b/i.test(lower)) {
+  deliverReply("You’re thinking about her.");
+  return true;
+}
+
+/* =========================
    DIRECT WHERE IS HE / SHE (CROSS GENDER SAFE)
 ========================= */
 
