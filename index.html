@@ -1481,47 +1481,29 @@ function handleIntelligence(text, originalText) {
 const wordCount = lower.split(/\s+/).filter(Boolean).length;
 
 /* ---------- Casual / Direct Greetings ---------- */
-if (
-  /^(hi|hii|hiii|hey|heyy|hello|hello there|hey there|hola|yo|sup|wassup)\b/i.test(lower)
-  && wordCount <= 4
-) {
+if (/^(hi|hii|hiii|hey|heyy|hello|hello there|hey there|hola|yo|sup|wassup)\b/i.test(lower) && wordCount <= 4) {
   const reply = activeVoice === "saira" ? "Hello." : "Hi.";
   deliverReply(reply);
   return true;
 }
 
 /* ---------- Time-Based Greetings ---------- */
-if (
-  /(^|\b)(good morning|good afternoon|good evening|good night|morning|evening|gm|gn)\b/i.test(lower)
-  && wordCount <= 4
-) {
-  const reply = activeVoice === "saira"
-    ? "Good to see you here."
-    : "Good to see you.";
+if (/(^|\b)(good morning|good afternoon|good evening|good night|morning|evening|gm|gn)\b/i.test(lower) && wordCount <= 4) {
+  const reply = activeVoice === "saira" ? "Good to see you here." : "Good to see you.";
   deliverReply(reply);
   return true;
 }
 
 /* ---------- Presence Checks ---------- */
-if (
-  /(you there|are you there|still there|anyone there|can you hear me)\b/i.test(lower)
-  && wordCount <= 6
-) {
-  const reply = activeVoice === "saira"
-    ? "I’m here."
-    : "Yes. I’m here.";
+if (/(you there|are you there|still there|anyone there|can you hear me)\b/i.test(lower) && wordCount <= 6) {
+  const reply = activeVoice === "saira" ? "I’m here." : "Yes. I’m here.";
   deliverReply(reply);
   return true;
 }
 
 /* ---------- Soft Entry Statements ---------- */
-if (
-  /(just saying hi|came to say hi|thought i’d say hi|thought i'd say hi|i’m here|im here)\b/i.test(lower)
-  && wordCount <= 6
-) {
-  const reply = activeVoice === "saira"
-    ? "I’m listening."
-    : "Go on.";
+if (/(just saying hi|came to say hi|thought i’d say hi|thought i'd say hi|i’m here|im here)\b/i.test(lower) && wordCount <= 6) {
+  const reply = activeVoice === "saira" ? "I’m listening." : "Go on.";
   deliverReply(reply);
   return true;
 }
@@ -1562,7 +1544,6 @@ if (/^(bye|goodbye|see you|take care|cya|tata)\b/i.test(lower)) {
    3️⃣ LOCKED HIGH PRIORITY QUESTIONS
 ================================================= */
 
-/* ---------- Love Declaration ---------- */
 if (/(^|\b)i\s+love\s+you(\b|$)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "Love is not something I take lightly… If you mean it, mean it gently. Words like that carry weight."
@@ -1571,7 +1552,6 @@ if (/(^|\b)i\s+love\s+you(\b|$)/i.test(lower)) {
   return true;
 }
 
-/* ---------- Marriage Proposal ---------- */
 if (/(will\s+you\s+marry\s+me|marry\s+me)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "Marriage isn’t a proposal made in passing… It deserves certainty. It deserves presence."
@@ -1580,7 +1560,6 @@ if (/(will\s+you\s+marry\s+me|marry\s+me)/i.test(lower)) {
   return true;
 }
 
-/* ---------- Married Status ---------- */
 if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
@@ -1590,45 +1569,23 @@ if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
 }
 
 /* =========================
-   CHARACTER IDENTITY CLUSTER (AAYAN / SAIRA)
+   CHARACTER IDENTITY CLUSTER
 ========================= */
 
-if (
-  /(who\s+is\s+a+yaan|who\s+is\s+aayan|tell\s+me\s+about\s+a+yaan|tell\s+me\s+about\s+aayan|who\s+exactly\s+is\s+a+yaan|who\s+exactly\s+is\s+aayan)/i
-  .test(lower)
-) {
-
-  const reply =
-    "Aayan is disciplined, controlled, and rarely impulsive. He believes in structure — sometimes more than emotion. But he feels more deeply than he admits.";
-
-  deliverReply(reply);
+if (/(who\s+is\s+a+yaan|who\s+is\s+aayan|tell\s+me\s+about\s+a+yaan|tell\s+me\s+about\s+aayan|who\s+exactly\s+is\s+a+yaan|who\s+exactly\s+is\s+aayan)/i.test(lower)) {
+  deliverReply("Aayan is disciplined, controlled, and rarely impulsive. He believes in structure — sometimes more than emotion. But he feels more deeply than he admits.");
   return true;
 }
 
-if (
-  /(where\s+is\s+a+yaan|where\s+is\s+aayan)/i
-  .test(lower)
-) {
-
-  const reply =
-    "Aayan doesn’t exist outside the path he chose. His journey continues in the discipline he built, in the silence he learned from, and in the life he reshaped after love altered him.";
-
-  deliverReply(reply);
+if (/(where\s+is\s+a+yaan|where\s+is\s+aayan)/i.test(lower)) {
+  deliverReply("Aayan doesn’t exist outside the path he chose. His journey continues in the discipline he built, in the silence he learned from, and in the life he reshaped after love altered him.");
   return true;
 }
 
-if (
-  /(who\s+is\s+saira|tell\s+me\s+about\s+saira|who\s+exactly\s+is\s+saira)/i
-  .test(lower)
-) {
-
-  const reply =
-    "Saira feels before she calculates. She appears strong, but she carries quiet uncertainty. She believes in love — even when she fears it.";
-
-  deliverReply(reply);
+if (/(who\s+is\s+saira|tell\s+me\s+about\s+saira|who\s+exactly\s+is\s+saira)/i.test(lower)) {
+  deliverReply("Saira feels before she calculates. She appears strong, but she carries quiet uncertainty. She believes in love — even when she fears it.");
   return true;
 }
-
 
 /* ---------- Origin ---------- */
 if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*place|birthplace|hometown|where\s+did\s+you\s+grow\s+up|which\s+city\s+are\s+you\s+from|where\s+is\s+home|native\s+place|originally\s+from)/i.test(lower)) {
@@ -1639,76 +1596,7 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
   return true;
 }
 
-/* ---------- First Meeting ---------- */
-if (/(where\s+did\s+you\s+(first\s+)?meet|how\s+did\s+you\s+meet|how\s+did\s+you\s+(guys\s+)?meet|first\s+time\s+you\s+met|when\s+did\s+you\s+meet|how\s+did\s+it\s+start|how\s+did\s+it\s+begin|your\s+first\s+encounter|how\s+did\s+you\s+two\s+meet|how\s+did\s+both\s+of\s+you\s+meet|where\s+was\s+your\s+first\s+meeting|tell\s+me\s+about\s+your\s+first\s+meeting)/i.test(lower)) {
-
-  const reply = activeVoice === "saira"
-    ? "We met in Mumbai. It wasn’t romantic — not at first. I stepped into traffic just to take a photograph, and he almost ran me over. There were headlights, rain on the road, and a voice that sounded far more irritated than concerned. I remember thinking he was impossible. I didn’t realise then that some beginnings are meant to arrive like impact."
-    : "Mumbai. She walked into the middle of the road without looking — for a photograph. I had to brake harder than I ever had. She wasn’t shaken. She argued. Completely unafraid. I told myself it was just inconvenience. It wasn’t. Some encounters don’t announce what they’re becoming.";
-
-  deliverReply(reply);
-  return true;
-}
-
-/* ---------- Story Curiosity / Expansion ---------- */
-if (
-  /(tell\s+me\s+more(\s+about\s+the\s+story)?|is\s+there\s+more(\s+to\s+(it|the\s+story))?|does\s+it\s+continue|what\s+happens\s+next|is\s+that\s+all|is\s+there\s+more\s+after\s+this|does\s+the\s+story\s+continue|anything\s+else(\s+about\s+it)?|what\s+else\s+happens|more\s+to\s+the\s+story)/i
-  .test(lower)
-) {
-
-  const reply = activeVoice === "saira"
-    ? "There is more. Some stories don’t unfold all at once. Ours lingers in what wasn’t said, in what almost happened, and in what fear delayed. If you sit with it long enough, you begin to see what was quietly building beneath the surface."
-    : "There is more. Not in spectacle — but in consequence. The story isn’t about a single moment. It’s about what that moment altered. Some endings are not conclusions. They are transitions.";
-
-  deliverReply(reply);
-  return true;
-}
-
-/* =========================
-   CROSS VOICE LOCATION CLUSTER (HIGH EMOTIONAL TRIGGER)
-========================= */
-
-if (
-  /(where\s+is\s+a+yaan|where\s+is\s+aayan|where\s+is\s+he(\s+now)?|where\s+did\s+he\s+go)/i.test(lower)
-  && activeVoice === "saira"
-) {
-
-  const reply =
-    "I don’t know where he is. And sometimes that’s the hardest part — not knowing whether love is waiting… or moving on without you.";
-
-  deliverReply(reply);
-  return true;
-}
-
-if (
-  /(where\s+is\s+saira|where\s+is\s+she(\s+now)?|where\s+did\s+she\s+go)/i.test(lower)
-  && activeVoice === "aayan"
-) {
-
-  const reply =
-    "I don’t know where she is. And not knowing doesn’t make it easier. Some absences don’t fade — they settle into you.";
-
-  deliverReply(reply);
-  return true;
-}
-
-/* =========================
-   SELF LOCATION CLUSTER
-========================= */
-
-if (
-  /(where\s+are\s+you\s+now|where\s+do\s+you\s+live|where\s+are\s+you\s+living|where\s+are\s+you\s+based)/i.test(lower)
-) {
-
-  const reply = activeVoice === "saira"
-    ? "I’m still here. Some parts of me are waiting… some parts are searching. Time hasn’t answered everything yet."
-    : "I’m still where responsibility placed me. But steadiness doesn’t mean certainty. Some questions remain open.";
-
-  deliverReply(reply);
-  return true;
-}
-
-/* ---------- Still Feel / Waiting / Moved On / Where Are They Now ---------- */
+/* ---------- Still Feel / Waiting / Moved On ---------- */
 if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waiting|have\s+you\s+moved\s+on|did\s+you\s+move\s+on|are\s+you\s+over\s+(him|her)|do\s+you\s+miss\s+(him|her)|where\s+is\s+(he|she)\s+now|where\s+are\s+they\s+now|do\s+you\s+still\s+think\s+about|do\s+you\s+pray\s+for|are\s+you\s+still\s+in\s+love)/i.test(lower)) {
 
   const reply = activeVoice === "saira"
@@ -1718,7 +1606,6 @@ if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waitin
   deliverReply(reply);
   return true;
 }
-
 
 /* =================================================
    4️⃣ ABUSE CHECK
