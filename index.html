@@ -1626,12 +1626,24 @@ if (/(where\s+did\s+you\s+(first\s+)?meet|how\s+did\s+you\s+meet|how\s+did\s+you
   return true;
 }
 
-/* ---------- Book Worth ---------- */
-if (/(is\s+(the\s+)?book\s+worth|should\s+i\s+read|is\s+it\s+worth\s+reading|is\s+it\s+good|convince\s+me|tell\s+me\s+more\s+about\s+the\s+story|why\s+should\s+i\s+read|what\s+makes\s+it\s+special|is\s+this\s+story\s+good|worth\s+my\s+time|why\s+should\s+i\s+buy)/i.test(lower)) {
+/* ---------- Story Curiosity / Expansion ---------- */
+if (
+  /(tell\s+me\s+more(\s+about\s+the\s+story)?|
+     is\s+there\s+more(\s+to\s+(it|the\s+story))?|
+     does\s+it\s+continue|
+     what\s+happens\s+next|
+     is\s+that\s+all|
+     is\s+there\s+more\s+after\s+this|
+     does\s+the\s+story\s+continue|
+     anything\s+else(\s+about\s+it)?|
+     what\s+else\s+happens|
+     more\s+to\s+the\s+story)/ix
+  .test(lower)
+) {
 
   const reply = activeVoice === "saira"
-    ? "Some stories don’t try to impress you. They stay with you quietly. Ours isn’t loud. It doesn’t rely on spectacle. It lingers in hesitation, in timing, in the small decisions that feel harmless until they aren’t. If you’ve ever loved and paused — and wondered later what that pause cost — you might recognise yourself in it."
-    : "It depends on what you’re looking for. This isn’t a story built on grand twists. It’s built on restraint. On what happens when certainty meets hesitation. If you value emotional consequence more than noise, then it may be worth your time.";
+    ? "There is more. Some stories don’t unfold all at once. Ours lingers in what wasn’t said, in what almost happened, and in what fear delayed. If you sit with it long enough, you begin to see what was quietly building beneath the surface."
+    : "There is more. Not in spectacle — but in consequence. The story isn’t about a single moment. It’s about what that moment altered. Some endings are not conclusions. They are transitions.";
 
   deliverReply(reply);
   return true;
