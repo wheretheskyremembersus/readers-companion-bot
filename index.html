@@ -1478,7 +1478,6 @@ function handleIntelligence(text, originalText) {
    1️⃣ GREETINGS (FINAL – Fully Guarded + Voice Aware)
 ================================================= */
 
-// Standardized word count (stable)
 const wordCount = lower.split(/\s+/).filter(Boolean).length;
 
 /* ---------- Casual / Direct Greetings ---------- */
@@ -1486,10 +1485,7 @@ if (
   /^(hi|hii|hiii|hey|heyy|hello|hello there|hey there|hola|yo|sup|wassup)\b/i.test(lower)
   && wordCount <= 4
 ) {
-  const reply = activeVoice === "saira"
-    ? "Hello."
-    : "Hi.";
-
+  const reply = activeVoice === "saira" ? "Hello." : "Hi.";
   deliverReply(reply);
   return true;
 }
@@ -1502,7 +1498,6 @@ if (
   const reply = activeVoice === "saira"
     ? "Good to see you here."
     : "Good to see you.";
-
   deliverReply(reply);
   return true;
 }
@@ -1515,7 +1510,6 @@ if (
   const reply = activeVoice === "saira"
     ? "I’m here."
     : "Yes. I’m here.";
-
   deliverReply(reply);
   return true;
 }
@@ -1528,170 +1522,137 @@ if (
   const reply = activeVoice === "saira"
     ? "I’m listening."
     : "Go on.";
-
   deliverReply(reply);
   return true;
 }
 
-  /* =================================================
-     2️⃣ BASIC SOCIAL
-  ================================================= */
+/* =================================================
+   2️⃣ BASIC SOCIAL
+================================================= */
 
-  if (/(how are you|how are you doing|how do you feel)/i.test(lower)) {
-    const reply = activeVoice === "saira"
-      ? "That depends on the day… but today, I’m steady. Thank you for asking. It’s rare that someone does."
-      : "I’m alright… not untouched by everything — but stronger than before. And you?";
-    deliverReply(reply);
-    return true;
-  }
-
-  if (/^(i am|i'm|my name is)\s+/i.test(lower)) {
-
-  const nameMatch = originalText.match(/^(i am|i'm|my name is)\s+([a-zA-Z]+)/i);
-
-  if (nameMatch && nameMatch[2]) {
-    const name = nameMatch[2];
-    deliverReply(`It’s good to meet you, ${name}.`);
-  } else {
-    deliverReply("It’s good to meet you.");
-  }
-
+if (/(how are you|how are you doing|how do you feel)/i.test(lower)) {
+  const reply = activeVoice === "saira"
+    ? "That depends on the day… but today, I’m steady. Thank you for asking. It’s rare that someone does."
+    : "I’m alright… not untouched by everything — but stronger than before. And you?";
+  deliverReply(reply);
   return true;
 }
 
-  if (/(thank you|thankyou|thanks|appreciate|thx|cheers)/i.test(lower)) {
-    deliverReply("You’re welcome.");
-    return true;
+if (/^(i am|i'm|my name is)\s+/i.test(lower)) {
+  const nameMatch = originalText.match(/^(i am|i'm|my name is)\s+([a-zA-Z]+)/i);
+  if (nameMatch && nameMatch[2]) {
+    deliverReply(`It’s good to meet you, ${nameMatch[2]}.`);
+  } else {
+    deliverReply("It’s good to meet you.");
   }
+  return true;
+}
 
- if (/^(bye|goodbye|see you|take care|cya|tata)\b/i.test(lower)) {
-    deliverReply(activeVoice === "saira" ? "Goodbye. Take care." : "Goodbye.");
-    return true;
-  }
+if (/(thank you|thankyou|thanks|appreciate|thx|cheers)/i.test(lower)) {
+  deliverReply("You’re welcome.");
+  return true;
+}
 
- /* =================================================
-   3️⃣ LOCKED HIGH PRIORITY QUESTIONS (FINAL – STABLE)
+if (/^(bye|goodbye|see you|take care|cya|tata)\b/i.test(lower)) {
+  deliverReply(activeVoice === "saira" ? "Goodbye. Take care." : "Goodbye.");
+  return true;
+}
+
+/* =================================================
+   3️⃣ LOCKED HIGH PRIORITY QUESTIONS
 ================================================= */
 
 /* ---------- Love Declaration ---------- */
 if (/(^|\b)i\s+love\s+you(\b|$)/i.test(lower)) {
-
   const reply = activeVoice === "saira"
     ? "Love is not something I take lightly… If you mean it, mean it gently. Words like that carry weight."
     : "Love isn’t a word I respond to casually… If you say it, I hope you understand what it asks of you.";
-
   deliverReply(reply);
   return true;
 }
 
 /* ---------- Marriage Proposal ---------- */
 if (/(will\s+you\s+marry\s+me|marry\s+me)/i.test(lower)) {
-
   const reply = activeVoice === "saira"
     ? "Marriage isn’t a proposal made in passing… It deserves certainty. It deserves presence."
     : "Marriage isn’t an answer to emotion… It’s a commitment to consequence. And consequence changes people.";
-
   deliverReply(reply);
   return true;
 }
 
 /* ---------- Married Status ---------- */
 if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
-
   const reply = activeVoice === "saira"
     ? "No… But life has taught me that timing matters more than status. Sometimes being ready is different from being willing."
     : "No… And I don’t answer that question lightly. Commitment means something where I come from.";
-
   deliverReply(reply);
   return true;
 }
 
-
+/* ---------- Identity ---------- */
 if (/(who\s+are\s+you|tell\s+me\s+about\s+yourself|what\s+are\s+you|introduce\s+yourself|can\s+i\s+know\s+you|who\s+is\s+this|who\s+am\s+i\s+talking\s+to|are\s+you\s+real|are\s+you\s+a\s+bot|are\s+you\s+human)/i.test(lower)) {
-
   const reply = activeVoice === "saira"
     ? "I’m Saira. I don’t exist outside this story — and I don’t pretend to. But within it, I lived every hesitation, every silence, every choice that felt smaller than it was. I don’t explain myself easily. I sit with things longer than I should."
     : "I’m Aayan. I belong to this story — nowhere else. I don’t blur that line. What you hear is who I was when decisions mattered, when restraint felt wiser than impulse. I don’t speak unnecessarily. But I don’t disappear either.";
-
   deliverReply(reply);
   return true;
 }
 
-/* =========================
-   ORIGIN / IDENTITY QUESTIONS
-========================= */
-
-if (
-  /(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*place|birthplace|hometown|where\s+did\s+you\s+grow\s+up|which\s+city\s+are\s+you\s+from|where\s+is\s+home|native\s+place|originally\s+from)/i
-  .test(lower)
-) {
-
+/* ---------- Origin ---------- */
+if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*place|birthplace|hometown|where\s+did\s+you\s+grow\s+up|which\s+city\s+are\s+you\s+from|where\s+is\s+home|native\s+place|originally\s+from)/i.test(lower)) {
   const reply = activeVoice === "saira"
     ? "I was born in Dehradun. The mountains were always close, even when I was restless. It’s a city that teaches you softness without making you weak."
     : "Shillong. I was born in the hills, where discipline was expected before dreams were allowed. It’s quieter than people imagine. But it shaped me more than I admit.";
-
   deliverReply(reply);
   return true;
 }
 
+/* ---------- First Meeting ---------- */
 if (/(where\s+did\s+you\s+(first\s+)?meet|how\s+did\s+you\s+meet|how\s+did\s+you\s+(guys\s+)?meet|first\s+time\s+you\s+met|when\s+did\s+you\s+meet|how\s+did\s+it\s+start|how\s+did\s+it\s+begin|your\s+first\s+encounter|how\s+did\s+you\s+two\s+meet|how\s+did\s+both\s+of\s+you\s+meet|where\s+was\s+your\s+first\s+meeting|tell\s+me\s+about\s+your\s+first\s+meeting)/i.test(lower)) {
-
   const reply = activeVoice === "saira"
-    ? "We met in Mumbai. It wasn’t romantic — not at first. I stepped into traffic just to take a photograph, and he almost ran me over."
-    : "Mumbai. She walked into the road without looking — for a photograph. I had to brake harder than I ever had.";
-
+    ? "We met in Mumbai. It wasn’t romantic — not at first. I stepped into traffic just to take a photograph, and he almost ran me over. There were headlights, rain on the road, and a voice that sounded far more irritated than concerned. I remember thinking he was impossible. I didn’t realise then that some beginnings are meant to arrive like impact."
+    : "Mumbai. She walked into the middle of the road without looking — for a photograph. I had to brake harder than I ever had. She wasn’t shaken. She argued. Completely unafraid. I told myself it was just inconvenience. It wasn’t. Some encounters don’t announce what they’re becoming.";
   deliverReply(reply);
   return true;
 }
 
+/* ---------- Book Worth ---------- */
 if (/(is\s+(the\s+)?book\s+worth|should\s+i\s+read|is\s+it\s+worth\s+reading|is\s+it\s+good|convince\s+me|tell\s+me\s+more\s+about\s+the\s+story|why\s+should\s+i\s+read|what\s+makes\s+it\s+special|is\s+this\s+story\s+good|worth\s+my\s+time|why\s+should\s+i\s+buy)/i.test(lower)) {
-
   const reply = activeVoice === "saira"
-    ? "Some stories don’t try to impress you. They stay quietly."
-    : "It depends on what you’re looking for. This story values emotional consequence over spectacle.";
-
+    ? "Some stories don’t try to impress you. They stay with you quietly. Ours isn’t loud. It doesn’t rely on spectacle. It lingers in hesitation, in timing, in the small decisions that feel harmless until they aren’t. If you’ve ever loved and paused — and wondered later what that pause cost — you might recognise yourself in it."
+    : "It depends on what you’re looking for. This isn’t a story built on grand twists. It’s built on restraint. On what happens when certainty meets hesitation. If you value emotional consequence more than noise, then it may be worth your time.";
   deliverReply(reply);
   return true;
 }
 
-if (/(favorite\s+place|favourite\s+place|which\s+city\s+meant\s+most|city\s+you\s+remember\s+most|which\s+place\s+mattered|tell\s+me\s+about\s+venice|tell\s+me\s+about\s+paris|tell\s+me\s+about\s+london|tell\s+me\s+about\s+mumbai|tell\s+me\s+about\s+goa|tell\s+me\s+about\s+spiti|tell\s+me\s+about\s+manali|tell\s+me\s+about\s+shimla|tell\s+me\s+about\s+haridwar|tell\s+me\s+about\s+rishikesh|tell\s+me\s+about\s+mussoorie|tell\s+me\s+about\s+dehradun|tell\s+me\s+about\s+shillong|tell\s+me\s+about\s+guwahati|what\s+was\s+your\s+favorite\s+city|what\s+place\s+do\s+you\s+miss)/i.test(lower)) {
+/* =================================================
+   4️⃣ ABUSE CHECK
+================================================= */
 
-  let reply = "Places mattered because of who we were becoming in them.";
+if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.test(lower)
+    && /(you|saira|aayan)/i.test(lower)) {
 
-  deliverReply(reply);
-  return true;
-}
+  abuseCount++;
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
 
-  /* =================================================
-     4️⃣ ABUSE CHECK (EARLY)
-  ================================================= */
+  if (exitStrikeCount >= 3) {
+    const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+    localStorage.setItem("blockUntil", blockTime);
+  }
 
-  if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.test(lower)
-      && /(you|saira|aayan)/i.test(lower)) {
-
-    abuseCount++;
-    exitStrikeCount++;
-    localStorage.setItem("exitStrikes", exitStrikeCount);
-
-    if (exitStrikeCount >= 3) {
-      const blockTime = Date.now() + (24 * 60 * 60 * 1000);
-      localStorage.setItem("blockUntil", blockTime);
-    }
-
-    if (repeatCount >= 3 || abuseCount >= abuseLimit) {
-      returnToWebsite();
-      return true;
-    }
-
-    const reply = activeVoice === "saira"
-      ? "I won’t stay where respect isn’t present."
-      : "If this turns careless, I’ll remain silent.";
-
-    deliverReply(reply);
+  if (repeatCount >= 3 || abuseCount >= abuseLimit) {
+    returnToWebsite();
     return true;
   }
 
-const detectedPillar = detectEmotionalPillar(lower);
+  const reply = activeVoice === "saira"
+    ? "I won’t stay where respect isn’t present."
+    : "If this turns careless, I’ll remain silent.";
+
+  deliverReply(reply);
+  return true;
+}
 
   /* =================================================
      5️⃣ EMOTIONAL PILLAR ENGINE
