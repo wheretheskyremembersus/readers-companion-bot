@@ -1596,6 +1596,50 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
   return true;
 }
 
+         /* =========================
+   CROSS GENDER CORRECTION LAYER
+========================= */
+
+if (
+  /(her)/i.test(lower) &&
+  activeVoice === "saira"
+) {
+  lower = lower.replace(/\bher\b/gi, "him");
+}
+
+if (
+  /(him)/i.test(lower) &&
+  activeVoice === "aayan"
+) {
+  lower = lower.replace(/\bhim\b/gi, "her");
+}
+
+         /* =========================
+   CROSS GENDER CORRECTION (EMOTIONAL)
+========================= */
+
+if (/(her)/i.test(lower) && activeVoice === "saira") {
+
+  deliverReply("You mean him…");
+
+  setTimeout(() => {
+    // Let main emotional block handle full response
+  }, 400);
+
+  lower = lower.replace(/\bher\b/gi, "him");
+}
+
+if (/(him)/i.test(lower) && activeVoice === "aayan") {
+
+  deliverReply("You mean her…");
+
+  setTimeout(() => {
+    // Let main emotional block handle full response
+  }, 400);
+
+  lower = lower.replace(/\bhim\b/gi, "her");
+}
+
 /* ---------- Still Feel / Waiting / Moved On ---------- */
 if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waiting|have\s+you\s+moved\s+on|did\s+you\s+move\s+on|are\s+you\s+over\s+(him|her)|do\s+you\s+miss\s+(him|her)|where\s+is\s+(he|she)\s+now|where\s+are\s+they\s+now|do\s+you\s+still\s+think\s+about|do\s+you\s+pray\s+for|are\s+you\s+still\s+in\s+love)/i.test(lower)) {
 
