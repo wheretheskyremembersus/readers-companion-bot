@@ -1875,22 +1875,58 @@ if (stageModifiers[stage]) {
 deliverReply(finalReply);
 return true;
 }
+         
 /* =================================================
    6️⃣ 60% FUZZY MATCH (SAFE LAST)
 ================================================= */
 
 for (let question of generalQuestionBank) {
   if (isSixtyPercentMatch(lower, question)) {
-
-    const humanLead = activeVoice === "saira"
-      ? "You’re asking something that feels familiar…"
-      : "That sounds like something I’ve been asked before…";
-
-    deliverReply(humanLead);
-    return true;
+    return resolveGeneralIntent(question);
   }
 }
- return false;
+
+return false;
+}
+
+/* =========================
+   GENERAL INTENT RESOLVER
+========================= */
+
+function resolveGeneralIntent(matchedQuestion) {
+
+  const map = {
+
+    "who are your friends": {
+      saira: "I don’t keep many people close. I’ve always preferred depth over noise. But since you asked… Rohan and Ankita have stayed long enough to see the parts I don’t always speak about. That kind of understanding matters.",
+      aayan: "I don’t measure closeness in numbers. Loyalty matters more to me than familiarity. Rohan has stood beside me through decisions that weren’t easy. That’s enough."
+    },
+
+    "where are you now": {
+      saira: "Life feels quieter now. I move carefully with what I choose to carry.",
+      aayan: "I’m where discipline placed me. Structure defines my present more than emotion does."
+    },
+
+    "what do you do": {
+      saira: "Work sustains me, but it doesn’t define me. I’ve learned to protect what feels real.",
+      aayan: "My work demands focus. I treat responsibility seriously."
+    },
+
+    "are you happy": {
+      saira: "Happiness isn’t constant. It visits in moments. I’ve stopped expecting permanence.",
+      aayan: "Happiness is steadiness. I don’t chase it — I build toward it."
+    }
+
+  };
+
+  const entry = map[matchedQuestion];
+
+  if (entry && entry[activeVoice]) {
+    deliverReply(entry[activeVoice]);
+    return true;
+  }
+
+  return false;
 }
 
 /* =========================
@@ -1939,14 +1975,13 @@ function sendTypedMessage() {
 
   lastUserInput = text;
 
-  /* =========================
+/* =========================
      INTELLIGENCE ROUTER
   ========================= */
 
   if (handleIntelligence(text, originalText)) {
     return;
   }
-
 
   /* =========================
      DEFAULT FALLBACK
