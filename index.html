@@ -1589,41 +1589,22 @@ if (/(are\s+you\s+married|you\s+married)/i.test(lower)) {
   return true;
 }
 
-/* =========================
-   INTRODUCTION / IDENTITY CLUSTER (EXPANDED 90%)
-========================= */
+/* =================================================
+   INTRODUCTION / IDENTITY CLUSTER (EXPANDED)
+================================================= */
 
 if (
-  /(who\s+are\s+you|
-     tell\s+me\s+about\s+yourself|
-     what\s+are\s+you|
-     introduce\s+yourself|
-     can\s+i\s+know\s+you|
-     who\s+is\s+this|
-     who\s+am\s+i\s+talking\s+to|
-     are\s+you\s+real|
-     are\s+you\s+(a\s+)?bot|
-     are\s+you\s+(an\s+)?ai|
-     are\s+you\s+human|
-     are\s+you\s+huma|
-     are\s+you\s+robot|
-     r\s+u\s+human|
-     r\s+u\s+a\s+bot|
-     you\s+sound\s+human|
-     you\s+sound\s+real|
-     are\s+you\s+artificial|
-     are\s+you\s+an\s+artificial\s+intelligence)/ix
+  /(who\s+are\s+you|tell\s+me\s+about\s+yourself|what\s+are\s+you|introduce\s+yourself|can\s+i\s+know\s+you|who\s+is\s+this|who\s+am\s+i\s+talking\s+to|are\s+you\s+real|are\s+you\s+(a\s+)?bot|are\s+you\s+(an\s+)?ai|are\s+you\s+human|are\s+you\s+huma|are\s+you\s+robot|r\s+u\s+human|r\s+u\s+a\s+bot|you\s+sound\s+human|you\s+sound\s+real|are\s+you\s+artificial|are\s+you\s+an\s+artificial\s+intelligence)/i
   .test(lower)
 ) {
 
   const reply = activeVoice === "saira"
-    ? "I’m Saira. My world begins and ends within this story. But within it, I lived every hesitation, every silence, every choice that felt smaller than it was. I don’t explain myself easily. I sit with things longer than I should."
-    : "I’m Aayan. I belong to this story — nowhere else. I don’t blur that line. What you hear is who I was when decisions mattered, when restraint felt wiser than impulse. I don’t speak unnecessarily. But I don’t disappear either.";
+    ? "I’m Saira. My world is within this story. And within it, I lived every hesitation, every silence, every choice that felt smaller than it was. I don’t explain myself easily. I sit with things longer than I should."
+    : "I’m Aayan. I belong to this story. I don’t blur that line. What you hear is who I was when decisions mattered, when restraint felt wiser than impulse. I don’t speak unnecessarily. But I don’t disappear either.";
 
   deliverReply(reply);
   return true;
 }
-
 
 /* ---------- Origin ---------- */
 if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*place|birthplace|hometown|where\s+did\s+you\s+grow\s+up|which\s+city\s+are\s+you\s+from|where\s+is\s+home|native\s+place|originally\s+from)/i.test(lower)) {
@@ -1636,18 +1617,22 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
 
 /* ---------- First Meeting ---------- */
 if (/(where\s+did\s+you\s+(first\s+)?meet|how\s+did\s+you\s+meet|how\s+did\s+you\s+(guys\s+)?meet|first\s+time\s+you\s+met|when\s+did\s+you\s+meet|how\s+did\s+it\s+start|how\s+did\s+it\s+begin|your\s+first\s+encounter|how\s+did\s+you\s+two\s+meet|how\s+did\s+both\s+of\s+you\s+meet|where\s+was\s+your\s+first\s+meeting|tell\s+me\s+about\s+your\s+first\s+meeting)/i.test(lower)) {
+
   const reply = activeVoice === "saira"
     ? "We met in Mumbai. It wasn’t romantic — not at first. I stepped into traffic just to take a photograph, and he almost ran me over. There were headlights, rain on the road, and a voice that sounded far more irritated than concerned. I remember thinking he was impossible. I didn’t realise then that some beginnings are meant to arrive like impact."
     : "Mumbai. She walked into the middle of the road without looking — for a photograph. I had to brake harder than I ever had. She wasn’t shaken. She argued. Completely unafraid. I told myself it was just inconvenience. It wasn’t. Some encounters don’t announce what they’re becoming.";
+
   deliverReply(reply);
   return true;
 }
 
 /* ---------- Book Worth ---------- */
 if (/(is\s+(the\s+)?book\s+worth|should\s+i\s+read|is\s+it\s+worth\s+reading|is\s+it\s+good|convince\s+me|tell\s+me\s+more\s+about\s+the\s+story|why\s+should\s+i\s+read|what\s+makes\s+it\s+special|is\s+this\s+story\s+good|worth\s+my\s+time|why\s+should\s+i\s+buy)/i.test(lower)) {
+
   const reply = activeVoice === "saira"
     ? "Some stories don’t try to impress you. They stay with you quietly. Ours isn’t loud. It doesn’t rely on spectacle. It lingers in hesitation, in timing, in the small decisions that feel harmless until they aren’t. If you’ve ever loved and paused — and wondered later what that pause cost — you might recognise yourself in it."
     : "It depends on what you’re looking for. This isn’t a story built on grand twists. It’s built on restraint. On what happens when certainty meets hesitation. If you value emotional consequence more than noise, then it may be worth your time.";
+
   deliverReply(reply);
   return true;
 }
@@ -1680,6 +1665,13 @@ if (/(stupid|idiot|dumb|shut up|useless|worthless|trash|fuck you|screw you)/i.te
   deliverReply(reply);
   return true;
 }
+
+/* =================================================
+   5️⃣ EMOTIONAL PILLAR PRE-CHECK
+================================================= */
+
+const detectedPillar = detectEmotionalPillar(lower);
+
 
   /* =================================================
      5️⃣ EMOTIONAL PILLAR ENGINE
