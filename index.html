@@ -1597,40 +1597,34 @@ if (/(where\s+(are|r)\s+you\s+from|where\s+were\s+you\s+born|your\s+birth\s*plac
 }
 
 /* =========================
-   CROSS GENDER + STILL FEEL CLUSTER (FINAL STABLE – NO CONFIRMATION)
+   CROSS GENDER + STILL FEEL CLUSTER (CLEAN SAFE VERSION)
 ========================= */
 
-if (
-  /(do\s+you\s+still\s+feel|
-     do\s+you\s+still\s+love|
-     are\s+you\s+still\s+waiting|
-     have\s+you\s+moved\s+on|
-     did\s+you\s+move\s+on|
-     are\s+you\s+over\s+(him|her)|
-     do\s+you\s+miss\s+(him|her)|
-     where\s+is\s+(he|she)\s+now|
-     where\s+are\s+they\s+now|
-     do\s+you\s+still\s+think\s+about|
-     do\s+you\s+pray\s+for|
-     are\s+you\s+still\s+in\s+love)/i.test(lower)
-) {
+if (/(do\s+you\s+still\s+feel|do\s+you\s+still\s+love|are\s+you\s+still\s+waiting|have\s+you\s+moved\s+on|did\s+you\s+move\s+on|are\s+you\s+over\s+(him|her)|do\s+you\s+miss\s+(him|her)|where\s+is\s+(he|she)\s+now|where\s+are\s+they\s+now|do\s+you\s+still\s+think\s+about|do\s+you\s+pray\s+for|are\s+you\s+still\s+in\s+love)/i.test(lower)) {
 
-  const reply = activeVoice === "saira"
+  let reply;
 
-    ? (/\bher\b/i.test(lower)
-        ? "I think you’re referring to him. Yes. I still feel for him. Some feelings don’t fade just because time moves. I don’t know where he is now… or who stands beside him. But my search never really ended. Not loudly. Not desperately. Just quietly — in the way your heart keeps listening for something it once recognised. And wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be. Sometimes, without even realising, I still pray for him."
-        : "Yes. I still feel for him. Some feelings don’t fade just because time moves. I don’t know where he is now… or who stands beside him. But my search never really ended. Not loudly. Not desperately. Just quietly — in the way your heart keeps listening for something it once recognised. And wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be. Sometimes, without even realising, I still pray for him."
-      )
+  if (activeVoice === "saira") {
 
-    : (/\bhim\b/i.test(lower)
-        ? "I think you’re referring to her. She is always there with me. Not in a way the world can see — but in the spaces that shaped me. I don’t know where she stands now, or what her life looks like. But some connections don’t dissolve. They settle into you. I haven’t erased her. I don’t think I ever will. And wherever she is… I hope she is protected. I hope she is at peace. Some prayers are not about return. They are simply about love that never wished harm."
-        : "She is always there with me. Not in a way the world can see — but in the spaces that shaped me. I don’t know where she stands now, or what her life looks like. But some connections don’t dissolve. They settle into you. I haven’t erased her. I don’t think I ever will. And wherever she is… I hope she is protected. I hope she is at peace. Some prayers are not about return. They are simply about love that never wished harm."
-      );
+    if (/\bher\b/i.test(lower)) {
+      reply = "I think you’re referring to him. Yes. I still feel for him. Some feelings don’t fade just because time moves. I don’t know where he is now… or who stands beside him. But my search never really ended. Not loudly. Not desperately. Just quietly — in the way your heart keeps listening for something it once recognised. And wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be. Sometimes, without even realising, I still pray for him.";
+    } else {
+      reply = "Yes. I still feel for him. Some feelings don’t fade just because time moves. I don’t know where he is now… or who stands beside him. But my search never really ended. Not loudly. Not desperately. Just quietly — in the way your heart keeps listening for something it once recognised. And wherever he is… I hope he is safe. I hope he is becoming everything he was meant to be. Sometimes, without even realising, I still pray for him.";
+    }
+
+  } else {
+
+    if (/\bhim\b/i.test(lower)) {
+      reply = "I think you’re referring to her. She is always there with me. Not in a way the world can see — but in the spaces that shaped me. I don’t know where she stands now, or what her life looks like. But some connections don’t dissolve. They settle into you. I haven’t erased her. I don’t think I ever will. And wherever she is… I hope she is protected. I hope she is at peace. Some prayers are not about return. They are simply about love that never wished harm.";
+    } else {
+      reply = "She is always there with me. Not in a way the world can see — but in the spaces that shaped me. I don’t know where she stands now, or what her life looks like. But some connections don’t dissolve. They settle into you. I haven’t erased her. I don’t think I ever will. And wherever she is… I hope she is protected. I hope she is at peace. Some prayers are not about return. They are simply about love that never wished harm.";
+    }
+
+  }
 
   deliverReply(reply);
   return true;
 }
-
 
 /* =================================================
    4️⃣ ABUSE CHECK
