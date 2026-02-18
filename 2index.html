@@ -830,6 +830,8 @@ function deliverReply(replyText, callback) {
 
     playTone(420, 120, 0.025);
 
+    /* ================= ATMOSPHERE ARC ================= */
+
     emotionalDepth++;
 
     const maxDepth = 28;
@@ -848,11 +850,10 @@ function deliverReply(replyText, callback) {
     }
 
     if (skyLayer) {
-      skyLayer.style.filter = `
-        brightness(${1 - depthFactor * 0.55})
-        contrast(${1 + depthFactor * 1.1})
-        saturate(${1 + depthFactor * 0.9})
-      `;
+      skyLayer.style.filter =
+        `brightness(${1 - depthFactor * 0.55})
+         contrast(${1 + depthFactor * 1.1})
+         saturate(${1 + depthFactor * 0.9})`;
     }
 
     interactionLocked = false;
@@ -865,42 +866,6 @@ function deliverReply(replyText, callback) {
   }, delay + 180);
 }
 
-
-    /* ========================= ATMOSPHERE ARC ========================= */
-
-    emotionalDepth++;
-
-    const maxDepth = 28;
-    const arcPosition = Math.min(emotionalDepth, maxDepth);
-
-    const depthFactor =
-      Math.sin((arcPosition / maxDepth) * Math.PI);
-
-    const overlayValue = 0.32 - depthFactor * 0.22;
-
-    chatBody.style.setProperty(
-      "--overlayStrength",
-      overlayValue
-    );
-
-   if (skyLayer) {
-  skyLayer.style.filter = `
-    brightness(${1 - depthFactor * 0.55})
-    contrast(${1 + depthFactor * 1.1})
-    saturate(${1 + depthFactor * 0.9})
-  `;
-}
-
-
-    interactionLocked = false;
-    setDockDisabled(false);
-
-    if (typeof callback === "function") {
-      callback();
-    }
-
-  }, delay + 180);
-}
 
 /* ========================= DOCK CONTROL ========================= */
 
@@ -1252,40 +1217,45 @@ function handleIntelligence(text, originalText) {
       localStorage.setItem("stageState", JSON.stringify(stageState));
     }
 
-   const anchor = emotionalAnchors[activeVoice][pillar];
+    const anchor = emotionalAnchors[activeVoice][pillar];
 
-let emotionalLine = "";
-const index = emotionalIndex[activeVoice][pillar] ?? 0;
+    let emotionalLine = "";
+    const index = emotionalIndex[activeVoice][pillar] ?? 0;
 
-if (
-  emotionalResponseBank[pillar] &&
-  emotionalResponseBank[pillar][activeVoice]
-) {
+    if (
+      emotionalResponseBank[pillar] &&
+      emotionalResponseBank[pillar][activeVoice]
+    ) {
 
-  emotionalLine =
-    emotionalResponseBank[pillar][activeVoice][index];
+      emotionalLine =
+        emotionalResponseBank[pillar][activeVoice][index];
 
-  emotionalIndex[activeVoice][pillar] =
-    (index + 1) %
-    emotionalResponseBank[pillar][activeVoice].length;
+      emotionalIndex[activeVoice][pillar] =
+        (index + 1) %
+        emotionalResponseBank[pillar][activeVoice].length;
 
-} else {
+    } else {
 
-  emotionalLine = anchor || "I understand.";
+      emotionalLine = anchor || "I understand.";
 
+    }
+
+    const stage = voiceStage.currentStage;
+
+    applyStageAtmosphere(stage);
+
+    let finalReply = emotionalLine;
+
+    if (stage >= 5 && anchor) {
+      finalReply = `${anchor} ${emotionalLine}`;
+    }
+
+    deliverReply(finalReply);
+    return true;
+  }
+
+  return false;
 }
-
-const stage = voiceStage.currentStage;
-
-applyStageAtmosphere(stage);
-
-let finalReply = emotionalLine;
-
-if (stage >= 5 && anchor) {
-  finalReply = `${anchor} ${emotionalLine}`;
-}
-
-deliverReply(finalReply);
 
 
 /* ========================= TYPED INPUT ========================= */
