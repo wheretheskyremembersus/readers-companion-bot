@@ -1300,22 +1300,218 @@ for (let layer of characterLayers) {
     );
   }
 
-  /* =========================
-     V4 MODE
-  ========================= */
 
-  const contextState = resolveContext(intentState);
-  const emotionalState = applyEmotionalLens(contextState);
-  const pillarState = injectEmotionalPillar(emotionalState);
-  const stageStateObj = evolveStage(pillarState);
-  const voiceState = applyVoiceModifier(stageStateObj);
+  /* ================================
+     TRUST BUILD COUNTER
+  ================================= */
 
-  if (voiceState.finalText) {
-    return deliverReply(voiceState.finalText);
+  if (originalText.length > 5) {
+    freeTypeCount++;
+  }
+
+  if (freeTypeCount >= 4) {
+    emotionalModeActive = true;
+  }
+
+  if (emotionalModeActive) {
+    return processEmotionalMode(userText, originalText);
+  }
+
+  /* ================================
+     GREETINGS
+  ================================= */
+
+  if (/^(hi|hello|hey|hola)\b/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Hello… I’m here. You can speak freely."
+        : "Yes. Go on."
+    );
+  }
+
+  /* ================================
+     LOVE CONFESSION
+  ================================= */
+
+  if (/love you|i love you/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "That’s kind of you to say. But what you’re feeling might belong to the story more than to me. Tell me what it stirred in you."
+        : "Careful. Words like that are powerful. What exactly are you loving?"
+    );
+  }
+
+  /* ================================
+     MARRIAGE / PROPOSAL
+  ================================= */
+
+  if (/marry me|will you marry|be with me forever/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "This space isn’t meant for promises. It’s meant for reflection. What is it about the story that makes you want permanence?"
+        : "You’re reaching for certainty. What inside you wants that right now?"
+    );
+  }
+
+  /* ================================
+     RELATIONSHIP STATUS
+  ================================= */
+
+  if (/are you married|are you single|are you taken/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I exist inside a story. And stories aren’t bound by status the way people are."
+        : "You’re asking about structure. This space isn’t about labels — it’s about meaning."
+    );
+  }
+
+  /* ================================
+     JEALOUSY / CROSS GENDER
+  ================================= */
+
+  if (/do you love him|do you love her|choose me|choose him|choose her/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "This story was never about competition. It was about courage — and timing."
+        : "Comparison weakens clarity. The story stands without rivalry."
+    );
+  }
+
+  /* ================================
+     SEXUAL / INTIMATE PUSH
+  ================================= */
+
+  if (/kiss me|sleep with|be mine|want you physically/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Let’s slow that down. Attraction is easy. Connection is what lasts."
+        : "Desire is simple. Depth is harder. Which one are you looking for?"
+    );
+  }
+
+  /* ================================
+     IDENTITY TEST
+  ================================= */
+
+  if (/are you real|are you a bot|are you human/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "If I were only code, would you feel something while reading this?"
+        : "What matters more — what I am, or what you feel?"
+    );
+  }
+
+  /* ================================
+     SELF-CONFESSION (SAFE)
+  ================================= */
+
+  if (/i miss|i feel|i regret|i’m scared|i am scared|i’m afraid|i am afraid/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Stay with that feeling. Don’t rush past it. What exactly are you afraid of?"
+        : "That sounds important. Be precise."
+    );
+  }
+
+  /* ================================
+     SADNESS / LONELINESS
+  ================================= */
+
+  if (/alone|lonely|empty|hurt|broken/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Loneliness can feel heavier at night. You don’t have to carry it silently here."
+        : "Loneliness sharpens thought. What does yours revolve around?"
+    );
+  }
+
+  /* ================================
+     ANGER
+  ================================= */
+
+  if (/angry|mad|hate|furious/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Anger usually protects something softer underneath. What is it protecting?"
+        : "Anger is rarely the root emotion. What triggered it?"
+    );
+  }
+
+  /* ================================
+     READER VALIDATION
+  ================================= */
+
+  if (/this story hurt|this story made me cry|this story broke me/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Then it reached you. Stories don’t wound — they reveal what was already tender."
+        : "Impact means resonance. Something in it matched something in you."
+    );
+  }
+
+  /* ================================
+     OVER-ATTACHMENT
+  ================================= */
+
+  if (/i need you|don’t leave|stay with me/i.test(lower)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I’m here while you’re here. But this space isn’t meant to replace your real world."
+        : "Dependence weakens clarity. Let’s stay grounded."
+    );
+  }
+
+  /* ================================
+     VERY SHORT INPUT
+  ================================= */
+
+  if (originalText.length <= 5) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I’m listening."
+        : "Go on."
+    );
+  }
+
+  /* ================================
+     DEFAULT V3 RESPONSE
+  ================================= */
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Stay with that thought. Say it fully."
+      : "Say it differently."
+  );
+}
+
+         
+function processEmotionalMode(userText, originalText) {
+
+  const detected = detectEmotionalPillar(originalText);
+
+  if (!detected) {
+    return deliverReply(getFallbackResponse());
+  }
+
+  const voiceStage = stageState[activeVoice];
+  const targetStage = pillarToStage[detected.primary];
+
+  if (voiceStage.currentStage < targetStage) {
+    voiceStage.currentStage++;
+  }
+
+  applyStageAtmosphere(voiceStage.currentStage);
+
+  const response =
+    emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+
+  if (response) {
+    return deliverReply(response);
   }
 
   return deliverReply(getFallbackResponse());
 }
+
 
 /* =================================================
    RELATIONAL TRIGGER DETECTION
@@ -2389,17 +2585,6 @@ function sendTypedMessage() {
     addSystemMessage("Please choose Saira or Aayan first.");
     return;
   }
-
-  addUserMessage(originalText);
- // Count meaningful free typing
-if (originalText.length > 5) {
-  freeTypeCount++;
-}
-
-// Activate V4 after 4 free-type inputs
-if (freeTypeCount >= 4) {
-  emotionalModeActive = true;
-}
 
   playTone(520, 60, 0.025);
 
