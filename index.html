@@ -659,6 +659,13 @@ let previewOffered = false;
 let emotionalToggle = false;
          
 let lastUserInput = "";
+         
+/* ========================= 
+V4 PARTITION CONTROL 
+========================= */
+
+let freeTypeCount = 0;
+let emotionalModeActive = false;
 
 /* =========================
    CORE STATE VARIABLES (REQUIRED)
@@ -1203,9 +1210,17 @@ function processInput(userText, originalText) {
    LAYER 1 — INTENT
 ================================================= */
 
-function resolveIntent(text, originalText) {
+function handleIntelligence(text, originalText) {
+
+  if (interactionLocked) return false;
+
+// Block emotional engine until activated
+if (!emotionalModeActive) {
+  return false;
+}
 
   const lower = text.toLowerCase().trim();
+
 
   if (/^(hi|hello|hey|hola|yo|sup)\b/.test(lower)) {
     return { type: "greeting", raw: originalText };
@@ -2264,6 +2279,16 @@ function sendTypedMessage() {
   }
 
   addUserMessage(originalText);
+ // Count meaningful free typing
+if (originalText.length > 5) {
+  freeTypeCount++;
+}
+
+// Activate V4 after 4 free-type inputs
+if (freeTypeCount >= 4) {
+  emotionalModeActive = true;
+}
+
   playTone(520, 60, 0.025);
 
   input.value = "";
