@@ -2252,37 +2252,37 @@ function clearDock() {
 function loadWelcome() {
 
   clearDock();
+
   interactionLocked = true;
 
-  // Line 1
   addSystemMessage("Hello.");
 
   setTimeout(() => {
 
-    // Line 2
     addSystemMessage("This is a quiet space.");
 
     setTimeout(() => {
 
-      // Line 3
       addSystemMessage("You can listen to our story through Saira or Aayan.");
 
       setTimeout(() => {
 
-        // Line 4
         addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below… or speak freely in your own words.</span>");
 
         setTimeout(() => {
 
-          // Line 5
           addSystemMessage("When you’re ready, you can choose a voice.");
 
+          // 🔓 UNLOCK BEFORE RENDERING BUTTONS
           interactionLocked = false;
 
           dock.innerHTML = `
             <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
             <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
           `;
+
+          // 🔓 ENSURE DOCK IS ENABLED
+          setDockDisabled(false);
 
         }, 800);
 
