@@ -2243,6 +2243,38 @@ function checkBlockStatus() {
 
   return false;
 }
+function selectVoice(v) {
+
+  initAudio();
+  playTone(520, 80, 0.03);
+
+  activeVoice = v;
+
+  emotionalDepth = 0;
+
+  if (skyLayer) {
+    skyLayer.style.backgroundImage =
+      v === "saira"
+        ? "url('Saira.jpg')"
+        : "url('Aayan.jpg')";
+
+    skyLayer.style.opacity = "1";
+    skyLayer.classList.add("active");
+  }
+
+  clearDock();
+
+  const typing = document.getElementById("typingArea");
+  if (typing) typing.style.display = "flex";
+
+  foundationalAnswered.clear();
+  characterAnswered = 0;
+  currentLayer = 0;
+
+  showFoundational();
+}
+
+         
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
