@@ -1213,6 +1213,55 @@ function handleIntelligence(text, originalText) {
 function processInput(userText, originalText) {
 
   const intentState = handleIntelligence(userText, originalText);
+/* =========================
+   TYPED QUESTION MATCHING (RESTORE V1 INTELLIGENCE)
+========================= */
+
+// 1️⃣ Foundational Typed Match
+for (let i = 0; i < 5; i++) {
+
+  const questionObj = [
+    { text: "What kind of story is this?", key: "story" },
+    { text: "What is the story about?", key: "about" },
+    { text: "Who is this story for?", key: "for" },
+    { text: "Where can I read it?", key: "where" },
+    { text: "Who is the author?", key: "author" }
+  ][i];
+
+  if (isSixtyPercentMatch(originalText, questionObj.text)) {
+
+    const replies = {
+      saira: {
+        story: "Our story is a contemporary romantic fiction — but it moves quietly. It lingers in moments that don’t seem significant at first, and then refuses to leave you.",
+        about: "It’s about me and Aayan — about love that felt certain, even when life around it wasn’t.",
+        for: "It’s for people who have felt something deeply and didn’t know what to do with it.",
+        where: "You can find our story in Kindle, paperback, hardcover, or audiobook.",
+        author: "Mohan R. wrote this as his debut novel."
+      },
+      aayan: {
+        story: "It’s contemporary romantic fiction, grounded in consequence and timing.",
+        about: "It’s about hesitation, responsibility, and the cost of silence.",
+        for: "It’s for those who chose logic over vulnerability and wondered later.",
+        where: "It’s available in digital, print, and audio formats.",
+        author: "Mohan R. wrote it to explore what lingers after love shifts."
+      }
+    };
+
+    return deliverReply(replies[activeVoice][questionObj.key]);
+  }
+}
+
+
+// 2️⃣ Character Layer Typed Match
+for (let layer of characterLayers) {
+  for (let item of layer) {
+
+    if (isSixtyPercentMatch(originalText, item.q)) {
+      return deliverReply(item.a[activeVoice]);
+    }
+
+  }
+}
 
   /* =========================
      V3 MODE (Before Emotional Activation)
