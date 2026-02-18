@@ -2252,47 +2252,45 @@ function clearDock() {
 function loadWelcome() {
 
   clearDock();
+  interactionLocked = true;
 
-  addSystemMessage("Whose voice would you like to hear?");
-
-  dock.innerHTML = `
-    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-  `;
-}
-
-function selectVoice(voice) {
-
-  activeVoice = voice;
-  interactionLocked = false;
-
-  document.getElementById("typingArea").style.display = "flex";
-
-  clearDock();
-  foundationalAnswered.clear();
-  characterAnswered = 0;
-  currentLayer = 0;
-
-  // Activate wallpaper
-  if (skyLayer) {
-    skyLayer.style.backgroundImage =
-      voice === "saira"
-        ? "url('Saira.jpg')"
-        : "url('Aayan.jpg')";
-
-    skyLayer.style.opacity = "1";
-    skyLayer.classList.add("active");
-  }
-
-  addSystemMessage(
-    voice === "saira"
-      ? "You chose to hear my side."
-      : "You chose to hear mine."
-  );
+  // Line 1
+  addSystemMessage("Hello.");
 
   setTimeout(() => {
-    showFoundational();
-  }, 500);
+
+    // Line 2
+    addSystemMessage("This is a quiet space.");
+
+    setTimeout(() => {
+
+      // Line 3
+      addSystemMessage("You can listen to our story through Saira or Aayan.");
+
+      setTimeout(() => {
+
+        // Line 4
+        addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below… or speak freely in your own words.</span>");
+
+        setTimeout(() => {
+
+          // Line 5
+          addSystemMessage("When you’re ready, you can choose a voice.");
+
+          interactionLocked = false;
+
+          dock.innerHTML = `
+            <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+            <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+          `;
+
+        }, 800);
+
+      }, 800);
+
+    }, 700);
+
+  }, 600);
 }
 
 
