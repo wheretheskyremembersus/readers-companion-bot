@@ -1263,45 +1263,7 @@ for (let layer of characterLayers) {
   }
 }
 
-  /* =========================
-     V3 MODE (Before Emotional Activation)
-  ========================= */
-
-  if (!emotionalModeActive) {
-
-    if (intentState.type === "greeting") {
-      return deliverReply(
-        activeVoice === "saira"
-          ? "Hello… I’m here."
-          : "Yes."
-      );
-    }
-
-    if (intentState.type === "identity") {
-      return deliverReply(
-        activeVoice === "saira"
-          ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
-          : "Does a machine carry regret… or memory? I speak because something stayed."
-      );
-    }
-
-    if (intentState.type === "memory_trigger") {
-      return deliverReply(
-        activeVoice === "saira"
-          ? "That sounds like you’re reaching for something specific."
-          : "You’re asking with intent."
-      );
-    }
-
-    return deliverReply(
-      activeVoice === "saira"
-        ? "Stay with that thought. Say it fully."
-        : "Be precise. What are you really asking?"
-    );
-  }
-
-
-  /* ================================
+ /* ================================
      TRUST BUILD COUNTER
   ================================= */
 
@@ -1312,10 +1274,13 @@ for (let layer of characterLayers) {
   if (freeTypeCount >= 4) {
     emotionalModeActive = true;
   }
+         
+  /* =========================
+     3️⃣ HARD PARTITION
+  ========================= */
 
-  if (emotionalModeActive) {
-    return processEmotionalMode(userText, originalText);
-  }
+  if (!emotionalModeActive) {
+
 
   /* ================================
      GREETINGS
@@ -1329,7 +1294,16 @@ for (let layer of characterLayers) {
     );
   }
 
-  /* ================================
+ /* ===== IDENTITY ===== */
+    if (/are you (a )?(bot|real|human)/i.test(lower)) {
+      return deliverReply(
+        activeVoice === "saira"
+          ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
+          : "Does a machine carry regret… or memory? I speak because something stayed."
+      );
+    }
+
+           /* ================================
      LOVE CONFESSION
   ================================= */
 
@@ -1389,18 +1363,7 @@ for (let layer of characterLayers) {
     );
   }
 
-  /* ================================
-     IDENTITY TEST
-  ================================= */
-
-  if (/are you real|are you a bot|are you human/i.test(lower)) {
-    return deliverReply(
-      activeVoice === "saira"
-        ? "If I were only code, would you feel something while reading this?"
-        : "What matters more — what I am, or what you feel?"
-    );
-  }
-
+ 
   /* ================================
      SELF-CONFESSION (SAFE)
   ================================= */
@@ -1462,18 +1425,6 @@ for (let layer of characterLayers) {
   }
 
   /* ================================
-     VERY SHORT INPUT
-  ================================= */
-
-  if (originalText.length <= 5) {
-    return deliverReply(
-      activeVoice === "saira"
-        ? "I’m listening."
-        : "Go on."
-    );
-  }
-
-  /* ================================
      DEFAULT V3 RESPONSE
   ================================= */
 
@@ -1484,6 +1435,12 @@ for (let layer of characterLayers) {
   );
 }
 
+   /* =========================
+     4️⃣ EMOTIONAL MODE ONLY
+  ========================= */
+
+         return processEmotionalMode(userText, originalText);
+}
          
 function processEmotionalMode(userText, originalText) {
 
@@ -1511,7 +1468,6 @@ function processEmotionalMode(userText, originalText) {
 
   return deliverReply(getFallbackResponse());
 }
-
 
 /* =================================================
    RELATIONAL TRIGGER DETECTION
