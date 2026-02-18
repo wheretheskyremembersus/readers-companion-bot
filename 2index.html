@@ -731,11 +731,11 @@ function addUserMessage(text) {
   const safeText = sanitize(text);
 
   chatBody.insertAdjacentHTML(
-  "beforeend",
-  `<div class="message user">
-      <div class="bubble"><strong>${safeText}</strong></div>
-   </div>`
-);
+    "beforeend",
+    `<div class="message user">
+        <div class="bubble"><strong>${safeText}</strong></div>
+     </div>`
+  );
 
   autoScroll();
 }
@@ -786,15 +786,16 @@ function showTypingIndicator() {
       : "system-msg";
 
   chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message ${side}" id="typingIndicator">
-       <div class="bubble">
-         <div class="typing-bubble">
-           <span></span><span></span><span></span>
-         </div>
+  "beforeend",
+  `<div class="message ${side}" id="typingIndicator">
+     <div class="bubble">
+       <div class="typing-bubble">
+         <span></span><span></span><span></span>
        </div>
-     </div>`
-  );
+     </div>
+   </div>`
+);
+
 
   autoScroll();
 }
@@ -846,11 +847,13 @@ function deliverReply(replyText, callback) {
       overlayValue
     );
 
-    skyLayer.style.filter = `
-  brightness(${1 - depthFactor * 0.55})
-  contrast(${1 + depthFactor * 1.1})
-  saturate(${1 + depthFactor * 0.9})
-`;
+   if (skyLayer) {
+  skyLayer.style.filter = `
+    brightness(${1 - depthFactor * 0.55})
+    contrast(${1 + depthFactor * 1.1})
+    saturate(${1 + depthFactor * 0.9})
+  `;
+}
 
 
     interactionLocked = false;
@@ -1293,8 +1296,14 @@ function loadWelcome() {
 
   emotionalDepth = 0;
 
+  if (chatBody) {
   chatBody.style.setProperty("--overlayStrength", 0.45);
+}
+
+if (skyLayer) {
   skyLayer.style.filter = "brightness(1) contrast(1) saturate(1)";
+}
+
 
   activeVoice = null;
   interactionLocked = false;
