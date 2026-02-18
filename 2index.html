@@ -830,6 +830,42 @@ function deliverReply(replyText, callback) {
 
     playTone(420, 120, 0.025);
 
+    emotionalDepth++;
+
+    const maxDepth = 28;
+    const arcPosition = Math.min(emotionalDepth, maxDepth);
+
+    const depthFactor =
+      Math.sin((arcPosition / maxDepth) * Math.PI);
+
+    const overlayValue = 0.32 - depthFactor * 0.22;
+
+    if (chatBody) {
+      chatBody.style.setProperty(
+        "--overlayStrength",
+        overlayValue
+      );
+    }
+
+    if (skyLayer) {
+      skyLayer.style.filter = `
+        brightness(${1 - depthFactor * 0.55})
+        contrast(${1 + depthFactor * 1.1})
+        saturate(${1 + depthFactor * 0.9})
+      `;
+    }
+
+    interactionLocked = false;
+    setDockDisabled(false);
+
+    if (typeof callback === "function") {
+      callback();
+    }
+
+  }, delay + 180);
+}
+
+
     /* ========================= ATMOSPHERE ARC ========================= */
 
     emotionalDepth++;
@@ -869,6 +905,8 @@ function deliverReply(replyText, callback) {
 /* ========================= DOCK CONTROL ========================= */
 
 function setDockDisabled(state) {
+
+  if (!dock) return;
 
   const buttons = dock.querySelectorAll("button");
 
@@ -942,8 +980,6 @@ function isSixtyPercentMatch(userText, targetText) {
 
 function applyStageAtmosphere(stage) {
 
-  if (!chatBody || !skyLayer) return;
-
   const overlayMap = {
     1: 0.30,
     2: 0.28,
@@ -964,16 +1000,21 @@ function applyStageAtmosphere(stage) {
     7: 0.7
   };
 
-  chatBody.style.setProperty(
-    "--overlayStrength",
-    overlayMap[stage] ?? 0.30
-  );
+  if (chatBody) {
+    chatBody.style.setProperty(
+      "--overlayStrength",
+      overlayMap[stage] ?? 0.30
+    );
+  }
 
-  skyLayer.style.filter =
-    `brightness(${brightnessMap[stage]})
-     contrast(${1 + stage * 0.05})
-     saturate(${1 + stage * 0.08})`;
+  if (skyLayer) {
+    skyLayer.style.filter =
+      `brightness(${brightnessMap[stage]})
+       contrast(${1 + stage * 0.05})
+       saturate(${1 + stage * 0.08})`;
+  }
 }
+
 
 /* ========================= EMOTIONAL PILLARS ========================= */
 
@@ -1211,33 +1252,41 @@ function handleIntelligence(text, originalText) {
       localStorage.setItem("stageState", JSON.stringify(stageState));
     }
 
-    const anchor = emotionalAnchors[activeVoice][pillar];
+   const anchor = emotionalAnchors[activeVoice][pillar];
 
-    const index = emotionalIndex[activeVoice][pillar] ?? 0;
-    const emotionalLine =
-      emotionalResponseBank[pillar][activeVoice][index];
+let emotionalLine = "";
+const index = emotionalIndex[activeVoice][pillar] ?? 0;
 
-    emotionalIndex[activeVoice][pillar] =
-      (index + 1) %
-      emotionalResponseBank[pillar][activeVoice].length;
+if (
+  emotionalResponseBank[pillar] &&
+  emotionalResponseBank[pillar][activeVoice]
+) {
 
-    const stage = voiceStage.currentStage;
+  emotionalLine =
+    emotionalResponseBank[pillar][activeVoice][index];
 
-    applyStageAtmosphere(stage);
+  emotionalIndex[activeVoice][pillar] =
+    (index + 1) %
+    emotionalResponseBank[pillar][activeVoice].length;
 
-    let finalReply = emotionalLine;
+} else {
 
-    if (stage >= 5) {
-     finalReply = `${anchor} ${emotionalLine}`;
-    }
+  emotionalLine = anchor || "I understand.";
 
-    deliverReply(finalReply);
-
-    return true;
-  }
-
-  return false;
 }
+
+const stage = voiceStage.currentStage;
+
+applyStageAtmosphere(stage);
+
+let finalReply = emotionalLine;
+
+if (stage >= 5 && anchor) {
+  finalReply = `${anchor} ${emotionalLine}`;
+}
+
+deliverReply(finalReply);
+
 
 /* ========================= TYPED INPUT ========================= */
 
@@ -1332,9 +1381,13 @@ function selectVoice(v) {
   const saved = localStorage.getItem("stageState");
 
   if (saved) {
-    const parsed = JSON.parse(saved);
-    if (parsed[v]) {
-      stageState[v] = parsed[v];
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed[v]) {
+        stageState[v] = parsed[v];
+      }
+    } catch (e) {
+      localStorage.removeItem("stageState");
     }
   }
 
@@ -1342,7 +1395,8 @@ function selectVoice(v) {
 
   clearDock();
 
-  document.getElementById("typingArea").style.display = "flex";
+  const typing = document.getElementById("typingArea");
+  if (typing) typing.style.display = "flex";
 
   const intro = v === "saira"
     ? "Hello. This is Saira."
