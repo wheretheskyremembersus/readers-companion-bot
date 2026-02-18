@@ -731,11 +731,11 @@ function addUserMessage(text) {
   const safeText = sanitize(text);
 
   chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message user">
-       <div class="bubble"><strong>${safeText}</strong></div>
-     </div>`
-  );
+  "beforeend",
+  `<div class="message user">
+      <div class="bubble"><strong>${safeText}</strong></div>
+   </div>`
+);
 
   autoScroll();
 }
@@ -846,12 +846,12 @@ function deliverReply(replyText, callback) {
       overlayValue
     );
 
-    if (skyLayer) {
-      skyLayer.style.filter =
-        `brightness(${1 - depthFactor * 0.55})
-         contrast(${1 + depthFactor * 1.1})
-         saturate(${1 + depthFactor * 0.9})`;
-    }
+    skyLayer.style.filter = `
+  brightness(${1 - depthFactor * 0.55})
+  contrast(${1 + depthFactor * 1.1})
+  saturate(${1 + depthFactor * 0.9})
+`;
+
 
     interactionLocked = false;
     setDockDisabled(false);
@@ -1225,7 +1225,7 @@ function handleIntelligence(text, originalText) {
     let finalReply = emotionalLine;
 
     if (stage >= 5) {
-      finalReply = `${anchor} ${emotionalLine}`;
+     finalReply = `${anchor} ${emotionalLine}`;
     }
 
     deliverReply(finalReply);
