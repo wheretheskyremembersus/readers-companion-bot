@@ -830,30 +830,6 @@ function deliverReply(replyText, callback) {
 
     playTone(420, 120, 0.025);
 
-    emotionalDepth++;
-
-    const maxDepth = 28;
-    const arcPosition = Math.min(emotionalDepth, maxDepth);
-
-    const depthFactor =
-      Math.sin((arcPosition / maxDepth) * Math.PI);
-
-    const overlayValue = 0.32 - depthFactor * 0.22;
-
-    if (chatBody) {
-      chatBody.style.setProperty(
-        "--overlayStrength",
-        overlayValue
-      );
-    }
-
-    if (skyLayer) {
-      skyLayer.style.filter =
-        `brightness(${1 - depthFactor * 0.55})
-         contrast(${1 + depthFactor * 1.1})
-         saturate(${1 + depthFactor * 0.9})`;
-    }
-
     interactionLocked = false;
     setDockDisabled(false);
 
