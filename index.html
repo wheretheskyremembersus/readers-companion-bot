@@ -2546,11 +2546,12 @@ function sendTypedMessage() {
 
   input.value = "";
 
+  addUserMessage(originalText);   // ✅ THIS WAS MISSING
+
   const text = originalText.toLowerCase();
 
   processInput(text, originalText);
 }
-
 /* =========================
    START
 ========================= */
