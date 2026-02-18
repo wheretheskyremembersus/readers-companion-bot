@@ -1214,13 +1214,7 @@ function handleIntelligence(text, originalText) {
 
   if (interactionLocked) return false;
 
-// Block emotional engine until activated
-if (!emotionalModeActive) {
-  return false;
-}
-
   const lower = text.toLowerCase().trim();
-
 
   if (/^(hi|hello|hey|hola|yo|sup)\b/.test(lower)) {
     return { type: "greeting", raw: originalText };
@@ -1387,6 +1381,14 @@ function getStageNativePillar(stage) {
 ================================================= */
 function injectEmotionalPillar(state) {
 
+  // Partition protection
+  if (!emotionalModeActive) {
+    return {
+      ...state,
+      activePillar: null
+    };
+  }
+
   const currentStage =
     stageState[activeVoice]?.currentStage || 1;
 
@@ -1398,7 +1400,6 @@ function injectEmotionalPillar(state) {
 
   const targetStage = pillarToStage[finalPillar];
 
-  // Prevent large emotional jumps
   if (targetStage > currentStage + 1) {
     finalPillar = nativePillar;
   }
@@ -1408,6 +1409,7 @@ function injectEmotionalPillar(state) {
     activePillar: finalPillar
   };
 }
+
 
 /* =================================================
    MASTER EMOTIONAL RESPONSE BANK (STRICT 7 STAGES)
