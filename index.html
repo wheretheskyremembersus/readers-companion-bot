@@ -2264,10 +2264,16 @@ function loadWelcome() {
 function selectVoice(voice) {
 
   activeVoice = voice;
+  interactionLocked = false;
 
   document.getElementById("typingArea").style.display = "flex";
 
-// Activate wallpaper
+  clearDock();
+  foundationalAnswered.clear();
+  characterAnswered = 0;
+  currentLayer = 0;
+
+  // Activate wallpaper
   if (skyLayer) {
     skyLayer.style.backgroundImage =
       voice === "saira"
@@ -2278,11 +2284,6 @@ function selectVoice(voice) {
     skyLayer.classList.add("active");
   }
 
-  clearDock();
-  foundationalAnswered.clear();
-  characterAnswered = 0;
-  currentLayer = 0;
-
   addSystemMessage(
     voice === "saira"
       ? "You chose to hear my side."
@@ -2291,8 +2292,9 @@ function selectVoice(voice) {
 
   setTimeout(() => {
     showFoundational();
-  }, 600);
+  }, 500);
 }
+
 
 function sendTypedMessage() {
 
