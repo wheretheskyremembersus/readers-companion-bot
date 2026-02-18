@@ -1210,25 +1210,58 @@ function processInput(userText, originalText) {
    LAYER 1 — INTENT
 ================================================= */
 
-function handleIntelligence(text, originalText) {
+function processInput(userText, originalText) {
 
-  if (interactionLocked) return false;
+  const intentState = handleIntelligence(userText, originalText);
 
-  const lower = text.toLowerCase().trim();
+  // If emotional mode is NOT active, return direct layered reply
+  if (!emotionalModeActive) {
 
-  if (/^(hi|hello|hey|hola|yo|sup)\b/.test(lower)) {
-    return { type: "greeting", raw: originalText };
+    if (intentState.type === "greeting") {
+      return deliverReply(
+        activeVoice === "saira"
+          ? "Hello… I’m here."
+          : "Yes."
+      );
+    }
+
+    if (intentState.type === "identity") {
+      return deliverReply(
+        activeVoice === "saira"
+          ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
+          : "Does a machine carry regret… or memory? I speak because something stayed."
+      );
+    }
+
+    if (intentState.type === "memory_trigger") {
+      return deliverReply(
+        activeVoice === "saira"
+          ? "That sounds like you’re reaching for something specific."
+          : "You’re asking with intent."
+      );
+    }
+
+    // Default V3 conversational response
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Stay with that thought. Say it fully."
+        : "Be precise. What are you really asking?"
+    );
   }
 
-  if (/(who are you|are you real|what are you)/i.test(lower)) {
-    return { type: "identity", raw: originalText };
-  }
+  // If V4 activated → run emotional engine
 
-  if (/(where|when|why|how|did|do|does)/i.test(lower)) {
-    return { type: "memory_trigger", raw: originalText };
-  }
+  const contextState = resolveContext(intentState);
+  const emotionalState = applyEmotionalLens(contextState);
+  const pillarState = injectEmotionalPillar(emotionalState);
+  const stageStateObj = evolveStage(pillarState);
+  const voiceState = applyVoiceModifier(stageStateObj);
 
-  return { type: "emotional_probe", raw: originalText };
+  if (voiceState.finalText) {
+    deliverReply(voiceState.finalText);
+  } else {
+    deliverReply(getFallbackResponse());
+  }
 }
 
 /* =================================================
