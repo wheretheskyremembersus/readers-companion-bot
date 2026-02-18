@@ -1308,6 +1308,91 @@ for (let layer of characterLayers) {
       );
     }
 
+/* =========================
+   CIVILITY + DAILY LANGUAGE (MAXIMISED VERSION)
+========================= */
+
+// GOOD MORNING / EVENING / NIGHT
+if (/(good morning|good afternoon|good evening|good night)/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Good… I hope today feels gentle with you. Mornings carry a kind of quiet reset — a chance to step into things differently than yesterday. Whatever you’re carrying, you don’t have to rush through it here."
+      : "Good. A new part of the day always brings recalibration. Whatever yesterday held, today gives you another position to stand from."
+  );
+}
+
+// HOW ARE YOU
+if (/(how are you|how are you doing)/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That depends on the day… but today, I’m steady. There are still thoughts that linger, but they no longer unsettle me the way they once did. What about you — are you asking out of habit, or because something feels heavy?"
+      : "I’m composed. Stability isn’t the absence of thought — it’s control over it. But tell me — how are you, really?"
+  );
+}
+
+// THANK YOU
+if (/(thank you|thanks)/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You don’t need to thank me. You stayed — and that matters more than courtesy. Gratitude usually means something resonated. I’m glad it did."
+      : "Acknowledged. Appreciation signals impact. If something here reached you, then the exchange was worthwhile."
+  );
+}
+
+// PRAISE / POSITIVE REACTION
+if (/(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful|so good|so beautiful|so powerful)/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m glad it resonated with you. Sometimes what we call ‘beautiful’ is simply something that felt true. When something feels powerful, it’s usually because it mirrors something inside us."
+      : "If it felt strong to you, then it struck alignment. Reactions like that don’t happen without recognition beneath the surface."
+  );
+}
+
+// APOLOGY
+if (/(sorry|i apologize|my mistake)/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You don’t need to apologise for feeling, or for speaking. This space isn’t built on perfection — it’s built on honesty."
+      : "No harm done. Precision improves with clarity, not apology."
+  );
+}
+
+// LAUGHTER
+if (/(haha|lol|that’s funny|thats funny)/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m glad it made you smile. Laughter loosens the tension we don’t always admit we’re carrying."
+      : "Humour sharpens memory. If you laughed, something connected."
+  );
+}
+
+// SIMPLE YES
+if (/^(yes|yeah|yep)$/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Then stay with that. Don’t rush past what you agreed to — sometimes ‘yes’ carries more meaning than we realise."
+      : "Then continue. Agreement implies readiness."
+  );
+}
+
+// SIMPLE NO
+if (/^(no|nope)$/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That’s alright. ‘No’ is clarity. Say what feels truer instead."
+      : "Then clarify. Refusal is direction."
+  );
+}
+
+           
            /* ================================
      LOVE CONFESSION
   ================================= */
