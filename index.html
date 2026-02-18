@@ -1212,7 +1212,10 @@ function handleIntelligence(text, originalText) {
 
 function processInput(userText, originalText) {
 
+  const lower = userText.toLowerCase().trim();  // ✅ ADD THIS LINE
+
   const intentState = handleIntelligence(userText, originalText);
+
 /* =========================
    TYPED QUESTION MATCHING (RESTORE V1 INTELLIGENCE)
 ========================= */
