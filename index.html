@@ -1185,36 +1185,39 @@ if (primary[1] >= confidenceThreshold) {
    CORE EXECUTION PIPELINE
 ================================================= */
 
-function processInput(userText, originalText) {
+function handleIntelligence(text, originalText) {
 
-  const intentState = resolveIntent(userText, originalText);
+  const lower = text.toLowerCase().trim();
 
-  const contextState = resolveContext(intentState);
+  // Greeting
+  if (/^(hi|hello|hey)\b/i.test(lower)) {
+    return { type: "greeting", raw: originalText };
+  }
 
-  const emotionalState = applyEmotionalLens(contextState);
+  // Identity
+  if (/are you (a )?(bot|real|human)/i.test(lower)) {
+    return { type: "identity", raw: originalText };
+  }
 
-  const pillarState = injectEmotionalPillar(emotionalState);
+  // Memory / past trigger
+  if (/remember|did you|when did/i.test(lower)) {
+    return { type: "memory_trigger", raw: originalText };
+  }
 
-  const stageStateObj = evolveStage(pillarState);
-
-  const voiceState = applyVoiceModifier(stageStateObj);
-
-  if (voiceState.finalText) {
-  deliverReply(voiceState.finalText);
-} else {
-  deliverReply(getFallbackResponse());
+  return {
+    type: "free",
+    raw: originalText
+  };
 }
-
-}
-/* =================================================
-   LAYER 1 — INTENT
-================================================= */
 
 function processInput(userText, originalText) {
 
   const intentState = handleIntelligence(userText, originalText);
 
-  // If emotional mode is NOT active, return direct layered reply
+  /* =========================
+     V3 MODE (Before Emotional Activation)
+  ========================= */
+
   if (!emotionalModeActive) {
 
     if (intentState.type === "greeting") {
@@ -1241,7 +1244,6 @@ function processInput(userText, originalText) {
       );
     }
 
-    // Default V3 conversational response
     return deliverReply(
       activeVoice === "saira"
         ? "Stay with that thought. Say it fully."
@@ -1249,7 +1251,9 @@ function processInput(userText, originalText) {
     );
   }
 
-  // If V4 activated → run emotional engine
+  /* =========================
+     V4 MODE
+  ========================= */
 
   const contextState = resolveContext(intentState);
   const emotionalState = applyEmotionalLens(contextState);
@@ -1258,31 +1262,10 @@ function processInput(userText, originalText) {
   const voiceState = applyVoiceModifier(stageStateObj);
 
   if (voiceState.finalText) {
-    deliverReply(voiceState.finalText);
-  } else {
-    deliverReply(getFallbackResponse());
+    return deliverReply(voiceState.finalText);
   }
-}
 
-/* =================================================
-   LAYER 2 — CONTEXT
-================================================= */
-
-function resolveContext(intentState) {
-
-  const relational = detectRelationalTrigger(
-    intentState.raw,
-    activeVoice
-  );
-
-  return {
-    intentType: intentState.type,
-    activeCharacter: activeVoice,
-    stageSnapshot: stageState[activeVoice]?.currentStage || 1,
-    original: intentState.raw,
-    relationalActive: relational.relationalActive,
-    relationalIntensity: relational.relationalIntensity
-  };
+  return deliverReply(getFallbackResponse());
 }
 
 /* =================================================
