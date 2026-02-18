@@ -2267,6 +2267,17 @@ function selectVoice(voice) {
 
   document.getElementById("typingArea").style.display = "flex";
 
+// Activate wallpaper
+  if (skyLayer) {
+    skyLayer.style.backgroundImage =
+      voice === "saira"
+        ? "url('Saira.jpg')"
+        : "url('Aayan.jpg')";
+
+    skyLayer.style.opacity = "1";
+    skyLayer.classList.add("active");
+  }
+
   clearDock();
   foundationalAnswered.clear();
   characterAnswered = 0;
