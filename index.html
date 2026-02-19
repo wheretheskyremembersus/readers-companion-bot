@@ -1216,6 +1216,65 @@ if (primary[1] >= confidenceThreshold) {
 
   return null;
 }
+/* =========================
+   V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
+========================= */
+
+const v3FallbackBank = {
+  saira: {
+
+    firm: [
+      "That’s enough.",
+      "It stays there.",
+      "That is sufficient.",
+      "We’ll leave it as it is.",
+      "It remains contained.",
+      "That is where it rests.",
+      "It does not go further.",
+      "That holds.",
+      "It remains steady.",
+      "That’s the boundary."
+    ],
+
+    neutral: [
+      "Some thoughts take time.",
+      "Not everything needs expansion.",
+      "It can remain as it is.",
+      "Certain things remain unspoken.",
+      "It doesn’t require more.",
+      "That’s where it stands.",
+      "It stays contained.",
+      "Not all thoughts resolve immediately.",
+      "Some things stay unfinished.",
+      "It doesn’t need elaboration."
+    ],
+
+    reflective: [
+      "Some meanings settle quietly.",
+      "It’s alright for it to remain undefined.",
+      "Not everything opens immediately.",
+      "It can rest there.",
+      "Certain thoughts don’t ask for movement.",
+      "That’s as far as it goes.",
+      "Some things are better left steady.",
+      "It stays where it is.",
+      "It doesn’t need reshaping.",
+      "That is enough."
+    ]
+  },
+
+  aayan: {
+
+    firm: [
+      "That is final.",
+      "Nothing more.",
+      "That stands.",
+      "It remains unchanged.",
+      "That is complete.",
+      "No expansion required.",
+      "That is the extent.",
+      "It stay
+],
 /* =================================================
    CORE EXECUTION PIPELINE
 ================================================= */
@@ -1777,6 +1836,7 @@ if (nameMatch) {
       : `Good to meet you, ${sessionUserName}.`
   );
 }
+         
   /* ================================
      DEFAULT V3 RESPONSE
   ================================= */
@@ -1792,13 +1852,37 @@ if (softDetected) {
     return deliverReply(anchor);
   }
 }
+/* =========================
+   V3 CLASSIFIED FALLBACK EXECUTION
+========================= */
 
-return deliverReply(
-  activeVoice === "saira"
-    ? "Stay with that thought. Say it fully."
-    : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
-);
+const wordCount = originalText.trim().split(/\s+/).length;
+
+let category = "neutral";
+
+if (wordCount <= 2) {
+  category = "firm";
 }
+else if (wordCount >= 8) {
+  category = "reflective";
+}
+
+if (originalText === lastUserInput) {
+  category = "firm";
+}
+
+lastUserInput = originalText;
+
+const bank = v3FallbackBank[activeVoice][category];
+
+const index = v3FallbackIndex[activeVoice] % bank.length;
+
+const reply = bank[index];
+
+v3FallbackIndex[activeVoice]++;
+
+return deliverReply(reply);
+} 
        
 function processEmotionalMode(userText, originalText) {
 
