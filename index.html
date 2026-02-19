@@ -1548,58 +1548,59 @@ if (
 
 }
 /* ================================
-   RELATIONAL SAFETY / RETURN / FUTURE HANDLER
+   RELATIONAL SAFETY / RETURN / FUTURE HANDLER (REFINED)
 ================================= */
 
 if (
 
-  /^is (he|she) (safe|okay|ok)\??$/i.test(originalText.trim()) ||
+  /\bis (he|she) (safe|okay|ok)\b/i.test(originalText) ||
 
-  /^will (he|she) come back\??$/i.test(originalText.trim()) ||
+  /\bwill (he|she) come back\b/i.test(originalText) ||
 
-  /^do you hope (he|she) will come back\??$/i.test(originalText.trim()) ||
+  /\bhope (he|she) will come back\b/i.test(originalText) ||
 
-  /^will (you|both of you) be together again\??$/i.test(originalText.trim()) ||
+  /\btogether again\b/i.test(originalText) ||
 
-  /^would you go back\??$/i.test(originalText.trim())
+  /\breunite\b/i.test(originalText) ||
+
+  /\bwould you go back\b/i.test(originalText)
 
 ) {
 
-  const reference = resolveReference(originalText);
   const stage = stageState[activeVoice]?.currentStage || 1;
 
   skipRelationalPrefix = true;
 
-  const futureMap = {
+  const map = {
 
     saira: {
 
       safety: {
-        1: "I believe he is.",
-        3: "I believe he is. I hold onto that.",
-        5: "I don’t know where he is. But I pray he’s safe.",
-        7: "I don’t know where he is. But I ask the sky to protect him."
+        1: "I choose to believe he is.",
+        3: "I believe he is. I hold onto that quietly.",
+        5: "I don’t know where he is. But I pray he is safe.",
+        7: "Wherever he is, I ask that he be protected."
       },
 
       return: {
-        1: "I don’t know.",
-        3: "I don’t know. Some things depend on timing.",
-        5: "I don’t know. But I haven’t stopped hoping.",
-        7: "If we are meant to cross paths again, it won’t be accidental."
+        1: "If something is meant to return, it will.",
+        3: "If we cross paths again, it will not be accidental.",
+        5: "If he returns, it will be because timing no longer stands between us.",
+        7: "If he comes back, it will be because both of us grew into who we were meant to become."
       },
 
       together: {
-        1: "That isn’t something I can answer.",
-        3: "That depends on more than feeling.",
-        5: "If we meet again, it would have to be different.",
-        7: "If we meet again, it would be because both of us grew enough to stand without fear."
+        1: "Being together requires more than memory.",
+        3: "If we stand together again, it would require courage from both sides.",
+        5: "If we meet again, it would have to be without fear deciding for us.",
+        7: "If we are together again, it will be because distance refined us rather than defeated us."
       },
 
       goBack: {
-        1: "I can’t relive what already happened.",
-        3: "Going back isn’t the same as moving forward.",
-        5: "I wouldn’t go back unchanged.",
-        7: "I wouldn’t go back to who I was. But I wouldn’t refuse what was real."
+        1: "I cannot relive the past.",
+        3: "Going back isn't the same as growing forward.",
+        5: "I would not return unchanged.",
+        7: "I would not go back to who I was. But I would not deny what we were."
       }
     },
 
@@ -1607,58 +1608,50 @@ if (
 
       safety: {
         1: "I assume she is.",
-        3: "I believe she is. I choose to.",
-        5: "I don’t know where she is. But I ask for her safety.",
-        7: "I don’t know where she is. But I’ve never stopped asking that she be protected."
+        3: "I believe she is. I hold that firmly.",
+        5: "Wherever she is, I ask that she remains safe.",
+        7: "I have never stopped asking that she be protected."
       },
 
       return: {
-        1: "I don’t know.",
-        3: "Return depends on readiness.",
-        5: "If paths cross again, it will be because both moved forward.",
-        7: "If we meet again, it will be because alignment replaced hesitation."
+        1: "Return depends on alignment.",
+        3: "If paths cross again, it will be because readiness replaced hesitation.",
+        5: "If she returns, it will be because both of us changed enough.",
+        7: "If she comes back, it will be because timing and strength finally agreed."
       },
 
       together: {
-        1: "That isn’t predictable.",
-        3: "That depends on more than memory.",
-        5: "Being together again would require growth.",
-        7: "If we stand together again, it would be because distance refined us rather than broke us."
+        1: "Togetherness requires more than feeling.",
+        3: "If we stand together again, it would require growth.",
+        5: "If we reunite, it would not be as who we were.",
+        7: "If we are together again, it will be because distance clarified rather than ended us."
       },
 
       goBack: {
         1: "The past is fixed.",
-        3: "Going back isn’t correction.",
-        5: "I wouldn’t return unchanged.",
-        7: "I wouldn’t repeat the past. But I wouldn’t deny what it meant."
+        3: "Returning isn't correction.",
+        5: "I would not return unchanged.",
+        7: "I would not repeat the past. But I would not deny its meaning."
       }
     }
   };
 
-  const voiceData = futureMap[activeVoice];
+  const voiceData = map[activeVoice];
 
   if (/safe|okay|ok/i.test(originalText)) {
-    return deliverReply(
-      voiceData.safety[stage] || voiceData.safety[1]
-    );
+    return deliverReply(voiceData.safety[stage] || voiceData.safety[1]);
   }
 
-  if (/come back/i.test(originalText)) {
-    return deliverReply(
-      voiceData.return[stage] || voiceData.return[1]
-    );
+  if (/come back|hope/i.test(originalText)) {
+    return deliverReply(voiceData.return[stage] || voiceData.return[1]);
   }
 
-  if (/together/i.test(originalText)) {
-    return deliverReply(
-      voiceData.together[stage] || voiceData.together[1]
-    );
+  if (/together|reunite/i.test(originalText)) {
+    return deliverReply(voiceData.together[stage] || voiceData.together[1]);
   }
 
   if (/go back/i.test(originalText)) {
-    return deliverReply(
-      voiceData.goBack[stage] || voiceData.goBack[1]
-    );
+    return deliverReply(voiceData.goBack[stage] || voiceData.goBack[1]);
   }
 
 }
