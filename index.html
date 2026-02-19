@@ -680,6 +680,24 @@ let currentLayer = 0;
 
 let reflections = [];
 let reflectionStep = 0;
+
+/* =========================
+   TOLL GATE SYSTEM
+========================= */
+
+let tollState = {
+  saira: {
+    dockCount: 0,
+    freeCount: 0,
+    unlocked: false
+  },
+  aayan: {
+    dockCount: 0,
+    freeCount: 0,
+    unlocked: false
+  }
+};
+
 /* =========================
    EMOTIONAL ROTATION INDEX
 ========================= */
@@ -1268,18 +1286,9 @@ for (let layer of characterLayers) {
   }
 }
 
- /* ================================
-     TRUST BUILD COUNTER
-  ================================= */
-
-  if (originalText.length > 5) {
-    freeTypeCount++;
-  }
-
-  if (freeTypeCount >= 4) {
-    emotionalModeActive = true;
-  }
-         
+ // HARD PARTITION USING TOLL SYSTEM
+if (!tollState[activeVoice].unlocked) {
+       
   /* =========================
      3️⃣ HARD PARTITION
   ========================= */
@@ -1543,9 +1552,12 @@ function processEmotionalMode(userText, originalText) {
   const voiceStage = stageState[activeVoice];
   const targetStage = pillarToStage[detected.primary];
 
-  if (voiceStage.currentStage < targetStage) {
-    voiceStage.currentStage++;
-  }
+ if (voiceStage.currentStage < targetStage) {
+  voiceStage.currentStage = Math.min(
+    voiceStage.currentStage + 1,
+    targetStage
+  );
+}
 
   applyStageAtmosphere(voiceStage.currentStage);
 
@@ -1633,9 +1645,6 @@ function evolveStage(state) {
       voiceStage.momentum[targetStage] = 0;
     }
 
-    localStorage.setItem("stageState", JSON.stringify(stageState));
-  }
-
   applyStageAtmosphere(voiceStage.currentStage);
 
   return {
@@ -1689,7 +1698,7 @@ function getStageNativePillar(stage) {
 function injectEmotionalPillar(state) {
 
   // Partition protection
-  if (!emotionalModeActive) {
+  if (!tollState[activeVoice]?.unlocked) {
     return {
       ...state,
       activePillar: null
@@ -2219,6 +2228,29 @@ function answerCharacter(item, btn) {
   deliverReply(reply, function () {
     characterAnswered++;
 
+ // TOLL: Dock progression
+tollState[activeVoice].dockCount++;
+
+const dockProgress = tollState[activeVoice].dockCount;
+
+if (dockProgress === 5) {
+  stageState[activeVoice].currentStage = 2;
+}
+if (dockProgress === 10) {
+  stageState[activeVoice].currentStage = 3;
+}
+if (dockProgress === 15) {
+  stageState[activeVoice].currentStage = 4;
+}
+if (dockProgress === 20) {
+  stageState[activeVoice].currentStage = 5;
+}
+
+// Unlock V4 if 5 dock reached
+if (dockProgress >= 5) {
+  tollState[activeVoice].unlocked = true;
+}
+
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
       unlockNextLayer();
     }
@@ -2637,6 +2669,18 @@ function sendTypedMessage() {
   input.value = "";
 
   addUserMessage(originalText);   // ✅ THIS WAS MISSING
+
+// TOLL: Free type progression
+const wordCount = originalText.trim().split(/\s+/).length;
+
+if (wordCount >= 5) {
+  tollState[activeVoice].freeCount++;
+}
+
+if (tollState[activeVoice].freeCount >= 3) {
+  tollState[activeVoice].unlocked = true;
+  stageState[activeVoice].currentStage = 2;
+}
 
   const text = originalText.toLowerCase();
 
