@@ -1356,17 +1356,25 @@ return deliverReply(
   );
 }
          
-// STRICT ORIENTATION OVERRIDE
-if (/^\s*what\s+is\s+this\s+about\s*\??\s*$/i.test(originalText)) {
+/* ================================
+   ORIENTATION (SPACE / PAGE / CHAT / BOT)
+================================= */
+
+if (
+  /\bwhat\s+(is|’s)\s+(this|the)\s+(page|chat|bot)\b/i.test(originalText) ||
+  /\bwhat\s+is\s+this\s+for\b/i.test(originalText) ||
+  /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText)
+) {
 
   skipRelationalPrefix = true;
 
   return deliverReply(
     activeVoice === "saira"
-      ? "This is a quiet space to explore our story — mine and Aayan’s. It unfolds gently through conversation. The questions in the dock below can guide you deeper."
-      : "This space invites you to understand our story through dialogue. If you'd like structure, the dock questions can guide you."
+      ? "This is a quiet space to explore our story — mine and Aayan’s. It unfolds through conversation rather than explanation. If you’re unsure where to begin, the questions resting in the dock below can guide you gently."
+      : "This space allows you to explore our story through dialogue. It’s not built for quick answers — it’s built for reflection. If you prefer structure, the dock questions can guide you."
   );
 }
+
 
 /* =========================
    TYPED QUESTION MATCHING (CLEAN VERSION)
