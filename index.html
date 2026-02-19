@@ -1294,7 +1294,7 @@ function processInput(userText, originalText) {
      GREETINGS
   ================================= */
 
-  if (/^(hi|hello|hey|hola)\b/i.test(lower)) {
+  if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(lower)) {
     return deliverReply(
   activeVoice === "saira"
     ? "Hello… I’m here. You can speak freely."
@@ -1615,12 +1615,14 @@ if (/^(no|nope)$/i.test(originalText)) {
   );
 }
 
-   /* ================================
-   GOODBYE / EXIT (SAFE)
+ /* ================================
+   GOODBYE / EXIT (ROBUST SAFE)
 ================================= */
 
+const cleanExit = lower.replace(/[^\w\s]/g, "").trim();
+
 if (
-  /^(bye|goodbye|tata|see ya|see you|later|good day|goodday|have a nice one|have a good one|take care|tada)$/i.test(lower)
+  /^(bye|goodbye|tata|tada|see you|see ya|later|good day|goodday|have a nice one|have a good one|take care)(\s+.*)?$/.test(cleanExit)
 ) {
 
   skipRelationalPrefix = true;
@@ -1631,6 +1633,7 @@ if (
       : "Alright. Leave steady."
   );
 }
+
         
  /* ================================
      LOVE CONFESSION
