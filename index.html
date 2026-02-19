@@ -1309,7 +1309,7 @@ for (let i = 0; i < foundationalQuestions.length; i++) {
         author: "Mohan R. wrote this as his debut novel.",
 
         whoAayan: "Aayan isn’t careless. He feels deeply — but hides it behind control.",
-        whoSaira: "I feel first and think later. That has shaped everything.",
+        whoSaira: ". That has shaped everything.",
         whereAayan: "He moved forward. Even when something stayed unfinished.",
         whereSaira: "I didn’t stay where I was. I chose differently."
       },
@@ -2157,9 +2157,9 @@ function answerFoundational(q, btn) {
 
   deliverReply(reply, function () {
 
-    if (foundationalAnswered.size === 5) {
-      unlockNextLayer();
-    }
+if (foundationalAnswered.size === 9) {
+    unlockNextLayer();
+}
 
   });
 }
