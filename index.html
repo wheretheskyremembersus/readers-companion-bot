@@ -1462,46 +1462,47 @@ if (!tollState[activeVoice]?.unlocked) {
 
 
 /* =========================
-   CIVILITY + DAILY LANGUAGE (MAXIMISED VERSION)
+   TIME-BASED GREETINGS (ROBUST)
 ========================= */
 
-// GOOD MORNING
-if (/\b(good morning|gm|gud morning)\b/i.test(originalText)) {
+const timeGreeting = originalText
+  .toLowerCase()
+  .replace(/[^\w\s]/g, "")
+  .trim();
+
+if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
 
   return deliverReply(
     activeVoice === "saira"
-      ? "Good morning… I hope today feels gentle with you. Mornings carry a quiet reset — a chance to begin differently."
-      : "Good morning. A new day offers recalibration. Use it well."
+      ? "Morning… I hope today feels gentle with you. A new beginning carries quiet possibility."
+      : "Morning. A new day offers recalibration. Use it well."
   );
 }
 
-// GOOD AFTERNOON
-if (/\b(good afternoon)\b/i.test(originalText)) {
+if (/(^|\s)(good\s*)?after(noon)?\b/.test(timeGreeting)) {
 
   return deliverReply(
     activeVoice === "saira"
-      ? "Good afternoon… I hope the day has treated you kindly so far."
-      : "Good afternoon. Midday often reveals how steady we’ve been."
+      ? "Afternoon… I hope the day has been kind so far."
+      : "Afternoon. Midday shows what we’ve carried forward."
   );
 }
 
-// GOOD EVENING
-if (/\b(good evening|ge)\b/i.test(originalText)) {
+if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
 
   return deliverReply(
     activeVoice === "saira"
-      ? "Good evening… The day slows now. You don’t have to rush here."
-      : "Good evening. Evenings are quieter. Reflection tends to surface."
+      ? "Evening… The day slows now. You don’t have to rush here."
+      : "Evening. Reflection tends to surface when things quiet down."
   );
 }
 
-// GOOD NIGHT
-if (/\b(good night|gn|gud night|gnight)\b/i.test(originalText)) {
+if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
 
   return deliverReply(
     activeVoice === "saira"
-      ? "Good night… Rest gently. Some thoughts soften when you let them."
-      : "Good night. Let the mind settle. Tomorrow can carry what remains."
+      ? "Night… Rest gently. Some thoughts soften when you let them."
+      : "Night. Let the mind settle. Tomorrow can carry what remains."
   );
 }
 
