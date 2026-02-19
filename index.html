@@ -1545,6 +1545,44 @@ if (
 
   return deliverReply(otherMap[activeVoice][stage]);
 }
+/* ================================
+   RELATIONAL FINALITY HANDLER
+================================= */
+
+if (
+
+  /\bis\s+(he|she)\s+dead\b/i.test(originalText) ||
+
+  /\bare\s+you\s+(separated|seperate|seperated)\b/i.test(originalText) ||
+
+  /\bdid\s+you\s+(guys\s+)?break\s+up\b/i.test(originalText) ||
+
+  /\bis\s+everything\s+over\b/i.test(originalText)
+
+) {
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+  skipRelationalPrefix = true;
+
+  const map = {
+
+    saira: {
+      1: "No. It isn’t that.",
+      3: "No. Distance isn't death.",
+      5: "No. We are apart, not erased.",
+      7: "No. Some bonds don’t end just because paths separate."
+    },
+
+    aayan: {
+      1: "No. It isn’t that simple.",
+      3: "No. Separation doesn’t equal absence.",
+      5: "No. We stepped apart. That’s different from ending.",
+      7: "No. What we had doesn’t disappear because we aren’t beside each other."
+    }
+  };
+
+  return deliverReply(map[activeVoice][stage]);
+}
 
  /* ================================
    RELATIONAL POSITIONAL HANDLER
