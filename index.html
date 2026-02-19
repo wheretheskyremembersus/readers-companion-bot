@@ -1323,6 +1323,18 @@ function handleIntelligence(text, originalText) {
   if (/^(hi|hello|hey)\b/i.test(lower)) {
     return { type: "greeting", raw: originalText };
   }
+         
+// SCRIPTED / PRE-WRITTEN TEST
+if (/scripted|pre[- ]?written|just lines|just programmed/i.test(lower)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If it were only scripted, it wouldn’t shift when you do."
+      : "Structure exists. But structure isn’t the same as predictability."
+  );
+}
 
   // Identity
   if (/are you (a )?(bot|robot|machine|real|human)/i.test(lower)) {
