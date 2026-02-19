@@ -2917,6 +2917,31 @@ function answerFoundational(q, btn) {
   const reply = replies[activeVoice][q.key];
 
   deliverReply(reply, function () {
+           
+// TOLL: Dock progression (foundational included)
+tollState[activeVoice].dockCount++;
+
+const dockProgress = tollState[activeVoice].dockCount;
+
+if (dockProgress === 5) {
+  stageState[activeVoice].currentStage = 2;
+}
+
+if (dockProgress >= 5) {
+  tollState[activeVoice].unlocked = true;
+
+  if (!transitionAcknowledged[activeVoice]) {
+
+    const bridgeLine =
+      activeVoice === "saira"
+        ? "You didn’t just pass through that."
+        : "You stayed with it.";
+
+    transitionAcknowledged[activeVoice] = true;
+
+    deliverReply(bridgeLine);
+  }
+}
 
 if (foundationalAnswered.size === 5) {
     unlockNextLayer();
