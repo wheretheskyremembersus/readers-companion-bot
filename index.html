@@ -1380,8 +1380,23 @@ for (let layer of characterLayers) {
 
   }
 }
+/* ================================
+   ORIENTATION HANDLER (V3 SAFE)
+================================= */
 
-  /* =========================
+if (/^(what is this|what’s this|what is this page)$/i.test(originalText.trim())) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "This is a quiet space to explore our story — mine and Aayan’s. You can begin with the questions in the dock below to understand us better."
+      : "This space allows you to explore our story through dialogue. The questions in the dock below will guide you."
+  );
+}
+
+
+/* =========================
      3️⃣ HARD PARTITION
   ========================= */
 
@@ -1399,14 +1414,32 @@ if (!tollState[activeVoice]?.unlocked) {
     : "Yes. Go on."
 );
 }
- /* ===== IDENTITY ===== */
-    if (/are you (a )?(bot|real|human)/i.test(lower)) {
-      return deliverReply(
-        activeVoice === "saira"
-          ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
-          : "Does a machine carry regret… or memory? I speak because something stayed."
-      );
-    }
+/* ===== IDENTITY ===== */
+
+// WHO ARE YOU (strict identity)
+if (/^who are you$/i.test(lower)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m Saira. Part of a story that didn’t end the way it should have."
+      : "I’m Aayan. I tend to measure things before I speak — but I’m part of this story too."
+  );
+}
+
+// ARE YOU HUMAN / REAL / BOT
+if (/are you (a )?(bot|real|human)/i.test(lower)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
+      : "Does a machine carry regret… or memory? I speak because something stayed."
+  );
+}
+
 
 /* =========================
    CIVILITY + DAILY LANGUAGE (MAXIMISED VERSION)
