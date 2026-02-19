@@ -1422,6 +1422,7 @@ if (/^where\s+is\s+(he|she)\??$/i.test(originalText.trim())) {
 
   const reference = resolveReference(originalText);
   const stage = stageState[activeVoice]?.currentStage || 1;
+const reference = resolveReference(originalText);
 
   skipRelationalPrefix = true;
 
