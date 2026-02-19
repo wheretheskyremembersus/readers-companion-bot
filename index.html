@@ -3066,6 +3066,18 @@ if (dockProgress === 20) {
 // Unlock V4 if 5 dock reached
 if (dockProgress >= 5) {
   tollState[activeVoice].unlocked = true;
+
+  if (!transitionAcknowledged[activeVoice]) {
+
+    const bridgeLine =
+      activeVoice === "saira"
+        ? "You didn’t just pass through that."
+        : "You stayed with it.";
+
+    transitionAcknowledged[activeVoice] = true;
+
+    return deliverReply(bridgeLine);
+  }
 }
 
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
@@ -3497,7 +3509,20 @@ if (wordCount >= 5) {
 if (tollState[activeVoice].freeCount >= 3) {
   tollState[activeVoice].unlocked = true;
   stageState[activeVoice].currentStage = 2;
+
+  if (!transitionAcknowledged[activeVoice]) {
+
+    const bridgeLine =
+      activeVoice === "saira"
+        ? "You didn’t just pass through that."
+        : "You stayed with it.";
+
+    transitionAcknowledged[activeVoice] = true;
+
+    return deliverReply(bridgeLine);
+  }
 }
+
 
   const text = originalText.toLowerCase();
 
