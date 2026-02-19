@@ -686,6 +686,10 @@ let reflectionStep = 0;
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
+let transitionAcknowledged = {
+  saira: false,
+  aayan: false
+};
 
 let tollState = {
   saira: {
@@ -3086,7 +3090,7 @@ if (dockProgress >= 5) {
 
     transitionAcknowledged[activeVoice] = true;
 
-deliverReply(bridgeLine);
+    deliverReply(bridgeLine);
   }
 }
 
