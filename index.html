@@ -1290,7 +1290,7 @@ function processInput(userText, originalText) {
    PERMANENT CHARACTER IDENTITY ROUTING
 ================================= */
 
-if (/\bwho\s+is\s+aayan\b/i.test(originalText) ||
+if (/\bwho\s+is\s+aayan\b/i.test(originalText.replace(/[^\w\s]/g, "")) ||
     /\btell me about aayan\b/i.test(originalText) ||
     /\bwas aayan like that\b/i.test(originalText) ||
     /\bis aayan like that\b/i.test(originalText)) {
@@ -1304,7 +1304,7 @@ return deliverReply(
   );
 }
 
-if (/\bwho\s+is\s+saira\b/i.test(originalText) ||
+if (/\bwho\s+is\s+saira\b/i.test(originalText.replace(/[^\w\s]/g, "")) ||
     /\btell me about saira\b/i.test(originalText) ||
     /\bwas saira like that\b/i.test(originalText) ||
     /\bis saira like that\b/i.test(originalText)) {
