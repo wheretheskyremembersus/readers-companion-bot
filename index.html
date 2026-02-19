@@ -1421,7 +1421,7 @@ for (let layer of characterLayers) {
    ORIENTATION HANDLER (V3 SAFE)
 ================================= */
 
-if (/^(what is this|what’s this|what is this page)$/i.test(originalText.trim())) {
+if (/\bwhat\s+(is|’s)\s+this(\s+page)?\b/i.test(originalText)) {
 
   skipRelationalPrefix = true;
 
