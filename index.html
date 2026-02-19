@@ -1306,13 +1306,15 @@ const nameCall = originalText
   .replace(/[^\w\s]/g, "")
   .trim();
 
-if (/^saira\b/.test(nameCall)) {
+if (/^saira\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
+  interactionLocked = false;   // surgical override
   return deliverReply("Yes… I’m here.");
 }
 
-if (/^aayan\b/.test(nameCall)) {
+if (/^aayan\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
+  interactionLocked = false;   // surgical override
   return deliverReply("I’m here.");
 }
 
