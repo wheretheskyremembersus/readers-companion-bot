@@ -1760,7 +1760,8 @@ return deliverReply(
     : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
 );
 
-// END OF V3 LOGIC
+  // END OF V3 LOGIC
+  return;
 }
 
 // =========================
@@ -1771,7 +1772,7 @@ if (tollState[activeVoice]?.unlocked) {
   emotionalModeActive = true;
   return processEmotionalMode(userText, originalText);
 }
-}
+
 function processEmotionalMode(userText, originalText) {
 
   const detected = detectEmotionalPillar(originalText);
