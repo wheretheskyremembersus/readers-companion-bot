@@ -1416,8 +1416,8 @@ if (!tollState[activeVoice]?.unlocked) {
 }
 /* ===== IDENTITY ===== */
 
-// WHO ARE YOU (strict identity)
-if (/^who are you$/i.test(lower)) {
+// WHO ARE YOU
+if (/\bwho\s+are\s+you\b/i.test(originalText)) {
 
   skipRelationalPrefix = true;
 
