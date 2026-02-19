@@ -1514,32 +1514,6 @@ if (/^(no|nope)$/i.test(originalText)) {
         : "You’re asking about structure. This space isn’t about labels — it’s about meaning."
     );
   }
-/* ================================
-   CHARACTER INSIGHT / COMPARISON
-================================= */
-
-if (lower.startsWith("who is aayan") ||
-    lower.includes("tell me about aayan") ||
-    lower.includes("was aayan like that") ||
-    lower.includes("is aayan like that")) {
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Aayan isn’t careless. He feels deeply — but he hides it behind control. If he seemed distant, it was rarely indifference. It was caution."
-      : "If you’re asking who Aayan is — he’s someone who measures before he moves. He doesn’t show everything he feels. That doesn’t mean it isn’t there."
-  );
-}
-if (lower.startsWith("who is saira") ||
-    lower.includes("tell me about saira") ||
-    lower.includes("was saira like that") ||
-    lower.includes("is saira like that")) {
-
-  return deliverReply(
-    activeVoice === "aayan"
-      ? "Saira feels before she calculates. She doesn’t hide behind structure — she reacts honestly. That’s part of what unsettled me."
-      : "If you’re asking who Saira is — she isn’t fragile. She just feels openly. That’s strength, not weakness."
-  );
-}
 
   /* ================================
      JEALOUSY / CROSS GENDER
