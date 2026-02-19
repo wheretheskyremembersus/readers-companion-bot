@@ -666,6 +666,7 @@ V4 PARTITION CONTROL
 
 let freeTypeCount = 0;
 let emotionalModeActive = false;
+let relationalPrefix = "";
 
 /* =========================
    CORE STATE VARIABLES (REQUIRED)
@@ -926,6 +927,15 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
   if (!replyText || interactionLocked) return;
+  /* =========================
+     AUTO RELATIONAL PREFIX (V3 ONLY)
+  ========================= */
+
+  if (!emotionalModeActive && typeof relationalPrefix !== "undefined") {
+    if (relationalPrefix && !replyText.startsWith(relationalPrefix)) {
+      replyText = relationalPrefix + replyText;
+    }
+  }
 
   interactionLocked = true;
   setDockDisabled(true);
@@ -1228,12 +1238,46 @@ function handleIntelligence(text, originalText) {
   };
 }
 
+/* =========================
+   RELATIONAL AWARENESS (V3)
+========================= */
+
 function processInput(userText, originalText) {
 
-  // normalize once
+  // Reset relational state per message
+  relationalPrefix = "";
+
+  // Normalize input
   const lower = (userText || "").toLowerCase().trim();
 
   const intentState = handleIntelligence(userText, originalText);
+
+  /* -------------------------
+     RELATIONAL TRIGGER CHECK
+  ------------------------- */
+
+  const relationalCheck = detectRelationalTrigger(originalText, activeVoice);
+
+  if (relationalCheck.relationalActive) {
+
+    if (activeVoice === "saira") {
+
+      if (/aayan/i.test(originalText)) {
+        relationalPrefix = "You’re asking about Aayan… ";
+      } else {
+        relationalPrefix = "You’re referring to him… ";
+      }
+
+    } else if (activeVoice === "aayan") {
+
+      if (/saira/i.test(originalText)) {
+        relationalPrefix = "You’re asking about Saira… ";
+      } else {
+        relationalPrefix = "You’re referring to her… ";
+      }
+
+    }
+  }
 
 
 /* =========================
@@ -1288,7 +1332,8 @@ for (let layer of characterLayers) {
 
  // HARD PARTITION USING TOLL SYSTEM
 if (!activeVoice || !tollState[activeVoice]?.unlocked) {
-       
+ emotionalModeActive = false;
+
   /* =========================
      3️⃣ HARD PARTITION
   ========================= */
@@ -1302,12 +1347,11 @@ if (!activeVoice || !tollState[activeVoice]?.unlocked) {
 
   if (/^(hi|hello|hey|hola)\b/i.test(lower)) {
     return deliverReply(
-      activeVoice === "saira"
-        ? "Hello… I’m here. You can speak freely."
-        : "Yes. Go on."
-    );
-  }
-
+  activeVoice === "saira"
+    ? "Hello… I’m here. You can speak freely."
+    : "Yes. Go on."
+);
+}
  /* ===== IDENTITY ===== */
     if (/are you (a )?(bot|real|human)/i.test(lower)) {
       return deliverReply(
@@ -1538,7 +1582,9 @@ if (/^(no|nope)$/i.test(originalText)) {
      4️⃣ EMOTIONAL MODE ONLY
   ========================= */
 
-         return processEmotionalMode(userText, originalText);
+emotionalModeActive = true;
+
+ return processEmotionalMode(userText, originalText);
 }
 }
          
@@ -1587,7 +1633,10 @@ function detectRelationalTrigger(originalText, activeVoice) {
 
   const triggers = nameMap[activeVoice] || [];
 
-  const detected = triggers.some(word => lower.includes(word));
+  const detected = triggers.some(word =>
+  new RegExp(`\\b${word}\\b`, "i").test(originalText)
+);
+
 
   return {
     relationalActive: detected,
