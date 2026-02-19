@@ -1301,22 +1301,29 @@ function processInput(userText, originalText) {
    DIRECT NAME INVOCATION
 ================================= */
 
-const nameCall = originalText
-  .toLowerCase()
-  .replace(/[^\w\s]/g, "")
-  .trim();
-
 if (/^saira\b$/i.test(nameCall)) {
+
   skipRelationalPrefix = true;
-  interactionLocked = false;   // surgical override
-  return deliverReply("Yes… I’m here.");
+
+  if (activeVoice === "saira") {
+    return deliverReply("Yes… I’m here.");
+  } else {
+    return deliverReply("You’re calling her.");
+  }
 }
+
 
 if (/^aayan\b$/i.test(nameCall)) {
+
   skipRelationalPrefix = true;
-  interactionLocked = false;   // surgical override
-  return deliverReply("I’m here.");
+
+  if (activeVoice === "aayan") {
+    return deliverReply("I’m here.");
+  } else {
+    return deliverReply("You’re calling him.");
+  }
 }
+
 
 /* ===== IDENTITY ===== */
 
