@@ -1047,14 +1047,14 @@ function isSixtyPercentMatch(userText, targetText) {
   const userWords = userText
     .toLowerCase()
     .replace(/[^\w\s]/g,"")
-    .split("")
+    .split(" ")
     .map(w => normalizeWord(w))
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
   const targetWords = targetText
     .toLowerCase()
     .replace(/[^\w\s]/g,"")
-    .split("")
+    .split(" ")
     .map(w => normalizeWord(w))
     .filter(w => w.length > 2 && !stopWords.includes(w));
 
@@ -1162,7 +1162,7 @@ function detectEmotionalPillar(text) {
 
   const userWords = lower
     .replace(/[^\w\s]/g,"")
-    .split("")
+    .split(" ")
     .map(w => normalizeWord(w));
 
   const pillarOrder = [
@@ -1183,7 +1183,7 @@ function detectEmotionalPillar(text) {
 
     emotionalPillars[pillar].forEach(keyword => {
 
-      if (keyword.includes("")) {
+      if (keyword.includes(" ")) {
         if (lower.includes(keyword)) {
           score += 3; // strong phrase
         }
