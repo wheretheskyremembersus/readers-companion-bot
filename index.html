@@ -1471,40 +1471,82 @@ if (reference.type === "other" || reference.type === "explicit_other") {
   return deliverReply(otherMap[activeVoice][stage]);
 }
 } 
- /* ================================
-   RELATIONAL LOVE / PRESENCE HANDLER
+/* ================================
+   RELATIONAL LOVE / PRESENCE / MISS HANDLER
 ================================= */
 
-if (/^do you love (him|her)\??$/i.test(originalText.trim()) ||
-    /^is (he|she) (there|still there)\??$/i.test(originalText.trim()) ||
-    /^are (you )?with (him|her)\??$/i.test(originalText.trim())
+if (
+  /^do you love (him|her)\??$/i.test(originalText.trim()) ||
+  /^do you miss (him|her)\??$/i.test(originalText.trim()) ||
+  /^is (he|she) (there|still there)\??$/i.test(originalText.trim()) ||
+  /^are (you )?with (him|her)\??$/i.test(originalText.trim())
 ) {
 
   const reference = resolveReference(originalText);
+  const stage = stageState[activeVoice]?.currentStage || 1;
 
+  skipRelationalPrefix = true;
+
+  /* SELF REFERENCE */
   if (reference.type === "self") {
 
-    skipRelationalPrefix = true;
+    const selfMap = {
 
-    return deliverReply(
-      activeVoice === "saira"
-        ? "If you're asking about me… what I felt was real."
-        : "If you're asking about me… I don’t dismiss what mattered."
-    );
+      saira: {
+        1: "If you're asking about me… what I felt was real.",
+        2: "If you're asking about me… what I felt didn’t disappear easily.",
+        3: "If you're asking about me… I don’t dismiss what I felt.",
+        4: "If you're asking about me… some things don’t leave just because distance exists.",
+        5: "If you're asking about me… I carry what was real without denying it.",
+        6: "If you're asking about me… missing someone doesn’t mean weakness.",
+        7: "If you're asking about me… some bonds don’t dissolve. They remain, even in absence."
+      },
+
+      aayan: {
+        1: "If you're asking about me… I don’t dismiss what mattered.",
+        2: "If you're asking about me… what mattered doesn’t vanish easily.",
+        3: "If you're asking about me… I don’t reduce what I felt.",
+        4: "If you're asking about me… distance doesn’t erase impact.",
+        5: "If you're asking about me… I don’t pretend something meaningful didn’t exist.",
+        6: "If you're asking about me… missing someone isn’t instability.",
+        7: "If you're asking about me… some connections remain integrated."
+      }
+    };
+
+    return deliverReply(selfMap[activeVoice][stage]);
   }
+
+  /* OTHER REFERENCE — CLIFFHANGER ALIGNED */
 
   if (reference.type === "other" || reference.type === "explicit_other") {
 
-    return deliverReply(
-      activeVoice === "saira"
-        ? "You're referring to him… This story was never about competition. It was about courage — and timing."
-        : "You're referring to her… This story was never about rivalry. It was about consequence — and timing."
-    );
+    const otherMap = {
+
+      saira: {
+        1: "You're referring to him… yes.",
+        2: "You're referring to him… I haven't stopped thinking about him.",
+        3: "You're referring to him… missing someone doesn’t end because you wish it would.",
+        4: "You're referring to him… I don't know where he is. But I haven't stopped hoping he's safe.",
+        5: "You're referring to him… I’ve searched more places than I can explain.",
+        6: "You're referring to him… distance hasn’t reduced what I carry.",
+        7: "You're referring to him… I miss him. Not as a wound — but as something unfinished."
+      },
+
+      aayan: {
+        1: "You're referring to her… yes.",
+        2: "You're referring to her… I think of her more than I admit.",
+        3: "You're referring to her… some absences don’t fade.",
+        4: "You're referring to her… I don’t know where she is. But I ask for her safety.",
+        5: "You're referring to her… I haven’t stopped carrying her quietly.",
+        6: "You're referring to her… distance doesn’t cancel devotion.",
+        7: "You're referring to her… I miss her. Not loudly. But consistently."
+      }
+    };
+
+    return deliverReply(otherMap[activeVoice][stage]);
   }
 
-  // If unknown, do nothing — allow normal routing
 }
-
 
   /* ================================
      GREETINGS
