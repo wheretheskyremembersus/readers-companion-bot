@@ -1473,6 +1473,82 @@ if (reference.type === "other" || reference.type === "explicit_other") {
 }
 } 
 /* ================================
+   RELATIONAL ACCOUNTABILITY HANDLER
+================================= */
+
+if (
+
+  /\bwhy\s+did\s+you\s+leave\s+(him|her|aayan|saira)\b/i.test(originalText) ||
+
+  /\bwhen\s+did\s+you\s+leave\s+(him|her|aayan|saira)\b/i.test(originalText) ||
+
+  /\bwhat\s+was\s+the\s+reason(\s+behind\s+(it|leaving\s+(him|her|aayan|saira)))?\b/i.test(originalText)
+
+) {
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+  skipRelationalPrefix = true;
+
+  const map = {
+
+    saira: {
+
+      why: {
+        1: "It wasn’t simple.",
+        3: "I didn’t leave because I stopped caring.",
+        5: "Fear made the decision before courage could.",
+        7: "I didn’t leave love. I left before I knew how to hold it without fear."
+      },
+
+      when: {
+        1: "When things became uncertain.",
+        3: "When hesitation grew louder than clarity.",
+        5: "When timing felt misaligned.",
+        7: "When both of us stood at the edge and neither stepped forward."
+      },
+
+      reason: {
+        1: "Uncertainty.",
+        3: "Fear of losing what mattered.",
+        5: "Fear disguised as caution.",
+        7: "Because I believed distance would hurt less than risking everything."
+      }
+    },
+
+    aayan: {
+
+      why: {
+        1: "It wasn’t abandonment.",
+        3: "I thought restraint was maturity.",
+        5: "I stepped back before I understood what I was stepping away from.",
+        7: "I didn’t leave care. I left because I believed distance would protect us."
+      },
+
+      when: {
+        1: "When circumstances shifted.",
+        3: "When control felt safer than vulnerability.",
+        5: "When silence replaced certainty.",
+        7: "When I chose discipline over risk."
+      },
+
+      reason: {
+        1: "Restraint.",
+        3: "Control over emotion.",
+        5: "Fear disguised as strength.",
+        7: "Because I thought distance was wiser than surrender."
+      }
+    }
+  };
+
+  let type = "why";
+
+  if (/when/i.test(originalText)) type = "when";
+  if (/reason/i.test(originalText)) type = "reason";
+
+  return deliverReply(map[activeVoice][type][stage]);
+}
+
+/* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
 ================================= */
 
