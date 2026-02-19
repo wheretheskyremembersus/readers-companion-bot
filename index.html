@@ -1401,17 +1401,86 @@ function resolveReference(originalText) {
 ========================= */
 
 function normalizeInput(text) {
+
   return (text || "")
     .toLowerCase()
+
+    // 1️⃣ collapse excessive repeated letters (loooove → loove)
     .replace(/(.)\1{2,}/g, "$1$1")
+
+    // 2️⃣ remove stray punctuation but keep spaces
     .replace(/[^\w\s]/g, " ")
+
+    // 3️⃣ normalize common relationship misspellings
     .replace(/seperat/g, "separat")
     .replace(/seprat/g, "separat")
     .replace(/seperate/g, "separate")
+    .replace(/seperated/g, "separated")
+
+    // 4️⃣ normalize break-up variations
     .replace(/break\s*up/g, "break up")
     .replace(/breakup/g, "break up")
     .replace(/brakeup/g, "break up")
+    .replace(/brekup/g, "break up")
+
+    // 5️⃣ normalize emotional exaggerations
+    .replace(/l+ove+/g, "love")
+    .replace(/m+iss+/g, "miss")
+    .replace(/d+ead+/g, "dead")
+
+    // 6️⃣ normalize common contractions
+    .replace(/\bdont\b/g, "don't")
+    .replace(/\bcant\b/g, "can't")
+    .replace(/\bwont\b/g, "won't")
+
+// emotional pillar typo normalization
+.replace(/lonley/g, "lonely")
+.replace(/lonelyy/g, "lonely")
+.replace(/hurted/g, "hurt")
+.replace(/regreat/g, "regret")
+.replace(/regrete/g, "regret")
+.replace(/loosing/g, "losing")
+.replace(/desteny/g, "destiny")
+.replace(/growed/g, "grown")
+.replace(/afraidy/g, "afraid")
+
+// layer-critical word protection
+.replace(/\blonley\b/g, "lonely")
+.replace(/\bregreat\b/g, "regret")
+.replace(/\bregrete\b/g, "regret")
+.replace(/\bloosing\b/g, "losing")
+.replace(/\bseperated\b/g, "separated")
+.replace(/\bseperate\b/g, "separate")
+.replace(/\bbreakup\b/g, "break up")
+.replace(/\bbrekup\b/g, "break up")
+.replace(/\bbrakeup\b/g, "break up")
+.replace(/\bded\b/g, "dead")
+.replace(/\bafraidy\b/g, "afraid")
+.replace(/\bmis\b/g, "miss")
+.replace(/\blve\b/g, "love")
+.replace(/\bdesteny\b/g, "destiny")
+.replace(/\btogther\b/g, "together")
+.replace(/\buntill\b/g, "until")
+
+// normalize character names (controlled variations)
+
+// Aayan variations
+.replace(/\bayaan\b/g, "aayan")
+.replace(/\bayaan\b/g, "aayan")
+.replace(/\bayan\b/g, "aayan")
+.replace(/\bayann\b/g, "aayan")
+.replace(/\baayen\b/g, "aayan")
+
+// Saira variations
+.replace(/\bsara\b/g, "saira")
+.replace(/\bsairaa\b/g, "saira")
+.replace(/\bsaera\b/g, "saira")
+.replace(/\bsayra\b/g, "saira")
+.replace(/\bsairaah\b/g, "saira")
+
+    // 7️⃣ collapse multiple spaces
     .replace(/\s+/g, " ")
+
     .trim();
 }
 
@@ -1443,11 +1512,11 @@ console.log("RELATIONAL HANDLER REACHED");
 
 if (
 
-  /\bwhy\b.*\bleave\b/i.test(originalText) ||
+  /\bwhy\b.*\bleave\b/i.test(normalizedText) ||
 
-  /\bwhen\b.*\bleave\b/i.test(originalText) ||
+  /\bwhen\b.*\bleave\b/i.test(normalizedText) ||
 
-  /\breason\b/i.test(originalText)
+  /\breason\b/i.test(normalizedText)
 
 ) {
 
@@ -1518,7 +1587,7 @@ if (
 ) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
-  const reference = resolveReference(originalText);
+const reference = resolveReference(normalizedText);
   skipRelationalPrefix = true;
 
   // SELF REFERENCE
@@ -1567,7 +1636,7 @@ if (
    RELATIONAL FINALITY HANDLER
 ================================= */
 
-const finalityText = originalText.toLowerCase().trim();
+const finalityText = normalizedText.toLowerCase().trim();
 
 if (
   /\bdead\b/.test(finalityText) ||
@@ -1611,7 +1680,7 @@ if (
 ================================= */
 
 if (
-  /\bwhere\s+is\s+(he|she|aayan|saira)\b/i.test(originalText)
+  /\bwhere\s+is\s+(he|she|aayan|saira)\b/i.test(normalizedText)
 ) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
@@ -2638,7 +2707,7 @@ if (tollState[activeVoice]?.unlocked) {
   ================================= */
 
 // Attempt light emotional detection before default fallback
-const softDetected = detectEmotionalPillar(originalText);
+const softDetected = detectEmotionalPillar(normalizedText);
 
 if (softDetected) {
 
@@ -2691,7 +2760,8 @@ function processEmotionalMode(userText, originalText) {
 
   console.log("---- V4 PROCESSING ----");
 
-  const detected = detectEmotionalPillar(originalText);
+const normalizedText = normalizeInput(originalText);
+const detected = detectEmotionalPillar(normalizedText);
 
   console.log("Detected Pillar:", detected?.primary ||"NONE");
   console.log("Stage Before:", stageState[activeVoice]?.currentStage);
