@@ -1465,15 +1465,46 @@ if (!tollState[activeVoice]?.unlocked) {
    CIVILITY + DAILY LANGUAGE (MAXIMISED VERSION)
 ========================= */
 
-// GOOD MORNING / EVENING / NIGHT
-if (/(good morning|good afternoon|good evening|good night)/i.test(originalText)) {
+// GOOD MORNING
+if (/\b(good morning|gm|gud morning)\b/i.test(originalText)) {
 
   return deliverReply(
     activeVoice === "saira"
-      ? "Good… I hope today feels gentle with you. Mornings carry a kind of quiet reset — a chance to step into things differently than yesterday. Whatever you’re carrying, you don’t have to rush through it here."
-      : "Good. A new part of the day always brings recalibration. Whatever yesterday held, today gives you another position to stand from."
+      ? "Good morning… I hope today feels gentle with you. Mornings carry a quiet reset — a chance to begin differently."
+      : "Good morning. A new day offers recalibration. Use it well."
   );
 }
+
+// GOOD AFTERNOON
+if (/\b(good afternoon)\b/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Good afternoon… I hope the day has treated you kindly so far."
+      : "Good afternoon. Midday often reveals how steady we’ve been."
+  );
+}
+
+// GOOD EVENING
+if (/\b(good evening|ge)\b/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Good evening… The day slows now. You don’t have to rush here."
+      : "Good evening. Evenings are quieter. Reflection tends to surface."
+  );
+}
+
+// GOOD NIGHT
+if (/\b(good night|gn|gud night|gnight)\b/i.test(originalText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Good night… Rest gently. Some thoughts soften when you let them."
+      : "Good night. Let the mind settle. Tomorrow can carry what remains."
+  );
+}
+
 
 // HOW ARE YOU
 if (/(how are you|how are you doing)/i.test(originalText)) {
