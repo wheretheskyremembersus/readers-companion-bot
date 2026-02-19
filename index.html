@@ -1552,19 +1552,21 @@ if (
    RELATIONAL SAFETY / RETURN / FUTURE HANDLER (REFINED)
 ================================= */
 
+const clean = originalText.toLowerCase();
+
 if (
 
- /\bis\s+(he|she)\s+(safe|okay|ok)\b/.test(clean)
+  /\bis\s+(he|she)\s+(safe|okay|ok)\b/.test(clean) ||
 
-  /\bwill (he|she) come back\b/i.test(originalText) ||
+  /\bwill\s+(he|she)\s+come\s+back\b/i.test(originalText) ||
 
-  /\bhope (he|she) will come back\b/i.test(originalText) ||
+  /\bhope\s+(he|she)\s+will\s+come\s+back\b/i.test(originalText) ||
 
-  /\btogether again\b/i.test(originalText) ||
+  /\btogether\s+again\b/i.test(originalText) ||
 
   /\breunite\b/i.test(originalText) ||
 
-  /\bwould you go back\b/i.test(originalText)
+  /\bwould\s+you\s+go\s+back\b/i.test(originalText)
 
 ) {
 
