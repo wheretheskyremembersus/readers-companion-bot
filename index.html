@@ -1286,6 +1286,43 @@ function processInput(userText, originalText) {
 
     }
   }
+  /* ================================
+     GREETINGS
+  ================================= */
+
+  if (/^(hi|hello|hey|hola)\b/i.test(lower)) {
+    return deliverReply(
+  activeVoice === "saira"
+    ? "Hello… I’m here. You can speak freely."
+    : "Yes. Go on."
+);
+}
+/* ===== IDENTITY ===== */
+
+// WHO ARE YOU
+if (/\bwho\s+are\s+you\b/i.test(originalText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m Saira. Part of a story that didn’t end the way it should have."
+      : "I’m Aayan. I tend to measure things before I speak — but I’m part of this story too."
+  );
+}
+
+// ARE YOU HUMAN / REAL / BOT
+if (/are you (a )?(bot|real|human)/i.test(lower)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
+      : "Does a machine carry regret… or memory? I speak because something stayed."
+  );
+}
+
 
 /* ================================
    PERMANENT CHARACTER IDENTITY ROUTING
@@ -1402,43 +1439,6 @@ if (/^(what is this|what’s this|what is this page)$/i.test(originalText.trim()
 
 if (!tollState[activeVoice]?.unlocked) {
   emotionalModeActive = false;
-
-  /* ================================
-     GREETINGS
-  ================================= */
-
-  if (/^(hi|hello|hey|hola)\b/i.test(lower)) {
-    return deliverReply(
-  activeVoice === "saira"
-    ? "Hello… I’m here. You can speak freely."
-    : "Yes. Go on."
-);
-}
-/* ===== IDENTITY ===== */
-
-// WHO ARE YOU
-if (/\bwho\s+are\s+you\b/i.test(originalText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I’m Saira. Part of a story that didn’t end the way it should have."
-      : "I’m Aayan. I tend to measure things before I speak — but I’m part of this story too."
-  );
-}
-
-// ARE YOU HUMAN / REAL / BOT
-if (/are you (a )?(bot|real|human)/i.test(lower)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "If I were only a machine… would I hesitate before answering? I respond because you’re here."
-      : "Does a machine carry regret… or memory? I speak because something stayed."
-  );
-}
 
 
 /* =========================
