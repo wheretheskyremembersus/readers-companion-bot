@@ -1492,61 +1492,59 @@ if (
 }
 
 /* ================================
-   RELATIONAL POSITIONAL HANDLER (STAGE AWARE)
+   RELATIONAL IDENTITY HANDLER
 ================================= */
 
-if (/^where\s+is\s+(he|she|aayan|saira)\??$/i.test(originalText.trim())) {
+if (
+  /\bwho\s+is\s+(he|she|aayan|saira)\b/i.test(originalText)
+) {
 
-const stage = stageState[activeVoice]?.currentStage || 1;
-
+  const stage = stageState[activeVoice]?.currentStage || 1;
+  const reference = resolveReference(originalText);
   skipRelationalPrefix = true;
 
-  /* SELF REFERENCE */
+  // SELF REFERENCE
   if (reference.type === "self") {
 
     const selfMap = {
-      1: "I'm here.",
-      2: "I'm here. Present.",
-      3: "I'm here. Not distant.",
-      4: "I'm here. I didn't disappear.",
-      5: "I'm here - even if things changed.",
-      6: "I'm here. Just not who I used to be.",
-      7: "I'm here. Some things remain."
+      1: "I'm just someone present.",
+      2: "I'm someone trying to understand my place.",
+      3: "I'm someone shaped by what I didn't say.",
+      4: "I'm someone who carries more than I show.",
+      5: "I'm someone who learned through distance.",
+      6: "I'm someone who changed because I had to.",
+      7: "I'm someone still becoming."
     };
 
     return deliverReply(selfMap[stage]);
   }
 
- /* OTHER REFERENCE - CLIFFHANGER VERSION */
-
-if (reference.type === "other" || reference.type === "explicit_other") {
-
+  // OTHER REFERENCE
   const otherMap = {
 
     saira: {
-      1: "He's somewhere out there.",
-      2: "He's somewhere... I just haven't found him yet.",
-      3: "He's out there. I believe that.",
-      4: "He's somewhere beyond my reach - but not beyond my prayers.",
-      5: "He's out there. I've looked in cities, in towns... I still do.",
-      6: "He's somewhere in this world. I carry him with me while I search.",
-      7: "He's out there. And until I know otherwise, I will keep believing we are not finished."
+      1: "He is someone who mattered.",
+      2: "He is someone I once walked beside.",
+      3: "He is someone who changed me quietly.",
+      4: "He is someone I still carry in thought.",
+      5: "He is someone I searched for longer than I admit.",
+      6: "He is someone who shaped who I became.",
+      7: "He is not just a memory. He is part of my becoming."
     },
 
     aayan: {
-      1: "She's somewhere out there.",
-      2: "She's somewhere... I hope she's safe.",
-      3: "She's out there. I think about that often.",
-      4: "She's somewhere beyond my reach - but not beyond my prayers.",
-      5: "She's out there. I don't know where. But I ask for her safety every day.",
-      6: "She's somewhere in this world. I carry her quietly, even in absence.",
-      7: "She's out there. And until life proves otherwise, I will believe we are not accidental."
+      1: "She is someone important.",
+      2: "She is someone I once stood beside.",
+      3: "She is someone who unsettled my certainty.",
+      4: "She is someone I think about more than I show.",
+      5: "She is someone I stepped away from too soon.",
+      6: "She is someone whose absence still speaks.",
+      7: "She is not just someone I knew. She is someone who altered my direction."
     }
   };
 
   return deliverReply(otherMap[activeVoice][stage]);
 }
-} 
 
 /* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
