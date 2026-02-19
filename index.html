@@ -2889,7 +2889,7 @@ function showFoundational() {
 
   questions.forEach(q => {
     const btn = document.createElement("button");
-    btn.className = "btn " + activeVoice; "btn " + activeVoice;;
+    btn.className = "btn " + activeVoice;
     btn.textContent = q.text;
     btn.onclick = () => answerFoundational(q, btn);
     dock.appendChild(btn);
@@ -3116,7 +3116,7 @@ function showNextLayer() {
 
   characterLayers[currentLayer].forEach(item => {
     const btn = document.createElement("button");
-    btn.className = "btn " + activeVoice; "btn " + activeVoice;;
+    btn.className = "btn " + activeVoice;
     btn.textContent = item.q;
     btn.onclick = () => answerCharacter(item, btn);
     dock.appendChild(btn);
@@ -3323,7 +3323,7 @@ function nextReflection() {
 
   emojis.forEach(e => {
     const btn = document.createElement("button");
-    btn.className = "btn " + activeVoice; "btn " + activeVoice;;
+    btn.className = "btn " + activeVoice;
     btn.textContent = e;
     btn.onclick = () => {
       playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
