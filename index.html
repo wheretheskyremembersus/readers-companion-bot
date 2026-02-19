@@ -1547,6 +1547,122 @@ if (
   }
 
 }
+/* ================================
+   RELATIONAL SAFETY / RETURN / FUTURE HANDLER
+================================= */
+
+if (
+
+  /^is (he|she) (safe|okay|ok)\??$/i.test(originalText.trim()) ||
+
+  /^will (he|she) come back\??$/i.test(originalText.trim()) ||
+
+  /^do you hope (he|she) will come back\??$/i.test(originalText.trim()) ||
+
+  /^will (you|both of you) be together again\??$/i.test(originalText.trim()) ||
+
+  /^would you go back\??$/i.test(originalText.trim())
+
+) {
+
+  const reference = resolveReference(originalText);
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  skipRelationalPrefix = true;
+
+  const futureMap = {
+
+    saira: {
+
+      safety: {
+        1: "I believe he is.",
+        3: "I believe he is. I hold onto that.",
+        5: "I don’t know where he is. But I pray he’s safe.",
+        7: "I don’t know where he is. But I ask the sky to protect him."
+      },
+
+      return: {
+        1: "I don’t know.",
+        3: "I don’t know. Some things depend on timing.",
+        5: "I don’t know. But I haven’t stopped hoping.",
+        7: "If we are meant to cross paths again, it won’t be accidental."
+      },
+
+      together: {
+        1: "That isn’t something I can answer.",
+        3: "That depends on more than feeling.",
+        5: "If we meet again, it would have to be different.",
+        7: "If we meet again, it would be because both of us grew enough to stand without fear."
+      },
+
+      goBack: {
+        1: "I can’t relive what already happened.",
+        3: "Going back isn’t the same as moving forward.",
+        5: "I wouldn’t go back unchanged.",
+        7: "I wouldn’t go back to who I was. But I wouldn’t refuse what was real."
+      }
+    },
+
+    aayan: {
+
+      safety: {
+        1: "I assume she is.",
+        3: "I believe she is. I choose to.",
+        5: "I don’t know where she is. But I ask for her safety.",
+        7: "I don’t know where she is. But I’ve never stopped asking that she be protected."
+      },
+
+      return: {
+        1: "I don’t know.",
+        3: "Return depends on readiness.",
+        5: "If paths cross again, it will be because both moved forward.",
+        7: "If we meet again, it will be because alignment replaced hesitation."
+      },
+
+      together: {
+        1: "That isn’t predictable.",
+        3: "That depends on more than memory.",
+        5: "Being together again would require growth.",
+        7: "If we stand together again, it would be because distance refined us rather than broke us."
+      },
+
+      goBack: {
+        1: "The past is fixed.",
+        3: "Going back isn’t correction.",
+        5: "I wouldn’t return unchanged.",
+        7: "I wouldn’t repeat the past. But I wouldn’t deny what it meant."
+      }
+    }
+  };
+
+  const voiceData = futureMap[activeVoice];
+
+  if (/safe|okay|ok/i.test(originalText)) {
+    return deliverReply(
+      voiceData.safety[stage] || voiceData.safety[1]
+    );
+  }
+
+  if (/come back/i.test(originalText)) {
+    return deliverReply(
+      voiceData.return[stage] || voiceData.return[1]
+    );
+  }
+
+  if (/together/i.test(originalText)) {
+    return deliverReply(
+      voiceData.together[stage] || voiceData.together[1]
+    );
+  }
+
+  if (/go back/i.test(originalText)) {
+    return deliverReply(
+      voiceData.goBack[stage] || voiceData.goBack[1]
+    );
+  }
+
+}
+
 
   /* ================================
      GREETINGS
