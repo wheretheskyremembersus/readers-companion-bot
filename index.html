@@ -1413,11 +1413,16 @@ function processInput(userText, originalText) {
 
   const intentState = handleIntelligence(userText, originalText);
 
-  /* ================================
-   RELATIONAL INTELLIGENT HANDLER
+ /* ================================
+   RELATIONAL LOVE / PRESENCE HANDLER
 ================================= */
 
-if (/love|choose|still there|with you|married|moved on/i.test(originalText)) {
+if (/^do you love (him|her)\??$/i.test(originalText.trim()) ||
+    /^is (he|she) (there|still there)\??$/i.test(originalText.trim()) ||
+    /^are (you )?with (him|her)\??$/i.test(originalText.trim())
+) {
+
+  const reference = resolveReference(originalText);
 
   if (reference.type === "self") {
 
@@ -1425,8 +1430,8 @@ if (/love|choose|still there|with you|married|moved on/i.test(originalText)) {
 
     return deliverReply(
       activeVoice === "saira"
-        ? "If you're asking about me… I'm here. And what I felt was real."
-        : "If you're asking about me… I don't dismiss what mattered."
+        ? "If you're asking about me… what I felt was real."
+        : "If you're asking about me… I don’t dismiss what mattered."
     );
   }
 
@@ -1438,7 +1443,10 @@ if (/love|choose|still there|with you|married|moved on/i.test(originalText)) {
         : "You're referring to her… This story was never about rivalry. It was about consequence — and timing."
     );
   }
+
+  // If unknown, do nothing — allow normal routing
 }
+
 
   /* ================================
      GREETINGS
