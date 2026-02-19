@@ -3385,30 +3385,31 @@ function getFallbackResponse() {
     return"Choose a voice first.";
   }
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+ const stage = stageState[activeVoice]?.currentStage || 1;
 
-  const fallbackMap = {
-    saira: {
-      1:"Tell me that again... slowly.",
-      2:"I want to understand what you're trying to say.",
-      3:"There's something underneath that. Stay with it.",
-      4:"You hesitated there.",
-      5:"That sounds like it carries more than you're saying.",
-      6:"You've changed somewhere inside this.",
-      7:"Some things return even when we try not to face them."
-    },
-    aayan: {
-      1:"I can hear that there's more behind what you just said. Help me understand it better.",
-      2:"It sounds like this matters to you. Tell me what you mean more clearly.",
-      3:"There's vulnerability in that statement.",
-      4:"That sounds like caution.",
-      5:"It sounds like something unresolved is resurfacing for you.",
-      6:"I can hear how much you've changed in that. That sounds like growth.",
-      7:"Unfinished things tend to surface again."
-    }
-  };
+const neutralFallback = {
+  saira: {
+    1: "I’m here.",
+    2: "Something in that carries weight.",
+    3: "That doesn’t feel accidental.",
+    4: "There’s meaning in that, even if it’s quiet.",
+    5: "I’ve felt that kind of shift before.",
+    6: "Sometimes the feeling comes before the clarity.",
+    7: "It doesn’t need to be loud to matter."
+  },
+  aayan: {
+    1: "I’m listening.",
+    2: "That holds structure.",
+    3: "That isn’t random.",
+    4: "Something is forming there.",
+    5: "I’ve stood in that kind of space.",
+    6: "Realisation doesn’t always arrive complete.",
+    7: "Not everything meaningful is immediately defined."
+  }
+};
 
-  return fallbackMap[activeVoice][stage];
+return deliverReply(neutralFallback[activeVoice][stage]);
+
 }
 
          
