@@ -2123,14 +2123,21 @@ if (/^(hello again|you there)$/i.test(micro)) {
   );
 }
          
+console.log("----- INPUT TRACE -----");
+console.log("Voice:", activeVoice);
+console.log("Unlocked:", tollState[activeVoice]?.unlocked);
+console.log("Current Stage:", stageState[activeVoice]?.currentStage);
+         
 /* =========================
    V4 EMOTIONAL MODE SWITCH
 ========================= */
 
 if (tollState[activeVoice]?.unlocked) {
+  console.log("ENGINE: V4 ACTIVATED");
   emotionalModeActive = true;
   return processEmotionalMode(userText, originalText);
 }
+
 
   /* ================================
      DEFAULT V3 RESPONSE
@@ -2176,12 +2183,24 @@ const reply = bank[index];
 
 v3FallbackIndex[activeVoice]++;
 
+console.log("ENGINE: V3 FALLBACK");
+
 return deliverReply(reply);
-} 
-       
+
+}
+
+/* =========================
+   V4 EMOTIONAL MODE ENGINE
+========================= */
+
 function processEmotionalMode(userText, originalText) {
 
+  console.log("---- V4 PROCESSING ----");
+
   const detected = detectEmotionalPillar(originalText);
+
+  console.log("Detected Pillar:", detected?.primary || "NONE");
+  console.log("Stage Before:", stageState[activeVoice]?.currentStage);
 
   if (!detected) {
     return deliverReply(getFallbackResponse());
@@ -2190,33 +2209,35 @@ function processEmotionalMode(userText, originalText) {
   const voiceStage = stageState[activeVoice];
   const targetStage = pillarToStage[detected.primary];
 
- if (voiceStage.currentStage < targetStage) {
-  voiceStage.currentStage = Math.min(
-    voiceStage.currentStage + 1,
-    targetStage
-  );
-}
+  if (voiceStage.currentStage < targetStage) {
+    voiceStage.currentStage = Math.min(
+      voiceStage.currentStage + 1,
+      targetStage
+    );
+  }
+
+  console.log("Stage After:", stageState[activeVoice]?.currentStage);
 
   applyStageAtmosphere(voiceStage.currentStage);
 
   const response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
- if (response) {
+  if (response) {
 
-  let finalText = response;
+    let finalText = response;
 
-  finalText = applyV4Integration(
-    finalText,
-    detected.primary
-  );
+    finalText = applyV4Integration(
+      finalText,
+      detected.primary
+    );
 
-  return deliverReply(finalText);
-}
-
+    return deliverReply(finalText);
+  }
 
   return deliverReply(getFallbackResponse());
 }
+
 
 function applyV4Integration(baseText, pillar) {
 
