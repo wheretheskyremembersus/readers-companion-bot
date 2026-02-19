@@ -1767,19 +1767,8 @@ return deliverReply(
     ? "Stay with that thought. Say it fully."
     : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
 );
-
-// END OF V3 LOGIC
-return;
 }
 
-// =========================
-// V4 PARTITION (MIND)
-// =========================
-
-if (tollState[activeVoice]?.unlocked) {
-  emotionalModeActive = true;
-  return processEmotionalMode(userText, originalText);
-}
          
 function processEmotionalMode(userText, originalText) {
 
