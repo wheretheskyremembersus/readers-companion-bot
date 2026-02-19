@@ -1343,6 +1343,56 @@ function handleIntelligence(text, originalText) {
     raw: originalText
   };
 }
+/* =================================================
+   RELATIONAL REFERENCE RESOLUTION ENGINE
+================================================= */
+
+function resolveReference(originalText) {
+
+  const lower = originalText.toLowerCase();
+
+  const hasSaira = /\bsaira\b/i.test(lower);
+  const hasAayan = /\baayan\b/i.test(lower);
+
+  const hasHer = /\bher\b/i.test(lower);
+  const hasHim = /\bhim\b/i.test(lower);
+  const hasShe = /\bshe\b/i.test(lower);
+  const hasHe = /\bhe\b/i.test(lower);
+
+  // 1️⃣ Explicit name overrides everything
+  if (hasSaira && activeVoice !== "saira") {
+    return { type: "explicit_other", target: "saira" };
+  }
+
+  if (hasAayan && activeVoice !== "aayan") {
+    return { type: "explicit_other", target: "aayan" };
+  }
+
+  // 2️⃣ Pronoun resolution (default to self)
+  if (activeVoice === "saira") {
+
+    if (hasHim || hasHe) {
+      return { type: "other", target: "aayan" };
+    }
+
+    if (hasHer || hasShe) {
+      return { type: "self", target: "saira" };
+    }
+  }
+
+  if (activeVoice === "aayan") {
+
+    if (hasHer || hasShe) {
+      return { type: "other", target: "saira" };
+    }
+
+    if (hasHim || hasHe) {
+      return { type: "self", target: "aayan" };
+    }
+  }
+
+  return { type: "unknown", target: null };
+}
 
 /* =========================
    RELATIONAL AWARENESS (V3)
@@ -1363,32 +1413,33 @@ function processInput(userText, originalText) {
 
   const intentState = handleIntelligence(userText, originalText);
 
-  /* -------------------------
-     RELATIONAL TRIGGER CHECK
-  ------------------------- */
+  /* ================================
+   RELATIONAL INTELLIGENT HANDLER
+================================= */
 
-  const relationalCheck = detectRelationalTrigger(originalText, activeVoice);
+if (/love|choose|still there|with you|married|moved on/i.test(originalText)) {
 
-  if (relationalCheck.relationalActive) {
+  if (reference.type === "self") {
 
-    if (activeVoice ==="saira") {
+    skipRelationalPrefix = true;
 
-      if (/aayan/i.test(originalText)) {
-        relationalPrefix ="You're asking about Aayan…";
-      } else {
-        relationalPrefix ="You're referring to him…";
-      }
-
-    } else if (activeVoice ==="aayan") {
-
-      if (/saira/i.test(originalText)) {
-        relationalPrefix ="You're asking about Saira…";
-      } else {
-        relationalPrefix ="You're referring to her…";
-      }
-
-    }
+    return deliverReply(
+      activeVoice === "saira"
+        ? "If you're asking about me… I'm here. And what I felt was real."
+        : "If you're asking about me… I don't dismiss what mattered."
+    );
   }
+
+  if (reference.type === "other" || reference.type === "explicit_other") {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "You're referring to him… This story was never about competition. It was about courage — and timing."
+        : "You're referring to her… This story was never about rivalry. It was about consequence — and timing."
+    );
+  }
+}
+
   /* ================================
      GREETINGS
   ================================= */
