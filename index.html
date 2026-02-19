@@ -2122,6 +2122,15 @@ if (/^(hello again|you there)$/i.test(micro)) {
       : "Still here."
   );
 }
+         
+/* =========================
+   V4 EMOTIONAL MODE SWITCH
+========================= */
+
+if (tollState[activeVoice]?.unlocked) {
+  emotionalModeActive = true;
+  return processEmotionalMode(userText, originalText);
+}
 
   /* ================================
      DEFAULT V3 RESPONSE
