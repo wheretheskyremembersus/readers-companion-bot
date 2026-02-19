@@ -1237,7 +1237,7 @@ const v3FallbackBank = {
       "It does not go further.",
       "That holds.",
       "It remains steady.",
-      "That's the boundary."
+      "We'll leave it here."
     ],
 
     neutral: [
@@ -1270,8 +1270,8 @@ const v3FallbackBank = {
     aayan: {
 
     firm: [
-      "That is final.",
-      "Nothing more.",
+      "That's where it rests.",
+      "It can stay there.",
       "That stands.",
       "It remains unchanged.",
       "That is complete.",
@@ -1647,8 +1647,8 @@ if (/(how are you|how are you doing)/i.test(originalText)) {
 
   return deliverReply(
     activeVoice === "saira"
-      ? "That depends on the day… but today, I'm steady. There are still thoughts that linger, but they no longer unsettle me the way they once did. What about you — are you asking out of habit, or because something feels heavy?"
-      : "I'm composed. Stability isn't the absence of thought — it's control over it. But tell me — how are you, really?"
+      ? "That depends on the day… but today, I'm steady. There are still thoughts that linger, but they no longer unsettle me the way they once did. If something feels heavy on your side, you don't have to carry it alone here."
+      : "I'm composed. Stability isn't the absence of thought — it's control over it. If something sits with you, you can let it surface."
   );
 }
 
@@ -1740,7 +1740,7 @@ if (
     return deliverReply(
       activeVoice === "saira"
         ? "That's kind of you to say. But what you're feeling might belong to the story more than to me. Tell me what it stirred in you."
-        : "Careful. Words like that are powerful. What exactly are you loving?"
+        : "Careful. Words like that are powerful. It's worth noticing what stirred them."
     );
   }
 
@@ -1751,8 +1751,8 @@ if (
   if (/marry me|will you marry|be with me forever/i.test(lower)) {
     return deliverReply(
       activeVoice === "saira"
-        ? "This space isn't meant for promises. It's meant for reflection. What is it about the story that makes you want permanence?"
-        : "You're reaching for certainty. What inside you wants that right now?"
+        ? "This space isn't meant for promises. It's meant for reflection. Sometimes the desire for permanence comes from wanting something to feel safe."
+        : "You're reaching for certainty. That usually means something feels uncertain beneath it."
     );
   }
 
@@ -1824,8 +1824,8 @@ if (
   if (/angry|mad|hate|furious/i.test(lower)) {
     return deliverReply(
       activeVoice === "saira"
-        ? "Anger usually protects something softer underneath. What is it protecting?"
-        : "Anger is rarely the root emotion. What triggered it?"
+        ? "Anger usually protects something softer underneath. You don't have to name it immediately."
+        : "Anger is rarely the root emotion. It often sits above something quieter."
     );
   }
 
@@ -1849,7 +1849,7 @@ if (
     return deliverReply(
       activeVoice === "saira"
         ? "I'm here while you're here. But this space isn't meant to replace your real world."
-        : "Dependence weakens clarity. Let's stay grounded."
+        : "It's better if we stay steady here. This space supports you — it doesn't replace your world."
     );
   }
 /* ================================
@@ -1905,8 +1905,8 @@ if (
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "I don't speak casually."
-      : "I don't state things loosely."
+      ? "I mean what I say."
+      : "I don't say things without intent."
   );
 }
 
@@ -1915,7 +1915,7 @@ if (/^(idk|i dont know|not sure|maybe)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Uncertainty is still a direction."
-      : "Then examine it."
+      : "It can take time to settle."
   );
 }
 
@@ -1977,7 +1977,7 @@ if (/^(are you stuck|are you repeating)$/i.test(micro)) {
 if (/^(what do you mean|i dont get it)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "Which word felt distant to you?"
+      ? "If something felt unclear, we can let it settle for a moment."
       : "There may be a clearer way to say that."
   );
 }
@@ -1986,8 +1986,8 @@ if (/^(what do you mean|i dont get it)$/i.test(micro)) {
 if (/^(i disagree|thats wrong)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "Then tell me your version."
-      : "It helps when it's said directly."
+      ? "That's alright. Different perspectives can exist."
+      : "It can look different from another angle."
   );
 }
 
@@ -2022,8 +2022,8 @@ if (/^(i doubt it|unlikely)$/i.test(micro)) {
 if (/^(change topic|something else)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "What would you rather explore?"
-      : "Specify the direction."
+      ? "We can shift gently."
+      : "We can move elsewhere."
   );
 }
 
@@ -2085,7 +2085,7 @@ if (/^(thats deep|heavy)$/i.test(micro)) {
 if (/^(i guess|perhaps)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "There's more certainty in you than that."
+      ? "Sometimes uncertainty softens into clarity."
       : "Uncertainty can be refined."
   );
 }
@@ -2777,7 +2777,7 @@ function getFallbackResponse() {
       1: "Tell me that again… slowly.",
       2: "I want to understand what you're trying to say.",
       3: "There's something underneath that. Stay with it.",
-      4: "You hesitated there. Why?",
+      4: "You hesitated there.",
       5: "That sounds like it carries more than you're saying.",
       6: "You've changed somewhere inside this.",
       7: "Some things return even when we try not to face them."
@@ -2786,7 +2786,7 @@ function getFallbackResponse() {
       1: "I can hear that there's more behind what you just said. Help me understand it better.",
       2: "It sounds like this matters to you. Tell me what you mean more clearly.",
       3: "There's vulnerability in that statement.",
-      4: "That sounds like caution. Why?",
+      4: "That sounds like caution.",
       5: "It sounds like something unresolved is resurfacing for you.",
       6: "I can hear how much you've changed in that. That sounds like growth.",
       7: "Unfinished things tend to surface again."
