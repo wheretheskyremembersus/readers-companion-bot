@@ -1495,9 +1495,11 @@ if (/\bwhat\s+(is|’s)\s+this(\s+page)?\b/i.test(originalText)) {
      3️⃣ HARD PARTITION
   ========================= */
 
-if (!tollState[activeVoice]?.unlocked) {
-  emotionalModeActive = false;
+const unlocked = tollState[activeVoice]?.unlocked;
 
+if (!unlocked) {
+  emotionalModeActive = false;
+}
 
 /* =========================
    TIME-BASED GREETINGS (ROBUST)
