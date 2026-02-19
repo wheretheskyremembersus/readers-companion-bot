@@ -1219,6 +1219,10 @@ if (primary[1] >= confidenceThreshold) {
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
+let v3FallbackIndex = {
+  saira: 0,
+  aayan: 0
+};
 
 const v3FallbackBank = {
   saira: {
@@ -1263,7 +1267,7 @@ const v3FallbackBank = {
     ]
   },
 
-  aayan: {
+    aayan: {
 
     firm: [
       "That is final.",
@@ -1273,8 +1277,40 @@ const v3FallbackBank = {
       "That is complete.",
       "No expansion required.",
       "That is the extent.",
-      "It stay
-],
+      "It stays within bounds.",
+      "It holds.",
+      "That concludes it."
+    ],
+
+    neutral: [
+      "It remains as stated.",
+      "It stays defined.",
+      "It remains controlled.",
+      "That is sufficient.",
+      "There’s no addition.",
+      "It holds its limit.",
+      "No adjustment needed.",
+      "It remains measured.",
+      "It stays limited.",
+      "That is all."
+    ],
+
+    reflective: [
+      "It does not extend further.",
+      "It remains contained.",
+      "There’s no progression there.",
+      "It doesn’t develop beyond that.",
+      "It stays structured.",
+      "That remains intact.",
+      "It holds as given.",
+      "There is no shift there.",
+      "It does not advance.",
+      "It remains in place."
+    ]
+  }
+};
+
+           
 /* =================================================
    CORE EXECUTION PIPELINE
 ================================================= */
