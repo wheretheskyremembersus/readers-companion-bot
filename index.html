@@ -1549,12 +1549,14 @@ if (
    RELATIONAL FINALITY HANDLER
 ================================= */
 
+const finalityText = originalText.toLowerCase();
+
 if (
   (finalityText.includes("dead") && (finalityText.includes("he") || finalityText.includes("she"))) ||
-  (finalityText.includes("separate")) ||
-  (finalityText.includes("break up")) ||
-  (finalityText.includes("over"))
-)
+  finalityText.includes("separate") ||
+  finalityText.includes("break up") ||
+  finalityText.includes("over")
+) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
   skipRelationalPrefix = true;
@@ -1582,7 +1584,7 @@ if (
     }
   };
 
-  return deliverReply(map[activeVoice][stage]);
+  return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
 }
 
 
