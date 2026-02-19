@@ -3439,44 +3439,21 @@ function loadWelcome() {
 
   clearDock();
 
-  interactionLocked = true;
+  interactionLocked = false;
 
   addSystemMessage("Hello.");
+  addSystemMessage("This is a quiet space.");
+  addSystemMessage("You can listen to our story through Saira or Aayan.");
+  addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below… or speak freely in your own words.</span>");
+  addSystemMessage("When you're ready, you can choose a voice.");
 
-  setTimeout(() => {
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+  `;
 
-    addSystemMessage("This is a quiet space.");
-
-    setTimeout(() => {
-
-      addSystemMessage("You can listen to our story through Saira or Aayan.");
-
-      setTimeout(() => {
-
-        addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below… or speak freely in your own words.</span>");
-
-        setTimeout(() => {
-
-          addSystemMessage("When you're ready, you can choose a voice.");
-
-          // 🔓 UNLOCK BEFORE RENDERING BUTTONS
-          interactionLocked = false;
-
-          dock.innerHTML = `
-            <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-            <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
-          `;
-
-          // 🔓 ENSURE DOCK IS ENABLED
-          setDockDisabled(false);
-
-        }, 800);
-
-      }, 800);
-
-    }, 700);
-
-  }, 600);
+  setDockDisabled(false);
+  autoScroll();
 }
 
 
