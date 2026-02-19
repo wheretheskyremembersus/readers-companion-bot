@@ -1530,7 +1530,7 @@ if (/^(no|nope)$/i.test(originalText)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Stay with that thought. Say it fully."
-      : "Say it differently."
+      : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
   );
 }
 
@@ -1970,12 +1970,12 @@ function getFallbackResponse() {
       7: "Some things return even when we try not to face them."
     },
     aayan: {
-      1: "Clarify that for me.",
-      2: "Be precise. What do you mean?",
+      1: "I can hear that there’s more behind what you just said. Help me understand it better.",
+      2: "It sounds like this matters to you. Tell me what you mean more clearly.",
       3: "There’s vulnerability in that statement.",
       4: "That sounds like caution. Why?",
-      5: "You’re revisiting something unresolved.",
-      6: "That suggests growth.",
+      5: "It sounds like something unresolved is resurfacing for you.",
+      6: "I can hear how much you’ve changed in that. That sounds like growth.",
       7: "Unfinished things tend to surface again."
     }
   };
