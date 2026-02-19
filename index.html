@@ -667,7 +667,8 @@ V4 PARTITION CONTROL
 let freeTypeCount = 0;
 let emotionalModeActive = false;
 let relationalPrefix = "";
-
+let skipRelationalPrefix = false; //
+         
 /* =========================
    CORE STATE VARIABLES (REQUIRED)
 ========================= */
@@ -927,15 +928,20 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
   if (!replyText || interactionLocked) return;
-  /* =========================
-     AUTO RELATIONAL PREFIX (V3 ONLY)
-  ========================= */
+/* =========================
+   AUTO RELATIONAL PREFIX (V3 ONLY)
+========================= */
 
-  if (!emotionalModeActive && typeof relationalPrefix !== "undefined") {
-    if (relationalPrefix && !replyText.startsWith(relationalPrefix)) {
-      replyText = relationalPrefix + replyText;
-    }
+if (
+  !emotionalModeActive &&
+  relationalPrefix &&
+  !skipRelationalPrefix
+) {
+  if (!replyText.startsWith(relationalPrefix)) {
+    replyText = relationalPrefix + replyText;
   }
+}
+
 
   interactionLocked = true;
   setDockDisabled(true);
@@ -1246,6 +1252,7 @@ function processInput(userText, originalText) {
 
   // Reset relational state per message
   relationalPrefix = "";
+  skipRelationalPrefix = false;
 
   // Normalize input
   const lower = (userText || "").toLowerCase().trim();
@@ -1349,7 +1356,8 @@ if (/\bwho\s+is\s+aayan\b/i.test(originalText) ||
     /\bis aayan like that\b/i.test(originalText)) {
 
 
-  return deliverReply(
+ skipRelationalPrefix = true;
+return deliverReply(
     activeVoice === "saira"
       ? "Aayan isn’t careless. He feels deeply — but he hides it behind control. If he seemed distant, it was rarely indifference. It was caution."
       : "If you’re asking who Aayan is — he’s someone who measures before he moves. He doesn’t show everything he feels. That doesn’t mean it isn’t there."
@@ -1362,7 +1370,8 @@ if (/\bwho\s+is\s+saira\b/i.test(originalText) ||
     /\bis saira like that\b/i.test(originalText)) {
 
 
-  return deliverReply(
+ skipRelationalPrefix = true;
+return deliverReply(
     activeVoice === "aayan"
       ? "Saira feels before she calculates. She doesn’t hide behind structure — she reacts honestly. That’s part of what unsettled me."
       : "If you’re asking who Saira is — she isn’t fragile. She just feels openly. That’s strength, not weakness."
