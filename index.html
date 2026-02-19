@@ -1615,8 +1615,24 @@ if (/^(no|nope)$/i.test(originalText)) {
   );
 }
 
-           
-           /* ================================
+   /* ================================
+   GOODBYE / EXIT (SAFE)
+================================= */
+
+if (
+  /^(bye|goodbye|tata|see ya|see you|later|good day|goodday|have a nice one|have a good one|take care|tada)$/i.test(lower)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Take care… I’m glad you stayed for a while."
+      : "Alright. Leave steady."
+  );
+}
+        
+ /* ================================
      LOVE CONFESSION
   ================================= */
 
