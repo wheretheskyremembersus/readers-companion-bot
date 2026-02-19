@@ -1350,11 +1350,11 @@ function handleIntelligence(text, originalText) {
 
 if (
 
-  /\bwhy\s+(did\s+you\s+)?leave\b/i.test(originalText) ||
+  /\bwhy\b.*\bleave\b/i.test(originalText) ||
 
-  /\bwhen\s+(did\s+you\s+)?leave\b/i.test(originalText) ||
+  /\bwhen\b.*\bleave\b/i.test(originalText) ||
 
-  /\bwhat\s+was\s+the\s+reason\b/i.test(originalText)
+  /\breason\b/i.test(originalText)
 
 ) {
 
