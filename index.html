@@ -1618,16 +1618,17 @@ return deliverReply(
     : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
 );
 
-}  // ← END OF V3 BLOCK
-
+// END OF V3 LOGIC
+}
 
 // =========================
 // V4 PARTITION (MIND)
 // =========================
 
-emotionalModeActive = true;
-return processEmotionalMode(userText, originalText);
-
+if (tollState[activeVoice]?.unlocked) {
+  emotionalModeActive = true;
+  return processEmotionalMode(userText, originalText);
+}
 
 function processEmotionalMode(userText, originalText) {
 
