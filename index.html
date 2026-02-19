@@ -1872,7 +1872,238 @@ if (nameMatch) {
       : `Good to meet you, ${sessionUserName}.`
   );
 }
-         
+
+/* ================================
+   V3 MICRO INTERACTION LAYER (25 INTENTS)
+================================= */
+
+const micro = originalText.toLowerCase().replace(/[^\w\s]/g, "").trim();
+
+/* 1️⃣ Clarification */
+if (/^(what|why|how|explain|clarify)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Tell me which part felt unclear."
+      : "Be specific."
+  );
+}
+
+/* 2️⃣ Minimal Acknowledgment */
+if (/^(hmm|oh|okay|ok|alright|right|fine)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Stay with it a moment."
+      : "Continue."
+  );
+}
+
+/* 3️⃣ Doubt */
+if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I don’t speak casually."
+      : "I don’t state things loosely."
+  );
+}
+
+/* 4️⃣ Uncertainty */
+if (/^(idk|i dont know|not sure|maybe)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Uncertainty is still a direction."
+      : "Then examine it."
+  );
+}
+
+/* 5️⃣ Continuation Prompt */
+if (/^(go on|continue|and|then|so)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "There’s more beneath it."
+      : "There is more."
+  );
+}
+
+/* 6️⃣ Impatience */
+if (/^(thats it|is that all|thats all)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Depth doesn’t rush."
+      : "Completion doesn’t require excess."
+  );
+}
+
+/* 7️⃣ Mild Challenge */
+if (/^(prove it|convince me|make me)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I don’t persuade."
+      : "I don’t negotiate attention."
+  );
+}
+
+/* 8️⃣ Disengagement */
+if (/^(whatever|meh|boring)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Then don’t force yourself to stay."
+      : "Then step away."
+  );
+}
+
+/* 9️⃣ Honesty Probe */
+if (/^(be honest|tell the truth)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I haven’t been dishonest."
+      : "I haven’t misled you."
+  );
+}
+
+/* 🔟 Control Test */
+if (/^(are you stuck|are you repeating)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "No. I move carefully."
+      : "Repetition is deliberate."
+  );
+}
+
+/* 11️⃣ Confusion */
+if (/^(what do you mean|i dont get it)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Which word felt distant to you?"
+      : "Identify the unclear part."
+  );
+}
+
+/* 12️⃣ Pushback */
+if (/^(i disagree|thats wrong)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Then tell me your version."
+      : "State your position clearly."
+  );
+}
+
+/* 13️⃣ Validation Seeking */
+if (/^(does that make sense|right)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It does — if you meant it."
+      : "Clarity depends on intention."
+  );
+}
+
+/* 14️⃣ Curiosity */
+if (/^(interesting|huh)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Something about it caught you."
+      : "You noticed something."
+  );
+}
+
+/* 15️⃣ Skepticism */
+if (/^(i doubt it|unlikely)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Doubt usually protects something."
+      : "Doubt is still engagement."
+  );
+}
+
+/* 16️⃣ Redirect */
+if (/^(change topic|something else)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What would you rather explore?"
+      : "Specify the direction."
+  );
+}
+
+/* 17️⃣ Light Tease */
+if (/^(youre dramatic|calm down)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m measured."
+      : "I’m controlled."
+  );
+}
+
+/* 18️⃣ Short Affirmation */
+if (/^(true|fair)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Then stay aligned with it."
+      : "Consistency matters."
+  );
+}
+
+/* 19️⃣ Curiosity Probe */
+if (/^(why though|but why)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Because something beneath it shifted."
+      : "Because timing altered outcome."
+  );
+}
+
+/* 20️⃣ Hesitation */
+if (/^(wait|hold on)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m here."
+      : "Go ahead."
+  );
+}
+
+/* 21️⃣ Emotional Guard */
+if (/^(dont go there|stop)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Then we won’t."
+      : "Understood."
+  );
+}
+
+/* 22️⃣ Reflection */
+if (/^(thats deep|heavy)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Depth doesn’t always arrive loudly."
+      : "Weight reveals importance."
+  );
+}
+
+/* 23️⃣ Agreement Expansion */
+if (/^(i guess|perhaps)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "There’s more certainty in you than that."
+      : "Uncertainty can be refined."
+  );
+}
+
+/* 24️⃣ Attention Test */
+if (/^(are you listening)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Carefully."
+      : "Precisely."
+  );
+}
+
+/* 25️⃣ Silence Break */
+if (/^(hello again|you there)$/i.test(micro)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I didn’t leave."
+      : "Still here."
+  );
+}
+
   /* ================================
      DEFAULT V3 RESPONSE
   ================================= */
