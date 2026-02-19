@@ -1413,6 +1413,8 @@ function processInput(userText, originalText) {
 
   const intentState = handleIntelligence(userText, originalText);
          
+  const reference = resolveReference(originalText); 
+         
 console.log("RELATIONAL HANDLER REACHED");
 /* ================================
    RELATIONAL POSITIONAL HANDLER (STAGE AWARE)
@@ -1420,9 +1422,7 @@ console.log("RELATIONAL HANDLER REACHED");
 
 if (/^where\s+is\s+(he|she)\??$/i.test(originalText.trim())) {
 
- const reference = resolveReference(originalText);
 const stage = stageState[activeVoice]?.currentStage || 1;
-
 
   skipRelationalPrefix = true;
 
