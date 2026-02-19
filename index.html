@@ -1278,39 +1278,53 @@ function processInput(userText, originalText) {
 
     }
   }
-
-
 /* =========================
-   TYPED QUESTION MATCHING (RESTORE V1 INTELLIGENCE)
+   TYPED QUESTION MATCHING (CLEAN VERSION)
 ========================= */
 
-// 1️⃣ Foundational Typed Match
-for (let i = 0; i < 5; i++) {
+const foundationalQuestions = [
+  { text: "What kind of story is this?", key: "story" },
+  { text: "What is the story about?", key: "about" },
+  { text: "Who is this story for?", key: "for" },
+  { text: "Where can I read it?", key: "where" },
+  { text: "Who is the author?", key: "author" },
+  { text: "Who is Aayan?", key: "whoAayan" },
+  { text: "Who is Saira?", key: "whoSaira" },
+  { text: "Where is Aayan?", key: "whereAayan" },
+  { text: "Where is Saira?", key: "whereSaira" }
+];
 
-  const questionObj = [
-    { text: "What kind of story is this?", key: "story" },
-    { text: "What is the story about?", key: "about" },
-    { text: "Who is this story for?", key: "for" },
-    { text: "Where can I read it?", key: "where" },
-    { text: "Who is the author?", key: "author" }
-  ][i];
+for (let i = 0; i < foundationalQuestions.length; i++) {
+
+  const questionObj = foundationalQuestions[i];
 
   if (isSixtyPercentMatch(originalText, questionObj.text)) {
 
     const replies = {
       saira: {
-        story: "Our story is a contemporary romantic fiction — but it moves quietly. It lingers in moments that don’t seem significant at first, and then refuses to leave you.",
-        about: "It’s about me and Aayan — about love that felt certain, even when life around it wasn’t.",
-        for: "It’s for people who have felt something deeply and didn’t know what to do with it.",
+        story: "Our story is a contemporary romantic fiction — but it moves quietly.",
+        about: "It’s about me and Aayan — about love that felt certain.",
+        for: "It’s for people who have felt something deeply.",
         where: "You can find our story in Kindle, paperback, hardcover, or audiobook.",
-        author: "Mohan R. wrote this as his debut novel."
+        author: "Mohan R. wrote this as his debut novel.",
+
+        whoAayan: "Aayan isn’t careless. He feels deeply — but hides it behind control.",
+        whoSaira: "I feel first and think later. That has shaped everything.",
+        whereAayan: "He moved forward. Even when something stayed unfinished.",
+        whereSaira: "I didn’t stay where I was. I chose differently."
       },
+
       aayan: {
         story: "It’s contemporary romantic fiction, grounded in consequence and timing.",
         about: "It’s about hesitation, responsibility, and the cost of silence.",
-        for: "It’s for those who chose logic over vulnerability and wondered later.",
+        for: "It’s for those who chose logic over vulnerability.",
         where: "It’s available in digital, print, and audio formats.",
-        author: "Mohan R. wrote it to explore what lingers after love shifts."
+        author: "Mohan R. wrote it to explore what lingers after love shifts.",
+
+        whoAayan: "I measure before I move. I don’t dismiss what matters.",
+        whoSaira: "Saira feels openly. That difference shaped everything.",
+        whereAayan: "I am where responsibility led me.",
+        whereSaira: "She didn’t remain unchanged. Growth rarely allows that."
       }
     };
 
@@ -1330,16 +1344,12 @@ for (let layer of characterLayers) {
   }
 }
 
- // HARD PARTITION USING TOLL SYSTEM
-if (!activeVoice || !tollState[activeVoice]?.unlocked) {
- emotionalModeActive = false;
-
   /* =========================
      3️⃣ HARD PARTITION
   ========================= */
 
-  if (!emotionalModeActive) {
-
+if (!tollState[activeVoice]?.unlocked) {
+  emotionalModeActive = false;
 
   /* ================================
      GREETINGS
@@ -1608,17 +1618,17 @@ return deliverReply(
     : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
 );
 
+}  // ← END OF V3 BLOCK
 
-   /* =========================
-     4️⃣ EMOTIONAL MODE ONLY
-  ========================= */
+
+// =========================
+// V4 PARTITION (MIND)
+// =========================
 
 emotionalModeActive = true;
+return processEmotionalMode(userText, originalText);
 
- return processEmotionalMode(userText, originalText);
-}
-}
-         
+
 function processEmotionalMode(userText, originalText) {
 
   const detected = detectEmotionalPillar(originalText);
