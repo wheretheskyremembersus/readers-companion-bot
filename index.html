@@ -675,6 +675,7 @@ let skipRelationalPrefix = false; //
 
 let activeVoice = null;
 let interactionLocked = false;
+let sessionUserName = null;
 
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
@@ -1622,14 +1623,14 @@ const nameMatch = originalText.match(
 
 if (nameMatch) {
 
-  const userName = nameMatch[2];
+  sessionUserName = nameMatch[2];
 
   skipRelationalPrefix = true;
 
   return deliverReply(
     activeVoice === "saira"
-      ? `I’m glad to meet you, ${userName}.`
-      : `Good to meet you, ${userName}.`
+      ? `I’m glad to meet you, ${sessionUserName}.`
+      : `Good to meet you, ${sessionUserName}.`
   );
 }
 
