@@ -1569,7 +1569,7 @@ if (
 ) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
-
+const reference = resolveReference(originalText);
   skipRelationalPrefix = true;
 
   const map = {
