@@ -1289,7 +1289,7 @@ const v3FallbackBank = {
     neutral: [
      "It remains as stated.",
      "It stays defined.",
-     "It remains controlled.",
+     "It hasn’t lost structure",
      "That is sufficient.",
      "There's no addition.",
      "It holds its limit.",
@@ -1690,13 +1690,13 @@ if (
   if (reference.type === "self") {
 
     const selfMap = {
-      1: "I'm here.",
-      2: "I'm here. Present.",
-      3: "I'm here. Not distant.",
-      4: "I'm here. I didn't disappear.",
-      5: "I'm here — even if things changed.",
-      6: "I'm here. Just not who I used to be.",
-      7: "I'm here. Some things remain."
+      1: "I’m still present with it.",
+      2: "I’m still present with it. Present.",
+      3: "I’m still present with it. Not distant.",
+      4: "I’m still present with it. I didn't disappear.",
+      5: "I’m still present with it.— even if things changed.",
+      6: "I’m still present with it. Just not who I used to be.",
+      7: "I’m still present with it. Some things remain."
     };
 
     return deliverReply(selfMap[stage]);
@@ -1942,7 +1942,7 @@ if (/go back/i.test(originalText)) {
   if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(lower)) {
     return deliverReply(
   activeVoice ==="saira"
-    ?"Hello... I'm here. You can speak freely."
+    ?"Hello... I’m still present with it. You can speak freely."
     :"Yes. Go on."
 );
 }
@@ -1955,7 +1955,7 @@ if (/^saira\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
 
   if (activeVoice ==="saira") {
-    return deliverReply("Yes... I'm here.");
+    return deliverReply("Yes... I’m still present with it.");
   } else {
     return deliverReply("You're calling her.");
   }
@@ -1967,7 +1967,7 @@ if (/^aayan\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
 
   if (activeVoice ==="aayan") {
-    return deliverReply("I'm here.");
+    return deliverReply("I haven’t stepped away.");
   } else {
     return deliverReply("You're calling him.");
   }
@@ -2379,7 +2379,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"Stay with that feeling. Don't rush past it. Fear usually hides something specific. You don't have to name it yet."
-        :"That sounds important."
+        :"That carried impact."
     );
   }
 
@@ -2498,7 +2498,7 @@ if (
   return deliverReply(
     activeVoice === "saira"
       ? "I'm still here."
-      : "I'm here."
+      : "I haven’t stepped away."
   );
 }
 
@@ -2660,7 +2660,7 @@ if (/^(why though|but why)$/i.test(micro)) {
 if (/^(wait|hold on)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
-      ?"I'm here."
+      ?"I’m still present with it."
       :"Go ahead."
   );
 }
@@ -2709,7 +2709,19 @@ if (/^(hello again|you there)$/i.test(micro)) {
       :"Still here."
   );
 }
-         
+
+if (
+  /\b(author|writer|novel|book|who wrote|written by)\b/i.test(normalizedText)
+) {
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this story."
+      : "Mohan R. wrote it."
+  );
+}
+ 
 console.log("----- INPUT TRACE -----");
 console.log("Voice:", activeVoice);
 console.log("Unlocked:", tollState[activeVoice]?.unlocked);
@@ -2725,6 +2737,34 @@ if (tollState[activeVoice]?.unlocked) {
   return processEmotionalMode(userText, originalText);
 }
 
+if (/\bwhy\b.*\bleave\b/.test(normalizedText)) {
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+  skipRelationalPrefix = true;
+
+  const map = {
+    saira: {
+      1: "It wasn’t simple.",
+      2: "Fear shaped more of it than I admitted.",
+      3: "I thought distance would protect what I felt.",
+      4: "I mistook restraint for strength.",
+      5: "I stepped back because I didn’t trust myself with it.",
+      6: "I was afraid of how deeply it could affect me.",
+      7: "I left because I thought staying might destroy what we had."
+    },
+    aayan: {
+      1: "It wasn’t impulsive.",
+      2: "I believed it was necessary at the time.",
+      3: "I trusted distance over vulnerability.",
+      4: "I thought control would prevent damage.",
+      5: "I chose discipline over emotion.",
+      6: "I was afraid of failing her.",
+      7: "I stepped away because I didn’t know how to stay without causing harm."
+    }
+  };
+
+  return deliverReply(map[activeVoice][stage]);
+}
 
   /* ================================
      DEFAULT V3 RESPONSE
