@@ -1420,9 +1420,9 @@ console.log("RELATIONAL HANDLER REACHED");
 
 if (/^where\s+is\s+(he|she)\??$/i.test(originalText.trim())) {
 
-  const reference = resolveReference(originalText);
-  const stage = stageState[activeVoice]?.currentStage || 1;
-const reference = resolveReference(originalText);
+ const reference = resolveReference(originalText);
+const stage = stageState[activeVoice]?.currentStage || 1;
+
 
   skipRelationalPrefix = true;
 
