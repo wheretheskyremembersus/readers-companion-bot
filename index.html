@@ -1414,6 +1414,36 @@ function processInput(userText, originalText) {
   const intentState = handleIntelligence(userText, originalText);
          
 console.log("RELATIONAL HANDLER REACHED");
+/* ================================
+   RELATIONAL POSITIONAL HANDLER
+================================= */
+
+if (/^where\s+is\s+(he|she)\??$/i.test(originalText.trim())) {
+
+  const reference = resolveReference(originalText);
+
+  skipRelationalPrefix = true;
+
+  if (reference.type === "self") {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I'm here."
+        : "I'm here."
+    );
+
+  }
+
+  if (reference.type === "other" || reference.type === "explicit_other") {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "He is where his choices led him."
+        : "She is where her growth carried her."
+    );
+
+  }
+}
 
  /* ================================
    RELATIONAL LOVE / PRESENCE HANDLER
