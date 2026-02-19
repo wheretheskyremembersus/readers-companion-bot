@@ -1645,6 +1645,8 @@ function evolveStage(state) {
       voiceStage.momentum[targetStage] = 0;
     }
 
+  }  // ✅ THIS WAS MISSING
+
   applyStageAtmosphere(voiceStage.currentStage);
 
   return {
