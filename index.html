@@ -1638,23 +1638,42 @@ if (
 
   const voiceData = map[activeVoice];
 
-  if (/safe|okay|ok/i.test(originalText)) {
-    return deliverReply(voiceData.safety[stage] || voiceData.safety[1]);
+ if (/safe|okay|ok/i.test(originalText)) {
+
+  if (reference.type === "self") {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I'm safe."
+        : "I'm safe."
+    );
   }
 
-  if (/come back|hope/i.test(originalText)) {
-    return deliverReply(voiceData.return[stage] || voiceData.return[1]);
-  }
-
-  if (/together|reunite/i.test(originalText)) {
-    return deliverReply(voiceData.together[stage] || voiceData.together[1]);
-  }
-
-  if (/go back/i.test(originalText)) {
-    return deliverReply(voiceData.goBack[stage] || voiceData.goBack[1]);
-  }
-
+  return deliverReply(voiceData.safety[stage] || voiceData.safety[1]);
 }
+
+if (/come back|hope/i.test(originalText)) {
+
+  if (reference.type === "self") {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "If I'm meant to return somewhere, I will."
+        : "If I'm meant to return, it will be intentional."
+    );
+  }
+
+  return deliverReply(voiceData.return[stage] || voiceData.return[1]);
+}
+
+if (/together|reunite/i.test(originalText)) {
+
+  return deliverReply(voiceData.together[stage] || voiceData.together[1]);
+}
+
+if (/go back/i.test(originalText)) {
+
+  return deliverReply(voiceData.goBack[stage] || voiceData.goBack[1]);
+}
+
 
 
   /* ================================
