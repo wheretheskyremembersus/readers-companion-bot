@@ -1306,17 +1306,13 @@ const nameCall = originalText
   .replace(/[^\w\s]/g, "")
   .trim();
 
-if (/^saira\b/.test(nameCall)){
-
+if (/^saira\b/.test(nameCall)) {
   skipRelationalPrefix = true;
-
   return deliverReply("Yes… I’m here.");
 }
 
-if (/^aayan\b/.test(nameCall)){ 
-
+if (/^aayan\b/.test(nameCall)) {
   skipRelationalPrefix = true;
-
   return deliverReply("I’m here.");
 }
 
