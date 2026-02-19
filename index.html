@@ -1325,7 +1325,7 @@ function handleIntelligence(text, originalText) {
   }
 
   // Identity
-  if (/are you (a )?(bot|real|human)/i.test(lower)) {
+  if (/are you (a )?(bot|robot|machine|real|human)/i.test(lower)) {
     return { type: "identity", raw: originalText };
   }
 
