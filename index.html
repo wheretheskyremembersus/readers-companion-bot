@@ -1549,13 +1549,13 @@ if (
    RELATIONAL FINALITY HANDLER
 ================================= */
 
-const finalityText = originalText.toLowerCase();
+const finalityText = originalText.toLowerCase().trim();
 
 if (
-  (finalityText.includes("dead") && (finalityText.includes("he") || finalityText.includes("she"))) ||
-  finalityText.includes("separate") ||
-  finalityText.includes("break up") ||
-  finalityText.includes("over")
+  /\bdead\b/.test(finalityText) ||
+  /\bseparat(e|ed|ion)?\b/.test(finalityText) ||
+  /\bbreak\s*up\b/.test(finalityText) ||
+  /\b(over|finished|ended)\b/.test(finalityText)
 ) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
