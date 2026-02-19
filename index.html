@@ -1415,34 +1415,60 @@ function processInput(userText, originalText) {
          
 console.log("RELATIONAL HANDLER REACHED");
 /* ================================
-   RELATIONAL POSITIONAL HANDLER
+   RELATIONAL POSITIONAL HANDLER (STAGE AWARE)
 ================================= */
 
 if (/^where\s+is\s+(he|she)\??$/i.test(originalText.trim())) {
 
   const reference = resolveReference(originalText);
+  const stage = stageState[activeVoice]?.currentStage || 1;
 
   skipRelationalPrefix = true;
 
+  /* SELF REFERENCE */
   if (reference.type === "self") {
 
-    return deliverReply(
-      activeVoice === "saira"
-        ? "I'm here."
-        : "I'm here."
-    );
+    const selfMap = {
+      1: "I'm here.",
+      2: "I'm here. Present.",
+      3: "I'm here. Not distant.",
+      4: "I'm here. I didn't disappear.",
+      5: "I'm here — even if things changed.",
+      6: "I'm here. Just not who I used to be.",
+      7: "I'm here. Some things remain."
+    };
 
+    return deliverReply(selfMap[stage]);
   }
 
-  if (reference.type === "other" || reference.type === "explicit_other") {
+ /* OTHER REFERENCE — CLIFFHANGER VERSION */
 
-    return deliverReply(
-      activeVoice === "saira"
-        ? "He is where his choices led him."
-        : "She is where her growth carried her."
-    );
+if (reference.type === "other" || reference.type === "explicit_other") {
 
-  }
+  const otherMap = {
+
+    saira: {
+      1: "He's somewhere out there.",
+      2: "He's somewhere… I just haven't found him yet.",
+      3: "He's out there. I believe that.",
+      4: "He's somewhere beyond my reach — but not beyond my prayers.",
+      5: "He's out there. I’ve looked in cities, in towns… I still do.",
+      6: "He's somewhere in this world. I carry him with me while I search.",
+      7: "He's out there. And until I know otherwise, I will keep believing we are not finished."
+    },
+
+    aayan: {
+      1: "She's somewhere out there.",
+      2: "She's somewhere… I hope she's safe.",
+      3: "She's out there. I think about that often.",
+      4: "She's somewhere beyond my reach — but not beyond my prayers.",
+      5: "She's out there. I don't know where. But I ask for her safety every day.",
+      6: "She's somewhere in this world. I carry her quietly, even in absence.",
+      7: "She's out there. And until life proves otherwise, I will believe we are not accidental."
+    }
+  };
+
+  return deliverReply(otherMap[activeVoice][stage]);
 }
 
  /* ================================
