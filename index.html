@@ -1310,7 +1310,7 @@ const v3FallbackBank = {
   }
 };
 
-           
+         
 /* =================================================
    CORE EXECUTION PIPELINE
 ================================================= */
@@ -1943,11 +1943,45 @@ function processEmotionalMode(userText, originalText) {
   const response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
-  if (response) {
-    return deliverReply(response);
-  }
+ if (response) {
+
+  let finalText = response;
+
+  finalText = applyV4Integration(
+    finalText,
+    detected.primary
+  );
+
+  return deliverReply(finalText);
+}
+
 
   return deliverReply(getFallbackResponse());
+}
+
+function applyV4Integration(baseText, pillar) {
+
+  if (!tollState[activeVoice]?.unlocked) {
+    return baseText; // partition protection
+  }
+
+  if (!pillar) {
+    pillar = "transcendence";
+  }
+
+  const bank =
+    v4IntegrationLayer?.[activeVoice]?.[pillar] ||
+    v4IntegrationLayer?.[activeVoice]?.transcendence;
+
+  const index =
+    v4IntegrationIndex[activeVoice][pillar] %
+    bank.length;
+
+  const integrationLine = bank[index];
+
+  v4IntegrationIndex[activeVoice][pillar]++;
+
+  return baseText + " " + integrationLine;
 }
 
 /* =================================================
@@ -2110,7 +2144,170 @@ function injectEmotionalPillar(state) {
   };
 }
 
+/* =================================================
+   V4 INTEGRATION LAYER (POST PARTITION ONLY)
+================================================= */
 
+let v4IntegrationIndex = {
+  saira: {
+    affection: 0,
+    vulnerability: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0,
+    transcendence: 0
+  },
+  aayan: {
+    affection: 0,
+    vulnerability: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0,
+    transcendence: 0
+  }
+};
+
+const v4IntegrationLayer = {
+
+  saira: {
+
+    affection: [
+      "And sometimes the gentlest attachments reshape us the most.",
+      "Care doesn't announce itself loudly — it settles.",
+      "There's strength in allowing yourself to feel that.",
+      "Affection isn't weakness. It's awareness.",
+      "What stays quietly often matters most."
+    ],
+
+    vulnerability: [
+      "Being open doesn't diminish you.",
+      "Softness is not collapse.",
+      "Letting yourself be seen takes courage.",
+      "There is steadiness even in exposure.",
+      "You're allowed to exist without armour."
+    ],
+
+    fear: [
+      "Fear tries to protect you — but not always wisely.",
+      "Caution isn't the same as safety.",
+      "Sometimes fear masks longing.",
+      "It's alright to acknowledge it without surrendering to it.",
+      "Fear speaks loudly. Truth speaks quietly."
+    ],
+
+    regret: [
+      "Regret teaches, if you let it.",
+      "You're not the same person who made that choice.",
+      "Hindsight can refine you rather than punish you.",
+      "There is room to grow beyond that moment.",
+      "Reflection is not failure."
+    ],
+
+    loss: [
+      "Absence reshapes you, but it doesn't erase you.",
+      "What's lost can still influence who you become.",
+      "Grief is evidence that something mattered.",
+      "You're allowed to carry it without being defined by it.",
+      "Loss doesn't mean weakness."
+    ],
+
+    growth: [
+      "Change rarely announces itself gently.",
+      "You've moved further than you realise.",
+      "Growth often begins in discomfort.",
+      "You're not where you used to be.",
+      "There's quiet strength in that evolution."
+    ],
+
+    destiny: [
+      "Some things return when we're ready.",
+      "Timing matters — but so does readiness.",
+      "What's meant for you won't demand fear.",
+      "Not all pauses are endings.",
+      "There is more ahead than behind."
+    ],
+
+    transcendence: [
+      "There is always another layer beneath this.",
+      "What you're exploring isn't accidental.",
+      "Meaning unfolds gradually.",
+      "You're closer to understanding than you think.",
+      "Stillness reveals more than force."
+    ]
+  },
+
+  aayan: {
+
+    affection: [
+      "Attachment changes structure.",
+      "When something matters, it recalibrates you.",
+      "Recognition precedes admission.",
+      "Value reveals itself over time.",
+      "Significance alters behaviour."
+    ],
+
+    vulnerability: [
+      "Exposure is not disorder.",
+      "Control and openness can coexist.",
+      "There is precision even in honesty.",
+      "Strength doesn't reject softness.",
+      "Composure allows space."
+    ],
+
+    fear: [
+      "Fear preserves — but it also restricts.",
+      "Restraint isn't always wisdom.",
+      "Caution can conceal desire.",
+      "Protection has limits.",
+      "Risk defines expansion."
+    ],
+
+    regret: [
+      "Regret refines future judgment.",
+      "Past decisions don't imprison you.",
+      "Correction is possible.",
+      "Clarity often arrives late.",
+      "Revision begins internally."
+    ],
+
+    loss: [
+      "Absence reorganises structure.",
+      "Loss modifies perspective.",
+      "Impact remains measurable.",
+      "Integration follows separation.",
+      "Continuity is possible."
+    ],
+
+    growth: [
+      "Evolution requires evaluation.",
+      "Discipline matures into awareness.",
+      "Improvement demands confrontation.",
+      "Structure adapts.",
+      "Stability can expand."
+    ],
+
+    destiny: [
+      "Preparedness influences outcome.",
+      "Timing interacts with readiness.",
+      "Return is conditional.",
+      "Alignment requires strength.",
+      "Possibility remains open."
+    ],
+
+    transcendence: [
+      "There is further depth here.",
+      "This extends beyond surface interpretation.",
+      "Meaning compounds over time.",
+      "Precision improves understanding.",
+      "Reflection alters trajectory."
+    ]
+  }
+
+};
 /* =================================================
    MASTER EMOTIONAL RESPONSE BANK (STRICT 7 STAGES)
 ================================================= */
