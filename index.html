@@ -1408,7 +1408,7 @@ function processInput(userText, originalText) {
   const lower = (userText ||"").toLowerCase().trim();
  const nameCall = originalText
   .toLowerCase()
-  .replace(/[^\w\s]/g,"")
+  .replace(/[^\w\s]/g, "")
   .trim();
 
   const intentState = handleIntelligence(userText, originalText);
