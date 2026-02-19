@@ -1287,7 +1287,7 @@ for (let layer of characterLayers) {
 }
 
  // HARD PARTITION USING TOLL SYSTEM
-if (!tollState[activeVoice].unlocked) {
+if (!activeVoice || !tollState[activeVoice]?.unlocked) {
        
   /* =========================
      3️⃣ HARD PARTITION
