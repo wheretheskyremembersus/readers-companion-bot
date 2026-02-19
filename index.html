@@ -1495,7 +1495,11 @@ if (/^(no|nope)$/i.test(originalText)) {
    CHARACTER INSIGHT / COMPARISON
 ================================= */
 
-if (/who is aayan|tell me about aayan|was aayan like that|is aayan like that/i.test(lower)) {
+if (/\bwho\s+is\s+aayan\b/i.test(lower) ||
+    /\btell me about aayan\b/i.test(lower) ||
+    /\bwas aayan like that\b/i.test(lower) ||
+    /\bis aayan like that\b/i.test(lower)) {
+
   return deliverReply(
     activeVoice === "saira"
       ? "Aayan isn’t careless. He feels deeply — but he hides it behind control. If he seemed distant, it was rarely indifference. It was caution."
@@ -1503,7 +1507,11 @@ if (/who is aayan|tell me about aayan|was aayan like that|is aayan like that/i.t
   );
 }
 
-if (/who is saira|tell me about saira|was saira like that|is saira like that/i.test(lower)) {
+if (/\bwho\s+is\s+saira\b/i.test(lower) ||
+    /\btell me about saira\b/i.test(lower) ||
+    /\bwas saira like that\b/i.test(lower) ||
+    /\bis saira like that\b/i.test(lower)) {
+
   return deliverReply(
     activeVoice === "aayan"
       ? "Saira feels before she calculates. She doesn’t hide behind structure — she reacts honestly. That’s part of what unsettled me."
