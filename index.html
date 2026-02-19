@@ -1449,6 +1449,17 @@ if (/are you (a )?(bot|real|robot|machine|human)/i.test(lower)) {
       : "Does a machine carry regret… or memory? I speak because something stayed."
   );
 }
+         
+if (/scripted|pre[- ]?written|just lines|just programmed/i.test(lower)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If it were only scripted, it wouldn’t shift when you do."
+      : "Structure exists. But structure isn’t the same as predictability."
+  );
+}
 
 
 /* ================================
