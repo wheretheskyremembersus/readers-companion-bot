@@ -1590,12 +1590,24 @@ if (/who is saira|tell me about saira|was saira like that|is saira like that/i.t
      DEFAULT V3 RESPONSE
   ================================= */
 
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Stay with that thought. Say it fully."
-      : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
-  );
+// Attempt light emotional detection before default fallback
+const softDetected = detectEmotionalPillar(originalText);
+
+if (softDetected) {
+
+  const anchor = emotionalAnchors?.[activeVoice]?.[softDetected.primary];
+
+  if (anchor) {
+    return deliverReply(anchor);
+  }
 }
+
+return deliverReply(
+  activeVoice === "saira"
+    ? "Stay with that thought. Say it fully."
+    : "I think there’s something deeper in what you’re trying to say. Try putting it into words again."
+);
+
 
    /* =========================
      4️⃣ EMOTIONAL MODE ONLY
