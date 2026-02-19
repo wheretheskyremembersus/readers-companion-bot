@@ -1397,6 +1397,25 @@ function resolveReference(originalText) {
 }
 
 /* =========================
+   INPUT NORMALIZATION
+========================= */
+
+function normalizeInput(text) {
+  return (text || "")
+    .toLowerCase()
+    .replace(/(.)\1{2,}/g, "$1$1")
+    .replace(/[^\w\s]/g, " ")
+    .replace(/seperat/g, "separat")
+    .replace(/seprat/g, "separat")
+    .replace(/seperate/g, "separate")
+    .replace(/break\s*up/g, "break up")
+    .replace(/breakup/g, "break up")
+    .replace(/brakeup/g, "break up")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/* =========================
    RELATIONAL AWARENESS (V3)
 ========================= */
 
@@ -1406,16 +1425,15 @@ function processInput(userText, originalText) {
   relationalPrefix ="";
   skipRelationalPrefix = false;
 
-  // Normalize input
-  const lower = (userText ||"").toLowerCase().trim();
- const nameCall = originalText
-  .toLowerCase()
-  .replace(/[^\w\s]/g, "")
-  .trim();
+  // Normalize input (GLOBAL TOLERANCE LAYER)
+const normalizedText = normalizeInput(originalText);
 
-  const intentState = handleIntelligence(userText, originalText);
-         
-  const reference = resolveReference(originalText); 
+const lower = normalizedText;
+const nameCall = normalizedText;
+
+const intentState = handleIntelligence(normalizedText, normalizedText);
+const reference = resolveReference(normalizedText);
+
          
 console.log("RELATIONAL HANDLER REACHED");
 
@@ -4026,7 +4044,7 @@ function sendTypedMessage() {
 
   input.value ="";
 
-  addUserMessage(originalText);   // ✅ THIS WAS MISSING
+  addUserMessage(originalText);  
 
 // TOLL: Free type progression
 const wordCount = originalText.trim().split(/\s+/).length;
