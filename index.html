@@ -1297,6 +1297,29 @@ function processInput(userText, originalText) {
     : "Yes. Go on."
 );
 }
+ /* ================================
+   DIRECT NAME INVOCATION
+================================= */
+
+const nameCall = originalText
+  .toLowerCase()
+  .replace(/[^\w\s]/g, "")
+  .trim();
+
+if (/^saira\b/.test(nameCall)) && activeVoice === "saira") {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply("Yes… I’m here.");
+}
+
+if (/^aayan\b/.test(nameCall)) && activeVoice === "aayan") {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply("I’m here.");
+}
+
 /* ===== IDENTITY ===== */
 
 // WHO ARE YOU
