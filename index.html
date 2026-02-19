@@ -1343,10 +1343,11 @@ for (let layer of characterLayers) {
    PERMANENT CHARACTER IDENTITY ROUTING
 ================================= */
 
-if (lower.startsWith("who is aayan") ||
-    lower.includes("tell me about aayan") ||
-    lower.includes("was aayan like that") ||
-    lower.includes("is aayan like that")) {
+if (/\bwho\s+is\s+aayan\b/i.test(originalText) ||
+    /\btell me about aayan\b/i.test(originalText) ||
+    /\bwas aayan like that\b/i.test(originalText) ||
+    /\bis aayan like that\b/i.test(originalText)) {
+
 
   return deliverReply(
     activeVoice === "saira"
@@ -1355,10 +1356,11 @@ if (lower.startsWith("who is aayan") ||
   );
 }
 
-if (lower.startsWith("who is saira") ||
-    lower.includes("tell me about saira") ||
-    lower.includes("was saira like that") ||
-    lower.includes("is saira like that")) {
+if (/\bwho\s+is\s+saira\b/i.test(originalText) ||
+    /\btell me about saira\b/i.test(originalText) ||
+    /\bwas saira like that\b/i.test(originalText) ||
+    /\bis saira like that\b/i.test(originalText)) {
+
 
   return deliverReply(
     activeVoice === "aayan"
