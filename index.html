@@ -1355,6 +1355,18 @@ return deliverReply(
       : "If you’re asking who Saira is — she isn’t fragile. She just feels openly. That’s strength, not weakness."
   );
 }
+         
+// STRICT ORIENTATION OVERRIDE
+if (/^\s*what\s+is\s+this\s+about\s*\??\s*$/i.test(originalText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "This is a quiet space to explore our story — mine and Aayan’s. It unfolds gently through conversation. The questions in the dock below can guide you deeper."
+      : "This space invites you to understand our story through dialogue. If you'd like structure, the dock questions can guide you."
+  );
+}
 
 /* =========================
    TYPED QUESTION MATCHING (CLEAN VERSION)
