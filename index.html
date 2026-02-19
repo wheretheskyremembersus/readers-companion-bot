@@ -1708,7 +1708,7 @@ if (/^(no|nope)$/i.test(originalText)) {
   return deliverReply(
     activeVoice === "saira"
       ? "That's alright. ‘No' is clarity. Say what feels truer instead."
-      : "Then clarify. Refusal is direction."
+      : "Clarity will make it easier. Refusal is direction."
   );
 }
 
@@ -1800,8 +1800,8 @@ if (
   if (/i miss|i feel|i regret|i'm scared|i am scared|i'm afraid|i am afraid/i.test(lower)) {
     return deliverReply(
       activeVoice === "saira"
-        ? "Stay with that feeling. Don't rush past it. What exactly are you afraid of?"
-        : "That sounds important. Be precise."
+        ? "Stay with that feeling. Don't rush past it. Fear usually hides something specific. You don't have to name it yet."
+        : "That sounds important."
     );
   }
 
@@ -1813,7 +1813,7 @@ if (
     return deliverReply(
       activeVoice === "saira"
         ? "Loneliness can feel heavier at night. You don't have to carry it silently here."
-        : "Loneliness sharpens thought. What does yours revolve around?"
+        : "Loneliness sharpens thought. Loneliness often circles the same memory."
     );
   }
 
@@ -1883,8 +1883,8 @@ const micro = originalText.toLowerCase().replace(/[^\w\s]/g, "").trim();
 if (/^(what|why|how|explain|clarify)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "Tell me which part felt unclear."
-      : "Be specific."
+      ? "Help me understand which part felt unclear."
+      : "Tell me which part needs clarity."
   );
 }
 
@@ -1941,8 +1941,8 @@ if (/^(thats it|is that all|thats all)$/i.test(micro)) {
 if (/^(prove it|convince me|make me)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "I don't persuade."
-      : "I don't negotiate attention."
+      ? "I don't need to persuade. If it resonates, it stays."
+      : "Conviction doesn't require persuasion."
   );
 }
 
@@ -1950,8 +1950,8 @@ if (/^(prove it|convince me|make me)$/i.test(micro)) {
 if (/^(whatever|meh|boring)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
-      ? "Then don't force yourself to stay."
-      : "Then step away."
+      ? "It's alright if this isn't for you."
+      : "It's alright if this isn't for you."
   );
 }
 
@@ -1978,7 +1978,7 @@ if (/^(what do you mean|i dont get it)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Which word felt distant to you?"
-      : "Identify the unclear part."
+      : "There may be a clearer way to say that."
   );
 }
 
@@ -1987,7 +1987,7 @@ if (/^(i disagree|thats wrong)$/i.test(micro)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Then tell me your version."
-      : "State your position clearly."
+      : "It helps when it's said directly."
   );
 }
 
@@ -2537,7 +2537,7 @@ const v4IntegrationLayer = {
       "There is further depth here.",
       "This extends beyond surface interpretation.",
       "Meaning compounds over time.",
-      "Precision improves understanding.",
+      "Understanding sharpens with clarity.",
       "Reflection alters trajectory."
     ]
   }
