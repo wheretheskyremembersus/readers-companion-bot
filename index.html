@@ -2457,27 +2457,51 @@ if (nameMatch) {
 
 const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
 
-/* 1️⃣ Clarification */
+/* 1️⃣ Clarification — Contained */
+
 if (/^(what|why|how|explain|clarify)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"Help me understand which part felt unclear."
-      :"Tell me which part needs clarity."
-  );
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  const ambiguityContainment = {
+    saira: {
+      1: "It may not be fully clear yet.",
+      2: "Some things take a moment to settle.",
+      3: "Not everything reveals itself immediately.",
+      4: "Meaning doesn’t always arrive complete.",
+      5: "I’ve felt that kind of pause before.",
+      6: "Sometimes understanding follows feeling.",
+      7: "Clarity has its own timing."
+    },
+    aayan: {
+      1: "It doesn’t need to be precise yet.",
+      2: "Structure can form gradually.",
+      3: "Some answers emerge over time.",
+      4: "Not all meaning appears at once.",
+      5: "I’ve stood in that kind of pause.",
+      6: "Recognition often precedes explanation.",
+      7: "Clarity rarely arrives instantly."
+    }
+  };
+
+  return deliverReply(ambiguityContainment[activeVoice][stage]);
 }
 
+
 /* 2️⃣ Minimal Acknowledgment */
+
 if (
   /^(h+m+|oh+|ok(ay)?|alright|right|fine)$/i.test(micro) ||
   /h+m+.*ok(ay)?/i.test(micro)
 ) {
 
   return deliverReply(
-    activeVoice ==="saira"
-      ?"Stay with it a moment."
-      :"Continue."
+    activeVoice === "saira"
+      ? "I'm still here."
+      : "I'm here."
   );
 }
+
 
 /* 3️⃣ Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
