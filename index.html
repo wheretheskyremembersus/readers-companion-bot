@@ -1784,16 +1784,33 @@ if (
   }
 
   /* ================================
-     JEALOUSY / CROSS GENDER
-  ================================= */
+   JEALOUSY / CROSS GENDER (SELF-REFERENCE SAFE)
+================================= */
 
-  if (/do you love him|do you love her|choose me|choose him|choose her/i.test(lower)) {
+if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
+
+  // SELF-REFERENCE PROTECTION
+  if (
+    (activeVoice === "saira" && /\bher\b/i.test(lower)) ||
+    (activeVoice === "aayan" && /\bhim\b/i.test(lower))
+  ) {
+    skipRelationalPrefix = true;
+
     return deliverReply(
-      activeVoice ==="saira"
-        ?"This story was never about competition. It was about courage — and timing."
-        :"Comparison weakens clarity. The story stands without rivalry."
+      activeVoice === "saira"
+        ? "If you're asking whether I loved… I did. It wasn’t rivalry. It was real."
+        : "If you're asking whether I loved… I did. That was never a competition."
     );
   }
+
+  // TRUE CROSS-CHARACTER CASE
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You're referring to him… This story was never about competition. It was about courage — and timing."
+      : "You're referring to her… This story was never about rivalry. It was about consequence — and timing."
+  );
+}
+
 
   /* ================================
      SEXUAL / INTIMATE PUSH
