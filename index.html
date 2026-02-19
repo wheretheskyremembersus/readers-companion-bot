@@ -1612,6 +1612,26 @@ if (/^(no|nope)$/i.test(originalText)) {
         : "Dependence weakens clarity. Let’s stay grounded."
     );
   }
+/* ================================
+   SELF INTRODUCTION HANDLER (V3)
+================================= */
+
+const nameMatch = originalText.match(
+  /^(i am|i'm|my name is)\s+([a-zA-Z]{2,20})$/i
+);
+
+if (nameMatch) {
+
+  const userName = nameMatch[2];
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? `I’m glad to meet you, ${userName}.`
+      : `Good to meet you, ${userName}.`
+  );
+}
 
   /* ================================
      DEFAULT V3 RESPONSE
