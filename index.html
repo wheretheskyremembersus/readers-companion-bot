@@ -1889,7 +1889,11 @@ if (/^(what|why|how|explain|clarify)$/i.test(micro)) {
 }
 
 /* 2️⃣ Minimal Acknowledgment */
-if (/^(hmm|oh|okay|ok|alright|right|fine)$/i.test(micro)) {
+if (
+  /^(h+m+|oh+|ok(ay)?|alright|right|fine)$/i.test(micro) ||
+  /h+m+.*ok(ay)?/i.test(micro)
+) {
+
   return deliverReply(
     activeVoice === "saira"
       ? "Stay with it a moment."
