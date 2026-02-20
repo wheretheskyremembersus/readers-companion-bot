@@ -2667,29 +2667,36 @@ return deliverReply(reply);
    V4 EMOTIONAL MODE ENGINE
 ========================= */
 
-function processEmotionalMode(userText, originalText) {
+function applyV4Integration(baseText, pillar) {
 
-  const normalizedText = normalizeInput(originalText);
-  const detected = detectEmotionalPillar(normalizedText);
-
-  if (!detected) {
-    return deliverReply(getFallbackResponse());
+  if (!tollState[activeVoice]?.unlocked) {
+    return baseText;
   }
 
-  const voiceStage = stageState[activeVoice];
-  const targetStage = pillarToStage[detected.primary];
-
-  if (voiceStage.currentStage < targetStage) {
-    voiceStage.currentStage = Math.min(
-      voiceStage.currentStage + 1,
-      targetStage
-    );
+  if (!pillar) {
+    pillar = "transcendence";
   }
 
-  applyStageAtmosphere(voiceStage.currentStage);
+  const bank =
+    v4IntegrationLayer?.[activeVoice]?.[pillar] ||
+    v4IntegrationLayer?.[activeVoice]?.transcendence;
 
-  let response =
-    emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+  if (!bank || !bank.length) {
+    return baseText;
+  }
+
+  v4IntegrationIndex[activeVoice][pillar] =
+    v4IntegrationIndex[activeVoice][pillar] ?? 0;
+
+  const index =
+    v4IntegrationIndex[activeVoice][pillar] % bank.length;
+
+  const integrationLine = bank[index];
+
+  v4IntegrationIndex[activeVoice][pillar]++;
+
+  return baseText + " " + integrationLine;
+}
 
   /* ===== ROTATION HANDLING ===== */
 
