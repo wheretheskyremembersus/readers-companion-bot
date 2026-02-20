@@ -2686,9 +2686,12 @@ const detected = detectEmotionalPillar(normalizedText);
 
   applyStageAtmosphere(voiceStage.currentStage);
 
-  const response =
-    emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+  let response =
+  emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
+if (Array.isArray(response)) {
+  response = response[Math.floor(Math.random() * response.length)];
+}
   if (response) {
 
     let finalText = response;
@@ -3237,7 +3240,11 @@ const emotionalResponseBank = {
 
    saira: {
   1: "Feeling that way can be heavier than it looks.",
-  2: "Sometimes we measure ourselves against silence and decide we fall short.",
+ 2: [
+  "Sometimes we measure ourselves against silence and decide we fall short.",
+  "Silence has a way of making us question ourselves more than we should.",
+  "When nothing is said, it's easy to assume the fault was ours."
+],
   3: "When you care deeply, it can become easier to question yourself than to question what happened.",
   4: "It hurts to wonder if you were less than enough. I remember asking myself that too — in the quiet that followed.",
 5: "There was a time I questioned myself the same way. Wondering if I had been too much… or somehow not enough to make someone stay.",
