@@ -2730,7 +2730,18 @@ console.log("Current Stage:", stageState[activeVoice]?.currentStage);
 /* =========================
    V4 EMOTIONAL MODE SWITCH
 ========================= */
+if (
+  !tollState[activeVoice]?.unlocked &&
+  /\b(author|writer|novel|book|who wrote|written by)\b/i.test(normalizedText)
+) {
+  skipRelationalPrefix = true;
 
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this story."
+      : "Mohan R. wrote it."
+  );
+}
 if (tollState[activeVoice]?.unlocked) {
   console.log("ENGINE: V4 ACTIVATED");
   emotionalModeActive = true;
@@ -3533,22 +3544,20 @@ function getFallbackResponse() {
 
 const neutralFallback = {
   saira: {
-    1: "I’m here.",
-    2: "Something in that carries weight.",
-    3: "That doesn’t feel accidental.",
-    4: "There’s meaning in that, even if it’s quiet.",
-    5: "I’ve felt that kind of shift before.",
-    6: "Sometimes the feeling comes before the clarity.",
-    7: "It doesn’t need to be loud to matter."
+    2: "It doesn’t feel settled yet.",
+    3: "Something in this is still alive.",
+    4: "It hasn’t dissolved with time.",
+    5: "Some things refuse to quiet down.",
+    6: "It lingers for a reason.",
+    7: "Not everything unfinished is broken."
   },
   aayan: {
-    1: "I’m listening.",
-    2: "That holds structure.",
-    3: "That isn’t random.",
-    4: "Something is forming there.",
-    5: "I’ve stood in that kind of space.",
-    6: "Realisation doesn’t always arrive complete.",
-    7: "Not everything meaningful is immediately defined."
+    2: "It hasn’t reached closure.",
+    3: "There’s still structure beneath it.",
+    4: "It hasn’t lost its weight.",
+    5: "Some impacts don’t fade easily.",
+    6: "It carries consequence.",
+    7: "Certain bonds don’t dissolve with distance."
   }
 };
 
