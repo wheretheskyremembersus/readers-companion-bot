@@ -1528,6 +1528,8 @@ if (
 ) {
   tollState[voice].unlocked = true;
 }
+console.log("DockCount:", tollState[voice].dockCount);
+console.log("FreeCount:", tollState[voice].freeCount);
 if (earlyEmotion) {
   return processEmotionalMode(userText, originalText);
 }
