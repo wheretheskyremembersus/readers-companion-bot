@@ -2691,7 +2691,8 @@ function processEmotionalMode(userText, originalText) {
   let response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
-  // ROTATION
+  /* ===== ROTATION HANDLING ===== */
+
   if (Array.isArray(response)) {
 
     const pillar = detected.primary;
@@ -2709,8 +2710,10 @@ function processEmotionalMode(userText, originalText) {
     response = response[index];
 
     emotionalRotationTracker[voice][pillar][stage] =
-      (index + 1) % response.length;
+      (index + 1) % emotionalResponseBank[pillar][voice][stage].length;
   }
+
+  /* ===== THIS IS WHERE YOUR BLOCK GOES ===== */
 
   if (response) {
 
@@ -2726,34 +2729,6 @@ function processEmotionalMode(userText, originalText) {
 
   return deliverReply(getFallbackResponse());
 }
-
-         
-function applyV4Integration(baseText, pillar) {
-
-  if (!tollState[activeVoice]?.unlocked) {
-    return baseText;
-  }
-
-  if (!pillar) {
-    pillar = "transcendence";
-  }
-
-  const bank =
-    v4IntegrationLayer?.[activeVoice]?.[pillar] ||
-    v4IntegrationLayer?.[activeVoice]?.transcendence;
-
-  if (!bank) return baseText;
-
-  const index =
-    v4IntegrationIndex[activeVoice][pillar] % bank.length;
-
-  const integrationLine = bank[index];
-
-  v4IntegrationIndex[activeVoice][pillar]++;
-
-  return baseText + " " + integrationLine;
-}
-
 /* =================================================
    RELATIONAL TRIGGER DETECTION
 ================================================= */
