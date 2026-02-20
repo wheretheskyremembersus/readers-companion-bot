@@ -4240,7 +4240,51 @@ function sendTypedMessage() {
   input.value ="";
 
   addUserMessage(originalText);  
+/* =========================
+   REPEAT PROTECTION RESTORE
+========================= */
 
+const normalized = normalizeInput(originalText);
+
+if (normalized === lastUserInput) {
+  repeatCount++;
+} else {
+  repeatCount = 1;
+}
+
+lastUserInput = normalized;
+
+if (repeatCount >= repeatLimit) {
+
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
+
+  repeatCount = 0;
+
+  return returnToWebsite();
+}
+
+/* =========================
+   ABUSE PROTECTION RESTORE
+========================= */
+
+const abuseRegex = /(fuck|shit|bitch|asshole|slut|whore|bastard|idiot)/i;
+
+if (abuseRegex.test(originalText)) {
+
+  abuseCount++;
+
+  if (abuseCount >= abuseLimit) {
+
+    const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+
+    localStorage.setItem("blockUntil", blockTime);
+    localStorage.setItem("exitStrikes", exitStrikeCount + 1);
+
+    location.reload();
+    return;
+  }
+}
 // TOLL: Free type progression
 const wordCount = originalText.trim().split(/\s+/).length;
 
