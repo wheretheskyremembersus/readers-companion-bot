@@ -2711,7 +2711,9 @@ function processEmotionalMode(userText, originalText) {
   const normalizedText = normalizeInput(originalText);
   const detected = detectEmotionalPillar(normalizedText);
 
-  if (!detected) {
+console.log("Detected:", detected);
+
+if (!detected) {
     return deliverReply(getFallbackResponse());
   }
 
