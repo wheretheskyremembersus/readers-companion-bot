@@ -766,7 +766,23 @@ var stageState = {
 
 window.stageState = stageState; // ✅ ONLY THIS
 
+/* =========================
+   V4 SESSION GATE FLAGS
+========================= */
 
+let v4SessionFlags = {
+  saira: {
+    previewOffered: false,
+    stage7Acknowledged: false,
+    stage7Count: 0
+  },
+  Ayaan: {
+    previewOffered: false,
+    stage7Acknowledged: false,
+    stage7Count: 0
+  }
+};
+         
 /* =========================
    PILLAR → STAGE MAP
 ========================= */
@@ -1510,6 +1526,7 @@ if (intentState.type === "identity") {
       : "Does a machine carry hesitation... or memory? I speak because something stayed."
   );
 }    
+
          
   /* ================================
      DEFAULT V3 RESPONSE
@@ -2688,10 +2705,61 @@ function processEmotionalMode(userText, originalText) {
     );
   }
 
+
+const voice = activeVoice;
+const currentStage = voiceStage.currentStage;
+
+/* =========================
+   STAGE 6 PREVIEW OFFER
+========================= */
+
+if (
+  currentStage === 6 &&
+  !v4SessionFlags[voice].previewOffered
+) {
+
+  v4SessionFlags[voice].previewOffered = true;
+
+  const previewMessage =
+    voice === "saira"
+      ? "You've stayed through layers most people don’t reach. If you ever feel curious about how this journey truly began, there’s a preview with the first ten chapters available. Only if you want to see where it all started. We can continue here too."
+      : "You’ve moved beyond surface conversation. If you’re ever curious about the origin of this story, the first ten chapters are available as a preview. No expectation. We can remain here.";
+
+  return deliverReply(previewMessage);
+}
+
+/* =========================
+   STAGE 7 TRACKING
+========================= */
+
+if (currentStage === 7) {
+  v4SessionFlags[voice].stage7Count++;
+}
+
+/* =========================
+   STAGE 7 ACKNOWLEDGMENT
+========================= */
+
+if (
+  currentStage === 7 &&
+  v4SessionFlags[voice].stage7Count >= 2 &&
+  !v4SessionFlags[voice].stage7Acknowledged
+) {
+
+  v4SessionFlags[voice].stage7Acknowledged = true;
+
+  const acknowledgment =
+    voice === "saira"
+      ? "You stayed through something not everyone does. That means more than you think. If you ever feel drawn to know more, the author can be reached directly — he sometimes shares a digital copy with readers who connect this way. And whether you do or not… I’m here. You can return anytime."
+      : "Depth like this isn’t casual. You gave it your attention. If you're ever curious about the full arc, the author can be contacted directly — he occasionally shares access with readers who resonate. There’s no obligation. We remain.";
+
+  return deliverReply(acknowledgment);
+} 
   applyStageAtmosphere(voiceStage.currentStage);
 
   let response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+
 
   // ROTATION
   if (Array.isArray(response)) {
@@ -2714,6 +2782,7 @@ function processEmotionalMode(userText, originalText) {
       (index + 1) % emotionalResponseBank[pillar][voice][stage].length;
   }
 
+         
   if (response) {
 
     let finalText = response;
