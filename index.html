@@ -25,11 +25,9 @@ content="default-src 'self';
          connect-src https://formspree.io;">
 
 <style>
-
- /* =========================
+/* =========================
    EXIT TRANSITION
 ========================= */
-
 .exit-overlay {
   position: fixed;
   inset: 0;
@@ -41,12 +39,10 @@ content="default-src 'self';
   z-index: 9999;
   transition: background 1.5s ease, backdrop-filter 1.5s ease;
 }
-
 .exit-overlay.active {
   background: rgba(0,0,0,0.65);
   backdrop-filter: blur(6px);
 }
-
 .exit-message {
   font-family:"Palatino Linotype", Palatino,"Book Antiqua", serif;
   font-size: 22px;
@@ -57,17 +53,13 @@ content="default-src 'self';
   transform: translateY(20px);
   transition: opacity 1.2s ease, transform 1.2s ease;
 }
-
 .exit-message.active {
   opacity: 1;
   transform: translateY(0px);
-}
-
-         
+}         
 /* =========================
-   GLOBAL PAGE (RESTORE)
+   GLOBAL PAGE 
 ========================= */
-
 body {
   margin: 0;
   font-family:"Palatino Linotype", Palatino,"Book Antiqua", serif;
@@ -82,7 +74,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 .page-wrapper {
   max-width: 1200px;
   margin: 0 auto;
@@ -102,7 +93,7 @@ body {
 }
    
 /* =========================
-   RIGHT COLUMN - FINAL REFINED VERSION
+   RIGHT COLUMN 
 ========================= */
 
 /* Main Section Titles */
@@ -270,7 +261,7 @@ body {
 }
 
 /* =========================
-   SKY LAYER (Contained Properly)
+   SKY LAYER 
 ========================= */
 
 .sky-layer {
@@ -866,7 +857,6 @@ function addUserMessage(text) {
   autoScroll();
 }
 
-
 function addVoiceMessage(text) {
   const side =
     activeVoice ==="saira"
@@ -895,7 +885,7 @@ function addSystemMessage(text) {
   autoScroll();
 }
 
-   /* =========================
+/* =========================
    TYPING INDICATOR FUNCTIONS
 ========================= */
 
@@ -946,8 +936,6 @@ if (
     replyText = relationalPrefix + replyText;
   }
 }
-
-
   interactionLocked = true;
   setDockDisabled(true);
 
@@ -1005,9 +993,9 @@ if (skyLayer) {
     saturate(${1 + depthFactor * 0.9})
   `;
 }
-    /* =========================
-       UNLOCK INTERACTION
-    ========================= */
+/* =========================
+UNLOCK INTERACTION
+========================= */
 
     interactionLocked = false;
     setDockDisabled(false);
@@ -1018,7 +1006,6 @@ if (skyLayer) {
 
   }, delay + 180);
 }
-
 
 /* ---------- Dock Control ---------- */
 
@@ -1146,8 +1133,7 @@ function applyStageAtmosphere(stage) {
     destiny:"Not all unfinished things are over."
   }
 };
-  
-                  
+                    
 function normalizeWord(word) {
   return word
     .toLowerCase()
@@ -1313,7 +1299,6 @@ const v3FallbackBank = {
     ]
   }
 };
-
          
 /* =================================================
    CORE EXECUTION PIPELINE
@@ -1343,7 +1328,6 @@ function handleIntelligence(text, originalText) {
     raw: originalText
   };
 }
-
  
 /* =================================================
    RELATIONAL REFERENCE RESOLUTION ENGINE
@@ -1502,7 +1486,6 @@ const nameCall = normalizedText;
 
 const intentState = handleIntelligence(normalizedText, normalizedText);
 const reference = resolveReference(normalizedText);
-
          
 console.log("RELATIONAL HANDLER REACHED");
 
@@ -1696,7 +1679,6 @@ if (
 
   return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
 }
-
 
  /* ================================
    RELATIONAL POSITIONAL HANDLER
@@ -1996,7 +1978,6 @@ if (/^aayan\b$/i.test(nameCall)) {
   }
 }
 
-
 /* ===== IDENTITY ===== */
 
 // WHO ARE YOU
@@ -2034,7 +2015,6 @@ if (/scripted|pre[- ]?written|just lines|just programmed/i.test(lower)) {
   );
 }
 
-
 /* ================================
    PERMANENT CHARACTER IDENTITY ROUTING
 ================================= */
@@ -2055,7 +2035,6 @@ if (
   );
 }
 
-
 if (
   /\bwho\s+is\s+saira\b/i.test(originalText.replace(/[^\w\s]/g,"")) ||
   /\btell me about saira\b/i.test(originalText) ||
@@ -2071,7 +2050,6 @@ if (
       :"If you're asking who Saira is - she isn't fragile. She just feels openly. That's strength, not weakness."
   );
 }
-
          
 /* ================================
    ORIENTATION (SPACE / PAGE / CHAT / BOT)
@@ -2092,9 +2070,8 @@ if (
   );
 }
 
-
 /* =========================
-   TYPED QUESTION MATCHING (CLEAN VERSION)
+   TYPED QUESTION MATCHING 
 ========================= */
 
 const foundationalQuestions = [
@@ -2143,7 +2120,6 @@ for (let i = 0; i < foundationalQuestions.length; i++) {
   }
 }
 
-
 // 2️⃣ Character Layer Typed Match
 for (let layer of characterLayers) {
   for (let item of layer) {
@@ -2155,7 +2131,7 @@ for (let layer of characterLayers) {
   }
 }
 /* ================================
-   ORIENTATION HANDLER (V3 SAFE)
+   ORIENTATION HANDLER (V3 )
 ================================= */
 
 if (/\bwhat\s+(is|'s)\s+this(\s+page)?\b/i.test(originalText)) {
@@ -2171,7 +2147,7 @@ if (/\bwhat\s+(is|'s)\s+this(\s+page)?\b/i.test(originalText)) {
 
 
 /* =========================
-     3️⃣ HARD PARTITION
+     HARD PARTITION
   ========================= */
 
 const unlocked = tollState[activeVoice]?.unlocked;
@@ -2314,7 +2290,6 @@ if (
       :"Alright. Leave steady."
   );
 }
-
         
  /* ================================
      LOVE CONFESSION
@@ -2380,7 +2355,6 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
   );
 }
 
-
   /* ================================
      SEXUAL / INTIMATE PUSH
   ================================= */
@@ -2393,8 +2367,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
     );
   }
 
- 
-  /* ================================
+   /* ================================
      SELF-CONFESSION (SAFE)
   ================================= */
 
@@ -2916,7 +2889,6 @@ function detectRelationalTrigger(originalText, activeVoice) {
   new RegExp(`\\b${word}\\b`,"i").test(originalText)
 );
 
-
   return {
     relationalActive: detected,
     relationalIntensity: detected ? 1 : 0
@@ -2935,7 +2907,6 @@ function applyEmotionalLens(contextState) {
     opennessLevel: contextState.stageSnapshot
   };
 }
-
 
 /* =================================================
    LAYER 5 - STAGE EVOLUTION
@@ -2984,8 +2955,6 @@ function evolveStage(state) {
   };
 }
 
-
-
 /* =================================================
    MASTER EMOTIONAL PILLARS (ONE VERSION ONLY)
 ================================================= */
@@ -2994,7 +2963,7 @@ const emotionalPillars = {
 
   affection: [
   "i love",
-  "i still love",
+"i still love",
   "i care",
   "i cared",
   "i miss you",
@@ -3558,7 +3527,6 @@ const neutralFallback = {
 return deliverReply(neutralFallback[activeVoice][stage]);
 
 }
-
          
 /* =========================
    FOUNDATIONAL
@@ -4213,8 +4181,7 @@ function selectVoice(v) {
 
   showFoundational();
 }
-
-         
+        
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
@@ -4331,7 +4298,6 @@ if (tollState[activeVoice].freeCount >= 3) {
     return deliverReply(bridgeLine);
   }
 }
-
 
   const text = originalText.toLowerCase();
 
