@@ -2718,10 +2718,12 @@ function processEmotionalMode(userText, originalText) {
 
     let finalText = response;
 
-    finalText = applyV4Integration(
-      finalText,
-      detected.primary
-    );
+    if (typeof applyV4Integration === "function") {
+  finalText = applyV4Integration(
+    finalText,
+    detected.primary
+  );
+}
 
     return deliverReply(finalText);
   }
