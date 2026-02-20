@@ -1480,6 +1480,12 @@ function processInput(userText, originalText) {
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
 
+// EARLY EMOTIONAL PRIORITY (NEW)
+const earlyEmotion = detectEmotionalPillar(normalizedText);
+
+if (earlyEmotion) {
+  return processEmotionalMode(userText, originalText);
+}
   console.log("RELATIONAL HANDLER REACHED");
   /* ================================
    IDENTITY ROUTING (INTENT STATE)
