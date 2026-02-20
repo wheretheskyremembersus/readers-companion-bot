@@ -724,6 +724,15 @@ let emotionalIndex = {
 const foreignLimit = 5;
 const repeatLimit = 5;
 const abuseLimit = 3;
+
+/* =========================
+   EMOTIONAL ROTATION TRACKER
+========================= */
+
+let emotionalRotationTracker = {
+  saira: {},
+  Ayaan: {}
+};
          
 // Initial atmosphere reset
 if (chatBody) {
@@ -2690,21 +2699,23 @@ const detected = detectEmotionalPillar(normalizedText);
   emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
 if (Array.isArray(response)) {
-  response = response[Math.floor(Math.random() * response.length)];
-}
-  if (response) {
 
-    let finalText = response;
+  const pillar = detected.primary;
+  const stage = voiceStage.currentStage;
+  const voice = activeVoice;
 
-    finalText = applyV4Integration(
-      finalText,
-      detected.primary
-    );
+  emotionalRotationTracker[voice][pillar] =
+    emotionalRotationTracker[voice][pillar] || {};
 
-    return deliverReply(finalText);
-  }
+  emotionalRotationTracker[voice][pillar][stage] =
+    emotionalRotationTracker[voice][pillar][stage] ?? 0;
 
-  return deliverReply(getFallbackResponse());
+  const index = emotionalRotationTracker[voice][pillar][stage];
+
+  response = response[index];
+
+  emotionalRotationTracker[voice][pillar][stage] =
+    (index + 1) % response.length;
 }
 
 
