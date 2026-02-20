@@ -1521,13 +1521,6 @@ if (earlyEmotion) {
   tollState[voice].freeCount++;
 }
 
-// Unlock condition (balanced)
-if (
-  tollState[voice].dockCount >= 2 &&
-  tollState[voice].freeCount >= 2
-) {
-  tollState[voice].unlocked = true;
-}
 console.log("DockCount:", tollState[voice].dockCount);
 console.log("FreeCount:", tollState[voice].freeCount);
 if (earlyEmotion) {
