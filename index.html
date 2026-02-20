@@ -733,21 +733,7 @@ let emotionalRotationTracker = {
   saira: {},
   Ayaan: {}
 };
-
-if (response) {
-
-  let finalText = response;
-
-  finalText = applyV4Integration(
-    finalText,
-    detected.primary
-  );
-
-  return deliverReply(finalText);
-}
-
-return deliverReply(getFallbackResponse());
-         
+     
 // Initial atmosphere reset
 if (chatBody) {
   chatBody.style.setProperty("--overlayStrength", 0.25);
