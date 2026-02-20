@@ -1507,7 +1507,27 @@ function processInput(userText, originalText) {
 
 // EARLY EMOTIONAL PRIORITY (NEW)
 const earlyEmotion = detectEmotionalPillar(normalizedText);
+// ===== TOLL GATE PROGRESSION =====
 
+const voice = activeVoice;
+
+// Count dock questions
+if (intentState?.source === "dock") {
+  tollState[voice].dockCount++;
+}
+
+// Count free emotional input
+if (earlyEmotion) {
+  tollState[voice].freeCount++;
+}
+
+// Unlock condition (balanced)
+if (
+  tollState[voice].dockCount >= 2 &&
+  tollState[voice].freeCount >= 2
+) {
+  tollState[voice].unlocked = true;
+}
 if (earlyEmotion) {
   return processEmotionalMode(userText, originalText);
 }
