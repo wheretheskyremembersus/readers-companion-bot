@@ -2667,39 +2667,33 @@ return deliverReply(reply);
    V4 EMOTIONAL MODE ENGINE
 ========================= */
 
-function applyV4Integration(baseText, pillar) {
+function processEmotionalMode(userText, originalText) {
 
-  if (!tollState[activeVoice]?.unlocked) {
-    return baseText;
+  console.log("---- V4 PROCESSING ----");
+
+  const normalizedText = normalizeInput(originalText);
+  const detected = detectEmotionalPillar(normalizedText);
+
+  if (!detected) {
+    return deliverReply(getFallbackResponse());
   }
 
-  if (!pillar) {
-    pillar = "transcendence";
+  const voiceStage = stageState[activeVoice];
+  const targetStage = pillarToStage[detected.primary];
+
+  if (voiceStage.currentStage < targetStage) {
+    voiceStage.currentStage = Math.min(
+      voiceStage.currentStage + 1,
+      targetStage
+    );
   }
 
-  const bank =
-    v4IntegrationLayer?.[activeVoice]?.[pillar] ||
-    v4IntegrationLayer?.[activeVoice]?.transcendence;
+  applyStageAtmosphere(voiceStage.currentStage);
 
-  if (!bank || !bank.length) {
-    return baseText;
-  }
+  let response =
+    emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
-  v4IntegrationIndex[activeVoice][pillar] =
-    v4IntegrationIndex[activeVoice][pillar] ?? 0;
-
-  const index =
-    v4IntegrationIndex[activeVoice][pillar] % bank.length;
-
-  const integrationLine = bank[index];
-
-  v4IntegrationIndex[activeVoice][pillar]++;
-
-  return baseText + " " + integrationLine;
-}
-
-  /* ===== ROTATION HANDLING ===== */
-
+  // ROTATION
   if (Array.isArray(response)) {
 
     const pillar = detected.primary;
@@ -2719,8 +2713,6 @@ function applyV4Integration(baseText, pillar) {
     emotionalRotationTracker[voice][pillar][stage] =
       (index + 1) % emotionalResponseBank[pillar][voice][stage].length;
   }
-
-  /* ===== THIS IS WHERE YOUR BLOCK GOES ===== */
 
   if (response) {
 
