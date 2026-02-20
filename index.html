@@ -744,7 +744,7 @@ if (response) {
   );
 
   return deliverReply(finalText);
-}
+
 }
 
 return deliverReply(getFallbackResponse());
@@ -2685,13 +2685,8 @@ return deliverReply(reply);
 
 function processEmotionalMode(userText, originalText) {
 
-  console.log("---- V4 PROCESSING ----");
-
-const normalizedText = normalizeInput(originalText);
-const detected = detectEmotionalPillar(normalizedText);
-
-  console.log("Detected Pillar:", detected?.primary ||"NONE");
-  console.log("Stage Before:", stageState[activeVoice]?.currentStage);
+  const normalizedText = normalizeInput(originalText);
+  const detected = detectEmotionalPillar(normalizedText);
 
   if (!detected) {
     return deliverReply(getFallbackResponse());
@@ -2707,57 +2702,72 @@ const detected = detectEmotionalPillar(normalizedText);
     );
   }
 
-  console.log("Stage After:", stageState[activeVoice]?.currentStage);
-
   applyStageAtmosphere(voiceStage.currentStage);
 
   let response =
-  emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+    emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
-if (Array.isArray(response)) {
+  // ROTATION
+  if (Array.isArray(response)) {
 
-  const pillar = detected.primary;
-  const stage = voiceStage.currentStage;
-  const voice = activeVoice;
+    const pillar = detected.primary;
+    const stage = voiceStage.currentStage;
+    const voice = activeVoice;
 
-  emotionalRotationTracker[voice][pillar] =
-    emotionalRotationTracker[voice][pillar] || {};
+    emotionalRotationTracker[voice][pillar] =
+      emotionalRotationTracker[voice][pillar] || {};
 
-  emotionalRotationTracker[voice][pillar][stage] =
-    emotionalRotationTracker[voice][pillar][stage] ?? 0;
+    emotionalRotationTracker[voice][pillar][stage] =
+      emotionalRotationTracker[voice][pillar][stage] ?? 0;
 
-  const index = emotionalRotationTracker[voice][pillar][stage];
+    const index = emotionalRotationTracker[voice][pillar][stage];
 
-  response = response[index];
+    response = response[index];
 
-  emotionalRotationTracker[voice][pillar][stage] =
-    (index + 1) % response.length;
+    emotionalRotationTracker[voice][pillar][stage] =
+      (index + 1) % response.length;
+  }
+
+  if (response) {
+
+    let finalText = response;
+
+    finalText = applyV4Integration(
+      finalText,
+      detected.primary
+    );
+
+    return deliverReply(finalText);
+  }
+
+  return deliverReply(getFallbackResponse());
 }
 
-
+         
 function applyV4Integration(baseText, pillar) {
 
   if (!tollState[activeVoice]?.unlocked) {
-    return baseText; // partition protection
+    return baseText;
   }
 
   if (!pillar) {
-    pillar ="transcendence";
+    pillar = "transcendence";
   }
 
   const bank =
     v4IntegrationLayer?.[activeVoice]?.[pillar] ||
     v4IntegrationLayer?.[activeVoice]?.transcendence;
 
+  if (!bank) return baseText;
+
   const index =
-    v4IntegrationIndex[activeVoice][pillar] %
-    bank.length;
+    v4IntegrationIndex[activeVoice][pillar] % bank.length;
 
   const integrationLine = bank[index];
 
   v4IntegrationIndex[activeVoice][pillar]++;
 
-  return baseText +"" + integrationLine;
+  return baseText + " " + integrationLine;
 }
 
 /* =================================================
