@@ -2748,35 +2748,6 @@ if (tollState[activeVoice]?.unlocked) {
   return processEmotionalMode(userText, originalText);
 }
 
-if (/\bwhy\b.*\bleave\b/.test(normalizedText)) {
-
-  const stage = stageState[activeVoice]?.currentStage || 1;
-  skipRelationalPrefix = true;
-
-  const map = {
-    saira: {
-      1: "It wasn’t simple.",
-      2: "Fear shaped more of it than I admitted.",
-      3: "I thought distance would protect what I felt.",
-      4: "I mistook restraint for strength.",
-      5: "I stepped back because I didn’t trust myself with it.",
-      6: "I was afraid of how deeply it could affect me.",
-      7: "I left because I thought staying might destroy what we had."
-    },
-    aayan: {
-      1: "It wasn’t impulsive.",
-      2: "I believed it was necessary at the time.",
-      3: "I trusted distance over vulnerability.",
-      4: "I thought control would prevent damage.",
-      5: "I chose discipline over emotion.",
-      6: "I was afraid of failing her.",
-      7: "I stepped away because I didn’t know how to stay without causing harm."
-    }
-  };
-
-  return deliverReply(map[activeVoice][stage]);
-}
-
   /* ================================
      DEFAULT V3 RESPONSE
   ================================= */
@@ -2980,7 +2951,7 @@ function evolveStage(state) {
       voiceStage.momentum[targetStage] = 0;
     }
 
-  }  // ✅ THIS WAS MISSING
+  }  
 
   applyStageAtmosphere(voiceStage.currentStage);
 
