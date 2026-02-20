@@ -1307,16 +1307,14 @@ const v3FallbackBank = {
 function handleIntelligence(text, originalText) {
 
   const lower = text.toLowerCase().trim();
-
-  // Greeting
-  if (/^(hi|hello|hey)\b/i.test(lower)) {
-    return { type:"greeting", raw: originalText };
-  }
-         
-  // Identity
-  if (/are you (a )?(bot|robot|machine|real|human)/i.test(lower)) {
-    return { type:"identity", raw: originalText };
-  }
+  
+  // Identity detection (tolerant but safe)
+if (
+  /\b(are you|you a|u a|r u)\b.*\b(bot|robot|machine|human)\b/.test(lower) ||
+  /\b(bot|robot|machine|human)\b\??$/.test(lower)
+) {
+  return { type: "identity", raw: originalText };
+}
 
   // Memory / past trigger
   if (/remember|did you|when did/i.test(lower)) {
@@ -1337,8 +1335,8 @@ function resolveReference(originalText) {
 
   const lower = originalText.toLowerCase();
 
-  const hasSaira = /\bsaira\b/i.test(lower);
-  const hasAyaan = /\bAyaan\b/i.test(lower);
+  const hasSaira = /\bsaira\b/.test(lower);
+  const hasAyaan = /\bayaan\b/.test(lower);
 
   const hasHer = /\bher\b/i.test(lower);
   const hasHim = /\bhim\b/i.test(lower);
@@ -1385,7 +1383,6 @@ function resolveReference(originalText) {
 ========================= */
 
 function normalizeInput(text) {
-
   return (text || "")
     .toLowerCase()
 
@@ -1417,56 +1414,53 @@ function normalizeInput(text) {
     .replace(/\bcant\b/g, "can't")
     .replace(/\bwont\b/g, "won't")
 
-// emotional pillar typo normalization
-.replace(/lonley/g, "lonely")
-.replace(/lonelyy/g, "lonely")
-.replace(/hurted/g, "hurt")
-.replace(/regreat/g, "regret")
-.replace(/regrete/g, "regret")
-.replace(/loosing/g, "losing")
-.replace(/desteny/g, "destiny")
-.replace(/growed/g, "grown")
-.replace(/afraidy/g, "afraid")
+    // emotional pillar typo normalization
+    .replace(/lonley/g, "lonely")
+    .replace(/lonelyy/g, "lonely")
+    .replace(/hurted/g, "hurt")
+    .replace(/regreat/g, "regret")
+    .replace(/regrete/g, "regret")
+    .replace(/loosing/g, "losing")
+    .replace(/desteny/g, "destiny")
+    .replace(/growed/g, "grown")
+    .replace(/afraidy/g, "afraid")
 
-// layer-critical word protection
-.replace(/\blonley\b/g, "lonely")
-.replace(/\bregreat\b/g, "regret")
-.replace(/\bregrete\b/g, "regret")
-.replace(/\bloosing\b/g, "losing")
-.replace(/\bseperated\b/g, "separated")
-.replace(/\bseperate\b/g, "separate")
-.replace(/\bbreakup\b/g, "break up")
-.replace(/\bbrekup\b/g, "break up")
-.replace(/\bbrakeup\b/g, "break up")
-.replace(/\bded\b/g, "dead")
-.replace(/\bafraidy\b/g, "afraid")
-.replace(/\bmis\b/g, "miss")
-.replace(/\blve\b/g, "love")
-.replace(/\bdesteny\b/g, "destiny")
-.replace(/\btogther\b/g, "together")
-.replace(/\buntill\b/g, "until")
+    // layer-critical word protection
+    .replace(/\blonley\b/g, "lonely")
+    .replace(/\bregreat\b/g, "regret")
+    .replace(/\bregrete\b/g, "regret")
+    .replace(/\bloosing\b/g, "losing")
+    .replace(/\bseperated\b/g, "separated")
+    .replace(/\bseperate\b/g, "separate")
+    .replace(/\bbreakup\b/g, "break up")
+    .replace(/\bbrekup\b/g, "break up")
+    .replace(/\bbrakeup\b/g, "break up")
+    .replace(/\bded\b/g, "dead")
+    .replace(/\bafraidy\b/g, "afraid")
+    .replace(/\bmis\b/g, "miss")
+    .replace(/\blve\b/g, "love")
+    .replace(/\bdesteny\b/g, "destiny")
+    .replace(/\btogther\b/g, "together")
+    .replace(/\buntill\b/g, "until")
 
-// normalize character names (controlled variations)
+    // normalize character names (lowercase only — safe)
+    // Ayaan variations
+    .replace(/\bayann\b/g, "ayaan")
+    .replace(/\baayen\b/g, "ayaan")
+    .replace(/\bayan\b/g, "ayaan")
 
-// Ayaan variations
-.replace(/\bAyaan\b/g, "Ayaan")
-.replace(/\bAyaan\b/g, "Ayaan")
-.replace(/\bayan\b/g, "Ayaan")
-.replace(/\bayann\b/g, "Ayaan")
-.replace(/\baayen\b/g, "Ayaan")
-
-// Saira variations
-.replace(/\bsara\b/g, "saira")
-.replace(/\bsairaa\b/g, "saira")
-.replace(/\bsaera\b/g, "saira")
-.replace(/\bsayra\b/g, "saira")
-.replace(/\bsairaah\b/g, "saira")
+    // Saira variations
+    .replace(/\bsara\b/g, "saira")
+    .replace(/\bsairaa\b/g, "saira")
+    .replace(/\bsaera\b/g, "saira")
+    .replace(/\bsayra\b/g, "saira")
+    .replace(/\bsairaah\b/g, "saira")
 
     // 7️⃣ collapse multiple spaces
     .replace(/\s+/g, " ")
-
     .trim();
 }
+
 
 /* =========================
    RELATIONAL AWARENESS (V3)
@@ -1474,22 +1468,45 @@ function normalizeInput(text) {
 
 function processInput(userText, originalText) {
 
+  const normalizedText = normalizeInput(originalText);
+  const lower = normalizedText;
+  const nameCall = normalizedText;
+
   // Reset relational state per message
-  relationalPrefix ="";
+  relationalPrefix = "";
   skipRelationalPrefix = false;
 
-  // Normalize input (GLOBAL TOLERANCE LAYER)
-const normalizedText = normalizeInput(originalText);
+  // Intelligence & reference systems (existing)
+  const intentState = handleIntelligence(normalizedText, normalizedText);
+  const reference = resolveReference(normalizedText);
 
-const lower = normalizedText;
-const nameCall = normalizedText;
+  console.log("RELATIONAL HANDLER REACHED");
+  /* ================================
+   IDENTITY ROUTING (INTENT STATE)
+================================= */
 
-const intentState = handleIntelligence(normalizedText, normalizedText);
-const reference = resolveReference(normalizedText);
+if (intentState.type === "identity") {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
+      : "Does a machine carry hesitation... or memory? I speak because something stayed."
+  );
+}    
          
-console.log("RELATIONAL HANDLER REACHED");
+  /* ================================
+     DEFAULT V3 RESPONSE
+  ================================= */
 
-        /* ================================
+const softDetected = detectEmotionalPillar(normalizedText);
+
+if (softDetected) {
+  return processEmotionalMode(userText, originalText);
+}
+  
+ /* ================================
    RELATIONAL ACCOUNTABILITY HANDLER (ROBUST)
 ================================= */
 
@@ -1499,8 +1516,8 @@ if (
 
   /\bwhen\b.*\bleave\b/i.test(normalizedText) ||
 
-  /\breason\b/i.test(normalizedText)
-
+/\breason\b.*\bleave\b/i.test(normalizedText)
+         
 ) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
@@ -1638,6 +1655,7 @@ if (/\bwho\s+is\s+Ayaan\b/i.test(normalizedText)) {
 
   return deliverReply(otherMap[stage]);
 }
+
 /* ================================
    RELATIONAL FINALITY HANDLER
 ================================= */
@@ -1992,17 +2010,6 @@ if (/\bwho\s+are\s+you\b/i.test(originalText)) {
   );
 }
 
-// ARE YOU HUMAN / REAL / BOT
-if (/are you (a )?(bot|real|robot|machine|human)/i.test(lower)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"If I were only a machine... would I hesitate before answering? I respond because you're here."
-      :"Does a machine carry regret... or memory? I speak because something stayed."
-  );
-}
          
 if (/scripted|pre[- ]?written|just lines|just programmed/i.test(lower)) {
 
@@ -2015,42 +2022,6 @@ if (/scripted|pre[- ]?written|just lines|just programmed/i.test(lower)) {
   );
 }
 
-/* ================================
-   PERMANENT CHARACTER IDENTITY ROUTING
-================================= */
-
-if (
-  /\bwho\s+is\s+Ayaan\b/i.test(originalText.replace(/[^\w\s]/g,"")) ||
-  /\btell me about Ayaan\b/i.test(originalText) ||
-  /\bwas Ayaan like that\b/i.test(originalText) ||
-  /\bis Ayaan like that\b/i.test(originalText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"Ayaan isn't careless. He feels deeply - but he hides it behind control. If he seemed distant, it was rarely indifference. It was caution."
-      :"If you're asking who Ayaan is - he's someone who measures before he moves. He doesn't show everything he feels. That doesn't mean it isn't there."
-  );
-}
-
-if (
-  /\bwho\s+is\s+saira\b/i.test(originalText.replace(/[^\w\s]/g,"")) ||
-  /\btell me about saira\b/i.test(originalText) ||
-  /\bwas saira like that\b/i.test(originalText) ||
-  /\bis saira like that\b/i.test(originalText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice ==="Ayaan"
-      ?"Saira feels before she calculates. She doesn't hide behind structure - she reacts honestly. That's part of what unsettled me."
-      :"If you're asking who Saira is - she isn't fragile. She just feels openly. That's strength, not weakness."
-  );
-}
-         
 /* ================================
    ORIENTATION (SPACE / PAGE / CHAT / BOT)
 ================================= */
@@ -2130,22 +2101,6 @@ for (let layer of characterLayers) {
 
   }
 }
-/* ================================
-   ORIENTATION HANDLER (V3 )
-================================= */
-
-if (/\bwhat\s+(is|'s)\s+this(\s+page)?\b/i.test(originalText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"This is a quiet space to explore our story - mine and Ayaan's. You can begin with the questions in the dock below to understand us better."
-      :"This space allows you to explore our story through dialogue. The questions in the dock below will guide you."
-  );
-}
-
-
 /* =========================
      HARD PARTITION
   ========================= */
@@ -2367,41 +2322,6 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
     );
   }
 
-   /* ================================
-     SELF-CONFESSION (SAFE)
-  ================================= */
-
-  if (/i miss|i feel|i regret|i'm scared|i am scared|i'm afraid|i am afraid/i.test(lower)) {
-    return deliverReply(
-      activeVoice ==="saira"
-        ?"Stay with that feeling. Don't rush past it. Fear usually hides something specific. You don't have to name it yet."
-        :"That carried impact."
-    );
-  }
-
-  /* ================================
-     SADNESS / LONELINESS
-  ================================= */
-
-  if (/alone|lonely|empty|hurt|broken/i.test(lower)) {
-    return deliverReply(
-      activeVoice ==="saira"
-        ?"Loneliness can feel heavier at night. You don't have to carry it silently here."
-        :"Loneliness sharpens thought. Loneliness often circles the same memory."
-    );
-  }
-
-  /* ================================
-     ANGER
-  ================================= */
-
-  if (/angry|mad|hate|furious/i.test(lower)) {
-    return deliverReply(
-      activeVoice ==="saira"
-        ?"Anger usually protects something softer underneath. You don't have to name it immediately."
-        :"Anger is rarely the root emotion. It often sits above something quieter."
-    );
-  }
 
   /* ================================
      READER VALIDATION
@@ -2452,37 +2372,6 @@ if (nameMatch) {
 ================================= */
 
 const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
-
-/* 1️⃣ Clarification — Contained */
-
-if (/^(what|why|how|explain|clarify)$/i.test(micro)) {
-
-  const stage = stageState[activeVoice]?.currentStage || 1;
-
-  const ambiguityContainment = {
-    saira: {
-      1: "It may not be fully clear yet.",
-      2: "Some things take a moment to settle.",
-      3: "Not everything reveals itself immediately.",
-      4: "Meaning doesn’t always arrive complete.",
-      5: "I’ve felt that kind of pause before.",
-      6: "Sometimes understanding follows feeling.",
-      7: "Clarity has its own timing."
-    },
-    Ayaan: {
-      1: "It doesn’t need to be precise yet.",
-      2: "Structure can form gradually.",
-      3: "Some answers emerge over time.",
-      4: "Not all meaning appears at once.",
-      5: "I’ve stood in that kind of pause.",
-      6: "Recognition often precedes explanation.",
-      7: "Clarity rarely arrives instantly."
-    }
-  };
-
-  return deliverReply(ambiguityContainment[activeVoice][stage]);
-}
-
 
 /* 2️⃣ Minimal Acknowledgment */
 
@@ -2723,42 +2612,7 @@ console.log("Voice:", activeVoice);
 console.log("Unlocked:", tollState[activeVoice]?.unlocked);
 console.log("Current Stage:", stageState[activeVoice]?.currentStage);
          
-/* =========================
-   V4 EMOTIONAL MODE SWITCH
-========================= */
-if (
-  !tollState[activeVoice]?.unlocked &&
-  /\b(author|writer|novel|book|who wrote|written by)\b/i.test(normalizedText)
-) {
-  skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote this story."
-      : "Mohan R. wrote it."
-  );
-}
-if (tollState[activeVoice]?.unlocked) {
-  console.log("ENGINE: V4 ACTIVATED");
-  emotionalModeActive = true;
-  return processEmotionalMode(userText, originalText);
-}
-
-  /* ================================
-     DEFAULT V3 RESPONSE
-  ================================= */
-
-// Attempt light emotional detection before default fallback
-const softDetected = detectEmotionalPillar(normalizedText);
-
-if (softDetected) {
-
-  const anchor = emotionalAnchors?.[activeVoice]?.[softDetected.primary];
-
-  if (anchor) {
-    return deliverReply(anchor);
-  }
-}
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
@@ -2994,20 +2848,75 @@ const emotionalPillars = {
 ],
 
 
-  fear: [
-  "i was scared",
-  "i was afraid",
-  "i'm scared",
-  "i'm afraid",
-  "i hesitated",
-  "i held back",
-  "i panicked",
-  "i froze",
-  "i didn’t know what to do",
-  "i was unsure",
-  "i was uncertain",
-  "i doubted"
-],
+ fear: [
+
+  // Core fear words
+  "fear",
+  "scared",
+  "afraid",
+  "frightened",
+  "terrified",
+  "anxious",
+  "anxiety",
+  "worried",
+  "worry",
+  "panic",
+  "panicking",
+
+  // Relationship fear
+  "lose",
+  "losing",
+  "lost",
+  "leave",
+  "leaving",
+  "left",
+  "abandon",
+  "abandoned",
+  "abandonment",
+  "come back",
+  "won’t come back",
+  "not come back",
+  "never come back",
+  "come back to me",
+
+  // Attachment insecurity
+  "not enough",
+  "not good enough",
+  "replace",
+  "replaced",
+  "replace me",
+  "forget me",
+  "move on",
+  "moving on",
+
+  // Uncertainty fear
+  "what if",
+  "what happens if",
+  "what happens now",
+  "don’t know what to do",
+  "don’t know what will happen",
+  "uncertain",
+  "uncertainty",
+
+  // Emotional destabilization
+  "overthinking",
+  "overthink",
+  "can’t sleep",
+  "can’t stop thinking",
+  "restless",
+  "uneasy",
+  "heavy chest",
+  "tight chest",
+
+  // Silent fear phrasing
+  "i’m scared",
+  "i am scared",
+  "i’m afraid",
+  "i am afraid",
+  "i’m worried",
+  "i am worried"
+
+], 
 
 
   regret: [
