@@ -1288,7 +1288,7 @@ const v3FallbackBank = {
     neutral: [
      "It remains as stated.",
      "It stays defined.",
-     "It remains controlled.",
+     "It hasn’t lost structure",
      "That is sufficient.",
      "There's no addition.",
      "It holds its limit.",
@@ -1502,9 +1502,8 @@ const nameCall = normalizedText;
 const intentState = handleIntelligence(normalizedText, normalizedText);
 const reference = resolveReference(normalizedText);
 
-
-        /* ================================
-   RELATIONAL ACCOUNTABILITY HANDLER (ROBUST)
+/* ================================
+RELATIONAL ACCOUNTABILITY HANDLER (ROBUST)
 ================================= */
 
 if (
@@ -1576,19 +1575,17 @@ if (
 }
 
 /* ================================
-   RELATIONAL IDENTITY HANDLER
+   RELATIONAL IDENTITY HANDLER 
 ================================= */
 
-if (
-  /\bwho\s+is\s+(he|she|aayan|saira)\b/i.test(originalText)
-) {
+if (/\bwho\s+is\s+saira\b/i.test(normalizedText)) {
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
-const reference = resolveReference(normalizedText);
   skipRelationalPrefix = true;
 
-  // SELF REFERENCE
-  if (reference.type === "self") {
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  // SELF CASE
+  if (activeVoice === "saira") {
 
     const selfMap = {
       1: "I'm just someone present.",
@@ -1603,31 +1600,56 @@ const reference = resolveReference(normalizedText);
     return deliverReply(selfMap[stage]);
   }
 
-  // OTHER REFERENCE
+  // OTHER CASE (Aayan speaking about Saira)
+
   const otherMap = {
-
-    saira: {
-      1: "He is someone who mattered.",
-      2: "He is someone I once walked beside.",
-      3: "He is someone who changed me quietly.",
-      4: "He is someone I still carry in thought.",
-      5: "He is someone I searched for longer than I admit.",
-      6: "He is someone who shaped who I became.",
-      7: "He is not just a memory. He is part of my becoming."
-    },
-
-    aayan: {
-      1: "She is someone important.",
-      2: "She is someone I once stood beside.",
-      3: "She is someone who unsettled my certainty.",
-      4: "She is someone I think about more than I show.",
-      5: "She is someone I stepped away from too soon.",
-      6: "She is someone whose absence still speaks.",
-      7: "She is not just someone I knew. She is someone who altered my direction."
-    }
+    1: "She is someone important.",
+    2: "She is someone I once stood beside.",
+    3: "She is someone who unsettled my certainty.",
+    4: "She is someone I think about more than I show.",
+    5: "She is someone I stepped away from too soon.",
+    6: "She is someone whose absence still speaks.",
+    7: "She is not just someone I knew. She is someone who altered my direction."
   };
 
-  return deliverReply(otherMap[activeVoice][stage]);
+  return deliverReply(otherMap[stage]);
+}
+
+if (/\bwho\s+is\s+aayan\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  // SELF CASE
+  if (activeVoice === "aayan") {
+
+    const selfMap = {
+      1: "I'm just someone present.",
+      2: "I'm someone trying to understand my place.",
+      3: "I'm someone shaped by what I didn't say.",
+      4: "I'm someone who carries more than I show.",
+      5: "I'm someone who learned through distance.",
+      6: "I'm someone who changed because I had to.",
+      7: "I'm someone still becoming."
+    };
+
+    return deliverReply(selfMap[stage]);
+  }
+
+  // OTHER CASE (Saira speaking about Aayan)
+
+  const otherMap = {
+    1: "He is someone who mattered.",
+    2: "He is someone I once walked beside.",
+    3: "He is someone who changed me quietly.",
+    4: "He is someone I still carry in thought.",
+    5: "He is someone I searched for longer than I admit.",
+    6: "He is someone who shaped who I became.",
+    7: "He is not just a memory. He is part of my becoming."
+  };
+
+  return deliverReply(otherMap[stage]);
 }
 /* ================================
    RELATIONAL FINALITY HANDLER
@@ -1687,13 +1709,13 @@ if (
   if (reference.type === "self") {
 
     const selfMap = {
-      1: "I'm here.",
-      2: "I'm here. Present.",
-      3: "I'm here. Not distant.",
-      4: "I'm here. I didn't disappear.",
-      5: "I'm here — even if things changed.",
-      6: "I'm here. Just not who I used to be.",
-      7: "I'm here. Some things remain."
+      1: "I’m still present with it.",
+      2: "I’m still present with it. Present.",
+      3: "I’m still present with it. Not distant.",
+      4: "I’m still present with it. I didn't disappear.",
+      5: "I’m still present with it.— even if things changed.",
+      6: "I’m still present with it. Just not who I used to be.",
+      7: "I’m still present with it. Some things remain."
     };
 
     return deliverReply(selfMap[stage]);
@@ -1939,7 +1961,7 @@ if (/go back/i.test(originalText)) {
   if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(lower)) {
     return deliverReply(
   activeVoice ==="saira"
-    ?"Hello... I'm here. You can speak freely."
+    ?"Hello... I’m still present with it. You can speak freely."
     :"Yes. Go on."
 );
 }
@@ -1952,7 +1974,7 @@ if (/^saira\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
 
   if (activeVoice ==="saira") {
-    return deliverReply("Yes... I'm here.");
+    return deliverReply("Yes... I’m still present with it.");
   } else {
     return deliverReply("You're calling her.");
   }
@@ -1964,7 +1986,7 @@ if (/^aayan\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
 
   if (activeVoice ==="aayan") {
-    return deliverReply("I'm here.");
+    return deliverReply("I haven’t stepped away.");
   } else {
     return deliverReply("You're calling him.");
   }
@@ -2376,7 +2398,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"Stay with that feeling. Don't rush past it. Fear usually hides something specific. You don't have to name it yet."
-        :"That sounds important."
+        :"That carried impact."
     );
   }
 
@@ -2495,7 +2517,7 @@ if (
   return deliverReply(
     activeVoice === "saira"
       ? "I'm still here."
-      : "I'm here."
+      : "I haven’t stepped away."
   );
 }
 
@@ -2657,7 +2679,7 @@ if (/^(why though|but why)$/i.test(micro)) {
 if (/^(wait|hold on)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
-      ?"I'm here."
+      ?"I’m still present with it."
       :"Go ahead."
   );
 }
@@ -2706,16 +2728,38 @@ if (/^(hello again|you there)$/i.test(micro)) {
       :"Still here."
   );
 }
-         
+
+if (
+  /\b(author|writer|novel|book|who wrote|written by)\b/i.test(normalizedText)
+) {
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this story."
+      : "Mohan R. wrote it."
+  );
+}
+ 
 /* =========================
    V4 EMOTIONAL MODE SWITCH
 ========================= */
+if (
+  !tollState[activeVoice]?.unlocked &&
+  /\b(author|writer|novel|book|who wrote|written by)\b/i.test(normalizedText)
+) {
+  skipRelationalPrefix = true;
 
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this story."
+      : "Mohan R. wrote it."
+  );
+}
 if (tollState[activeVoice]?.unlocked) {
   emotionalModeActive = true;
   return processEmotionalMode(userText, originalText);
 }
-
 
   /* ================================
      DEFAULT V3 RESPONSE
@@ -2911,7 +2955,7 @@ function evolveStage(state) {
       voiceStage.momentum[targetStage] = 0;
     }
 
-  }  // ✅ THIS WAS MISSING
+  }  
 
   applyStageAtmosphere(voiceStage.currentStage);
 
@@ -3475,22 +3519,20 @@ function getFallbackResponse() {
 
 const neutralFallback = {
   saira: {
-    1: "I’m here.",
-    2: "Something in that carries weight.",
-    3: "That doesn’t feel accidental.",
-    4: "There’s meaning in that, even if it’s quiet.",
-    5: "I’ve felt that kind of shift before.",
-    6: "Sometimes the feeling comes before the clarity.",
-    7: "It doesn’t need to be loud to matter."
+    2: "It doesn’t feel settled yet.",
+    3: "Something in this is still alive.",
+    4: "It hasn’t dissolved with time.",
+    5: "Some things refuse to quiet down.",
+    6: "It lingers for a reason.",
+    7: "Not everything unfinished is broken."
   },
   aayan: {
-    1: "I’m listening.",
-    2: "That holds structure.",
-    3: "That isn’t random.",
-    4: "Something is forming there.",
-    5: "I’ve stood in that kind of space.",
-    6: "Realisation doesn’t always arrive complete.",
-    7: "Not everything meaningful is immediately defined."
+    2: "It hasn’t reached closure.",
+    3: "There’s still structure beneath it.",
+    4: "It hasn’t lost its weight.",
+    5: "Some impacts don’t fade easily.",
+    6: "It carries consequence.",
+    7: "Certain bonds don’t dissolve with distance."
   }
 };
 
@@ -4200,7 +4242,51 @@ function sendTypedMessage() {
   input.value ="";
 
   addUserMessage(originalText);  
+/* =========================
+   REPEAT PROTECTION RESTORE
+========================= */
 
+const normalized = normalizeInput(originalText);
+
+if (normalized === lastUserInput) {
+  repeatCount++;
+} else {
+  repeatCount = 1;
+}
+
+lastUserInput = normalized;
+
+if (repeatCount >= repeatLimit) {
+
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
+
+  repeatCount = 0;
+
+  return returnToWebsite();
+}
+
+/* =========================
+   ABUSE PROTECTION RESTORE
+========================= */
+
+const abuseRegex = /(fuck|shit|bitch|asshole|slut|whore|bastard|idiot)/i;
+
+if (abuseRegex.test(originalText)) {
+
+  abuseCount++;
+
+  if (abuseCount >= abuseLimit) {
+
+    const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+
+    localStorage.setItem("blockUntil", blockTime);
+    localStorage.setItem("exitStrikes", exitStrikeCount + 1);
+
+    location.reload();
+    return;
+  }
+}
 // TOLL: Free type progression
 const wordCount = originalText.trim().split(/\s+/).length;
 
