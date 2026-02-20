@@ -3202,6 +3202,29 @@ const v4IntegrationLayer = {
   }
 
 };
+
+
+         function applyV4Integration(baseText, pillar) {
+
+  if (!tollState[activeVoice]?.unlocked) {
+    return baseText;
+  }
+
+  const layer = v4IntegrationLayer?.[activeVoice]?.[pillar];
+
+  if (!layer || !layer.length) {
+    return baseText;
+  }
+
+  const index = v4IntegrationIndex[activeVoice][pillar] % layer.length;
+
+  const addition = layer[index];
+
+  v4IntegrationIndex[activeVoice][pillar]++;
+
+  return baseText + " " + addition;
+}
+         
 /* =================================================
    MASTER EMOTIONAL RESPONSE BANK (STRICT 7 STAGES)
 ================================================= */
