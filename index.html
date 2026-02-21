@@ -1571,10 +1571,12 @@ function getSelfReferencePrefix(stage) {
 ========================= */
 
 function processInput(userText, originalText) {
-const stage = stageState[activeVoice]?.currentStage || 1;
+
   const normalizedText = normalizeInput(originalText);
   const lower = normalizedText;
   const nameCall = normalizedText;
+
+const stage = stageState[activeVoice]?.currentStage || 1;
 
  /* =========================
    HARD AUTHOR ROUTING
@@ -1843,7 +1845,6 @@ function pickStageVariant(map) {
   // Intelligence & reference systems (existing)
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
-  const stage = stageState[activeVoice]?.currentStage || 1;      
          
 let selfPrefix = "";
 
