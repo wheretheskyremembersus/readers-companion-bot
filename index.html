@@ -2430,21 +2430,6 @@ if (nameMatch) {
 
 const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
 
-/* 2️⃣ Minimal Acknowledgment */
-
-if (
-  /^(h+m+|oh+|ok(ay)?|alright|right|fine)$/i.test(micro) ||
-  /h+m+.*ok(ay)?/i.test(micro)
-) {
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I'm still here."
-      : "I haven’t stepped away."
-  );
-}
-
-
 /* 3️⃣ Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
   return deliverReply(
