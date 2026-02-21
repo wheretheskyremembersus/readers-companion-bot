@@ -1606,6 +1606,68 @@ if (openMatch) {
     );
   }
 }
+
+/* ================================
+   V3 OPEN QUESTION ROUTER
+================================= */
+
+const openQ = normalizedText.trim();
+
+if (/^why\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It wasn’t as simple as it looked from outside."
+      : "It wasn’t a decision made lightly."
+  );
+}
+
+if (/^how\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It shifted gradually, not all at once."
+      : "It changed through small decisions."
+  );
+}
+
+if (/^when\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Earlier than either of us expected."
+      : "Before we understood the consequence."
+  );
+}
+
+if (/^where\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Not always where I thought I would be."
+      : "Where responsibility led."
+  );
+}
+
+if (/^what\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "More than either of us realised at first."
+      : "Something shifted beneath the surface."
+  );
+}
+
+if (/^will\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That depends on what changes."
+      : "That depends on readiness."
+  );
+}
+
+if (/^would\b/.test(openQ)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It’s difficult to answer in absolutes."
+      : "I don’t answer hypotheticals lightly."
+  );
+}
   // Reset relational state per message
   relationalPrefix = "";
   skipRelationalPrefix = false;
