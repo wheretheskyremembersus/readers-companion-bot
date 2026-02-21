@@ -1537,7 +1537,6 @@ if (
   );
 }
 
-const stage = stageState[activeVoice]?.currentStage || 1;
 
 function pickStageVariant(map) {
   if (stage >= 7) return map[7];
@@ -1553,7 +1552,7 @@ function pickStageVariant(map) {
   // Intelligence & reference systems (existing)
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
-         
+  const stage = stageState[activeVoice]?.currentStage || 1;       
 /* ================================
    RELATIONAL LONGING CAPTURE (V3)
 ================================= */
