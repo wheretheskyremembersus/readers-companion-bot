@@ -2649,9 +2649,10 @@ if (/^(hello again|you there)$/i.test(micro)) {
       :"Still here."
   );
 }
-
-if (
-  /\b(author|writer|novel|book|who wrote|written by)\b/i.test(normalizedText)
+  if (
+  /\b(author|writer|written by)\b/i.test(normalizedText) ||
+  /\bwho\s+wrote\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText)
 ) {
   skipRelationalPrefix = true;
 
