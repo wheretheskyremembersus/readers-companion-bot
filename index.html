@@ -1746,13 +1746,50 @@ if (
         : "If you're asking about her… ";
   }
 
-  const core =
+  let core = "";
+
+if (/forgive/i.test(relational)) {
+
+  if (activeVoice === "saira") {
+
+    if (reference.type === "other") {
+      // forgive him
+      core =
+        stage <= 2
+          ? "Forgiveness isn't simple when something mattered."
+          : "Forgiveness comes quietly when understanding replaces fear.";
+    } else {
+      // forgive her (self-projection)
+      core =
+        stage <= 2
+          ? "If you're asking about me, I think you are."
+          : "I know sometimes people ask about someone else when they mean me.";
+    }
+
+  } else { // AYAAN
+
+    if (reference.type === "other") {
+      core =
+        stage <= 2
+          ? "Forgiveness requires clarity."
+          : "Forgiveness follows comprehension, not impulse.";
+    } else {
+      core =
+        stage <= 2
+          ? "If you're referring to me, say it plainly."
+          : "Sometimes questions are indirect when feelings aren't.";
+    }
+
+  }
+
+} else {
+
+  core =
     activeVoice === "saira"
       ? "Some connections don't fade just because distance exists."
       : "Some bonds remain even when circumstances shift.";
 
-  return deliverReply(prefix + core);
-}      
+}
   /* ================================
      DEFAULT V3 RESPONSE
   ================================= */
