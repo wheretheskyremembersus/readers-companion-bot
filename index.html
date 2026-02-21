@@ -1607,13 +1607,6 @@ if (
 
   let prefix = "";
 
-  if (stage <= 2 && reference.type === "self") {
-    prefix =
-      activeVoice === "saira"
-        ? "I think you're referring to me here. "
-        : "I believe you're referring to me. ";
-  }
-
   if (stage >= 5 && reference.type === "other") {
     prefix =
       activeVoice === "saira"
