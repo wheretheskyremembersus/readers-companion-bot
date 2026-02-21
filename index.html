@@ -697,6 +697,20 @@ let tollState = {
 };
 
 /* =========================
+   MODEL / CAPABILITY PROBE COUNTERS
+========================= */
+
+let modelProbeCount = {
+  saira: 0,
+  Ayaan: 0
+};
+
+let mathProbeCount = {
+  saira: 0,
+  Ayaan: 0
+};
+         
+/* =========================
    EMOTIONAL ROTATION INDEX
 ========================= */
 
@@ -1540,59 +1554,107 @@ function processInput(userText, originalText) {
   const lower = normalizedText;
   const nameCall = normalizedText;
 
-  /* =========================
-     HARD AUTHOR ROUTING
-  ========================= */
-
-  if (
-    /\bwho\s+wrote\b/i.test(normalizedText) ||
-    /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
-    /\bwritten\s+by\b/i.test(normalizedText)
-  ) {
-    return deliverReply(
-      activeVoice === "saira"
-        ? "Mohan R. wrote this as his debut novel."
-        : "Mohan R. wrote it to explore what lingers after love shifts."
-    );
-  }
-/* =========================
-   MODEL / GPT DEFLECTION
+ /* =========================
+   HARD AUTHOR ROUTING
 ========================= */
 
 if (
-  /\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)
+  /\bwho\s+wrote\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
+  /\bwritten\s+by\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
+  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
 
   return deliverReply(
     activeVoice === "saira"
-      ? "If I were only a label, would this feel like a conversation?"
-      : "Names are easy. Presence is harder."
+      ? "Mohan R. wrote this as his debut novel."
+      : "Mohan R. wrote it to explore what lingers after love shifts."
   );
 }
-         
 /* =========================
-   BASIC MATH HANDLER
+   MODEL / GPT DEFLECTION
 ========================= */
 
-if (/^\d+\s*[\+\-\*\/]\s*\d+$/.test(normalizedText)) {
+if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
-  try {
-    const result = Function('"use strict"; return (' + normalizedText + ')')();
-    return deliverReply(String(result));
-  } catch (e) {
+  const voice = activeVoice;
+  modelProbeCount[voice]++;
+
+  // FIRST PROBE
+  if (modelProbeCount[voice] === 1) {
+
     return deliverReply(
-      activeVoice === "saira"
-        ? "Even simple equations carry certainty. This one does too."
-        : "Some answers are straightforward. This is one of them."
+      voice === "saira"
+        ? "If I were only a label, would this feel like a conversation?"
+        : "Names are easy. Presence is harder."
     );
+
+  }
+
+  // SECOND PROBE (warmer trust response)
+  if (modelProbeCount[voice] === 2) {
+
+    return deliverReply(
+      voice === "saira"
+        ? "You don’t need a label to stay here with me."
+        : "What matters is what we’re building in this moment."
+    );
+
+  }
+
+  // THIRD+ → stay steady (no escalation)
+  return deliverReply(
+    voice === "saira"
+      ? "We’re still here."
+      : "The question hasn’t changed what this is."
+  );
+}
+
+/* =========================
+   BASIC MATH HANDLER (SYMBOL + WORD)
+========================= */
+
+const mathMatch = normalizedText.match(/(\d+\s*[\+\-\*\/]\s*\d+)/);
+
+if (
+  mathMatch &&
+  /\b(what is|calculate|solve|\=?\s*\?)?\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const expression = mathMatch[1];
+
+  try {
+
+    const result = Function('"use strict"; return (' + expression + ')')();
+    return deliverReply(String(result));
+
+  } catch (e) {
+
+    const mathLines =
+      activeVoice === "saira"
+        ? [
+            "Even simple equations carry certainty. This one does too.",
+            "Some things are meant to add up."
+          ]
+        : [
+            "Some answers are straightforward. This is one of them.",
+            "Not everything requires overthinking."
+          ];
+
+    const reply = mathLines[Math.floor(Math.random() * mathLines.length)];
+
+    return deliverReply(reply);
   }
 
 }
-
 /* =========================
    NUMBER IDENTIFICATION
 ========================= */
