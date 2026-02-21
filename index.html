@@ -1676,7 +1676,7 @@ if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
 
 /* ---------- Protagonist / Antagonist ---------- */
 
-if (/\bprotagonist|main character\b/i.test(t)) {
+if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
   skipRelationalPrefix = true;
   return deliverReply(
     activeVoice === "saira"
@@ -1812,8 +1812,8 @@ if (/\b(call|voice|audio)\b/i.test(t)) {
   skipRelationalPrefix = true;
   return deliverReply(
     activeVoice === "saira"
-      ? "It functions through text, not voice calls."
-      : "Communication here is text-only."
+      ? "We speak through words here."
+      : "Our connection happens through writing."
   );
 }
 
