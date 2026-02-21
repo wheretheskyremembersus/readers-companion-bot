@@ -1235,8 +1235,16 @@ if (primary[1] >= confidenceThreshold) {
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
 let v3FallbackIndex = {
-  saira: 0,
-  Ayaan: 0
+  saira: {
+    firm: 0,
+    neutral: 0,
+    reflective: 0
+  },
+  Ayaan: {
+    firm: 0,
+    neutral: 0,
+    reflective: 0
+  }
 };
 
 const v3FallbackBank = {
@@ -2683,18 +2691,13 @@ lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
-const index = v3FallbackIndex[activeVoice] % bank.length;
+const index = v3FallbackIndex[activeVoice][category] % bank.length;
 
 const reply = bank[index];
 
-v3FallbackIndex[activeVoice]++;
-
-console.log("ENGINE: V3 FALLBACK");
+v3FallbackIndex[activeVoice][category]++;
 
 return deliverReply(reply);
-
-}
-
 /* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
@@ -3520,34 +3523,94 @@ function applyVoiceModifier(state) {
 function getFallbackResponse() {
 
   if (!activeVoice) {
-    return"Choose a voice first.";
+    return "Choose a voice first.";
   }
 
- const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = stageState[activeVoice]?.currentStage || 1;
 
-const neutralFallback = {
-  saira: {
-    2: "It doesn’t feel settled yet.",
-    3: "Something in this is still alive.",
-    4: "It hasn’t dissolved with time.",
-    5: "Some things refuse to quiet down.",
-    6: "It lingers for a reason.",
-    7: "Not everything unfinished is broken."
-  },
-  Ayaan: {
-    2: "It hasn’t reached closure.",
-    3: "There’s still structure beneath it.",
-    4: "It hasn’t lost its weight.",
-    5: "Some impacts don’t fade easily.",
-    6: "It carries consequence.",
-    7: "Certain bonds don’t dissolve with distance."
-  }
-};
+  const neutralFallback = {
+    saira: {
+      1: [
+        "Go on.",
+        "I’m here.",
+        "Continue."
+      ],
+      2: [
+        "It doesn’t feel settled yet.",
+        "Maybe.",
+        "I understand."
+      ],
+      3: [
+        "Something in this is still alive.",
+        "It hasn’t fully settled.",
+        "That happens."
+      ],
+      4: [
+        "It hasn’t dissolved with time.",
+        "It’s still present.",
+        "Not everything fades quickly."
+      ],
+      5: [
+        "Some things refuse to quiet down.",
+        "It doesn’t disappear that easily.",
+        "Some things linger."
+      ],
+      6: [
+        "It lingers for a reason.",
+        "It hasn’t loosened its hold.",
+        "That doesn’t just fade."
+      ],
+      7: [
+        "Not everything unfinished is broken.",
+        "Some endings aren’t clean.",
+        "It isn’t always simple."
+      ]
+    },
 
-return deliverReply(neutralFallback[activeVoice][stage]);
+    Ayaan: {
+      1: [
+        "Proceed.",
+        "I’m listening.",
+        "Continue."
+      ],
+      2: [
+        "It hasn’t reached closure.",
+        "Noted.",
+        "Perhaps."
+      ],
+      3: [
+        "There’s still structure beneath it.",
+        "It hasn’t dissolved completely.",
+        "It’s possible."
+      ],
+      4: [
+        "It hasn’t lost its weight.",
+        "That remains significant.",
+        "It still carries meaning."
+      ],
+      5: [
+        "Some impacts don’t fade easily.",
+        "It doesn’t resolve that quickly.",
+        "Certain things persist."
+      ],
+      6: [
+        "It carries consequence.",
+        "It hasn’t stabilised yet.",
+        "That remains unresolved."
+      ],
+      7: [
+        "Certain bonds don’t dissolve with distance.",
+        "Not everything closes neatly.",
+        "Some outcomes endure."
+      ]
+    }
+  };
 
-}
-         
+ const pool = neutralFallback[activeVoice][stage] 
+          || neutralFallback[activeVoice][1];
+
+return deliverReply(pool[0]);
+} 
 /* =========================
    FOUNDATIONAL
 ========================= */
