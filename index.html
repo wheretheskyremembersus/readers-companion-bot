@@ -1373,31 +1373,37 @@ function resolveReference(originalText) {
   const hasSaira = /\bsaira\b/.test(lower);
   const hasAyaan = /\bayaan\b/.test(lower);
 
-  const hasHer = /\bher\b/i.test(lower);
-  const hasHim = /\bhim\b/i.test(lower);
-  const hasShe = /\bshe\b/i.test(lower);
-  const hasHe = /\bhe\b/i.test(lower);
+  const hasHer = /\bher\b/.test(lower);
+  const hasHim = /\bhim\b/.test(lower);
+  const hasShe = /\bshe\b/.test(lower);
+  const hasHe = /\bhe\b/.test(lower);
 
-  // 1️⃣ Explicit name detection FIRST
+  /* ================================
+     EXPLICIT NAME HANDLING
+  ================================= */
 
-// If name matches ACTIVE voice → self
-if (hasSaira && activeVoice === "saira") {
-  return { type: "self", target: "saira" };
-}
+  // If name matches ACTIVE voice → SELF
+  if (hasSaira && activeVoice === "saira") {
+    return { type: "self", target: "saira" };
+  }
 
-if (hasAyaan && activeVoice === "Ayaan") {
-  return { type: "self", target: "Ayaan" };
-}
+  if (hasAyaan && activeVoice === "Ayaan") {
+    return { type: "self", target: "Ayaan" };
+  }
 
-// If name matches OTHER voice → explicit_other
-if (hasSaira && activeVoice !== "saira") {
-  return { type: "explicit_other", target: "saira" };
-}
+  // If name matches OTHER voice → explicit_other
+  if (hasSaira && activeVoice !== "saira") {
+    return { type: "explicit_other", target: "saira" };
+  }
 
-if (hasAyaan && activeVoice !== "Ayaan") {
-  return { type: "explicit_other", target: "Ayaan" };
-}
-  // 2️⃣ Pronoun resolution (default to self)
+  if (hasAyaan && activeVoice !== "Ayaan") {
+    return { type: "explicit_other", target: "Ayaan" };
+  }
+
+  /* ================================
+     PRONOUN RESOLUTION
+  ================================= */
+
   if (activeVoice === "saira") {
 
     if (hasHim || hasHe) {
@@ -1407,6 +1413,7 @@ if (hasAyaan && activeVoice !== "Ayaan") {
     if (hasHer || hasShe) {
       return { type: "self", target: "saira" };
     }
+
   }
 
   if (activeVoice === "Ayaan") {
@@ -1418,6 +1425,7 @@ if (hasAyaan && activeVoice !== "Ayaan") {
     if (hasHim || hasHe) {
       return { type: "self", target: "Ayaan" };
     }
+
   }
 
   return { type: "unknown", target: null };
