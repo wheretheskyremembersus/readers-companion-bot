@@ -1556,6 +1556,56 @@ function processInput(userText, originalText) {
     );
   }
 /* =========================
+   MODEL / GPT DEFLECTION
+========================= */
+
+if (
+  /\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a label, would this feel like a conversation?"
+      : "Names are easy. Presence is harder."
+  );
+}
+         
+/* =========================
+   BASIC MATH HANDLER
+========================= */
+
+if (/^\d+\s*[\+\-\*\/]\s*\d+$/.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  try {
+    const result = Function('"use strict"; return (' + normalizedText + ')')();
+    return deliverReply(String(result));
+  } catch (e) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Even simple equations carry certainty. This one does too."
+        : "Some answers are straightforward. This is one of them."
+    );
+  }
+
+}
+
+/* =========================
+   NUMBER IDENTIFICATION
+========================= */
+
+if (/^what is \d+$/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const number = normalizedText.match(/\d+/)[0];
+  return deliverReply(number);
+}
+         
+/* =========================
    BOOK CONTEXT ROUTING
 ========================= */
 
