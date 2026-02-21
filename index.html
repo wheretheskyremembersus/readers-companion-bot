@@ -1527,8 +1527,8 @@ function processInput(userText, originalText) {
 ========================= */
 
 if (
-  /\btell\s+me\s+about\s+(the\s+)?(novel|book|story)\b/i.test(normalizedText) ||
-  /\bwhat\s+is\s+(the\s+)?(novel|book|story)\s+about\b/i.test(normalizedText)
+  /\btell\s+me\s+about\b.*\b(novel|book|story)\b/i.test(normalizedText) ||
+  /\bwhat\s+is\b.*\b(novel|book|story)\b.*\babout\b/i.test(normalizedText)
 ) {
   return deliverReply(
     activeVoice === "saira"
