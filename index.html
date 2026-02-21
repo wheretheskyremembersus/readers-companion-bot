@@ -1659,13 +1659,6 @@ if (
 
   return deliverReply(reply);
 }
-         
-/* =========================
-   OPEN QUESTION ROUTER (V3 AMBIGUOUS)
-========================= */
-const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
-
-if (openMatch) {
 
 // Specific END detection before generic "how"
 if (
@@ -1679,7 +1672,15 @@ if (
       : "It didn’t end. We moved forward without realizing we were still connected."
 
   return deliverReply(endReply);
-}         
+}  
+         
+/* =========================
+   OPEN QUESTION ROUTER (V3 AMBIGUOUS)
+========================= */
+const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
+
+if (openMatch) {
+       
   const type = openMatch[1];
 
   const openBank = {
