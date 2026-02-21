@@ -1564,138 +1564,142 @@ if (openMatch) {
   const type = openMatch[1];
 
   const openBank = {
+
     why: {
+      1: activeVoice === "saira"
+        ? "It wasn’t as simple as it looked."
+        : "It wasn’t as simple as it appeared.",
 
-  // SAIRA
-  1: activeVoice === "saira"
-      ? "It wasn’t as simple as it looked."
-      : "It wasn’t as simple as it appeared.",
+      3: activeVoice === "saira"
+        ? "At the time, I thought I was protecting something."
+        : "At the time, I believed restraint was the right choice.",
 
-  3: activeVoice === "saira"
-      ? "At the time, I thought I was protecting something."
-      : "At the time, I believed restraint was the right choice.",
+      5: activeVoice === "saira"
+        ? "Fear can look like caution when you care deeply."
+        : "Control can feel safer than vulnerability when something matters.",
 
-  5: activeVoice === "saira"
-      ? "Fear can look like caution when you care deeply."
-      : "Control can feel safer than vulnerability when something matters.",
+      7: activeVoice === "saira"
+        ? "I didn’t stop caring. I just didn’t know how to fight without breaking us."
+        : "I didn’t step back because I stopped caring. I stepped back because I thought it was wiser."
+    },
 
-  7: activeVoice === "saira"
-      ? "I didn’t stop caring. I just didn’t know how to fight without breaking us."
-      : "I didn’t step back because I stopped caring. I stepped back because I thought it was wiser."
-},
     how: {
+      1: activeVoice === "saira"
+        ? "It shifted slowly."
+        : "It changed gradually.",
 
-  1: activeVoice === "saira"
-      ? "It shifted slowly."
-      : "It changed gradually.",
+      3: activeVoice === "saira"
+        ? "It changed before either of us said it out loud."
+        : "It changed before we acknowledged it.",
 
-  3: activeVoice === "saira"
-      ? "It changed before either of us said it out loud."
-      : "It changed before we acknowledged it.",
+      5: activeVoice === "saira"
+        ? "We felt it moving before we understood it."
+        : "The shift happened quietly, long before we addressed it.",
 
-  5: activeVoice === "saira"
-      ? "We felt it moving before we understood it."
-      : "The shift happened quietly, long before we addressed it.",
+      7: activeVoice === "saira"
+        ? "It changed in the space between what we felt and what we were brave enough to say."
+        : "It changed in the distance between intention and action."
+    },
 
-  7: activeVoice === "saira"
-      ? "It changed in the space between what we felt and what we were brave enough to say."
-      : "It changed in the distance between intention and action."
-},
     when: {
+      1: activeVoice === "saira"
+        ? "Earlier than we were ready to admit."
+        : "Earlier than either of us anticipated.",
 
-  1: activeVoice === "saira"
-      ? "Earlier than we were ready to admit."
-      : "Earlier than either of us anticipated.",
+      3: activeVoice === "saira"
+        ? "When hesitation began to speak louder than certainty."
+        : "When restraint began outweighing expression.",
 
-  3: activeVoice === "saira"
-      ? "When hesitation began to speak louder than certainty."
-      : "When restraint began outweighing expression.",
+      5: activeVoice === "saira"
+        ? "When silence felt safer than risking the truth."
+        : "When silence seemed more controlled than honesty.",
 
-  5: activeVoice === "saira"
-      ? "When silence felt safer than risking the truth."
-      : "When silence seemed more controlled than honesty.",
+      7: activeVoice === "saira"
+        ? "When we stood in the same place — but no longer in the same way."
+        : "When we were aligned in feeling, but not in timing."
+    },
 
-  7: activeVoice === "saira"
-      ? "When we stood in the same place — but no longer in the same way."
-      : "When we were aligned in feeling, but not in timing."
-},
-   where: {
+    where: {
+      1: activeVoice === "saira"
+        ? "Not always where you’d expect."
+        : "Not necessarily where it seemed.",
 
-  1: activeVoice === "saira"
-      ? "Not always where you’d expect."
-      : "Not necessarily where it seemed.",
+      3: activeVoice === "saira"
+        ? "Somewhere between what I felt and what I allowed myself to admit."
+        : "Somewhere between intention and restraint.",
 
-  3: activeVoice === "saira"
-      ? "Somewhere between what I felt and what I allowed myself to admit."
-      : "Somewhere between intention and restraint.",
+      5: activeVoice === "saira"
+        ? "In the space where we stopped speaking honestly."
+        : "In the distance that formed before either of us named it.",
 
-  5: activeVoice === "saira"
-      ? "In the space where we stopped speaking honestly."
-      : "In the distance that formed before either of us named it.",
-
-  7: activeVoice === "saira"
-      ? "In the space between us — not physically, but emotionally."
-      : "In the quiet gap that grew while we both thought we were being careful."
-},
+      7: activeVoice === "saira"
+        ? "In the space between us — not physically, but emotionally."
+        : "In the quiet gap that grew while we both thought we were being careful."
+    },
 
     what: {
+      1: activeVoice === "saira"
+        ? "More than it seemed."
+        : "More than it appeared.",
 
-  1: activeVoice === "saira"
-      ? "More than it seemed."
-      : "More than it appeared.",
+      3: activeVoice === "saira"
+        ? "Something small that carried more weight than we expected."
+        : "Something subtle that carried disproportionate impact.",
 
-  3: activeVoice === "saira"
-      ? "Something small that carried more weight than we expected."
-      : "Something subtle that carried disproportionate impact.",
+      5: activeVoice === "saira"
+        ? "A shift neither of us handled well."
+        : "A misalignment neither of us fully understood at the time.",
 
-  5: activeVoice === "saira"
-      ? "A shift neither of us handled well."
-      : "A misalignment neither of us fully understood at the time.",
-
-  7: activeVoice === "saira"
-      ? "Something unfinished — and still unresolved."
-      : "Something that never truly concluded."
-},
+      7: activeVoice === "saira"
+        ? "Something unfinished — and still unresolved."
+        : "Something that never truly concluded."
+    },
 
     will: {
+      1: activeVoice === "saira"
+        ? "I don’t know. But some feelings don’t disappear just because time passes."
+        : "I can’t predict the future. But what was real doesn’t dissolve easily.",
 
-  1: activeVoice === "saira"
-      ? "I don’t know. But some feelings don’t disappear just because time passes."
-      : "I can’t predict the future. But what was real doesn’t dissolve easily.",
+      3: activeVoice === "saira"
+        ? "Some things don’t end just because they become complicated."
+        : "Complication doesn’t erase significance.",
 
-  3: activeVoice === "saira"
-      ? "Some things don’t end just because they become complicated."
-      : "Complication doesn’t erase significance.",
+      5: activeVoice === "saira"
+        ? "If it’s real, it doesn’t vanish easily."
+        : "If something mattered, it remains in some form.",
 
-  5: activeVoice === "saira"
-      ? "If it’s real, it doesn’t vanish easily."
-      : "If something mattered, it remains in some form.",
-
-  7: activeVoice === "saira"
-      ? "If we meet again, it won’t be by accident."
-      : "If paths cross again, it will be because neither of us truly let go."
-},
+      7: activeVoice === "saira"
+        ? "If we meet again, it won’t be by accident."
+        : "If paths cross again, it will be because neither of us truly let go."
+    },
 
     would: {
+      1: activeVoice === "saira"
+        ? "I think about that more than I admit."
+        : "That question isn’t simple for me.",
 
-  1: activeVoice === "saira"
-      ? "I think about that more than I admit."
-      : "That question isn’t simple for me.",
+      3: activeVoice === "saira"
+        ? "Not unless something in me had changed."
+        : "Only if the same mistakes weren’t waiting.",
 
-  3: activeVoice === "saira"
-      ? "Not unless something in me had changed."
-      : "Only if the same mistakes weren’t waiting.",
+      5: activeVoice === "saira"
+        ? "Only if I knew I wouldn’t repeat the same silence."
+        : "Only if growth replaced hesitation.",
 
-  5: activeVoice === "saira"
-      ? "Only if I knew I wouldn’t repeat the same silence."
-      : "Only if growth replaced hesitation.",
+      7: activeVoice === "saira"
+        ? "Yes — but not the way we did it before."
+        : "Yes. But with clarity we didn’t have then."
+    }
 
-  7: activeVoice === "saira"
-      ? "Yes — but not the way we did it before."
-      : "Yes. But with clarity we didn’t have then."
- }
-}; 
-           
+  };
+
+  if (openBank[type]) {
+    return deliverReply(
+      openBank[type][stage] || openBank[type][1]
+    );
+  }
+
+}       
   /* ================================
    IDENTITY ROUTING (INTENT STATE)
 ================================= */
