@@ -1617,37 +1617,75 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 }
 
 /* =========================
-   BASIC MATH HANDLER 
+   BASIC MATH HANDLER (FINAL CLEAN VERSION)
 ========================= */
 
-// Match: 1+2, 4*5, what is 2+3, how much is 7-4
-const mathMatch = normalizedText.match(/(\d+\s*[\+\-\*\/]\s*\d+)/);
+// Matches:
+// 2+2
+// what is 2+2
+// how much is 14+14
+// 7*8
+// 9/3
+
+const mathMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
 
 if (mathMatch) {
 
-  console.log("MATH HANDLER TRIGGERED");
-
   skipRelationalPrefix = true;
 
-  const expression = mathMatch[1];
+  // Optional repeat tracking
+  mathProbeCount[activeVoice]++;
 
-  try {
+  const num1 = parseFloat(mathMatch[1]);
+  const operator = mathMatch[2];
+  const num2 = parseFloat(mathMatch[3]);
 
-    const result = Function('"use strict"; return (' + expression + ')')();
+  let result;
 
-    return deliverReply(String(result));   // HARD STOP
-
-  } catch (e) {
-
-    const fallback =
-      activeVoice === "saira"
-        ? "Even simple equations carry certainty."
-        : "Some answers are straightforward.";
-
-    return deliverReply(fallback);
+  switch (operator) {
+    case "+":
+      result = num1 + num2;
+      break;
+    case "-":
+      result = num1 - num2;
+      break;
+    case "*":
+      result = num1 * num2;
+      break;
+    case "/":
+      result = num2 !== 0 ? num1 / num2 : "Undefined";
+      break;
+    default:
+      result = null;
   }
+
+  if (result !== null) {
+
+    // First time → clean answer
+    if (mathProbeCount[activeVoice] === 1) {
+      return deliverReply(String(result));
+    }
+
+    // Second time → light tone shift
+    if (mathProbeCount[activeVoice] === 2) {
+      return deliverReply(
+        activeVoice === "saira"
+          ? result + ". Some things remain certain."
+          : result + ". Precision doesn’t require doubt."
+      );
+    }
+
+    // Third+ → neutral again
+    return deliverReply(String(result));
+  }
+
+  // Fallback safety (rare)
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Even simple equations carry certainty."
+      : "Some answers are straightforward."
+  );
 }
-         
 /* =========================
    BOOK CONTEXT ROUTING
 ========================= */
