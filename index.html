@@ -1665,11 +1665,26 @@ if (
             "What mattered doesn’t simply dissolve."
           ];
 
-    core = longingLines[Math.floor(Math.random() * longingLines.length)];
+    // Prevent consecutive repetition
+    if (typeof window.__lastLongingIndex === "undefined") {
+      window.__lastLongingIndex = -1;
+    }
+
+    let index;
+    do {
+      index = Math.floor(Math.random() * longingLines.length);
+    } while (index === window.__lastLongingIndex && longingLines.length > 1);
+
+    window.__lastLongingIndex = index;
+    core = longingLines[index];
 
   }
 
-  return deliverReply((selfPrefix + prefix + core).trim());
+  return deliverReply(
+    (selfPrefix + prefix + " " + core)
+      .replace(/\s+/g, " ")
+      .trim()
+  );
 }
 /* ================================
    RELATIONAL DEPTH PROBE (PHASE 1)
