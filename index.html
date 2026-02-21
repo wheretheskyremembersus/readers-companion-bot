@@ -1512,8 +1512,24 @@ function normalizeInput(text) {
     .replace(/\s+/g, " ")
     .trim();
 }
+/* =========================
+   PRE FIX GENERATOR (V3)
+========================= */
+function getSelfReferencePrefix(stage) {
 
+  if (activeVoice === "saira") {
+    if (stage <= 3) {
+      return "You mean me, don’t you?";
+    }
+    return "If you're talking about me…";
+  }
 
+  if (stage <= 3) {
+    return "If that’s about me…";
+  }
+
+  return "If you're asking about me…";
+}
 /* =========================
    RELATIONAL AWARENESS (V3)
 ========================= */
@@ -1569,7 +1585,13 @@ function pickStageVariant(map) {
   // Intelligence & reference systems (existing)
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
-  const stage = stageState[activeVoice]?.currentStage || 1;       
+  const stage = stageState[activeVoice]?.currentStage || 1;      
+         
+let selfPrefix = "";
+
+if (reference.type === "self") {
+  selfPrefix = getSelfReferencePrefix(stage);
+}
 /* ================================
    RELATIONAL LONGING CAPTURE (V3)
 ================================= */
@@ -1635,8 +1657,7 @@ if (
 
   }
 
-  return deliverReply(prefix + core);
-
+return deliverReply(selfPrefix + prefix + core);
 }
 
 /* ================================
@@ -1664,7 +1685,8 @@ if (
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
-const openMatch = normalizedText.match(/\b(why|how|when|where|what|will|would)\b/i);
+const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
+
 if (openMatch) {
        
   const type = openMatch[1];
@@ -1814,12 +1836,9 @@ if (
   };
 
   if (openBank[type]) {
-    return deliverReply(
-      openBank[type][stage] || openBank[type][1]
-    );
-  }
-
-}       
+  const answer = openBank[type][stage] || openBank[type][1];
+  return deliverReply(selfPrefix + answer);
+}
   /* ================================
    IDENTITY ROUTING (INTENT STATE)
 ================================= */
@@ -1988,7 +2007,10 @@ if (
     }
   };
 
-  return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
+ const answer =
+  map[activeVoice][stage] || map[activeVoice][1];
+
+return deliverReply(selfPrefix + answer);
 }
 
  /* ================================
