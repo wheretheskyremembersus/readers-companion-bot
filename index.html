@@ -1626,39 +1626,57 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 // how much is 14+14
 // 7*8
 // 9/3
+// 2247
+// what is 2247
+// how much is 224
 
-const mathMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+const operatorMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+const pureNumberMatch = normalizedText.match(/^(what is|how much is)?\s*(\d+)$/);
 
-if (mathMatch) {
+if (operatorMatch || pureNumberMatch) {
 
   skipRelationalPrefix = true;
 
-  // Optional repeat tracking
   mathProbeCount[activeVoice]++;
-
-  const num1 = parseFloat(mathMatch[1]);
-  const operator = mathMatch[2];
-  const num2 = parseFloat(mathMatch[3]);
 
   let result;
 
-  switch (operator) {
-    case "+":
-      result = num1 + num2;
-      break;
-    case "-":
-      result = num1 - num2;
-      break;
-    case "*":
-      result = num1 * num2;
-      break;
-    case "/":
-      result = num2 !== 0 ? num1 / num2 : "Undefined";
-      break;
-    default:
-      result = null;
+  // ========================
+  // CASE 1: Operator Expression
+  // ========================
+  if (operatorMatch) {
+
+    const num1 = parseFloat(operatorMatch[1]);
+    const operator = operatorMatch[2];
+    const num2 = parseFloat(operatorMatch[3]);
+
+    switch (operator) {
+      case "+": result = num1 + num2; break;
+      case "-": result = num1 - num2; break;
+      case "*": result = num1 * num2; break;
+      case "/": result = num2 !== 0 ? num1 / num2 : "Undefined"; break;
+    }
+
   }
 
+  // ========================
+  // CASE 2: Pure Number
+  // ========================
+  if (pureNumberMatch && !operatorMatch) {
+
+    result = pureNumberMatch[2];
+
+    // For pure numbers → use the toned version from first instance
+    return deliverReply(
+      activeVoice === "saira"
+        ? result + ". Some things remain certain."
+        : result + ". Precision doesn’t require doubt."
+    );
+  }
+
+  // ========================
+  // Existing Operator Logic (UNCHANGED)
+  // ========================
   if (result !== null) {
 
     // First time → clean answer
