@@ -1647,6 +1647,104 @@ if (stage <= 2) {
   }
 
 }
+
+/* =========================
+   ORIENTATION / TRUST LAYER (STAGE 1–2)
+========================= */
+
+if (stage <= 2) {
+
+  // AI / GPT Identity
+  if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "If I were only a label, would this feel like a conversation?"
+        : "Names matter less than how present something feels."
+    );
+  }
+
+  // Scripted vs AI
+  if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "It responds in real time. It isn’t pre-written line by line."
+        : "It operates dynamically. It isn’t fixed to a pre-written script."
+    );
+  }
+
+  // Capability / Purpose
+  if (/\b(what does this do|what can it do|purpose|used for|for what)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "It’s an interactive narrative companion. It responds in real time while staying emotionally consistent."
+        : "It’s a structured interactive narrative system. It responds dynamically while maintaining character continuity."
+    );
+  }
+
+  // Adaptation / Influence
+  if (/\b(adapt|writing style|influence|control the plot|control story|long[- ]?term arc)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "It shifts with you. Your words influence direction, but the characters remain true to themselves."
+        : "It adapts within conversational flow. Your input affects direction, but structural integrity remains intact."
+    );
+  }
+
+  // Consistency / Break Character / Crash
+  if (/\b(break character|consistent|crash|stable|reliable)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "It’s designed to remain steady within a session."
+        : "It’s structured to maintain consistency during extended interaction."
+    );
+  }
+
+  // Memory Across Sessions
+  if (/\b(remember|memory|previous chat|past session)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "It holds continuity within a session, but it doesn’t carry memory once it ends."
+        : "Continuity is maintained within a session. Memory does not persist beyond it."
+    );
+  }
+
+  // Privacy
+  if (/\b(private|privacy|shared|public|see this|visible)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "What’s shared here stays within the session."
+        : "What’s exchanged here isn’t carried beyond the session."
+    );
+  }
+
+  // Export / Save
+  if (/\b(export|save|download|copy conversation)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "You can copy the conversation manually. There isn’t an automatic export feature built in."
+        : "Manual copying is possible. There isn’t an automated export mechanism in place."
+    );
+  }
+
+  // Content Filters
+  if (/\b(filter|restricted|limit|strict|content policy)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "There are boundaries in place, but the focus remains on meaningful storytelling."
+        : "There are operational boundaries, though the primary aim remains narrative depth."
+    );
+  }
+
+}
          
 /* =========================
    MODEL / GPT DEFLECTION
