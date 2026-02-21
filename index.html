@@ -1620,23 +1620,21 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
    BASIC MATH HANDLER (FULL SUPPORT)
 ========================= */
 
-// Match arithmetic expression anywhere in the input
+/* =========================
+   BASIC MATH HANDLER
+========================= */
+
 const mathMatch = normalizedText.match(/(\d+\s*[\+\-\*\/]\s*\d+)/);
 
-if (
-  mathMatch &&
-  /\b(what is|how much is|calculate|solve)?\b/i.test(normalizedText)
-) {
+if (mathMatch) {
 
   skipRelationalPrefix = true;
 
   const expression = mathMatch[1];
 
   try {
-
     const result = Function('"use strict"; return (' + expression + ')')();
     return deliverReply(String(result));
-
   } catch (e) {
 
     const mathLines =
@@ -1651,12 +1649,10 @@ if (
           ];
 
     const reply = mathLines[Math.floor(Math.random() * mathLines.length)];
-
     return deliverReply(reply);
   }
 
-}    
-
+}
 console.log("MATH HANDLER TRIGGERED");
          
 /* =========================
