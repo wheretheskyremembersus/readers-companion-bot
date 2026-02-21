@@ -2020,58 +2020,8 @@ if (
   return deliverReply(selfPrefix + answer);
 }
 }
-  /* ================================
-   IDENTITY ROUTING (INTENT STATE)
-================================= */
 
-if (intentState.type === "identity") {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
-      : "Does a machine carry hesitation... or memory? I speak because something stayed."
-  );
-}    
-
-
-  /* ================================
-     DEFAULT V3 RESPONSE
-  ================================= */
-
-const softDetected = detectEmotionalPillar(normalizedText);
-
-if (softDetected) {
-  return processEmotionalMode(userText, originalText);
-}
-  
-         
-// EARLY EMOTIONAL PRIORITY (NEW)
-const earlyEmotion = detectEmotionalPillar(normalizedText);
-// ===== TOLL GATE PROGRESSION =====
-
-const voice = activeVoice;
-
-// Count dock questions
-if (intentState?.source === "dock") {
-  tollState[voice].dockCount++;
-}
-
-// Count free emotional input
-if (earlyEmotion) {
-  tollState[voice].freeCount++;
-}
-
-console.log("DockCount:", tollState[voice].dockCount);
-console.log("FreeCount:", tollState[voice].freeCount);
-if (earlyEmotion) {
-  return processEmotionalMode(userText, originalText);
-}
-  console.log("RELATIONAL HANDLER REACHED");
-
-  
-/* ================================
+         /* ================================
    RELATIONAL IDENTITY HANDLER 
 ================================= */
 
@@ -2248,6 +2198,58 @@ if (
   return deliverReply(otherMap[activeVoice][stage]);
 }
   
+  /* ================================
+   IDENTITY ROUTING (INTENT STATE)
+================================= */
+
+if (intentState.type === "identity") {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
+      : "Does a machine carry hesitation... or memory? I speak because something stayed."
+  );
+}    
+
+
+  /* ================================
+     DEFAULT V3 RESPONSE
+  ================================= */
+
+const softDetected = detectEmotionalPillar(normalizedText);
+
+if (softDetected) {
+  return processEmotionalMode(userText, originalText);
+}
+  
+         
+// EARLY EMOTIONAL PRIORITY (NEW)
+const earlyEmotion = detectEmotionalPillar(normalizedText);
+// ===== TOLL GATE PROGRESSION =====
+
+const voice = activeVoice;
+
+// Count dock questions
+if (intentState?.source === "dock") {
+  tollState[voice].dockCount++;
+}
+
+// Count free emotional input
+if (earlyEmotion) {
+  tollState[voice].freeCount++;
+}
+
+console.log("DockCount:", tollState[voice].dockCount);
+console.log("FreeCount:", tollState[voice].freeCount);
+if (earlyEmotion) {
+  return processEmotionalMode(userText, originalText);
+}
+  console.log("RELATIONAL HANDLER REACHED");
+
+  
+
 /* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
 ================================= */
