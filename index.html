@@ -2110,53 +2110,44 @@ const foundationalQuestions = [
   { text:"Who is the author?", key:"author" },
 ];
 
-for (let i = 0; i < foundationalQuestions.length; i++) {
+if (originalText.trim().split(/\s+/).length > 3) {
 
-  const questionObj = foundationalQuestions[i];
+  for (let i = 0; i < foundationalQuestions.length; i++) {
 
-  if (isSixtyPercentMatch(originalText, questionObj.text)) {
+    const questionObj = foundationalQuestions[i];
 
-    const replies = {
-      saira: {
-        story:"Our story is a contemporary romantic fiction - but it moves quietly.",
-        about:"It's about me and Ayaan - about love that felt certain.",
-        for:"It's for people who have felt something deeply.",
-        where:"You can find our story in Kindle, paperback, hardcover, or audiobook.",
-        author:"Mohan R. wrote this as his debut novel.",
+    if (isSixtyPercentMatch(originalText, questionObj.text)) {
 
-    whoAyaan:"Ayaan isn't careless. He feels deeply - but hides it behind control.",
-    whoSaira:"I feel first and think later. That has shaped everything.",
-    whereAyaan:"He moved forward. Even when something stayed unfinished.",
-    whereSaira:"I didn't stay where I was. I chose differently."
-  },
+      const replies = {
+        saira: {
+          story:"Our story is a contemporary romantic fiction - but it moves quietly.",
+          about:"It's about me and Ayaan - about love that felt certain.",
+          for:"It's for people who have felt something deeply.",
+          where:"You can find our story in Kindle, paperback, hardcover, or audiobook.",
+          author:"Mohan R. wrote this as his debut novel."
+        },
+        Ayaan: {
+          story:"It's contemporary romantic fiction, grounded in consequence and timing.",
+          about:"It's about hesitation, responsibility, and the cost of silence.",
+          for:"It's for those who chose logic over vulnerability.",
+          where:"It's available in digital, print, and audio formats.",
+          author:"Mohan R. wrote it to explore what lingers after love shifts."
+        }
+      };
 
-      Ayaan: {
-        story:"It's contemporary romantic fiction, grounded in consequence and timing.",
-        about:"It's about hesitation, responsibility, and the cost of silence.",
-        for:"It's for those who chose logic over vulnerability.",
-        where:"It's available in digital, print, and audio formats.",
-        author:"Mohan R. wrote it to explore what lingers after love shifts.",
-               
-    whoAyaan:"I measure before I move. I don't dismiss what matters.",
-    whoSaira:"Saira feels openly. That difference shaped everything.",
-    whereAyaan:"I am where responsibility led me.",
-    whereSaira:"She didn't remain unchanged. Growth rarely allows that."
-  }
-};
-
-    return deliverReply(replies[activeVoice][questionObj.key]);
-  }
-}
-
-// 2️⃣ Character Layer Typed Match
-for (let layer of characterLayers) {
-  for (let item of layer) {
-
-    if (isSixtyPercentMatch(originalText, item.q)) {
-      return deliverReply(item.a[activeVoice]);
+      return deliverReply(replies[activeVoice][questionObj.key]);
     }
-
   }
+
+  // Character Layer Typed Match
+  for (let layer of characterLayers) {
+    for (let item of layer) {
+      if (isSixtyPercentMatch(originalText, item.q)) {
+        return deliverReply(item.a[activeVoice]);
+      }
+    }
+  }
+
 }
 /* =========================
      HARD PARTITION
