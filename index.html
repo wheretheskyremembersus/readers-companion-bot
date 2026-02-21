@@ -1597,6 +1597,57 @@ if (
       : "Mohan R. wrote it to explore what lingers after love shifts."
   );
 }
+
+/* =========================
+   ORIENTATION / TRUST LAYER (STAGE 1–2)
+========================= */
+
+if (stage <= 2) {
+
+  // AI / GPT Identity
+  if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "If I were only a label, would this feel like a conversation?"
+        : "Names matter less than how present something feels."
+    );
+  }
+
+  // Scripted vs AI
+  if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      "It responds in real time. It isn’t pre-written line by line."
+    );
+  }
+
+  // Memory Across Sessions
+  if (/\bremember|memory|previous chat|past session\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      "It maintains continuity within a session, but it doesn’t retain memory once it ends."
+    );
+  }
+
+  // Privacy
+  if (/\bprivate|privacy|shared|public|see this|visible\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      "What’s shared here stays within the session."
+    );
+  }
+
+  // Export / Save
+  if (/\bexport|save|download|copy conversation\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      "You can copy the conversation manually. There isn’t an automatic export feature built in."
+    );
+  }
+
+}
+         
 /* =========================
    MODEL / GPT DEFLECTION
 ========================= */
