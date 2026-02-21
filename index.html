@@ -2472,16 +2472,39 @@ if (
   return deliverReply(selfPrefix + answer);
 }
 }
-  /* ================================
-     GREETINGS
-  ================================= */
 
-  if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(lower)) {
-    return deliverReply(
-  activeVoice ==="saira"
-    ?"Hello... I’m still present with it. You can speak freely."
-    :"Yes. Go on."
-);
+/* =========================
+   GREETING HANDLER (COMPANION SAFE)
+========================= */
+
+if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  let greetingReply;
+
+  if (stage <= 2) {
+    greetingReply =
+      activeVoice === "saira"
+        ? "Hi."
+        : "Hello.";
+  } 
+  else if (stage <= 4) {
+    greetingReply =
+      activeVoice === "saira"
+        ? "Hi… you came back."
+        : "Hello. It’s good to see you again.";
+  } 
+  else {
+    greetingReply =
+      activeVoice === "saira"
+        ? "Hi… I was hoping you would."
+        : "Hello. You feel familiar now.";
+  }
+
+  return deliverReply(greetingReply);
 }
  /* ================================
    DIRECT NAME INVOCATION
