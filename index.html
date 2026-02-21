@@ -2263,8 +2263,11 @@ if (originalText.trim().split(/\s+/).length > 3) {
     const questionObj = foundationalQuestions[i];
 
 if (
-  originalText.trim().split(/\s+/).length > 3 &&
-  isSixtyPercentMatch(originalText, questionObj.text)
+  isSixtyPercentMatch(originalText, questionObj.text) &&
+  !(
+    /^\s*who\b/i.test(originalText) &&
+    !/\b(author|wrote|written|novel)\b/i.test(originalText)
+  )
 ) {
       const replies = {
         saira: {
