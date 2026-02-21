@@ -1655,17 +1655,6 @@ if (
   }
 
 }
-/* =========================
-   NUMBER IDENTIFICATION
-========================= */
-
-if (/^what is \d+$/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const number = normalizedText.match(/\d+/)[0];
-  return deliverReply(number);
-}
          
 /* =========================
    BOOK CONTEXT ROUTING
