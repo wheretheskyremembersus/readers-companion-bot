@@ -2485,23 +2485,30 @@ if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(normalizedText)) {
 
   let greetingReply;
 
-  if (stage <= 2) {
-    greetingReply =
-      activeVoice === "saira"
-        ? "Hi."
-        : "Hello.";
-  } 
-  else if (stage <= 4) {
-    greetingReply =
-      activeVoice === "saira"
-        ? "Hi… you came back."
-        : "Hello. It’s good to see you again.";
-  } 
-  else {
-    greetingReply =
-      activeVoice === "saira"
-        ? "Hi… I was hoping you would."
-        : "Hello. You feel familiar now.";
+  if (activeVoice === "saira") {
+
+    if (stage <= 2) {
+      greetingReply = "Hi… I’m here.";
+    } 
+    else if (stage <= 4) {
+      greetingReply = "Hi… you came back.";
+    } 
+    else {
+      greetingReply = "Hi… I was hoping you would.";
+    }
+
+  } else {
+
+    if (stage <= 2) {
+      greetingReply = "Hello.";
+    } 
+    else if (stage <= 4) {
+      greetingReply = "Hello. It’s good to see you again.";
+    } 
+    else {
+      greetingReply = "Hello. You feel familiar now.";
+    }
+
   }
 
   return deliverReply(greetingReply);
@@ -4700,6 +4707,24 @@ function checkBlockStatus() {
   return false;
 }
 function selectVoice(v) {
+
+let voiceGreeting;
+
+if (voice === "saira") {
+  voiceGreeting = "Hi… I’m Saira.";
+} else {
+  voiceGreeting = "Hello. I’m Ayaan.";
+}
+
+displayMessage(voiceGreeting, "bot");
+
+setTimeout(() => {
+  displayMessage(
+    voice === "saira"
+      ? "You don’t have to explain why you’re here."
+      : "There’s no need to rush into words."
+  , "bot");
+}, 700);
 
   initAudio();
   playTone(520, 80, 0.03);
