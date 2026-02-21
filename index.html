@@ -2441,11 +2441,24 @@ if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
 
 /* 4️⃣ Uncertainty */
 if (/^(idk|i dont know|not sure|maybe)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"Uncertainty is still a direction."
-      :"It can take time to settle."
-  );
+
+  const uncertaintyBank = {
+    saira: [
+      "Uncertainty is still a direction.",
+      "Not knowing is part of it.",
+      "It’s alright not to be sure yet."
+    ],
+    Ayaan: [
+      "Uncertainty still signals movement.",
+      "Clarity doesn’t always arrive immediately.",
+      "Not knowing is still information."
+    ]
+  };
+
+  const pool = uncertaintyBank[activeVoice];
+  const index = Math.floor(Math.random() * pool.length);
+
+  return deliverReply(pool[index]);
 }
 
 /* 5️⃣ Continuation Prompt */
