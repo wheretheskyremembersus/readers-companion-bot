@@ -1507,6 +1507,22 @@ function processInput(userText, originalText) {
   const lower = normalizedText;
   const nameCall = normalizedText;
 
+  /* =========================
+     HARD AUTHOR ROUTING
+  ========================= */
+
+  if (
+    /\bwho\s+wrote\b/i.test(normalizedText) ||
+    /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
+    /\bwritten\s+by\b/i.test(normalizedText)
+  ) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Mohan R. wrote this as his debut novel."
+        : "Mohan R. wrote it to explore what lingers after love shifts."
+    );
+  }
+
   // Reset relational state per message
   relationalPrefix = "";
   skipRelationalPrefix = false;
@@ -1537,6 +1553,8 @@ if (earlyEmotion) {
   return processEmotionalMode(userText, originalText);
 }
   console.log("RELATIONAL HANDLER REACHED");
+
+
   /* ================================
    IDENTITY ROUTING (INTENT STATE)
 ================================= */
@@ -2638,19 +2656,6 @@ if (/^(hello again|you there)$/i.test(micro)) {
     activeVoice ==="saira"
       ?"I didn't leave."
       :"Still here."
-  );
-}
-  if (
-  /\b(author|writer|written by)\b/i.test(normalizedText) ||
-  /\bwho\s+wrote\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText)
-) {
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote this story."
-      : "Mohan R. wrote it."
   );
 }
  
