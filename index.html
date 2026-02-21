@@ -1575,7 +1575,6 @@ if (intentState.type === "identity") {
 ================================= */
 
 const relational = normalizedText;
-const stage = stageState[activeVoice]?.currentStage || 1;
 const reference = resolveReference(normalizedText);
 
 // Love / longing detection
@@ -1643,7 +1642,6 @@ const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/
 if (openMatch) {
 
   const type = openMatch[1];
-  const stage = stageState[activeVoice]?.currentStage || 1;
 
   const openBank = {
 
@@ -1727,7 +1725,6 @@ if (earlyEmotion) {
     );
   }
 }
-  const stage = stageState[activeVoice]?.currentStage || 1;
   skipRelationalPrefix = true;
 
   const voice = activeVoice;
