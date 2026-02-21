@@ -1664,8 +1664,7 @@ if (
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
-const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
-
+const openMatch = normalizedText.match(/\b(why|how|when|where|what|will|would)\b/i);
 if (openMatch) {
        
   const type = openMatch[1];
