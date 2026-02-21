@@ -1519,14 +1519,21 @@ function normalizeInput(text) {
     .replace(/\bayann\b/g, "ayaan")
     .replace(/\baayen\b/g, "ayaan")
     .replace(/\bayan\b/g, "ayaan")
+    .replace(/\baayan\b/g, "ayaan")
+    .replace(/\baian\b/g, "ayaan")
+    .replace(/\bayan\b/g, "ayaan")
 
-    // Saira variations
-    .replace(/\bsara\b/g, "saira")
-    .replace(/\bsairaa\b/g, "saira")
-    .replace(/\bsaera\b/g, "saira")
-    .replace(/\bsayra\b/g, "saira")
-    .replace(/\bsairaah\b/g, "saira")
-
+    // Additional Saira variations
+.replace(/\bsaira\b/g, "saira")   // safety normalize
+.replace(/\bsayrah\b/g, "saira")
+.replace(/\bsera\b/g, "saira")
+.replace(/\bseira\b/g, "saira")
+.replace(/\bsaeira\b/g, "saira")
+.replace(/\bsaaira\b/g, "saira")
+.replace(/\bshaira\b/g, "saira")
+.replace(/\bsyra\b/g, "saira")
+.replace(/\bsira\b/g, "saira")
+           
     // 7️⃣ collapse multiple spaces
     .replace(/\s+/g, " ")
     .trim();
