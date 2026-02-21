@@ -1607,6 +1607,7 @@ if (
 
   let prefix = "";
 
+  // Stage-aware soft clarification for OTHER (not self)
   if (stage >= 5 && reference.type === "other") {
     prefix =
       activeVoice === "saira"
@@ -1615,6 +1616,10 @@ if (
   }
 
   let core = "";
+
+  /* ================================
+     FORGIVENESS BRANCH
+  ================================= */
 
   if (/forgive/i.test(relational)) {
 
@@ -1641,18 +1646,31 @@ if (
 
     }
 
-  } else {
+  }
 
-    core =
+  /* ================================
+     LONGING / LOVE / MISS BRANCH
+  ================================= */
+
+  else {
+
+    const longingLines =
       activeVoice === "saira"
-        ? "Some connections don't fade just because distance exists."
-        : "Some bonds remain even when circumstances shift.";
+        ? [
+            "Some connections don't fade just because distance exists.",
+            "Distance doesn’t quiet what once felt certain."
+          ]
+        : [
+            "Some bonds remain even when circumstances shift.",
+            "What mattered doesn’t simply dissolve."
+          ];
+
+    core = longingLines[Math.floor(Math.random() * longingLines.length)];
 
   }
 
-return deliverReply(selfPrefix + prefix + core);
+  return deliverReply((selfPrefix + prefix + core).trim());
 }
-
 /* ================================
    RELATIONAL DEPTH PROBE (PHASE 1)
 ================================= */
