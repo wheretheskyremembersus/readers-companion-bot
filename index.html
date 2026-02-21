@@ -2758,6 +2758,40 @@ console.log("Voice:", activeVoice);
 console.log("Unlocked:", tollState[activeVoice]?.unlocked);
 console.log("Current Stage:", stageState[activeVoice]?.currentStage);
 
+/* ================================
+   RELATIONAL LONGING CAPTURE (V3)
+================================= */
+
+const relational = normalizedText;
+
+// Love / longing detection
+if (
+  /\b(love|miss|forgive|choose|waiting|answer|come back|again|still)\b/i.test(relational) &&
+  /\b(him|her|he|she)\b/i.test(relational)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Some connections don't fade just because distance exists."
+      : "Some bonds remain even when circumstances shift."
+  );
+}
+
+// Responsibility / blame detection
+if (
+  /\b(who|fault|hurt|messed|pulled|left|blame)\b/i.test(relational)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It wasn't as simple as one person failing the other."
+      : "Responsibility rarely belongs to only one side."
+  );
+}
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
