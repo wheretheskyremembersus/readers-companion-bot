@@ -1378,7 +1378,9 @@ function resolveReference(originalText) {
   const hasShe = /\bshe\b/i.test(lower);
   const hasHe = /\bhe\b/i.test(lower);
 
-  /// If explicit name matches active voice, treat as self
+  // 1️⃣ Explicit name detection FIRST
+
+// If name matches ACTIVE voice → self
 if (hasSaira && activeVoice === "saira") {
   return { type: "self", target: "saira" };
 }
@@ -1387,6 +1389,14 @@ if (hasAyaan && activeVoice === "Ayaan") {
   return { type: "self", target: "Ayaan" };
 }
 
+// If name matches OTHER voice → explicit_other
+if (hasSaira && activeVoice !== "saira") {
+  return { type: "explicit_other", target: "saira" };
+}
+
+if (hasAyaan && activeVoice !== "Ayaan") {
+  return { type: "explicit_other", target: "Ayaan" };
+}
   // 2️⃣ Pronoun resolution (default to self)
   if (activeVoice === "saira") {
 
@@ -1412,7 +1422,7 @@ if (hasAyaan && activeVoice === "Ayaan") {
 
   return { type: "unknown", target: null };
 }
-
+console.log("REFERENCE:", reference);
 /* =========================
    INPUT NORMALIZATION
 ========================= */
