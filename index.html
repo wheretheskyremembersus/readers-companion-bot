@@ -1638,6 +1638,28 @@ if (
   return deliverReply(prefix + core);
 
 }
+
+/* ================================
+   RELATIONAL DEPTH PROBE (PHASE 1)
+================================= */
+
+if (
+  /\b(real|actual|really)\b.*\b(saira|ayaan)\b/i.test(normalizedText) ||
+  /\bwhat\s+is\b.*\ball\s+about\b/i.test(normalizedText) ||
+  /\bknow\s+more\b/i.test(normalizedText) ||
+  /\bwhat\s+is\s+behind\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const reply =
+    activeVoice === "saira"
+      ? "I'm not just what you see. There’s more beneath what I show."
+      : "What you see isn’t the whole of me."
+
+  return deliverReply(reply);
+}
+         
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
@@ -1645,6 +1667,19 @@ const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/
 
 if (openMatch) {
 
+// Specific END detection before generic "how"
+if (
+  type === "how" &&
+  /\b(end|over|finish|separate|break up)\b/i.test(normalizedText)
+) {
+
+  const endReply =
+    activeVoice === "saira"
+      ? "It didn’t end. We just lost sight of each other while still holding on."
+      : "It didn’t end. We moved forward without realizing we were still connected."
+
+  return deliverReply(endReply);
+}         
   const type = openMatch[1];
 
   const openBank = {
