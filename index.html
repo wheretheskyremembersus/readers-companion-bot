@@ -1745,7 +1745,42 @@ if (stage <= 2) {
   }
 
 }
-         
+/* =========================
+   SOCIAL CALIBRATION LAYER
+========================= */
+
+const trimmed = normalizedText.trim();
+
+// Greeting
+if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Hi… I’m Saira."
+      : "Hello. I’m Ayaan."
+  );
+}
+
+// How are you
+if (/^how are you\b/i.test(trimmed)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m here. And you?"
+      : "I’m steady. And you?"
+  );
+}
+
+// Light affirmations
+if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Alright."
+      : "Understood."
+  );
+}         
 /* =========================
    MODEL / GPT DEFLECTION
 ========================= */
