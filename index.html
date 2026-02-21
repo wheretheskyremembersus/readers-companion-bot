@@ -1555,29 +1555,6 @@ function pickStageVariant(map) {
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
 
-// EARLY EMOTIONAL PRIORITY (NEW)
-const earlyEmotion = detectEmotionalPillar(normalizedText);
-// ===== TOLL GATE PROGRESSION =====
-
-const voice = activeVoice;
-
-// Count dock questions
-if (intentState?.source === "dock") {
-  tollState[voice].dockCount++;
-}
-
-// Count free emotional input
-if (earlyEmotion) {
-  tollState[voice].freeCount++;
-}
-
-console.log("DockCount:", tollState[voice].dockCount);
-console.log("FreeCount:", tollState[voice].freeCount);
-if (earlyEmotion) {
-  return processEmotionalMode(userText, originalText);
-}
-  console.log("RELATIONAL HANDLER REACHED");
-
   /* ================================
    IDENTITY ROUTING (INTENT STATE)
 ================================= */
@@ -1713,7 +1690,31 @@ if (openMatch) {
       7: "Only if growth outweighed hesitation."
     }
   };
+         
+// EARLY EMOTIONAL PRIORITY (NEW)
+const earlyEmotion = detectEmotionalPillar(normalizedText);
+// ===== TOLL GATE PROGRESSION =====
 
+const voice = activeVoice;
+
+// Count dock questions
+if (intentState?.source === "dock") {
+  tollState[voice].dockCount++;
+}
+
+// Count free emotional input
+if (earlyEmotion) {
+  tollState[voice].freeCount++;
+}
+
+console.log("DockCount:", tollState[voice].dockCount);
+console.log("FreeCount:", tollState[voice].freeCount);
+if (earlyEmotion) {
+  return processEmotionalMode(userText, originalText);
+}
+  console.log("RELATIONAL HANDLER REACHED");
+         
+         
   if (openBank[type]) {
     return deliverReply(
       openBank[type][stage] || openBank[type][1]
