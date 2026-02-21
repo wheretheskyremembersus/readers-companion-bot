@@ -1553,6 +1553,75 @@ function pickStageVariant(map) {
   // Intelligence & reference systems (existing)
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
+         
+/* ================================
+   RELATIONAL LONGING CAPTURE (V3)
+================================= */
+
+const relational = normalizedText;
+
+if (
+  /\b(love|miss|forgive|choose|waiting|answer|come back|again|still)\b/i.test(relational) &&
+  /\b(him|her|he|she|Ayaan|saira)\b/i.test(relational)
+) {
+
+  skipRelationalPrefix = true;
+
+  let prefix = "";
+
+  if (stage <= 2 && reference.type === "self") {
+    prefix =
+      activeVoice === "saira"
+        ? "I think you're referring to me here. "
+        : "I believe you're referring to me. ";
+  }
+
+  if (stage >= 5 && reference.type === "other") {
+    prefix =
+      activeVoice === "saira"
+        ? "If you're asking about him… "
+        : "If you're asking about her… ";
+  }
+
+  let core = "";
+
+  if (/forgive/i.test(relational)) {
+
+    if (reference.type === "other") {
+
+      core =
+        stage <= 2
+          ? "Forgiveness isn't immediate when something real was involved."
+          : "Forgiveness comes when understanding outweighs hurt.";
+
+    } else if (reference.type === "self") {
+
+      core =
+        stage <= 2
+          ? "If you're asking about me, you don't have to say it indirectly."
+          : "Sometimes people ask about someone else when they mean me. You can ask me directly.";
+
+    } else {
+
+      core =
+        stage <= 2
+          ? "Forgiveness isn't simple."
+          : "Forgiveness depends on what was truly understood.";
+
+    }
+
+  } else {
+
+    core =
+      activeVoice === "saira"
+        ? "Some connections don't fade just because distance exists."
+        : "Some bonds remain even when circumstances shift.";
+
+  }
+
+  return deliverReply(prefix + core);
+
+}
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
@@ -1714,74 +1783,7 @@ if (intentState.type === "identity") {
   );
 }    
 
-/* ================================
-   RELATIONAL LONGING CAPTURE (V3)
-================================= */
 
-const relational = normalizedText;
-
-if (
-  /\b(love|miss|forgive|choose|waiting|answer|come back|again|still)\b/i.test(relational) &&
-  /\b(him|her|he|she|Ayaan|saira)\b/i.test(relational)
-) {
-
-  skipRelationalPrefix = true;
-
-  let prefix = "";
-
-  if (stage <= 2 && reference.type === "self") {
-    prefix =
-      activeVoice === "saira"
-        ? "I think you're referring to me here. "
-        : "I believe you're referring to me. ";
-  }
-
-  if (stage >= 5 && reference.type === "other") {
-    prefix =
-      activeVoice === "saira"
-        ? "If you're asking about him… "
-        : "If you're asking about her… ";
-  }
-
-  let core = "";
-
-  if (/forgive/i.test(relational)) {
-
-    if (reference.type === "other") {
-
-      core =
-        stage <= 2
-          ? "Forgiveness isn't immediate when something real was involved."
-          : "Forgiveness comes when understanding outweighs hurt.";
-
-    } else if (reference.type === "self") {
-
-      core =
-        stage <= 2
-          ? "If you're asking about me, you don't have to say it indirectly."
-          : "Sometimes people ask about someone else when they mean me. You can ask me directly.";
-
-    } else {
-
-      core =
-        stage <= 2
-          ? "Forgiveness isn't simple."
-          : "Forgiveness depends on what was truly understood.";
-
-    }
-
-  } else {
-
-    core =
-      activeVoice === "saira"
-        ? "Some connections don't fade just because distance exists."
-        : "Some bonds remain even when circumstances shift.";
-
-  }
-
-  return deliverReply(prefix + core);
-
-}
   /* ================================
      DEFAULT V3 RESPONSE
   ================================= */
