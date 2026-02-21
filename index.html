@@ -1840,11 +1840,6 @@ if (earlyEmotion) {
     }
   };
 
-  let type = "why";
-
-  if (/when/i.test(originalText)) type = "when";
-  if (/reason/i.test(originalText)) type = "reason";
-
   return deliverReply(map[voice][type][stage]);
 }
 
