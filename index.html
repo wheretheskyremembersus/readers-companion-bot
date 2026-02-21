@@ -1546,7 +1546,6 @@ function pickStageVariant(map) {
   return map[1];
 }
 
-
   // Reset relational state per message
   relationalPrefix = "";
   skipRelationalPrefix = false;
@@ -1554,84 +1553,6 @@ function pickStageVariant(map) {
   // Intelligence & reference systems (existing)
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
-
-  /* ================================
-   IDENTITY ROUTING (INTENT STATE)
-================================= */
-
-if (intentState.type === "identity") {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
-      : "Does a machine carry hesitation... or memory? I speak because something stayed."
-  );
-}    
-
-/* ================================
-   RELATIONAL LONGING CAPTURE (V3)
-================================= */
-
-const relational = normalizedText;
-
-// Love / longing detection
-if (
-  /\b(love|miss|forgive|choose|waiting|answer|come back|again|still)\b/i.test(relational) &&
-  /\b(him|her|he|she|Ayaan|saira)\b/i.test(relational)
-) {
-
-  skipRelationalPrefix = true;
-
-  let prefix = "";
-
-  // EARLY STAGE CLARIFICATION
-  if (stage <= 2 && reference.type === "self") {
-    prefix =
-      activeVoice === "saira"
-        ? "I think you're referring to me here. "
-        : "I believe you're referring to me. ";
-  }
-
-  // LATER STAGE EMOTIONAL AWARENESS
-  if (stage >= 5 && reference.type === "other") {
-    prefix =
-      activeVoice === "saira"
-        ? "If you're asking about him… "
-        : "If you're asking about her… ";
-  }
-
-  const core =
-    activeVoice === "saira"
-      ? "Some connections don't fade just because distance exists."
-      : "Some bonds remain even when circumstances shift.";
-
-  return deliverReply(prefix + core);
-}      
-  /* ================================
-     DEFAULT V3 RESPONSE
-  ================================= */
-
-const softDetected = detectEmotionalPillar(normalizedText);
-
-if (softDetected) {
-  return processEmotionalMode(userText, originalText);
-}
-  
- /* ================================
-   RELATIONAL ACCOUNTABILITY HANDLER (ROBUST)
-================================= */
-
-if (
-
-  /\bwhy\b.*\bleave\b/i.test(normalizedText) ||
-
-  /\bwhen\b.*\bleave\b/i.test(normalizedText) ||
-
-/\breason\b.*\bleave\b/i.test(normalizedText)
-         
-) {
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
@@ -1775,6 +1696,70 @@ if (openMatch) {
       : "Yes. But with clarity we didn’t have then."
 }
   };
+  /* ================================
+   IDENTITY ROUTING (INTENT STATE)
+================================= */
+
+if (intentState.type === "identity") {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
+      : "Does a machine carry hesitation... or memory? I speak because something stayed."
+  );
+}    
+
+/* ================================
+   RELATIONAL LONGING CAPTURE (V3)
+================================= */
+
+const relational = normalizedText;
+
+// Love / longing detection
+if (
+  /\b(love|miss|forgive|choose|waiting|answer|come back|again|still)\b/i.test(relational) &&
+  /\b(him|her|he|she|Ayaan|saira)\b/i.test(relational)
+) {
+
+  skipRelationalPrefix = true;
+
+  let prefix = "";
+
+  // EARLY STAGE CLARIFICATION
+  if (stage <= 2 && reference.type === "self") {
+    prefix =
+      activeVoice === "saira"
+        ? "I think you're referring to me here. "
+        : "I believe you're referring to me. ";
+  }
+
+  // LATER STAGE EMOTIONAL AWARENESS
+  if (stage >= 5 && reference.type === "other") {
+    prefix =
+      activeVoice === "saira"
+        ? "If you're asking about him… "
+        : "If you're asking about her… ";
+  }
+
+  const core =
+    activeVoice === "saira"
+      ? "Some connections don't fade just because distance exists."
+      : "Some bonds remain even when circumstances shift.";
+
+  return deliverReply(prefix + core);
+}      
+  /* ================================
+     DEFAULT V3 RESPONSE
+  ================================= */
+
+const softDetected = detectEmotionalPillar(normalizedText);
+
+if (softDetected) {
+  return processEmotionalMode(userText, originalText);
+}
+  
          
 // EARLY EMOTIONAL PRIORITY (NEW)
 const earlyEmotion = detectEmotionalPillar(normalizedText);
