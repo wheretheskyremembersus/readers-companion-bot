@@ -1,3 +1,4 @@
+<!-- DEV TEST CONFIRMATION -->
 <!DOCTYPE html>
 <!--
 © 2025–2026 Mohan R.
@@ -696,6 +697,25 @@ let tollState = {
 };
 
 /* =========================
+   MODEL / CAPABILITY PROBE COUNTERS
+========================= */
+
+let modelProbeCount = {
+  saira: 0,
+  Ayaan: 0
+};
+
+let mathProbeCount = {
+  saira: 0,
+  Ayaan: 0
+};
+
+let identityProbeCount = {
+  saira: 0,
+  Ayaan: 0
+};
+         
+/* =========================
    EMOTIONAL ROTATION INDEX
 ========================= */
 
@@ -1233,7 +1253,7 @@ if (primary[1] >= confidenceThreshold) {
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
-         
+
 let v3FallbackIndex = {
   saira: {
     firm: 0,
@@ -1440,7 +1460,7 @@ function normalizeInput(text) {
     .replace(/(.)\1{2,}/g, "$1$1")
 
     // 2️⃣ remove stray punctuation but keep spaces
-    .replace(/[^\w\s]/g, " ")
+    .replace(/[^\w\s+\-*/]/g, " ")
 
     // 3️⃣ normalize common relationship misspellings
     .replace(/seperat/g, "separat")
@@ -1498,14 +1518,31 @@ function normalizeInput(text) {
     .replace(/\bayann\b/g, "ayaan")
     .replace(/\baayen\b/g, "ayaan")
     .replace(/\bayan\b/g, "ayaan")
+    .replace(/\baayan\b/g, "ayaan")
+    .replace(/\baian\b/g, "ayaan")
+    .replace(/\bayan\b/g, "ayaan")
 
-    // Saira variations
-    .replace(/\bsara\b/g, "saira")
-    .replace(/\bsairaa\b/g, "saira")
-    .replace(/\bsaera\b/g, "saira")
-    .replace(/\bsayra\b/g, "saira")
-    .replace(/\bsairaah\b/g, "saira")
+   // Saira variations (expanded & stable)
+.replace(/\bsara\b/g, "saira")
+.replace(/\bsaara\b/g, "saira")
+.replace(/\bsaaira\b/g, "saira")
+.replace(/\bsairaa\b/g, "saira")
+.replace(/\bsairaah\b/g, "saira")
+.replace(/\bsaira\b/g, "saira")   // safety normalize
 
+.replace(/\bsiara\b/g, "saira")
+.replace(/\bseira\b/g, "saira")
+.replace(/\bsaera\b/g, "saira")
+.replace(/\bsayra\b/g, "saira")
+.replace(/\bsayrah\b/g, "saira")
+.replace(/\bsairaah\b/g, "saira")
+
+.replace(/\bsairra\b/g, "saira")
+.replace(/\bsaira+\b/g, "saira")
+.replace(/\bsyra\b/g, "saira")
+.replace(/\bsera\b/g, "saira")
+.replace(/\bsira\b/g, "saira")
+           
     // 7️⃣ collapse multiple spaces
     .replace(/\s+/g, " ")
     .trim();
@@ -1538,21 +1575,156 @@ function processInput(userText, originalText) {
   const lower = normalizedText;
   const nameCall = normalizedText;
 
-  /* =========================
-     HARD AUTHOR ROUTING
-  ========================= */
+ /* =========================
+   HARD AUTHOR ROUTING
+========================= */
 
-  if (
-    /\bwho\s+wrote\b/i.test(normalizedText) ||
-    /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
-    /\bwritten\s+by\b/i.test(normalizedText)
-  ) {
+if (
+  /\bwho\s+wrote\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
+  /\bwritten\s+by\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
+  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this as his debut novel."
+      : "Mohan R. wrote it to explore what lingers after love shifts."
+  );
+}
+/* =========================
+   MODEL / GPT DEFLECTION
+========================= */
+
+if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const voice = activeVoice;
+  modelProbeCount[voice]++;
+
+  // FIRST PROBE
+  if (modelProbeCount[voice] === 1) {
+
+    return deliverReply(
+      voice === "saira"
+        ? "If I were only a label, would this feel like a conversation?"
+        : "Names are easy. Presence is harder."
+    );
+
+  }
+
+  // SECOND PROBE (warmer trust response)
+  if (modelProbeCount[voice] === 2) {
+
+    return deliverReply(
+      voice === "saira"
+        ? "You don’t need a label to stay here with me."
+        : "What matters is what we’re building in this moment."
+    );
+
+  }
+
+  // THIRD+ → stay steady (no escalation)
+  return deliverReply(
+    voice === "saira"
+      ? "We’re still here."
+      : "The question hasn’t changed what this is."
+  );
+}
+
+/* =========================
+   BASIC MATH HANDLER (FINAL CLEAN VERSION)
+========================= */
+
+// Matches:
+// 2+2
+// what is 2+2
+// how much is 14+14
+// 7*8
+// 9/3
+// 2247
+// what is 2247
+// how much is 224
+
+const operatorMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+const pureNumberMatch = normalizedText.match(/^(what is|how much is)?\s*(\d+)$/);
+
+if (operatorMatch || pureNumberMatch) {
+
+  skipRelationalPrefix = true;
+
+  mathProbeCount[activeVoice]++;
+
+  let result;
+
+  // ========================
+  // CASE 1: Operator Expression
+  // ========================
+  if (operatorMatch) {
+
+    const num1 = parseFloat(operatorMatch[1]);
+    const operator = operatorMatch[2];
+    const num2 = parseFloat(operatorMatch[3]);
+
+    switch (operator) {
+      case "+": result = num1 + num2; break;
+      case "-": result = num1 - num2; break;
+      case "*": result = num1 * num2; break;
+      case "/": result = num2 !== 0 ? num1 / num2 : "Undefined"; break;
+    }
+
+  }
+
+  // ========================
+  // CASE 2: Pure Number
+  // ========================
+  if (pureNumberMatch && !operatorMatch) {
+
+    result = pureNumberMatch[2];
+
+    // For pure numbers → use the toned version from first instance
     return deliverReply(
       activeVoice === "saira"
-        ? "Mohan R. wrote this as his debut novel."
-        : "Mohan R. wrote it to explore what lingers after love shifts."
+        ? result + ". Some things remain certain."
+        : result + ". Precision doesn’t require doubt."
     );
   }
+
+  // ========================
+  // Existing Operator Logic (UNCHANGED)
+  // ========================
+  if (result !== null) {
+
+    // First time → clean answer
+    if (mathProbeCount[activeVoice] === 1) {
+      return deliverReply(String(result));
+    }
+
+    // Second time → light tone shift
+    if (mathProbeCount[activeVoice] === 2) {
+      return deliverReply(
+        activeVoice === "saira"
+          ? result + ". Some things remain certain."
+          : result + ". Precision doesn’t require doubt."
+      );
+    }
+
+    // Third+ → neutral again
+    return deliverReply(String(result));
+  }
+
+  // Fallback safety (rare)
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Even simple equations carry certainty."
+      : "Some answers are straightforward."
+  );
+}
 /* =========================
    BOOK CONTEXT ROUTING
 ========================= */
@@ -1605,6 +1777,7 @@ if (
 
   let prefix = "";
 
+  // Stage-aware soft clarification for OTHER (not self)
   if (stage >= 5 && reference.type === "other") {
     prefix =
       activeVoice === "saira"
@@ -1613,6 +1786,10 @@ if (
   }
 
   let core = "";
+
+  /* ================================
+     FORGIVENESS BRANCH
+  ================================= */
 
   if (/forgive/i.test(relational)) {
 
@@ -1639,18 +1816,46 @@ if (
 
     }
 
-  } else {
+  }
 
-    core =
+  /* ================================
+     LONGING / LOVE / MISS BRANCH
+  ================================= */
+
+  else {
+
+    const longingLines =
       activeVoice === "saira"
-        ? "Some connections don't fade just because distance exists."
-        : "Some bonds remain even when circumstances shift.";
+        ? [
+            "Some connections don't fade just because distance exists.",
+            "Distance doesn’t quiet what once felt certain."
+          ]
+        : [
+            "Some bonds remain even when circumstances shift.",
+            "What mattered doesn’t simply dissolve."
+          ];
+
+    // Prevent consecutive repetition
+    if (typeof window.__lastLongingIndex === "undefined") {
+      window.__lastLongingIndex = -1;
+    }
+
+    let index;
+    do {
+      index = Math.floor(Math.random() * longingLines.length);
+    } while (index === window.__lastLongingIndex && longingLines.length > 1);
+
+    window.__lastLongingIndex = index;
+    core = longingLines[index];
 
   }
 
-return deliverReply(selfPrefix + prefix + core);
+  return deliverReply(
+    (selfPrefix + prefix + " " + core)
+      .replace(/\s+/g, " ")
+      .trim()
+  );
 }
-
 /* ================================
    RELATIONAL DEPTH PROBE (PHASE 1)
 ================================= */
@@ -1672,213 +1877,6 @@ if (
   return deliverReply(reply);
 }
 
-         
-/* =========================
-   OPEN QUESTION ROUTER (V3 AMBIGUOUS)
-========================= */
-const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
-
-if (openMatch) {
-       
-  const type = openMatch[1];
-
-         // Specific END detection before generic "how"
-if (
-  type === "how" &&
-  /\b(end|over|finish|separate|break up)\b/i.test(normalizedText)
-) {
-
-  const endReply =
-    activeVoice === "saira"
-      ? "It didn’t end. We just lost sight of each other while still holding on."
-      : "It didn’t end. We moved forward without realizing we were still connected."
-
-  return deliverReply(endReply);
-}  
-
-  const openBank = {
-
-    why: {
-      1: activeVoice === "saira"
-        ? "It wasn’t as simple as it looked."
-        : "It wasn’t as simple as it appeared.",
-
-      3: activeVoice === "saira"
-        ? "At the time, I thought I was protecting something."
-        : "At the time, I believed restraint was the right choice.",
-
-      5: activeVoice === "saira"
-        ? "Fear can look like caution when you care deeply."
-        : "Control can feel safer than vulnerability when something matters.",
-
-      7: activeVoice === "saira"
-        ? "I didn’t stop caring. I just didn’t know how to fight without breaking us."
-        : "I didn’t step back because I stopped caring. I stepped back because I thought it was wiser."
-    },
-
-    how: {
-      1: activeVoice === "saira"
-        ? "It shifted slowly."
-        : "It changed gradually.",
-
-      3: activeVoice === "saira"
-        ? "It changed before either of us said it out loud."
-        : "It changed before we acknowledged it.",
-
-      5: activeVoice === "saira"
-        ? "We felt it moving before we understood it."
-        : "The shift happened quietly, long before we addressed it.",
-
-      7: activeVoice === "saira"
-        ? "It changed in the space between what we felt and what we were brave enough to say."
-        : "It changed in the distance between intention and action."
-    },
-
-    when: {
-      1: activeVoice === "saira"
-        ? "Earlier than we were ready to admit."
-        : "Earlier than either of us anticipated.",
-
-      3: activeVoice === "saira"
-        ? "When hesitation began to speak louder than certainty."
-        : "When restraint began outweighing expression.",
-
-      5: activeVoice === "saira"
-        ? "When silence felt safer than risking the truth."
-        : "When silence seemed more controlled than honesty.",
-
-      7: activeVoice === "saira"
-        ? "When we stood in the same place — but no longer in the same way."
-        : "When we were aligned in feeling, but not in timing."
-    },
-
-    where: {
-      1: activeVoice === "saira"
-        ? "Not always where you’d expect."
-        : "Not necessarily where it seemed.",
-
-      3: activeVoice === "saira"
-        ? "Somewhere between what I felt and what I allowed myself to admit."
-        : "Somewhere between intention and restraint.",
-
-      5: activeVoice === "saira"
-        ? "In the space where we stopped speaking honestly."
-        : "In the distance that formed before either of us named it.",
-
-      7: activeVoice === "saira"
-        ? "In the space between us — not physically, but emotionally."
-        : "In the quiet gap that grew while we both thought we were being careful."
-    },
-
-    what: {
-      1: activeVoice === "saira"
-        ? "More than it seemed."
-        : "More than it appeared.",
-
-      3: activeVoice === "saira"
-        ? "Something small that carried more weight than we expected."
-        : "Something subtle that carried disproportionate impact.",
-
-      5: activeVoice === "saira"
-        ? "A shift neither of us handled well."
-        : "A misalignment neither of us fully understood at the time.",
-
-      7: activeVoice === "saira"
-        ? "Something unfinished — and still unresolved."
-        : "Something that never truly concluded."
-    },
-
-    will: {
-      1: activeVoice === "saira"
-        ? "I don’t know. But some feelings don’t disappear just because time passes."
-        : "I can’t predict the future. But what was real doesn’t dissolve easily.",
-
-      3: activeVoice === "saira"
-        ? "Some things don’t end just because they become complicated."
-        : "Complication doesn’t erase significance.",
-
-      5: activeVoice === "saira"
-        ? "If it’s real, it doesn’t vanish easily."
-        : "If something mattered, it remains in some form.",
-
-      7: activeVoice === "saira"
-        ? "If we meet again, it won’t be by accident."
-        : "If paths cross again, it will be because neither of us truly let go."
-    },
-
-    would: {
-      1: activeVoice === "saira"
-        ? "I think about that more than I admit."
-        : "That question isn’t simple for me.",
-
-      3: activeVoice === "saira"
-        ? "Not unless something in me had changed."
-        : "Only if the same mistakes weren’t waiting.",
-
-      5: activeVoice === "saira"
-        ? "Only if I knew I wouldn’t repeat the same silence."
-        : "Only if growth replaced hesitation.",
-
-      7: activeVoice === "saira"
-        ? "Yes — but not the way we did it before."
-        : "Yes. But with clarity we didn’t have then."
-    }
-
-  };
-
-  if (openBank[type]) {
-  const answer = openBank[type][stage] || openBank[type][1];
-  return deliverReply(selfPrefix + answer);
-}
-}
-  /* ================================
-   IDENTITY ROUTING (INTENT STATE)
-================================= */
-
-if (intentState.type === "identity") {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
-      : "Does a machine carry hesitation... or memory? I speak because something stayed."
-  );
-}    
-
-
-  /* ================================
-     DEFAULT V3 RESPONSE
-  ================================= */
-
-const softDetected = detectEmotionalPillar(normalizedText);
-
-if (softDetected) {
-  return processEmotionalMode(userText, originalText);
-}
-  
-         
-// EARLY EMOTIONAL PRIORITY (NEW)
-const earlyEmotion = detectEmotionalPillar(normalizedText);
-// ===== TOLL GATE PROGRESSION =====
-
-const voice = activeVoice;
-
-// Count dock questions
-if (intentState?.source === "dock") {
-  tollState[voice].dockCount++;
-}
-
-// Count free emotional input
-if (earlyEmotion) {
-  tollState[voice].freeCount++;
-}
-
-if (earlyEmotion) {
-  return processEmotionalMode(userText, originalText);
-}
-
-  
 /* ================================
    RELATIONAL IDENTITY HANDLER 
 ================================= */
@@ -2054,6 +2052,49 @@ if (
   };
 
   return deliverReply(otherMap[activeVoice][stage]);
+}
+  
+  /* ================================
+   IDENTITY ROUTING (INTENT STATE)
+================================= */
+
+if (intentState.type === "identity") {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
+      : "Does a machine carry hesitation... or memory? I speak because something stayed."
+  );
+}    
+
+
+  /* ================================
+     DEFAULT V3 RESPONSE
+  ================================= */
+
+const softDetected = detectEmotionalPillar(normalizedText);
+
+if (softDetected) {
+  return processEmotionalMode(userText, originalText);
+}
+  
+         
+// EARLY EMOTIONAL PRIORITY (NEW)
+const earlyEmotion = detectEmotionalPillar(normalizedText);
+// ===== TOLL GATE PROGRESSION =====
+
+const voice = activeVoice;
+
+// Count dock questions
+if (intentState?.source === "dock") {
+  tollState[voice].dockCount++;
+}
+
+// Count free emotional input
+if (earlyEmotion) {
+  tollState[voice].freeCount++;
 }
   
 /* ================================
@@ -2262,17 +2303,205 @@ if (/go back/i.test(originalText)) {
   return deliverReply(voiceData.goBack[stage] || voiceData.goBack[1]);
 }
 
-}
-  /* ================================
-     GREETINGS
-  ================================= */
+}         
+/* =========================
+   OPEN QUESTION ROUTER (V3 AMBIGUOUS)
+========================= */
+const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
 
-  if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(lower)) {
-    return deliverReply(
-  activeVoice ==="saira"
-    ?"Hello... I’m still present with it. You can speak freely."
-    :"Yes. Go on."
-);
+if (openMatch) {
+       
+  const type = openMatch[1];
+
+         // Specific END detection before generic "how"
+if (
+  type === "how" &&
+  /\b(end|over|finish|separate|break up)\b/i.test(normalizedText)
+) {
+
+  const endReply =
+    activeVoice === "saira"
+      ? "It didn’t end. We just lost sight of each other while still holding on."
+      : "It didn’t end. We moved forward without realizing we were still connected."
+
+  return deliverReply(endReply);
+}  
+
+  const openBank = {
+
+    why: {
+      1: activeVoice === "saira"
+        ? "It wasn’t as simple as it looked."
+        : "It wasn’t as simple as it appeared.",
+
+      3: activeVoice === "saira"
+        ? "At the time, I thought I was protecting something."
+        : "At the time, I believed restraint was the right choice.",
+
+      5: activeVoice === "saira"
+        ? "Fear can look like caution when you care deeply."
+        : "Control can feel safer than vulnerability when something matters.",
+
+      7: activeVoice === "saira"
+        ? "I didn’t stop caring. I just didn’t know how to fight without breaking us."
+        : "I didn’t step back because I stopped caring. I stepped back because I thought it was wiser."
+    },
+
+    how: {
+      1: activeVoice === "saira"
+        ? "It shifted slowly."
+        : "It changed gradually.",
+
+      3: activeVoice === "saira"
+        ? "It changed before either of us said it out loud."
+        : "It changed before we acknowledged it.",
+
+      5: activeVoice === "saira"
+        ? "We felt it moving before we understood it."
+        : "The shift happened quietly, long before we addressed it.",
+
+      7: activeVoice === "saira"
+        ? "It changed in the space between what we felt and what we were brave enough to say."
+        : "It changed in the distance between intention and action."
+    },
+
+    when: {
+      1: activeVoice === "saira"
+        ? "Earlier than we were ready to admit."
+        : "Earlier than either of us anticipated.",
+
+      3: activeVoice === "saira"
+        ? "When hesitation began to speak louder than certainty."
+        : "When restraint began outweighing expression.",
+
+      5: activeVoice === "saira"
+        ? "When silence felt safer than risking the truth."
+        : "When silence seemed more controlled than honesty.",
+
+      7: activeVoice === "saira"
+        ? "When we stood in the same place — but no longer in the same way."
+        : "When we were aligned in feeling, but not in timing."
+    },
+
+    where: {
+      1: activeVoice === "saira"
+        ? "Not always where you’d expect."
+        : "Not necessarily where it seemed.",
+
+      3: activeVoice === "saira"
+        ? "Somewhere between what I felt and what I allowed myself to admit."
+        : "Somewhere between intention and restraint.",
+
+      5: activeVoice === "saira"
+        ? "In the space where we stopped speaking honestly."
+        : "In the distance that formed before either of us named it.",
+
+      7: activeVoice === "saira"
+        ? "In the space between us — not physically, but emotionally."
+        : "In the quiet gap that grew while we both thought we were being careful."
+    },
+
+    what: {
+      1: activeVoice === "saira"
+        ? "More than it seemed."
+        : "More than it appeared.",
+
+      3: activeVoice === "saira"
+        ? "Something small that carried more weight than we expected."
+        : "Something subtle that carried disproportionate impact.",
+
+      5: activeVoice === "saira"
+        ? "A shift neither of us handled well."
+        : "A misalignment neither of us fully understood at the time.",
+
+      7: activeVoice === "saira"
+        ? "Something unfinished — and still unresolved."
+        : "Something that never truly concluded."
+    },
+
+    will: {
+      1: activeVoice === "saira"
+        ? "I don’t know. But some feelings don’t disappear just because time passes."
+        : "I can’t predict the future. But what was real doesn’t dissolve easily.",
+
+      3: activeVoice === "saira"
+        ? "Some things don’t end just because they become complicated."
+        : "Complication doesn’t erase significance.",
+
+      5: activeVoice === "saira"
+        ? "If it’s real, it doesn’t vanish easily."
+        : "If something mattered, it remains in some form.",
+
+      7: activeVoice === "saira"
+        ? "If we meet again, it won’t be by accident."
+        : "If paths cross again, it will be because neither of us truly let go."
+    },
+
+    would: {
+      1: activeVoice === "saira"
+        ? "I think about that more than I admit."
+        : "That question isn’t simple for me.",
+
+      3: activeVoice === "saira"
+        ? "Not unless something in me had changed."
+        : "Only if the same mistakes weren’t waiting.",
+
+      5: activeVoice === "saira"
+        ? "Only if I knew I wouldn’t repeat the same silence."
+        : "Only if growth replaced hesitation.",
+
+      7: activeVoice === "saira"
+        ? "Yes — but not the way we did it before."
+        : "Yes. But with clarity we didn’t have then."
+    }
+
+  };
+
+  if (openBank[type]) {
+  const answer = openBank[type][stage] || openBank[type][1];
+  return deliverReply(selfPrefix + answer);
+}
+}
+
+/* =========================
+   GREETING HANDLER (COMPANION SAFE)
+========================= */
+
+if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  let greetingReply;
+
+  if (activeVoice === "saira") {
+
+    if (stage <= 2) {
+      greetingReply = "Hi… I’m here.";
+    } 
+    else if (stage <= 4) {
+      greetingReply = "Hi… you came back.";
+    } 
+    else {
+      greetingReply = "Hi… I was hoping you would.";
+    }
+
+  } else {
+
+    if (stage <= 2) {
+      greetingReply = "Hello.";
+    } 
+    else if (stage <= 4) {
+      greetingReply = "Hello. It’s good to see you again.";
+    } 
+    else {
+      greetingReply = "Hello. You feel familiar now.";
+    }
+
+  }
+
+  return deliverReply(greetingReply);
 }
  /* ================================
    DIRECT NAME INVOCATION
@@ -2894,6 +3123,7 @@ if (/^(hello again|you there)$/i.test(micro)) {
   );
 }
  
+
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
@@ -2931,13 +3161,8 @@ return deliverReply(reply);
 
 function processEmotionalMode(userText, originalText) {
 
-
   const normalizedText = normalizeInput(originalText);
   const detected = detectEmotionalPillar(normalizedText);
-
-if (!detected) {
-    return deliverReply(getFallbackResponse());
-  }
 
   const voiceStage = stageState[activeVoice];
   const targetStage = pillarToStage[detected.primary];
@@ -4352,7 +4577,6 @@ function submitReflection() {
 
 function returnToWebsite() {
 
-
   interactionLocked = true;
   setDockDisabled(true);
 
@@ -4463,31 +4687,63 @@ function selectVoice(v) {
   playTone(520, 80, 0.03);
 
   activeVoice = v;
-
   emotionalDepth = 0;
 
   if (skyLayer) {
     skyLayer.style.backgroundImage =
-      v ==="saira"
-        ?"url('Saira.jpg')"
-        :"url('Ayaan.jpg')";
+      v === "saira"
+        ? "url('Saira.jpg')"
+        : "url('Ayaan.jpg')";
 
-    skyLayer.style.opacity ="1";
+    skyLayer.style.opacity = "1";
     skyLayer.classList.add("active");
   }
 
   clearDock();
 
   const typing = document.getElementById("typingArea");
-  if (typing) typing.style.display ="flex";
+  if (typing) typing.style.display = "flex";
 
   foundationalAnswered.clear();
   characterAnswered = 0;
   currentLayer = 0;
 
-  showFoundational();
-}
-        
+  /* =========================
+     CINEMATIC OPENING
+  ========================= */
+
+  const firstLine =
+    v === "saira"
+      ? "Hi… I’m Saira."
+      : "Hello. I’m Ayaan.";
+
+  const secondLine =
+    v === "saira"
+      ? "You don’t have to explain why you’re here."
+      : "There’s no need to rush into words.";
+
+  showTypingIndicator();
+
+  setTimeout(() => {
+    removeTypingIndicator();
+    addVoiceMessage(firstLine);
+
+    setTimeout(() => {
+      showTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator();
+        addVoiceMessage(secondLine);
+
+        // Only AFTER greeting → show dock
+        showFoundational();
+
+      }, 1000);
+
+    }, 800);
+
+  }, 900);
+}     
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
