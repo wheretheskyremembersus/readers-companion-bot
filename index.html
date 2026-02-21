@@ -1194,6 +1194,10 @@ function detectEmotionalPillar(text) {
 
     emotionalPillars[pillar].forEach(keyword => {
 
+// Prevent book context from triggering emotional detection
+if (/\bnovel\b/.test(lower) && !/\b(love|miss|fear|hurt|regret|alone|lost)\b/.test(lower)) {
+  continue;
+}
       if (keyword.includes(" ")) {
         if (lower.includes(keyword)) {
           score += 3; // strong phrase
