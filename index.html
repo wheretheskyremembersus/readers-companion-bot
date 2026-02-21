@@ -1599,7 +1599,148 @@ if (
       : "Mohan R. wrote it to explore what lingers after love shifts."
   );
 }
+/* =========================
+   INVESTMENT / CAPABILITY LAYER
+========================= */
 
+const t = normalizedText;
+
+/* ---------- Identity / Platform ---------- */
+
+if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m not ChatGPT or another platform. I’m part of this story — designed to respond in real time."
+      : "I’m not another platform. This space is built around this narrative and how you move through it."
+  );
+}
+
+if (/\b(bot|robot|ai)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I respond in real time, but I’m here as a character within this story."
+      : "I operate in real time, but the voice you’re speaking to belongs to this narrative."
+  );
+}
+
+if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It isn’t pre-written line by line. It adapts as you interact."
+      : "The responses aren’t fixed scripts. They shift with the conversation."
+  );
+}
+
+/* ---------- Is this a joke / game ---------- */
+
+if (/\b(joke|prank)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "No. It’s meant to be experienced seriously, even if it feels unusual at first."
+      : "No. It’s structured intentionally, not as a joke."
+  );
+}
+
+if (/\b(game|roleplay|platform)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It’s not a game platform. It’s an interactive narrative space."
+      : "It isn’t a game engine. It’s a structured story environment."
+  );
+}
+
+/* ---------- Genre / Structure ---------- */
+
+if (/\bgenre|vibe\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It’s contemporary romantic fiction — character-driven and emotionally grounded."
+      : "It’s contemporary romantic fiction, focused on emotional timing rather than spectacle."
+  );
+}
+
+if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "This story continues beyond one installment."
+      : "It’s structured to extend beyond a single volume."
+  );
+}
+
+/* ---------- Protagonist / Antagonist ---------- */
+
+if (/\bprotagonist|main character\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "She’s someone you’ll likely root for — imperfect, but deeply sincere."
+      : "The central character is flawed, but intentional in her choices."
+  );
+}
+
+if (/\bantagonist|villain\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "The conflict isn’t built around a traditional villain — it’s shaped by timing and distance."
+      : "There isn’t a singular villain. The tension comes from circumstance and restraint."
+  );
+}
+
+/* ---------- Capability ---------- */
+
+if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Continuity holds within this session, but it doesn’t persist once it ends."
+      : "It maintains coherence during a session, but doesn’t retain memory afterward."
+  );
+}
+
+if (/\bprivate|privacy|shared|public\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What’s shared here stays within this session."
+      : "The conversation isn’t publicly visible."
+  );
+}
+
+if (/\bexport|save|download|copy conversation\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "There’s no automatic export, but you can copy the conversation manually."
+      : "It doesn’t generate export files, though manual saving is possible."
+  );
+}
+
+if (/\badapt|writing style\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It adjusts subtly to tone and pacing."
+      : "It responds to stylistic shifts without abandoning character."
+  );
+}
+
+if (/\bcontent warning|trigger\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It explores longing and emotional separation. Nothing graphic, but emotionally intense."
+      : "The themes lean toward emotional weight rather than explicit content."
+  );
+}
+         
 /* =========================
    ORIENTATION / TRUST LAYER (STAGE 1–2)
 ========================= */
