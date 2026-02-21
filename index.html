@@ -1563,8 +1563,14 @@ if (openMatch) {
 
   const type = openMatch[1];
 
-  const openBank = {
+  const openBank = { ... };
 
+  if (openBank[type]) {
+    return deliverReply(
+      openBank[type][stage] || openBank[type][1]
+    );
+  }
+}
     why: {
 
   // SAIRA
