@@ -1456,7 +1456,7 @@ function normalizeInput(text) {
     .replace(/(.)\1{2,}/g, "$1$1")
 
     // 2️⃣ remove stray punctuation but keep spaces
-    .replace(/[^\w\s]/g, " ")
+    .replace(/[^\w\s+\-*/]/g, " ")
 
     // 3️⃣ normalize common relationship misspellings
     .replace(/seperat/g, "separat")
