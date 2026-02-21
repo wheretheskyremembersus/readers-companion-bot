@@ -1523,75 +1523,6 @@ function processInput(userText, originalText) {
     );
   }
 /* =========================
-   OPEN QUESTION ROUTER (V3 AMBIGUOUS)
-========================= */
-
-const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
-
-if (openMatch) {
-
-  const type = openMatch[1];
-  const stage = stageState[activeVoice]?.currentStage || 1;
-
-  const openBank = {
-
-    why: {
-      1: "Not every reason is obvious at first.",
-      3: "Sometimes the answer feels clearer later than it did in the moment.",
-      5: "Fear can shape decisions before clarity does.",
-      7: "Some choices weren’t made lightly — even if they look that way."
-    },
-
-    how: {
-      1: "It didn’t happen all at once.",
-      3: "Slowly. Almost quietly.",
-      5: "It shifted before I realised it had.",
-      7: "It changed in ways neither of us expected."
-    },
-
-    when: {
-      1: "Earlier than it should have.",
-      3: "When hesitation grew louder than certainty.",
-      5: "When silence felt safer than speaking.",
-      7: "When both of us were standing at different edges."
-    },
-
-    where: {
-      1: "Not always where you’d expect.",
-      3: "Somewhere between intention and fear.",
-      5: "In the space neither of us wanted to admit.",
-      7: "In the distance that formed before we named it."
-    },
-
-    what: {
-      1: "More than it seemed at the surface.",
-      3: "Something that felt small but wasn’t.",
-      5: "A shift neither of us handled well.",
-      7: "Something unfinished."
-    },
-
-    will: {
-      1: "That depends.",
-      3: "Not everything unfolds on command.",
-      5: "Some things return only if they’re meant to.",
-      7: "Only if both sides have changed."
-    },
-
-    would: {
-      1: "It’s difficult to answer in absolutes.",
-      3: "Not without knowing what would be different.",
-      5: "Only if understanding replaced fear.",
-      7: "Only if growth outweighed hesitation."
-    }
-  };
-
-  if (openBank[type]) {
-    return deliverReply(
-      openBank[type][stage] || openBank[type][1]
-    );
-  }
-}
-/* =========================
    BOOK CONTEXT ROUTING
 ========================= */
 
@@ -1646,7 +1577,6 @@ if (earlyEmotion) {
   return processEmotionalMode(userText, originalText);
 }
   console.log("RELATIONAL HANDLER REACHED");
-
 
   /* ================================
    IDENTITY ROUTING (INTENT STATE)
@@ -1721,7 +1651,75 @@ if (
 /\breason\b.*\bleave\b/i.test(normalizedText)
          
 ) {
+/* =========================
+   OPEN QUESTION ROUTER (V3 AMBIGUOUS)
+========================= */
 
+const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
+
+if (openMatch) {
+
+  const type = openMatch[1];
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  const openBank = {
+
+    why: {
+      1: "Not every reason is obvious at first.",
+      3: "Sometimes the answer feels clearer later than it did in the moment.",
+      5: "Fear can shape decisions before clarity does.",
+      7: "Some choices weren’t made lightly — even if they look that way."
+    },
+
+    how: {
+      1: "It didn’t happen all at once.",
+      3: "Slowly. Almost quietly.",
+      5: "It shifted before I realised it had.",
+      7: "It changed in ways neither of us expected."
+    },
+
+    when: {
+      1: "Earlier than it should have.",
+      3: "When hesitation grew louder than certainty.",
+      5: "When silence felt safer than speaking.",
+      7: "When both of us were standing at different edges."
+    },
+
+    where: {
+      1: "Not always where you’d expect.",
+      3: "Somewhere between intention and fear.",
+      5: "In the space neither of us wanted to admit.",
+      7: "In the distance that formed before we named it."
+    },
+
+    what: {
+      1: "More than it seemed at the surface.",
+      3: "Something that felt small but wasn’t.",
+      5: "A shift neither of us handled well.",
+      7: "Something unfinished."
+    },
+
+    will: {
+      1: "That depends.",
+      3: "Not everything unfolds on command.",
+      5: "Some things return only if they’re meant to.",
+      7: "Only if both sides have changed."
+    },
+
+    would: {
+      1: "It’s difficult to answer in absolutes.",
+      3: "Not without knowing what would be different.",
+      5: "Only if understanding replaced fear.",
+      7: "Only if growth outweighed hesitation."
+    }
+  };
+
+  if (openBank[type]) {
+    return deliverReply(
+      openBank[type][stage] || openBank[type][1]
+    );
+  }
+}
   const stage = stageState[activeVoice]?.currentStage || 1;
   skipRelationalPrefix = true;
 
