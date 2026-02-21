@@ -1617,43 +1617,36 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 }
 
 /* =========================
-   BASIC MATH HANDLER (FULL SUPPORT)
+   BASIC MATH HANDLER 
 ========================= */
 
-/* =========================
-   BASIC MATH HANDLER
-========================= */
-
+// Match: 1+2, 4*5, what is 2+3, how much is 7-4
 const mathMatch = normalizedText.match(/(\d+\s*[\+\-\*\/]\s*\d+)/);
 
 if (mathMatch) {
+
+  console.log("MATH HANDLER TRIGGERED");
 
   skipRelationalPrefix = true;
 
   const expression = mathMatch[1];
 
   try {
+
     const result = Function('"use strict"; return (' + expression + ')')();
-    return deliverReply(String(result));
+
+    return deliverReply(String(result));   // HARD STOP
+
   } catch (e) {
 
-    const mathLines =
+    const fallback =
       activeVoice === "saira"
-        ? [
-            "Even simple equations carry certainty.",
-            "Some things are meant to add up."
-          ]
-        : [
-            "Some answers are straightforward.",
-            "Not everything requires overthinking."
-          ];
+        ? "Even simple equations carry certainty."
+        : "Some answers are straightforward.";
 
-    const reply = mathLines[Math.floor(Math.random() * mathLines.length)];
-    return deliverReply(reply);
+    return deliverReply(fallback);
   }
-
 }
-console.log("MATH HANDLER TRIGGERED");
          
 /* =========================
    BOOK CONTEXT ROUTING
