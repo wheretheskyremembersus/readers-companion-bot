@@ -4708,53 +4708,67 @@ function checkBlockStatus() {
 }
 function selectVoice(v) {
 
-let voiceGreeting;
-
-if (voice === "saira") {
-  voiceGreeting = "Hi… I’m Saira.";
-} else {
-  voiceGreeting = "Hello. I’m Ayaan.";
-}
-
-displayMessage(voiceGreeting, "bot");
-
-setTimeout(() => {
-  displayMessage(
-    voice === "saira"
-      ? "You don’t have to explain why you’re here."
-      : "There’s no need to rush into words."
-  , "bot");
-}, 700);
-
   initAudio();
   playTone(520, 80, 0.03);
 
   activeVoice = v;
-
   emotionalDepth = 0;
 
   if (skyLayer) {
     skyLayer.style.backgroundImage =
-      v ==="saira"
-        ?"url('Saira.jpg')"
-        :"url('Ayaan.jpg')";
+      v === "saira"
+        ? "url('Saira.jpg')"
+        : "url('Ayaan.jpg')";
 
-    skyLayer.style.opacity ="1";
+    skyLayer.style.opacity = "1";
     skyLayer.classList.add("active");
   }
 
   clearDock();
 
   const typing = document.getElementById("typingArea");
-  if (typing) typing.style.display ="flex";
+  if (typing) typing.style.display = "flex";
 
   foundationalAnswered.clear();
   characterAnswered = 0;
   currentLayer = 0;
 
-  showFoundational();
-}
-        
+  /* =========================
+     CINEMATIC OPENING
+  ========================= */
+
+  const firstLine =
+    v === "saira"
+      ? "Hi… I’m Saira."
+      : "Hello. I’m Ayaan.";
+
+  const secondLine =
+    v === "saira"
+      ? "You don’t have to explain why you’re here."
+      : "There’s no need to rush into words.";
+
+  showTypingIndicator();
+
+  setTimeout(() => {
+    removeTypingIndicator();
+    addVoiceMessage(firstLine);
+
+    setTimeout(() => {
+      showTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator();
+        addVoiceMessage(secondLine);
+
+        // Only AFTER greeting → show dock
+        showFoundational();
+
+      }, 1000);
+
+    }, 800);
+
+  }, 900);
+}     
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
