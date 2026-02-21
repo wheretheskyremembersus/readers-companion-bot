@@ -1746,44 +1746,44 @@ if (
         : "If you're asking about her… ";
   }
 
-  let core = "";
+let core = "";
 
+// Detect forgiveness specifically
 if (/forgive/i.test(relational)) {
 
-  if (activeVoice === "saira") {
+  // If pronoun matches the OTHER character
+  if (reference.type === "other") {
 
-    if (reference.type === "other") {
-      // forgive him
-      core =
-        stage <= 2
-          ? "Forgiveness isn't simple when something mattered."
-          : "Forgiveness comes quietly when understanding replaces fear.";
-    } else {
-      // forgive her (self-projection)
-      core =
-        stage <= 2
-          ? "If you're asking about me, I think you are."
-          : "I know sometimes people ask about someone else when they mean me.";
-    }
+    core =
+      stage <= 2
+        ? "Forgiveness isn't immediate when something real was involved."
+        : "Forgiveness comes when understanding outweighs hurt.";
 
-  } else { // AYAAN
+  }
 
-    if (reference.type === "other") {
-      core =
-        stage <= 2
-          ? "Forgiveness requires clarity."
-          : "Forgiveness follows comprehension, not impulse.";
-    } else {
-      core =
-        stage <= 2
-          ? "If you're referring to me, say it plainly."
-          : "Sometimes questions are indirect when feelings aren't.";
-    }
+  // If pronoun matches SELF (possible projection)
+  else if (reference.type === "self") {
+
+    core =
+      stage <= 2
+        ? "If you're asking about me, you don't have to say it indirectly."
+        : "Sometimes people ask about someone else when they mean me. You can ask me directly.";
+
+  }
+
+  // If unclear
+  else {
+
+    core =
+      stage <= 2
+        ? "Forgiveness isn't simple."
+        : "Forgiveness depends on what was truly understood.";
 
   }
 
 } else {
 
+  // Non-forgiveness emotional longing
   core =
     activeVoice === "saira"
       ? "Some connections don't fade just because distance exists."
