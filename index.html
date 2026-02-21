@@ -1556,7 +1556,6 @@ function pickStageVariant(map) {
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
-
 const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
 
 if (openMatch) {
@@ -1787,14 +1786,7 @@ if (earlyEmotion) {
   return processEmotionalMode(userText, originalText);
 }
   console.log("RELATIONAL HANDLER REACHED");
-         
-         
-  if (openBank[type]) {
-    return deliverReply(
-      openBank[type][stage] || openBank[type][1]
-    );
-  }
-}
+
   
 /* ================================
    RELATIONAL IDENTITY HANDLER 
