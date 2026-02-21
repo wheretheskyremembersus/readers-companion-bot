@@ -1617,14 +1617,15 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 }
 
 /* =========================
-   BASIC MATH HANDLER (SYMBOL + WORD)
+   BASIC MATH HANDLER (FULL SUPPORT)
 ========================= */
 
+// Match arithmetic expression anywhere in the input
 const mathMatch = normalizedText.match(/(\d+\s*[\+\-\*\/]\s*\d+)/);
 
 if (
   mathMatch &&
-  /\b(what is|calculate|solve|\=?\s*\?)?\b/i.test(normalizedText)
+  /\b(what is|how much is|calculate|solve)?\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
@@ -1641,11 +1642,11 @@ if (
     const mathLines =
       activeVoice === "saira"
         ? [
-            "Even simple equations carry certainty. This one does too.",
+            "Even simple equations carry certainty.",
             "Some things are meant to add up."
           ]
         : [
-            "Some answers are straightforward. This is one of them.",
+            "Some answers are straightforward.",
             "Not everything requires overthinking."
           ];
 
@@ -1654,8 +1655,7 @@ if (
     return deliverReply(reply);
   }
 
-}
-         
+}    
 /* =========================
    BOOK CONTEXT ROUTING
 ========================= */
