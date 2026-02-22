@@ -2415,7 +2415,7 @@ if (
   return deliverReply(otherMap[activeVoice][stage]);
 }
   
-  /* ================================
+/* ================================
    IDENTITY ROUTING (INTENT STATE)
 ================================= */
 
@@ -2428,44 +2428,35 @@ if (intentState.type === "identity") {
       ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
       : "Does a machine carry hesitation... or memory? I speak because something stayed."
   );
-}    
+}
 
+/* ================================
+   V3/V4 PARTITION ENFORCEMENT
+================================= */
 
-  /* ================================
-     DEFAULT V3 RESPONSE
-  ================================= */
+if (tollState[activeVoice].unlocked !== true) {
+
+  // ---- V3 MODE ----
+  // No dock counting here
+  // No free counting here
+  // No stage mutation here
+  // No emotional engine here
+
+  return processV3Response(userText, originalText);
+}
+/* ================================
+   V4 ROUTING (UNLOCKED ONLY)
+================================= */
+
+// Only reaches here if unlocked === true
 
 const softDetected = detectEmotionalPillar(normalizedText);
 
 if (softDetected) {
   return processEmotionalMode(userText, originalText);
 }
-  
-         
-// EARLY EMOTIONAL PRIORITY (NEW)
-const earlyEmotion = detectEmotionalPillar(normalizedText);
-// ===== TOLL GATE PROGRESSION =====
 
-const voice = activeVoice;
-
-// Count dock questions
-if (intentState?.source === "dock") {
-  tollState[voice].dockCount++;
-}
-
-// Count free emotional input
-if (earlyEmotion) {
-  tollState[voice].freeCount++;
-}
-
-console.log("DockCount:", tollState[voice].dockCount);
-console.log("FreeCount:", tollState[voice].freeCount);
-if (earlyEmotion) {
-  return processEmotionalMode(userText, originalText);
-}
-  console.log("RELATIONAL HANDLER REACHED");
-
-  
+console.log("RELATIONAL HANDLER REACHED");
 
 /* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
@@ -4507,41 +4498,45 @@ function answerFoundational(q, btn) {
   }
 };
 
+/* =========================
+V3 DOCK PROGRESSION + TOLLGATE
+========================= */
   const reply = replies[activeVoice][q.key];
 
-  deliverReply(reply, function () {
-           
-// TOLL: Dock progression (foundational included)
-tollState[activeVoice].dockCount++;
+deliverReply(reply, function () {
 
-const dockProgress = tollState[activeVoice].dockCount;
+  // --- TOLL: Dock progression ---
+  tollState[activeVoice].dockCount++;
 
-if (dockProgress === 5) {
-  stageState[activeVoice].currentStage = 2;
-}
+  const dockProgress = tollState[activeVoice].dockCount;
 
-if (dockProgress >= 5) {
-  tollState[activeVoice].unlocked = true;
+  // 🔒 DO NOT modify stage pre-unlock
+  // Stage progression belongs only inside V4
 
-  if (!transitionAcknowledged[activeVoice]) {
+  // 🔓 Unlock ONLY at 15 dock interactions
+  if (dockProgress >= 15) {
+    tollState[activeVoice].unlocked = true;
 
-    const bridgeLine =
-      activeVoice ==="saira"
-        ?"You didn't just pass through that."
-        :"You stayed with it.";
+    // Optional: allow subtle bridge ONLY at real unlock
+    if (!transitionAcknowledged[activeVoice]) {
 
-    transitionAcknowledged[activeVoice] = true;
+      const bridgeLine =
+        activeVoice === "saira"
+          ? "You didn't just pass through that."
+          : "You stayed with it.";
 
-    deliverReply(bridgeLine);
+      transitionAcknowledged[activeVoice] = true;
+
+      deliverReply(bridgeLine);
+    }
   }
-}
 
-if (foundationalAnswered.size === 5) {
+  // Foundational logic remains untouched
+  if (foundationalAnswered.size === 5) {
     unlockNextLayer();
-}
+  }
 
-  });
-}
+});
 
 /* =========================
    15 CHARACTER QUESTIONS
@@ -4716,39 +4711,18 @@ function answerCharacter(item, btn) {
   deliverReply(reply, function () {
     characterAnswered++;
 
- // TOLL: Dock progression
+/*================================
+ V3 DOCK PROGRESSION + TOLLGATE
+================================*/
+
+// TOLL: Dock progression
 tollState[activeVoice].dockCount++;
 
 const dockProgress = tollState[activeVoice].dockCount;
 
-if (dockProgress === 5) {
-  stageState[activeVoice].currentStage = 2;
-}
-if (dockProgress === 10) {
-  stageState[activeVoice].currentStage = 3;
-}
-if (dockProgress === 15) {
-  stageState[activeVoice].currentStage = 4;
-}
-if (dockProgress === 20) {
-  stageState[activeVoice].currentStage = 5;
-}
-
-// Unlock V4 if 5 dock reached
-if (dockProgress >= 5) {
+// Unlock ONLY at 15 dock interactions
+if (dockProgress >= 15) {
   tollState[activeVoice].unlocked = true;
-
-  if (!transitionAcknowledged[activeVoice]) {
-
-    const bridgeLine =
-      activeVoice ==="saira"
-        ?"You didn't just pass through that."
-        :"You stayed with it.";
-
-    transitionAcknowledged[activeVoice] = true;
-
-    deliverReply(bridgeLine);
-  }
 }
 
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
@@ -5222,34 +5196,41 @@ if (abuseRegex.test(originalText)) {
     return;
   }
 }
-// TOLL: Free type progression
+         
+/* =========================
+V3 FREEHAND PROGRESSION + TOLLGATE
+========================= */
+
 const wordCount = originalText.trim().split(/\s+/).length;
 
 if (wordCount >= 5) {
   tollState[activeVoice].freeCount++;
 }
 
-if (tollState[activeVoice].freeCount >= 3) {
-  tollState[activeVoice].unlocked = true;
-  stageState[activeVoice].currentStage = 2;
+const freeProgress = tollState[activeVoice].freeCount;
 
+// 🔓 Unlock ONLY at 10 free interactions
+if (freeProgress >= 10) {
+  tollState[activeVoice].unlocked = true;
+
+  // Optional: subtle bridge only at real unlock
   if (!transitionAcknowledged[activeVoice]) {
 
     const bridgeLine =
-      activeVoice ==="saira"
-        ?"You didn't just pass through that."
-        :"You stayed with it.";
+      activeVoice === "saira"
+        ? "You didn't just pass through that."
+        : "You stayed with it.";
 
     transitionAcknowledged[activeVoice] = true;
 
-    return deliverReply(bridgeLine);
+    deliverReply(bridgeLine);
   }
 }
 
-  const text = originalText.toLowerCase();
-
-  processInput(text, originalText);
-}
+// Continue normal processing
+const text = originalText.toLowerCase();
+processInput(text, originalText);
+         
 /* =========================
    START
 ========================= */
