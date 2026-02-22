@@ -1579,21 +1579,20 @@ function processInput(userText, originalText) {
 const stage = stageState[activeVoice]?.currentStage || 1;
 
 
-  /* ================================
-     UNLOCK + STAGE PROGRESSION
-  ================================= */
+ /* ================================
+   V4 UNLOCK CHECK (SAFE VERSION)
+================================= */
 
-  if (
-    tollState[voice].dockCount >= 15 ||
-    tollState[voice].freeCount >= 10
-  ) {
-    tollState[voice].unlocked = true;
+if (
+  tollState[activeVoice]?.dockCount >= 15 ||
+  tollState[activeVoice]?.freeCount >= 10
+) {
+  tollState[activeVoice].unlocked = true;
 
-    // Start V4 at Stage 1
-    if (stageState[voice].currentStage < 1) {
-      stageState[voice].currentStage = 1;
-    }
+  if (stageState[activeVoice].currentStage < 1) {
+    stageState[activeVoice].currentStage = 1;
   }
+}
          
  /* =========================
    HARD AUTHOR ROUTING
