@@ -1580,20 +1580,6 @@ const stage = stageState[activeVoice]?.currentStage || 1;
 
 
   /* ================================
-     DEBUG MONITOR
-  ================================= */
-const DEBUG_MODE = true;
-
-if (DEBUG_MODE && activeVoice) {
-  console.log("----- INPUT TRACE -----");
-  console.log("Voice:", activeVoice);
-  console.log("Stage:", stageState[activeVoice]?.currentStage);
-  console.log("Unlocked:", tollState[activeVoice]?.unlocked);
-  console.log("DockCount:", tollState[activeVoice]?.dockCount);
-  console.log("FreeCount:", tollState[activeVoice]?.freeCount);
-}
-
-  /* ================================
      TOLL COUNTING (PRE-ROUTING)
   ================================= */
 
