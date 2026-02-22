@@ -742,7 +742,7 @@ const words = text.split(" ").filter(Boolean);
   return false;
 }
 
-function relationalRedirect(activeVoice) {
+const voice = activeVoice.toLowerCase(); {
 
   const sairaPool = [
     "You must be joking. Anyway… I know you're here to walk this journey with me.",
@@ -2495,8 +2495,36 @@ if (intentState.type === "identity") {
   );
 }
 
+/* =========================
+   ARITHMETIC DETECTION
+========================= */
+
+function detectAndComputeMath(input) {
+  const normalized = normalizeInput(input);
+
+  // Detect simple arithmetic expressions
+  const mathMatch = normalized.match(/(-?\d+(\.\d+)?\s*[\+\-\*\/]\s*-?\d+(\.\d+)?)/);
+
+  if (!mathMatch) return null;
+
+  const expression = mathMatch[1];
+
+  // Safety check – only allow numbers and operators
+  if (!/^[-\d\.\+\-\*\/\s]+$/.test(expression)) return null;
+
+  try {
+    const result = Function('"use strict"; return (' + expression + ')')();
+    if (typeof result === "number" && isFinite(result)) {
+      return result;
+    }
+  } catch (e) {
+    return null;
+  }
+
+  return null;
+}
 /* ================================
-   STATE MACHINE ROUTING
+   EMOTIONAL ROUTING
 ================================= */
 
 if (tollState[activeVoice]?.unlocked === true) {
