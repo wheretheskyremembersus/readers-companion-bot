@@ -2123,6 +2123,55 @@ let selfPrefix = "";
 if (reference.type === "self") {
   selfPrefix = getSelfReferencePrefix(stage);
 }
+
+/* ================================
+   SURFACE EMOTION CATCH (V3 STABILITY)
+================================= */
+
+if (/\b(happy|hurt|regret|fault|over him|over her|guilty)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  if (/\bhappy\b/i.test(normalizedText)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Happiness can be quiet."
+        : "Happiness doesn't need noise."
+    );
+  }
+
+  if (/\bhurt\b/i.test(normalizedText)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Hurt doesn't erase what was real."
+        : "Pain clarifies more than it destroys."
+    );
+  }
+
+  if (/\bregret\b/i.test(normalizedText)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Regret simplifies what was complicated."
+        : "I don’t reduce decisions to regret."
+    );
+  }
+
+  if (/\b(fault|guilty)\b/i.test(normalizedText)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Responsibility isn’t always singular."
+        : "It wasn’t one variable."
+    );
+  }
+
+  if (/\b(over him|over her)\b/i.test(normalizedText)) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Moving forward doesn’t require erasing."
+        : "Closure isn't deletion."
+    );
+  }
+}
 /* ================================
    RELATIONAL LONGING CAPTURE (V3)
 ================================= */
