@@ -33,8 +33,8 @@ function addVoiceMessage(text) {
   const side =
     activeVoice === "saira"
       ? "saira-msg"
-      : activeVoice === "aayan"
-      ? "aayan-msg"
+      : activeVoice === "Ayaan"
+      ? "Ayaan-msg"
       : "";
 
   chatBody.insertAdjacentHTML(
@@ -71,7 +71,7 @@ function loadWelcome() {
   const welcomeMessages = [
     "Hello.",
     "This is a quiet space.",
-    "You can listen to our story through Saira or Aayan.",
+    "You can listen to our story through Saira or Ayaan.",
     "Our story is a contemporary romantic fiction.",
     "When you’re ready, you can choose a voice."
   ];
@@ -91,7 +91,7 @@ function loadWelcome() {
 
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn aayan" onclick="selectVoice('aayan')">Aayan</button>
+    <button class="btn Ayaan" onclick="selectVoice('Ayaan')">Ayaan</button>
   `;
 
   autoScroll();
@@ -107,7 +107,7 @@ function selectVoice(voice) {
   const intro =
     voice === "saira"
       ? "Hello, this is Saira. I don’t believe stories are meant to be explained too quickly — but I can sit with you and share what ours carries."
-      : "Hello. This is Aayan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
+      : "Hello. This is Ayaan. I don’t speak easily about what stayed behind, but I can tell you what it asked of us.";
 
   addVoiceMessage(intro);
   showFoundational();
@@ -146,7 +146,7 @@ function answerFoundational(q, btn) {
   saira: {
     story: "Our story is a contemporary romantic fiction — but it moves quietly. It lingers in moments that don’t seem significant at first, and then refuses to leave you. It’s less about grand declarations, and more about what remains unsaid.",
 
-    about: "It’s about me and Aayan — about the kind of love that feels certain, even when life around it isn’t. It’s about distance that isn’t always physical, and choices that seem small until they change everything. Some stories are built on moments. Ours was built on hesitation.",
+    about: "It’s about me and Ayaan — about the kind of love that feels certain, even when life around it isn’t. It’s about distance that isn’t always physical, and choices that seem small until they change everything. Some stories are built on moments. Ours was built on hesitation.",
 
     for: "This story finds people who have felt something deeply and didn’t know what to do with it. The ones who replay conversations long after they’ve ended. If you’ve ever stood between love and fear — you already understand us.",
 
@@ -155,7 +155,7 @@ function answerFoundational(q, btn) {
     author: "Mohan R. wrote this as his debut novel. He didn’t try to make it loud — only honest. I think he trusted silence as much as dialogue, and allowed the pauses to speak."
   },
 
-  aayan: {
+  Ayaan: {
     story: "It’s a contemporary romantic fiction, but it lives in the space between love and responsibility. It’s about choices that don’t feel urgent — until they are. And about how easily silence can become distance.",
 
     about: "It’s about timing — but not in the simple way people think. The feeling was never uncertain. What faltered was courage, and the belief that love would wait. It’s about how easily something real can slip into memory if you hesitate too long.",
@@ -279,7 +279,7 @@ function nextReflection() {
       ["How clearly did the emotions feel?", ["🌫️","🌱","💛","🌙","✨"]],
       ["How drawn do you feel to continue?", ["🚶","👀","💫","❤️","📖"]]
     ],
-    aayan: [
+    Ayaan: [
       ["How clearly did the emotional world reveal itself to you?", ["🌑","🌘","🌗","🌕","☀️"]],
       ["How steady did the story feel?", ["🌑","🌘","🌗","🌕","☀️"]],
       ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
