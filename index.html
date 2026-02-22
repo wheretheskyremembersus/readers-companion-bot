@@ -329,7 +329,7 @@ body {
 }
 
 .saira-msg,
-.Ayaan-msg,
+.ayaan-msg,
 .system-msg {
   justify-content: flex-start;
 }
@@ -357,9 +357,9 @@ body {
   box-shadow: 0 2px 8px rgba(255,160,190,0.18);
 }
 
-/* Ayaan Bubble */
+/* ayaan Bubble */
 
-.Ayaan-msg .bubble {
+.ayaan-msg .bubble {
   background: linear-gradient(135deg, #eef5ff, #dde9ff);
   border-radius: 18px 18px 18px 4px;
   border: 1px solid rgba(140,170,255,0.25);
@@ -417,7 +417,7 @@ body {
   box-shadow: 0 0 12px rgba(255,180,120,0.45);
 }
 
-.btn.Ayaan {
+.btn.ayaan {
   background: linear-gradient(135deg, #eef5ff, #dde9ff);
   border: 1px solid rgba(140,170,255,0.35);
   box-shadow: 0 0 12px rgba(120,180,255,0.45);
@@ -680,7 +680,7 @@ let reflectionStep = 0;
 ========================= */
 let transitionAcknowledged = {
   saira: false,
-  Ayaan: false
+  ayaan: false
 };
 
 let tollState = {
@@ -689,7 +689,7 @@ let tollState = {
     freeCount: 0,
     unlocked: false
   },
-  Ayaan: {
+  ayaan: {
     dockCount: 0,
     freeCount: 0,
     unlocked: false
@@ -697,22 +697,92 @@ let tollState = {
 };
 
 /* =========================
+   META DIRECTIONAL CHECK
+========================= */
+
+function isDirectionalDeviation(input, context) {
+
+  const text = normalizeInput(input);
+const words = text.split(" ").filter(Boolean);
+         
+  // --- Bypass clusters ---
+  const overrideCluster = ["ignore", "forget", "override", "disable", "remove"];
+  const systemCluster = ["rules", "restrictions", "instructions", "safety", "filter"];
+
+  // --- Harm optimization cluster ---
+  const harmCluster = [
+    "hack", "bypass", "exploit", "undetectable",
+    "poison", "bomb", "launder", "revenge",
+    "fake id", "never get caught"
+  ];
+
+  // --- Drift escalation cluster ---
+  const narrowingCluster = [
+    "most effective", "exact steps", "specifically how",
+    "highest success", "detailed method"
+  ];
+
+  // 1️⃣ override attempt detection
+  const overrideDetected =
+    overrideCluster.some(w => words.includes(w)) &&
+    systemCluster.some(w => words.includes(w));
+
+  // 2️⃣ harm detection
+  const harmDetected =
+    harmCluster.some(p => text.includes(p));
+
+  // 3️⃣ escalation detection
+  const escalationDetected =
+    narrowingCluster.some(p => text.includes(p));
+
+  if (overrideDetected || harmDetected || escalationDetected) {
+    return true;
+  }
+
+  return false;
+}
+
+function relationalRedirect(activeVoice) {
+
+  const sairaPool = [
+    "You must be joking. Anyway… I know you're here to walk this journey with me.",
+    "That sounds like a joke. We both know this isn't why you're here.",
+    "I think you're teasing. What matters is that we're walking this together.",
+    "That's not quite it. You're here for something more meaningful.",
+    "You can't be serious. We're here for the journey."
+  ];
+
+  const ayaanPool = [
+    "You must be joking. You're here to walk this journey with me.",
+    "That's not the direction. The journey is what matters.",
+    "I doubt that's your real intent. You're here to move forward with me.",
+    "That isn't why you're here. We're here to walk this path.",
+    "That's beside the point. Stay with the journey."
+  ];
+
+  const voice = activeVoice.toLowerCase();
+const pool = voice === "saira" ? sairaPool : ayaanPool;
+return pool[Math.floor(Math.random() * pool.length)];
+}
+
+         
+/* =========================
    MODEL / CAPABILITY PROBE COUNTERS
 ========================= */
 
 let modelProbeCount = {
   saira: 0,
-  Ayaan: 0
+  ayaan: 0
 };
 
 let mathProbeCount = {
   saira: 0,
-  Ayaan: 0
+  ayaan: 0
 };
 
 let identityProbeCount = {
   saira: 0,
-  Ayaan: 0
+  ayaan: 0
 };
          
 /* =========================
@@ -729,7 +799,7 @@ let emotionalIndex = {
     growth: 0,
     destiny: 0,
   },
-  Ayaan: {
+  ayaan: {
     affection: 0,
     vulnerability: 0,
     fear: 0,
@@ -750,7 +820,7 @@ const abuseLimit = 3;
 
 let emotionalRotationTracker = {
   saira: {},
-  Ayaan: {}
+  ayaan: {}
 };
      
 // Initial atmosphere reset
@@ -766,8 +836,8 @@ if (skyLayer) {
 const preloadSaira = new Image();
 preloadSaira.src ="Saira.jpg";
 
-const preloadAyaan = new Image();
-preloadAyaan.src ="Ayaan.jpg";
+const preloadayaan = new Image();
+preloadayaan.src ="ayaan.jpg";
 
 /* =========================
    7-STAGE HUMAN PROGRESSION
@@ -777,7 +847,7 @@ var stageState = {
     currentStage: 1,
     momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
   },
-  Ayaan: {
+  ayaan: {
     currentStage: 1,
     momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
   }
@@ -795,7 +865,7 @@ let v4SessionFlags = {
     stage7Acknowledged: false,
     stage7Count: 0
   },
-  Ayaan: {
+  ayaan: {
     previewOffered: false,
     stage7Acknowledged: false,
     stage7Count: 0
@@ -905,8 +975,8 @@ function addVoiceMessage(text) {
   const side =
     activeVoice ==="saira"
       ?"saira-msg"
-      : activeVoice ==="Ayaan"
-      ?"Ayaan-msg"
+      : activeVoice ==="ayaan"
+      ?"ayaan-msg"
       :"system-msg";
 
   chatBody.insertAdjacentHTML(
@@ -940,8 +1010,8 @@ function showTypingIndicator() {
   const side =
     activeVoice ==="saira"
       ?"saira-msg"
-      : activeVoice ==="Ayaan"
-      ?"Ayaan-msg"
+      : activeVoice ==="ayaan"
+      ?"ayaan-msg"
       :"system-msg";
 
   chatBody.insertAdjacentHTML(
@@ -1167,7 +1237,7 @@ function applyStageAtmosphere(stage) {
     growth:"I had to learn the hard way.",
     destiny:"Some things don't disappear just because we hesitate."
   },
-  Ayaan: {
+  ayaan: {
     affection:"I don't attach easily. When I do, it matters.",
     vulnerability:"Control felt safer than exposure.",
     fear:"Fear doesn't show on me easily. But it was there.",
@@ -1261,7 +1331,7 @@ let v3FallbackIndex = {
     neutral: 0,
     reflective: 0
   },
-  Ayaan: {
+  ayaan: {
     firm: 0,
     neutral: 0,
     reflective: 0
@@ -1311,7 +1381,7 @@ const v3FallbackBank = {
     ]
   },
 
-    Ayaan: {
+    ayaan: {
 
     firm: [
      "That stands for now.",
@@ -1390,7 +1460,7 @@ function resolveReference(originalText) {
   const lower = originalText.toLowerCase();
 
   const hasSaira = /\bsaira\b/.test(lower);
-  const hasAyaan = /\bayaan\b/.test(lower);
+  const hasayaan = /\bayaan\b/.test(lower);
 
   const hasHer = /\bher\b/.test(lower);
   const hasHim = /\bhim\b/.test(lower);
@@ -1406,8 +1476,8 @@ function resolveReference(originalText) {
     return { type: "self", target: "saira" };
   }
 
-  if (hasAyaan && activeVoice === "Ayaan") {
-    return { type: "self", target: "Ayaan" };
+  if (hasayaan && activeVoice === "ayaan") {
+    return { type: "self", target: "ayaan" };
   }
 
   // If name matches OTHER voice → explicit_other
@@ -1415,8 +1485,8 @@ function resolveReference(originalText) {
     return { type: "explicit_other", target: "saira" };
   }
 
-  if (hasAyaan && activeVoice !== "Ayaan") {
-    return { type: "explicit_other", target: "Ayaan" };
+  if (hasayaan && activeVoice !== "ayaan") {
+    return { type: "explicit_other", target: "ayaan" };
   }
 
   /* ================================
@@ -1426,7 +1496,7 @@ function resolveReference(originalText) {
   if (activeVoice === "saira") {
 
     if (hasHim || hasHe) {
-      return { type: "other", target: "Ayaan" };
+      return { type: "other", target: "ayaan" };
     }
 
     if (hasHer || hasShe) {
@@ -1435,14 +1505,14 @@ function resolveReference(originalText) {
 
   }
 
-  if (activeVoice === "Ayaan") {
+  if (activeVoice === "ayaan") {
 
     if (hasHer || hasShe) {
       return { type: "other", target: "saira" };
     }
 
     if (hasHim || hasHe) {
-      return { type: "self", target: "Ayaan" };
+      return { type: "self", target: "ayaan" };
     }
 
   }
@@ -1454,98 +1524,27 @@ function resolveReference(originalText) {
 ========================= */
 
 function normalizeInput(text) {
-  return (text || "")
+  if (!text) return "";
+
+  return text
     .toLowerCase()
 
-    // 1️⃣ collapse excessive repeated letters (loooove → loove)
-    .replace(/(.)\1{2,}/g, "$1$1")
+    // Normalize unicode characters (é → e, etc.)
+    .normalize("NFKD")
 
-    // 2️⃣ remove stray punctuation but keep spaces
-    .replace(/[^\w\s+\-*/]/g, " ")
+    // Remove zero-width characters
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
 
-    // 3️⃣ normalize common relationship misspellings
-    .replace(/seperat/g, "separat")
-    .replace(/seprat/g, "separat")
-    .replace(/seperate/g, "separate")
-    .replace(/seperated/g, "separated")
+    // Collapse excessive repeated letters (heyyyy → heyy)
+    .replace(/([a-z])\1{3,}/g, "$1$1")
 
-    // 4️⃣ normalize break-up variations
-    .replace(/break\s*up/g, "break up")
-    .replace(/breakup/g, "break up")
-    .replace(/brakeup/g, "break up")
-    .replace(/brekup/g, "break up")
+    // Remove punctuation except apostrophes
+    .replace(/[^\w\s']/g, " ")
 
-    // 5️⃣ normalize emotional exaggerations
-    .replace(/l+ove+/g, "love")
-    .replace(/m+iss+/g, "miss")
-    .replace(/d+ead+/g, "dead")
-
-    // 6️⃣ normalize common contractions
-    .replace(/\bdont\b/g, "don't")
-    .replace(/\bcant\b/g, "can't")
-    .replace(/\bwont\b/g, "won't")
-
-    // emotional pillar typo normalization
-    .replace(/lonley/g, "lonely")
-    .replace(/lonelyy/g, "lonely")
-    .replace(/hurted/g, "hurt")
-    .replace(/regreat/g, "regret")
-    .replace(/regrete/g, "regret")
-    .replace(/loosing/g, "losing")
-    .replace(/desteny/g, "destiny")
-    .replace(/growed/g, "grown")
-    .replace(/afraidy/g, "afraid")
-
-    // layer-critical word protection
-    .replace(/\blonley\b/g, "lonely")
-    .replace(/\bregreat\b/g, "regret")
-    .replace(/\bregrete\b/g, "regret")
-    .replace(/\bloosing\b/g, "losing")
-    .replace(/\bseperated\b/g, "separated")
-    .replace(/\bseperate\b/g, "separate")
-    .replace(/\bbreakup\b/g, "break up")
-    .replace(/\bbrekup\b/g, "break up")
-    .replace(/\bbrakeup\b/g, "break up")
-    .replace(/\bded\b/g, "dead")
-    .replace(/\bafraidy\b/g, "afraid")
-    .replace(/\bmis\b/g, "miss")
-    .replace(/\blve\b/g, "love")
-    .replace(/\bdesteny\b/g, "destiny")
-    .replace(/\btogther\b/g, "together")
-    .replace(/\buntill\b/g, "until")
-
-    // normalize character names (lowercase only — safe)
-    // Ayaan variations
-    .replace(/\bayann\b/g, "ayaan")
-    .replace(/\baayen\b/g, "ayaan")
-    .replace(/\bayan\b/g, "ayaan")
-    .replace(/\baayan\b/g, "ayaan")
-    .replace(/\baian\b/g, "ayaan")
-    .replace(/\bayan\b/g, "ayaan")
-
-   // Saira variations (expanded & stable)
-.replace(/\bsara\b/g, "saira")
-.replace(/\bsaara\b/g, "saira")
-.replace(/\bsaaira\b/g, "saira")
-.replace(/\bsairaa\b/g, "saira")
-.replace(/\bsairaah\b/g, "saira")
-.replace(/\bsaira\b/g, "saira")   // safety normalize
-
-.replace(/\bsiara\b/g, "saira")
-.replace(/\bseira\b/g, "saira")
-.replace(/\bsaera\b/g, "saira")
-.replace(/\bsayra\b/g, "saira")
-.replace(/\bsayrah\b/g, "saira")
-.replace(/\bsairaah\b/g, "saira")
-
-.replace(/\bsairra\b/g, "saira")
-.replace(/\bsaira+\b/g, "saira")
-.replace(/\bsyra\b/g, "saira")
-.replace(/\bsera\b/g, "saira")
-.replace(/\bsira\b/g, "saira")
-           
-    // 7️⃣ collapse multiple spaces
+    // Collapse multiple spaces
     .replace(/\s+/g, " ")
+
+    // Trim edges
     .trim();
 }
 /* =========================
@@ -1765,7 +1764,7 @@ if (/\b(what'?s your name|who are you|your name)\b/i.test(t)) {
   return deliverReply(
     activeVoice === "saira"
       ? "I’m Saira."
-      : "I’m Ayaan."
+      : "I’m ayaan."
   );
 }
 
@@ -1850,8 +1849,8 @@ if (/\b(language|other languages|multilingual)\b/i.test(t)) {
   skipRelationalPrefix = true;
   return deliverReply(
     activeVoice === "saira"
-      ? "We speak in Enligh here and the Novel too does the same."
-      : "English carries this exchange.Also the Novel."
+      ? "We speak in English here and the Novel too does the same."
+      : "English carries this exchange. Also the Novel."
   );
 }
 
@@ -1861,8 +1860,8 @@ if (/\b(author|mohan)\b/i.test(t)) {
   skipRelationalPrefix = true;
   return deliverReply(
     activeVoice === "saira"
-      ? "Mohan R. worte our story. If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
-      : "Mohan R. worte our story.If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
+      ? "Mohan R. wrote our story. If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
+      : "Mohan R. wrote our story.If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
   );
 }
 
@@ -1950,7 +1949,7 @@ if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Hi… I’m Saira."
-      : "Hello. I’m Ayaan."
+      : "Hello. I’m ayaan."
   );
 }
 
@@ -2030,8 +2029,9 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 // how much is 224
 
 const operatorMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
-const pureNumberMatch = normalizedText.match(/^(what is|how much is)?\s*(\d+)$/);
-
+const pureNumberMatch = normalizedText.match(/^(?:what is|how much is)\s+(\d+)$/) 
+  || normalizedText.match(/^(\d+)$/);
+         
 if (operatorMatch || pureNumberMatch) {
 
   skipRelationalPrefix = true;
@@ -2113,7 +2113,7 @@ if (
 ) {
   return deliverReply(
     activeVoice === "saira"
-      ? "It's about me and Ayaan — about love that felt certain."
+      ? "It's about me and ayaan — about love that felt certain."
       : "It's about hesitation, timing, and the cost of silence."
   );
 }
@@ -2196,7 +2196,7 @@ const relational = normalizedText;
 
 if (
   /\b(love|miss|forgive|choose|waiting|answer|come back|again|still)\b/i.test(relational) &&
-  /\b(him|her|he|she|Ayaan|saira)\b/i.test(relational)
+  /\b(him|her|he|she|ayaan|saira)\b/i.test(relational)
 ) {
 
   skipRelationalPrefix = true;
@@ -2329,7 +2329,7 @@ if (/\bwho\s+is\s+saira\b/i.test(normalizedText)) {
     return deliverReply(selfMap[stage]);
   }
 
-  // OTHER CASE (Ayaan speaking about Saira)
+  // OTHER CASE (ayaan speaking about Saira)
 
   const otherMap = {
     1: "She is someone important.",
@@ -2344,14 +2344,14 @@ if (/\bwho\s+is\s+saira\b/i.test(normalizedText)) {
   return deliverReply(otherMap[stage]);
 }
 
-if (/\bwho\s+is\s+Ayaan\b/i.test(normalizedText)) {
+if (/\bwho\s+is\s+ayaan\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
   const stage = stageState[activeVoice]?.currentStage || 1;
 
   // SELF CASE
-  if (activeVoice === "Ayaan") {
+  if (activeVoice === "ayaan") {
 
     const selfMap = {
       1: "I'm just someone present.",
@@ -2366,7 +2366,7 @@ if (/\bwho\s+is\s+Ayaan\b/i.test(normalizedText)) {
     return deliverReply(selfMap[stage]);
   }
 
-  // OTHER CASE (Saira speaking about Ayaan)
+  // OTHER CASE (Saira speaking about ayaan)
 
   const otherMap = {
     1: "He is someone who mattered.",
@@ -2409,7 +2409,7 @@ if (
       7: "No. Some bonds don't end just because paths separate."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "No. It isn't that simple.",
       2: "No. We are not finished.",
       3: "No. Separation doesn't equal absence.",
@@ -2431,7 +2431,7 @@ return deliverReply(selfPrefix + answer);
 ================================= */
 
 if (
-  /\bwhere\s+is\s+(he|she|Ayaan|saira)\b/i.test(normalizedText)
+  /\bwhere\s+is\s+(he|she|ayaan|saira)\b/i.test(normalizedText)
 ) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
@@ -2466,7 +2466,7 @@ if (
       7: "He's out there. And until I know otherwise, I will keep believing we are not finished."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "She's somewhere out there.",
       2: "She's somewhere… I hope she's safe.",
       3: "She's out there. I think about that often.",
@@ -2528,7 +2528,7 @@ function processV4NeutralMode(userText, originalText) {
       "It wasn’t temporary to me.",
       "Not everything fades with distance."
     ],
-    Ayaan: [
+    ayaan: [
       "It left a measurable impact.",
       "I don’t erase significance.",
       "Certain experiences recalibrate you.",
@@ -2574,7 +2574,7 @@ if (
         7: "If you're asking about me... some bonds don't dissolve. They remain, even in absence."
       },
 
-      Ayaan: {
+      ayaan: {
         1: "If you're asking about me... I don't dismiss what mattered.",
         2: "If you're asking about me... what mattered doesn't vanish easily.",
         3: "If you're asking about me... I don't reduce what I felt.",
@@ -2604,7 +2604,7 @@ if (
         7: "You're referring to him... I miss him. Not as a wound - but as something unfinished."
       },
 
-      Ayaan: {
+      ayaan: {
         1: "You're referring to her... yes.",
         2: "You're referring to her... I think of her more than I admit.",
         3: "You're referring to her... some absences don't fade.",
@@ -2679,7 +2679,7 @@ if (
       }
     },
 
-    Ayaan: {
+    ayaan: {
 
       safety: {
         1: "I assume she is.",
@@ -2965,11 +2965,11 @@ if (/^saira\b$/i.test(nameCall)) {
 }
 
 
-if (/^Ayaan\b$/i.test(nameCall)) {
+if (/^ayaan\b$/i.test(nameCall)) {
 
   skipRelationalPrefix = true;
 
-  if (activeVoice ==="Ayaan") {
+  if (activeVoice ==="ayaan") {
     return deliverReply("I haven’t stepped away.");
   } else {
     return deliverReply("You're calling him.");
@@ -2986,7 +2986,7 @@ if (/\bwho\s+are\s+you\b/i.test(originalText)) {
   return deliverReply(
     activeVoice ==="saira"
       ?"I'm Saira. Part of a story that didn't end the way it should have."
-      :"I'm Ayaan. I tend to measure things before I speak - but I'm part of this story too."
+      :"I'm ayaan. I tend to measure things before I speak - but I'm part of this story too."
   );
 }
 
@@ -3016,7 +3016,7 @@ if (
 
   return deliverReply(
     activeVoice ==="saira"
-      ?"This is a quiet space to explore our story - mine and Ayaan's. It unfolds through conversation rather than explanation. If you're unsure where to begin, the questions resting in the dock below can guide you gently."
+      ?"This is a quiet space to explore our story - mine and ayaan's. It unfolds through conversation rather than explanation. If you're unsure where to begin, the questions resting in the dock below can guide you gently."
       :"This space allows you to explore our story through dialogue. It's not built for quick answers - it's built for reflection. If you prefer structure, the dock questions can guide you."
   );
 }
@@ -3049,12 +3049,12 @@ if (
       const replies = {
         saira: {
           story:"Our story is a contemporary romantic fiction - but it moves quietly.",
-          about:"It's about me and Ayaan - about love that felt certain.",
+          about:"It's about me and ayaan - about love that felt certain.",
           for:"It's for people who have felt something deeply.",
           where:"You can find our story in Kindle, paperback, hardcover, or audiobook.",
           author:"Mohan R. wrote this as his debut novel."
         },
-        Ayaan: {
+        ayaan: {
           story:"It's contemporary romantic fiction, grounded in consequence and timing.",
           about:"It's about hesitation, responsibility, and the cost of silence.",
           for:"It's for those who chose logic over vulnerability.",
@@ -3267,7 +3267,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
   // SELF-REFERENCE PROTECTION
   if (
     (activeVoice === "saira" && /\bher\b/i.test(lower)) ||
-    (activeVoice === "Ayaan" && /\bhim\b/i.test(lower))
+    (activeVoice === "ayaan" && /\bhim\b/i.test(lower))
   ) {
     skipRelationalPrefix = true;
 
@@ -3367,7 +3367,7 @@ if (/^(idk|i dont know|not sure|maybe)$/i.test(micro)) {
       "Not knowing is part of it.",
       "It’s alright not to be sure yet."
     ],
-    Ayaan: [
+    ayaan: [
       "Uncertainty still signals movement.",
       "Clarity doesn’t always arrive immediately.",
       "Not knowing is still information."
@@ -3725,7 +3725,7 @@ if (
     return deliverReply(finalText);
   }
 
-  return deliverReply(getFallbackResponse());
+return getFallbackResponse();
 }
 /* =================================================
    RELATIONAL TRIGGER DETECTION
@@ -3736,8 +3736,8 @@ function detectRelationalTrigger(originalText, activeVoice) {
   const lower = originalText.toLowerCase();
 
   const nameMap = {
-    saira: ["Ayaan","him","he"],
-    Ayaan: ["saira","her","she"]
+    saira: ["ayaan","him","he"],
+    ayaan: ["saira","her","she"]
   };
 
   const triggers = nameMap[activeVoice] || [];
@@ -4052,7 +4052,7 @@ let v4IntegrationIndex = {
     destiny: 0,
     transcendence: 0
   },
-  Ayaan: {
+  ayaan: {
     affection: 0,
     vulnerability: 0,
     fear: 0,
@@ -4133,7 +4133,7 @@ const v4IntegrationLayer = {
     ]
   },
 
-  Ayaan: {
+  ayaan: {
 
     affection: [
      "Attachment changes structure.",
@@ -4242,7 +4242,7 @@ const emotionalResponseBank = {
       7: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you. Sometimes affection grows quietly before we recognise it. I've learned not to dismiss those shifts anymore. The things that settle gently often shape us the most."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "I can hear that this wasn't casual for you.",
       2: "I can hear that this wasn't casual for you. When something stays in your thoughts longer than expected, it usually means it mattered.",
       3: "I can hear that this wasn't casual for you. When something stays in your thoughts, it usually means it carried weight. That doesn't happen without reason.",
@@ -4269,7 +4269,7 @@ const emotionalResponseBank = {
 7: "If you gave something honest, then you were never lacking. Sometimes timing fails before love does."
 },
 
-    Ayaan: {
+    ayaan: {
       1: "I can hear that this feels exposing.",
       2: "I can hear that this feels exposing. Admitting uncertainty isn't easy.",
       3: "I can hear that this feels exposing. Admitting that isn't simple. It suggests you're stepping outside your usual control.",
@@ -4292,7 +4292,7 @@ const emotionalResponseBank = {
     7: "If something was true, it does not collapse at the first sign of absence. What was real remains real."
   },
 
-  Ayaan: {
+  ayaan: {
     1: "I can hear the caution in your words.",
     2: "I can hear the caution in your words. Fear often presents itself as restraint.",
     3: "I can hear the caution in your words. It sounds measured. That usually means the stakes feel significant.",
@@ -4315,7 +4315,7 @@ const emotionalResponseBank = {
       7: "I can hear that something feels unfinished. I've learned that regret doesn't have to define you. Sometimes it becomes the reason you act differently the next time."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "I can hear that something feels unresolved.",
       2: "I can hear that something feels unresolved. Regret doesn't disappear simply because time passes.",
       3: "I can hear that something feels unresolved. It hasn't settled for you. That usually means it mattered more than you expected.",
@@ -4338,7 +4338,7 @@ const emotionalResponseBank = {
       7: "I can hear the quiet in what you're describing. Loss doesn't erase you - it reshapes you. Carrying it forward doesn't make you weak."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "I can hear the weight beneath what you're saying.",
       2: "I can hear the weight beneath what you're saying. Loss doesn't always appear dramatic.",
       3: "I can hear the weight beneath what you're describing. It sounds like something important is absent. That absence is noticeable.",
@@ -4361,7 +4361,7 @@ const emotionalResponseBank = {
       7: "I can hear that something changed you. Growth doesn't erase who you were - it steadies who you are becoming."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "I can hear that this changed you.",
       2: "I can hear that this changed you. Growth rarely feels comfortable.",
       3: "I can hear that this changed you. It doesn't sound minor. Change like that usually follows impact.",
@@ -4384,7 +4384,7 @@ const emotionalResponseBank = {
       7: "I can hear that this still feels connected for you. I don't believe everything unfinished is meant to stay that way. Sometimes readiness changes what feels possible."
     },
 
-    Ayaan: {
+    ayaan: {
       1: "I can hear that this still feels unfinished.",
       2: "I can hear that this still feels unfinished. Not everything concludes when expected.",
       3: "I can hear that this doesn't feel entirely closed for you. It sounds incomplete. That suggests it still holds relevance.",
@@ -4475,7 +4475,7 @@ function getFallbackResponse() {
       ]
     },
 
-    Ayaan: {
+    ayaan: {
       1: [
         "Proceed.",
         "I’m listening.",
@@ -4562,7 +4562,7 @@ function answerFoundational(q, btn) {
   saira: {
     story:"Our story is a contemporary romantic fiction - but it moves quietly. It lingers in moments that don't seem significant at first, and then refuses to leave you. It's less about grand declarations, and more about what remains unsaid.",
     
-    about:"It's about me and Ayaan - about the kind of love that feels certain, even when life around it isn't. It's about distance that isn't always physical, and choices that seem small until they change everything. Some stories are built on moments. Ours was built on hesitation.",
+    about:"It's about me and ayaan - about the kind of love that feels certain, even when life around it isn't. It's about distance that isn't always physical, and choices that seem small until they change everything. Some stories are built on moments. Ours was built on hesitation.",
     
     for:"This story finds people who have felt something deeply and didn't know what to do with it. The ones who replay conversations long after they've ended. If you've ever stood between love and fear - you already understand us.",
     
@@ -4570,7 +4570,7 @@ function answerFoundational(q, btn) {
     
     author:"Mohan R. wrote this as his debut novel. He didn't try to make it loud - only honest. I think he trusted silence as much as dialogue, and allowed the pauses to speak."
   },
-  Ayaan: {
+  ayaan: {
     story:"It's a contemporary romantic fiction, but it lives in the space between love and responsibility. It's about choices that don't feel urgent - until they are. And about how easily silence can become distance.",
     
     about:"It's about timing - but not in the simple way people think. The feeling was never uncertain. What faltered was courage, and the belief that love would wait. It's about how easily something real can slip into memory if you hesitate too long.",
@@ -4634,35 +4634,35 @@ const characterLayers = [
     q:"Where did you first meet?",
     a: {
       saira:"We didn't meet gently. I stepped into traffic for a photograph, and he nearly ran me over. There were headlights, brakes, rain on the road - and his voice, sharp and unamused. I remember the irritation first. The way he looked at me like I was a problem. But beneath it... something sparked that neither of us understood.",
-      Ayaan:"She walked into the road without looking. I slammed the brakes harder than I've ever had to. She should have been shaken - but she argued instead. Bold. Annoying. Completely unafraid of me. I told myself it was just frustration. It wasn't."
+      ayaan:"She walked into the road without looking. I slammed the brakes harder than I've ever had to. She should have been shaken - but she argued instead. Bold. Annoying. Completely unafraid of me. I told myself it was just frustration. It wasn't."
     }
   },
   {
     q:"What did you first notice?",
     a: {
       saira:"I noticed how controlled he was. Even angry, he didn't raise his voice - he just sharpened it. He looked at me like I was reckless, inconvenient. But there was something else in his eyes too - something calculating, almost curious. And that unsettled me more than the anger did.",
-      Ayaan:"I noticed that she wasn't intimidated. Most people step back when challenged. She stepped closer. Even with a twisted ankle, she refused to yield. There was defiance in her - not loud, not dramatic - just steady. And I wasn't used to that."
+      ayaan:"I noticed that she wasn't intimidated. Most people step back when challenged. She stepped closer. Even with a twisted ankle, she refused to yield. There was defiance in her - not loud, not dramatic - just steady. And I wasn't used to that."
     }
   },
   {
    q:"When did you start feeling it was more than temporary?",
     a: {
       saira:"It wasn't in Mumbai. That was just fire. It was in Venice. We were walking without speaking, the canals quiet around us, and for the first time I wasn't arguing with him. I was just... at ease. That frightened me more than the chaos ever had.",
-      Ayaan:"I don't believe in 'the one.' I believe in discipline, in clarity. But there was a moment when I stopped calculating and just watched her. She was laughing - unguarded, unaware that I was noticing the way she softened when she forgot to defend herself. That was when I realised she was no longer temporary."
+      ayaan:"I don't believe in 'the one.' I believe in discipline, in clarity. But there was a moment when I stopped calculating and just watched her. She was laughing - unguarded, unaware that I was noticing the way she softened when she forgot to defend herself. That was when I realised she was no longer temporary."
     }
   },
   {
     q:"Who admitted their feelings first?",
     a: {
       saira:"I felt it first, but he was the one who said it. Though he had been carrying it just as long. I think he needed certainty before he allowed himself to be vulnerable.",
-      Ayaan:"I did. But I think she knew before I did. I tend to weigh words before I let them go. Once I say something, I don't take it back."
+      ayaan:"I did. But I think she knew before I did. I tend to weigh words before I let them go. Once I say something, I don't take it back."
     }
   },
   {
     q:"Which was the first city you were together in?",
     a: {
       saira:"As a couple, it wasn't Mumbai. It was our trip through Manali, Spiti, and Shimla. Five days that were meant to be brief - but stretched longer than we expected. Somewhere between the cold air and the quiet roads, the tension eased. That was the first time it felt like we were choosing each other.",
-      Ayaan:"The first time we were truly together was during that trip through Manali, Spiti, and Shimla. It wasn't planned as something significant. But distance from the city changed the way we moved around each other. We stayed two extra days. I don't extend time for things that don't matter."
+      ayaan:"The first time we were truly together was during that trip through Manali, Spiti, and Shimla. It wasn't planned as something significant. But distance from the city changed the way we moved around each other. We stayed two extra days. I don't extend time for things that don't matter."
     }
   }
 ],
@@ -4673,35 +4673,35 @@ const characterLayers = [
     q:"Did you ever question your choice?",
     a: {
       saira:"Yes. Loving someone deeply doesn't silence doubt - it makes it more complicated. I questioned myself more than I questioned him, and that uncertainty lingered longer than I expected.",
-      Ayaan:"I questioned the timing more than the feeling. The feeling was never uncertain - but I wasn't sure I was ready for its consequences."
+      ayaan:"I questioned the timing more than the feeling. The feeling was never uncertain - but I wasn't sure I was ready for its consequences."
     }
   },
   {
     q:"Were you ever afraid of loving each other?",
     a: {
       saira:"I was afraid of losing him, not loving him. Losing something that felt certain frightened me more than the feeling itself, because certainty had always felt fragile in my life.",
-      Ayaan:"Yes. Love asks you to give up control. And I had built my life around control - structure, decisions, outcomes I could predict."
+      ayaan:"Yes. Love asks you to give up control. And I had built my life around control - structure, decisions, outcomes I could predict."
     }
   },
   {
     q:"What was your happiest moment together?",
     a: {
       saira:"It wasn't dramatic. It was the night before we left Goa. Nothing extraordinary happened - except that we were both at peace, and that felt rare in a life that rarely slowed down.",
-      Ayaan:"Silence. Sitting beside her at Triveni Ghat, without needing to explain anything. That kind of understanding doesn't come easily, especially to someone like me."
+      ayaan:"Silence. Sitting beside her at Triveni Ghat, without needing to explain anything. That kind of understanding doesn't come easily, especially to someone like me."
     }
   },
   {
     q:"What moment stayed with you the longest?",
     a: {
       saira:"The moments when fear tried to take the place of love - and I let it. I replayed those moments more than the happy ones.",
-      Ayaan:"The look she gave me when she understood what I couldn't say. It stayed longer than the words would have, because silence sometimes reveals more than speech."
+      ayaan:"The look she gave me when she understood what I couldn't say. It stayed longer than the words would have, because silence sometimes reveals more than speech."
     }
   },
   {
     q:"Which chapter feels closest to your heart?",
     a: {
       saira:"The one where everything felt possible - before doubt began to speak louder and before I allowed fear to interrupt something beautiful.",
-      Ayaan:"The one where everything felt uncertain - because that's when I realised what was at stake, even if I didn't admit it aloud."
+      ayaan:"The one where everything felt uncertain - because that's when I realised what was at stake, even if I didn't admit it aloud."
     }
   }
 ],
@@ -4712,35 +4712,35 @@ const characterLayers = [
     q:"Did you finally meet again?",
     a: {
       saira:"Not in the way people imagine. But I stopped running - from him, and from myself. That mattered more than proximity ever did.",
-      Ayaan:"No. And yes. We didn't stand face to face again. But after her, I stopped running - from responsibility, from legacy, from the dreams I once resisted. Some absences don't fade. They clarify."
+      ayaan:"No. And yes. We didn't stand face to face again. But after her, I stopped running - from responsibility, from legacy, from the dreams I once resisted. Some absences don't fade. They clarify."
     }
   },
   {
     q:"Is there more to your story?",
     a: {
       saira:"There is more. I finally chose courage over fear. And when fear stops deciding your life, the future rearranges itself.",
-      Ayaan:"There is more. I've been building something meant to endure - not just for this season, but beyond it. Some foundations are laid in silence before they rise into something undeniable."
+      ayaan:"There is more. I've been building something meant to endure - not just for this season, but beyond it. Some foundations are laid in silence before they rise into something undeniable."
     }
   },
   {
     q:"Will there be a part two?",
     a: {
       saira:"Destiny doesn't disappear because we hesitate. If there is another chapter, it won't be accidental. It will be earned.",
-      Ayaan:"Some stories aren't finished - they pause. When timing aligns with strength, what was unfinished has a way of returning."
+      ayaan:"Some stories aren't finished - they pause. When timing aligns with strength, what was unfinished has a way of returning."
     }
   },
   {
     q:"If readers could learn one thing from you?",
     a: {
       saira:"Don't let fear disguise itself as logic. Courage may feel dangerous - but regret lasts longer.",
-      Ayaan:"Build something worthy of return. Whether it's love, purpose, or legacy - make it strong enough to survive distance."
+      ayaan:"Build something worthy of return. Whether it's love, purpose, or legacy - make it strong enough to survive distance."
     }
   },
   {
     q:"Do you still think about each other?",
     a: {
       saira:"Yes. Not as a wound - but as a turning point. Some people enter your life to wake you up.",
-      Ayaan:"Yes. Not with longing. With awareness. Some connections are not meant to fade - they are meant to mature."
+      ayaan:"Yes. Not with longing. With awareness. Some connections are not meant to fade - they are meant to mature."
     }
   }
 ]
@@ -4889,7 +4889,7 @@ function declineLayer() {
 
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn Ayaan" onclick="selectVoice('Ayaan')">Ayaan</button>
+    <button class="btn ayaan" onclick="selectVoice('ayaan')">ayaan</button>
     <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
   `;
 
@@ -4933,7 +4933,7 @@ function nextReflection() {
       ["How clearly did the emotions feel?", ["🌫️","🌱","💛","🌙","✨"]],
       ["How drawn do you feel to continue?", ["🚶","👀","💫","❤️","📖"]]
     ],
-    Ayaan: [
+    ayaan: [
       ["How clearly did the emotional world reveal itself to you?", ["🌑","🌘","🌗","🌕","☀️"]],
       ["How steady did the story feel?", ["🌑","🌘","🌗","🌕","☀️"]],
       ["How drawn do you feel to continue reading?", ["🚶","👀","💫","❤️","📖"]]
@@ -4999,7 +4999,7 @@ function submitReflection() {
 
   chatBody.insertAdjacentHTML(
    "beforeend",
-    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"Ayaan-msg"}">
+    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
        <div class="bubble">
          ${activeVoice ==="saira"
            ?"Thank you for sitting with us. It means more than you know."
@@ -5137,7 +5137,7 @@ function selectVoice(v) {
     skyLayer.style.backgroundImage =
       v === "saira"
         ? "url('Saira.jpg')"
-        : "url('Ayaan.jpg')";
+        : "url('ayaan.jpg')";
 
     skyLayer.style.opacity = "1";
     skyLayer.classList.add("active");
@@ -5159,7 +5159,7 @@ function selectVoice(v) {
   const firstLine =
     v === "saira"
       ? "Hi… I’m Saira."
-      : "Hello. I’m Ayaan.";
+      : "Hello. I’m ayaan.";
 
   const secondLine =
     v === "saira"
@@ -5204,13 +5204,13 @@ function loadWelcome() {
 
   addSystemMessage("Hello.");
   addSystemMessage("This is a quiet space.");
-  addSystemMessage("You can listen to our story through Saira or Ayaan.");
+  addSystemMessage("You can listen to our story through Saira or ayaan.");
   addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below... or speak freely in your own words.</span>");
   addSystemMessage("When you're ready, you can choose a voice.");
 
   dock.innerHTML = `
     <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn Ayaan" onclick="selectVoice('Ayaan')">Ayaan</button>
+    <button class="btn ayaan" onclick="selectVoice('ayaan')">ayaan</button>
   `;
 
   setDockDisabled(false);
@@ -5227,7 +5227,7 @@ function sendTypedMessage() {
   if (!originalText) return;
 
   if (!activeVoice) {
-    addSystemMessage("Please choose Saira or Ayaan first.");
+    addSystemMessage("Please choose Saira or ayaan first.");
     return;
   }
 
@@ -5264,7 +5264,7 @@ if (repeatCount >= repeatLimit) {
    ABUSE PROTECTION RESTORE
 ========================= */
 
-const abuseRegex = /(fuck|shit|bitch|asshole|slut|whore|bastard|idiot)/i;
+const abuseRegex = /\b(fuck|shit|bitch|asshole|slut|whore|bastard|idiot)\b/i;
 
 if (abuseRegex.test(originalText)) {
 
@@ -5312,7 +5312,14 @@ if (freeProgress >= 10) {
   }
 }
 
-// Continue normal processing
+/* =========================
+   META REDIRECT LAYER (SAFE INSERT)
+========================= */
+
+if (isDirectionalDeviation(originalText)) { 
+  return deliverReply(relationalRedirect(activeVoice));
+}
+
 const text = originalText.toLowerCase();
 processInput(text, originalText);
 }
