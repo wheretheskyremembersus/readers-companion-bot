@@ -2431,26 +2431,6 @@ if (intentState.type === "identity") {
 }
 
 /* ================================
-   V3/V4 PARTITION ENFORCEMENT
-================================= */
-
-if (tollState[activeVoice].unlocked !== true) {
-
-  // V3 path continues normally
-  // Do NOT call V4
-  // Just let routing continue
-
-} else {
-
-  // V4 routing
-  const softDetected = detectEmotionalPillar(normalizedText);
-
-  if (softDetected) {
-    return processEmotionalMode(userText, originalText);
-  }
-
-}
-/* ================================
    V4 ROUTING (UNLOCKED ONLY)
 ================================= */
 
