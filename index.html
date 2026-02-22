@@ -1578,23 +1578,20 @@ function processInput(userText, originalText) {
 
 const stage = stageState[activeVoice]?.currentStage || 1;
 
-/* ================================
-   DEBUG MODE FLAG
-================================= */
 
-const DEBUG_MODE = true;
   /* ================================
      DEBUG MONITOR
   ================================= */
+const DEBUG_MODE = true;
 
-  if (DEBUG_MODE) {
-    console.log("----- INPUT TRACE -----");
-    console.log("Voice:", voice);
-    console.log("Stage:", stageState[voice]?.currentStage);
-    console.log("Unlocked:", tollState[voice]?.unlocked);
-    console.log("DockCount:", tollState[voice]?.dockCount);
-    console.log("FreeCount:", tollState[voice]?.freeCount);
-  }
+if (DEBUG_MODE && activeVoice) {
+  console.log("----- INPUT TRACE -----");
+  console.log("Voice:", activeVoice);
+  console.log("Stage:", stageState[activeVoice]?.currentStage);
+  console.log("Unlocked:", tollState[activeVoice]?.unlocked);
+  console.log("DockCount:", tollState[activeVoice]?.dockCount);
+  console.log("FreeCount:", tollState[activeVoice]?.freeCount);
+}
 
   /* ================================
      TOLL COUNTING (PRE-ROUTING)
