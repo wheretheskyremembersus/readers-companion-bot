@@ -2443,7 +2443,6 @@ if (tollState[activeVoice].unlocked !== true) {
   // No emotional engine here
 
   return processV3Response(userText, originalText);
-}
 /* ================================
    V4 ROUTING (UNLOCKED ONLY)
 ================================= */
@@ -2455,10 +2454,10 @@ const softDetected = detectEmotionalPillar(normalizedText);
 if (softDetected) {
   return processEmotionalMode(userText, originalText);
 }
-}
+
          
 console.log("RELATIONAL HANDLER REACHED");
-
+}
 /* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
 ================================= */
