@@ -1580,20 +1580,6 @@ const stage = stageState[activeVoice]?.currentStage || 1;
 
 
   /* ================================
-     TOLL COUNTING (PRE-ROUTING)
-  ================================= */
-
-  if (intentState?.source === "dock") {
-    tollState[voice].dockCount++;
-  }
-
-  const emotionalProbe = detectEmotionalPillar(normalizedText);
-
-  if (emotionalProbe && emotionalProbe.primaryScore >= 2) {
-    tollState[voice].freeCount++;
-  }
-
-  /* ================================
      UNLOCK + STAGE PROGRESSION
   ================================= */
 
