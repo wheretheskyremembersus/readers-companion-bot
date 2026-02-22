@@ -2438,7 +2438,7 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const softDetected = detectEmotionalPillar(normalizedText);
 
-  if (softDetected) {
+  if (softDetected && softDetected.primaryScore >= 3) {
     return processEmotionalMode(userText, originalText);
   }
 
