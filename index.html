@@ -1556,6 +1556,52 @@ function normalizeInput(text) {
     // Trim edges
     .trim();
 }
+
+/* =========================
+   LOCATION / PLACE DETECTION
+========================= */
+
+function isLocationQuery(input) {
+  const text = normalizeInput(input);
+
+  const locationPatterns = [
+    "where is",
+    "where s",
+    "have you been to",
+    "have you ever been to",
+    "do you know where",
+    "what time in",
+    "time in",
+    "weather in",
+    "located in",
+    "travel to",
+    "been to",
+    "from which country",
+    "in which country",
+    "capital of",
+    "population of"
+  ];
+
+  return locationPatterns.some(pattern => text.includes(pattern));
+}
+
+/* =========================
+   LOCATION REDIRECT
+========================= */
+
+function locationRedirect(activeVoice) {
+
+  const sairaLine = 
+    "Places come and go. What matters is that we're here — now.";
+
+  const ayaanLine = 
+    "Geography shifts. Presence is what holds weight.";
+
+  const voice = activeVoice ? activeVoice.toLowerCase() : "saira";
+
+  return voice === "saira" ? sairaLine : ayaanLine;
+}
+         
 /* =========================
    PRE FIX GENERATOR (V3)
 ========================= */
@@ -2531,6 +2577,10 @@ function detectAndComputeMath(input) {
   }
 
   return null;
+}
+
+if (isLocationQuery(originalText)) {
+  return deliverReply(locationRedirect(activeVoice));
 }
 /* ================================
    EMOTIONAL ROUTING
