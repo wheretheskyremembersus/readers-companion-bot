@@ -2431,17 +2431,18 @@ if (intentState.type === "identity") {
 }
 
 /* ================================
-   V4 ROUTING (UNLOCKED ONLY)
+   V4 ROUTING (STRICT PARTITION)
 ================================= */
 
-// Only reaches here if unlocked === true
+if (tollState[activeVoice]?.unlocked === true) {
 
-const softDetected = detectEmotionalPillar(normalizedText);
+  const softDetected = detectEmotionalPillar(normalizedText);
 
-if (softDetected) {
-  return processEmotionalMode(userText, originalText);
+  if (softDetected) {
+    return processEmotionalMode(userText, originalText);
+  }
+
 }
-
          
 console.log("RELATIONAL HANDLER REACHED");
 /* ================================
