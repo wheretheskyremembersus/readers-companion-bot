@@ -2436,13 +2436,19 @@ if (intentState.type === "identity") {
 
 if (tollState[activeVoice].unlocked !== true) {
 
-  // ---- V3 MODE ----
-  // No dock counting here
-  // No free counting here
-  // No stage mutation here
-  // No emotional engine here
+  // V3 path continues normally
+  // Do NOT call V4
+  // Just let routing continue
 
-  return processV3Response(userText, originalText);
+} else {
+
+  // V4 routing
+  const softDetected = detectEmotionalPillar(normalizedText);
+
+  if (softDetected) {
+    return processEmotionalMode(userText, originalText);
+  }
+
 }
 /* ================================
    V4 ROUTING (UNLOCKED ONLY)
