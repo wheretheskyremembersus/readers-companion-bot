@@ -1565,21 +1565,24 @@ function isLocationQuery(input) {
   const text = normalizeInput(input);
 
   const locationPatterns = [
-    "where is",
-    "where s",
-    "have you been to",
-    "have you ever been to",
-    "do you know where",
-    "what time in",
-    "time in",
-    "weather in",
-    "located in",
-    "travel to",
-    "been to",
-    "from which country",
-    "in which country",
-    "capital of",
-    "population of"
+   const locationPatterns = [
+  "where is",
+  "where s",
+  "have you been to",
+  "have you ever been to",
+  "do you know where",
+  "what time is it in",
+  "what time in",
+  "time in",
+  "weather in",
+  "located in",
+  "travel to",
+  "been to",
+  "from which country",
+  "in which country",
+  "capital of",
+  "what time is it in",
+  "population of"
   ];
 
   return locationPatterns.some(pattern => text.includes(pattern));
