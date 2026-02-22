@@ -742,7 +742,15 @@ const words = text.split(" ").filter(Boolean);
   return false;
 }
 
-const voice = activeVoice.toLowerCase(); {
+/* =========================
+   RELATIONAL REDIRECT
+========================= */
+
+function relationalRedirect(activeVoice) {
+
+  if (!activeVoice) {
+    return "We can leave it there.";
+  }
 
   const sairaPool = [
     "You must be joking. Anyway… I know you're here to walk this journey with me.",
@@ -761,8 +769,9 @@ const voice = activeVoice.toLowerCase(); {
   ];
 
   const voice = activeVoice.toLowerCase();
-const pool = voice === "saira" ? sairaPool : ayaanPool;
-return pool[Math.floor(Math.random() * pool.length)];
+  const pool = voice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
          
