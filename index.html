@@ -2431,10 +2431,10 @@ if (intentState.type === "identity") {
 }
 
 /* ================================
-   V4 ROUTING (DISABLED)
+   STATE MACHINE ROUTING
 ================================= */
 
-if (false) {
+if (tollState[activeVoice]?.unlocked === true) {
 
   const softDetected = detectEmotionalPillar(normalizedText);
 
@@ -2442,9 +2442,42 @@ if (false) {
     return processEmotionalMode(userText, originalText);
   }
 
+  // If unlocked but not strong emotional trigger,
+  // stay in V4 tone — NEVER fall back to V3.
+  return processV4NeutralMode(userText, originalText);
+}
+
+/* ================================
+   V4 NEUTRAL MODE (POST-UNLOCK)
+================================= */
+
+function processV4NeutralMode(userText, originalText) {
+
+  const voice = activeVoice;
+
+  const v4NeutralResponses = {
+    saira: [
+      "It changed me more than I expected.",
+      "I don’t dismiss what it meant.",
+      "Some things stay with you quietly.",
+      "It wasn’t temporary to me.",
+      "Not everything fades with distance."
+    ],
+    Ayaan: [
+      "It left a measurable impact.",
+      "I don’t erase significance.",
+      "Certain experiences recalibrate you.",
+      "It altered my perspective.",
+      "It wasn’t incidental."
+    ]
+  };
+
+  const pool = v4NeutralResponses[voice];
+  const reply = pool[Math.floor(Math.random() * pool.length)];
+
+  return deliverReply(reply);
 }
          
-console.log("RELATIONAL HANDLER REACHED");
 /* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
 ================================= */
