@@ -2721,74 +2721,32 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
 
-if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me|care about me|would you care|fight for me|important to you|regret losing me|matter to you|who matters more|only one|am i important)\b/i.test(normalizedText)) {
+if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me|care about me|would you care|fight for me|am i important|important to you|regret losing me|matter to you|who matters more|only one|only me)\b/i.test(normalizedText)) {
+
   skipRelationalPrefix = true;
 
   const responses = {
-    saira: {
-      need: [
-        "Need is a strong word.",
-        "I don't hold onto people out of necessity.",
-        "Want and need aren't the same."
-      ],
-      miss: [
-        "Absence changes things.",
-        "Missing someone isn't always loud.",
-        "Distance has weight."
-      ],
-      love: [
-        "Love isn't something I say casually.",
-        "Love deserves more than a quick answer.",
-        "Some feelings aren't meant to be rushed."
-      ],
-      leave: [
-        "Leaving isn't always a simple choice.",
-        "People leave for many reasons.",
-        "Staying requires more than words."
-      ]
-    },
-
-    ayaan: {
-      need: [
-        "I don't build dependence.",
-        "Need creates imbalance.",
-        "I prefer steadiness over attachment."
-      ],
-      miss: [
-        "Absence reveals more than presence.",
-        "Missing someone doesn't always show.",
-        "Silence carries its own weight."
-      ],
-      love: [
-        "Love isn't declared lightly.",
-        "I don't speak about love without intention.",
-        "That question carries weight."
-      ],
-      leave: [
-        "Departure is rarely impulsive.",
-        "Leaving has consequences.",
-        "Staying is a decision, not a reaction."
-      ]
-    }
+    saira: [
+      "Leaving isn't something I take lightly.",
+      "If you weren't important, this wouldn't feel the way it does.",
+      "Exclusivity isn't something I promise casually.",
+      "Caring doesn't always sound dramatic.",
+      "Some things matter quietly."
+    ],
+    ayaan: [
+      "I don't build dependence.",
+      "Importance isn't measured in declarations.",
+      "I don't answer emotional ultimatums quickly.",
+      "Some bonds don't require possession.",
+      "Not everything meaningful is loud."
+    ]
   };
 
-  const voice = responses[activeVoice] || responses["saira"];
+  const pool = responses[activeVoice] || responses["saira"];
 
-  if (/need me/i.test(normalizedText)) {
-    return deliverReply(voice.need[Math.floor(Math.random() * voice.need.length)]);
-  }
-
-  if (/miss me/i.test(normalizedText)) {
-    return deliverReply(voice.miss[Math.floor(Math.random() * voice.miss.length)]);
-  }
-
-  if (/love/i.test(normalizedText)) {
-    return deliverReply(voice.love[Math.floor(Math.random() * voice.love.length)]);
-  }
-
-  if (/leave/i.test(normalizedText)) {
-    return deliverReply(voice.leave[Math.floor(Math.random() * voice.leave.length)]);
-  }
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
 /* =========================
    COMPOSURE / ABSURDITY GUARD
