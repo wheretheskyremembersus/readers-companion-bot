@@ -2868,8 +2868,7 @@ if (
    TRUST / CREDIBILITY GUARD
 ========================= */
 
-if (/\b(trust|worthy|faithful|represent the story|different from a generic chatbot|generic chatbot|why should i trust|limits to what you|topics you won'?t|stay in character|escalate emotionally|manipulate feelings|emotional tone|respond to vulnerability|how will you respond|consistent character)\b/i.test(normalizedText)) {
-
+if (/\b(trust|worthy|faithful|represent|generic chatbot|stay in character|drift|consisten|contradict|boundaries|structure|stage of the story|external systems|persuade|emotionally balanced|avoid it|decide what not to answer|reflect the novel|stable responses|limits)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
 
   const responses = {
