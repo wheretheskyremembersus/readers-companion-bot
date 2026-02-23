@@ -2868,7 +2868,11 @@ if (
    TRUST / CREDIBILITY GUARD
 ========================= */
 
-if (/^(what guarantees|what ensures|what framework|what stops|how do you ensure|how do you handle|are you built to|are there internal|how stable|what governs|how do you maintain|what keeps|if i test|if i push|how do i know|is your|are your)\b/i.test(normalizedText)) {
+if (
+  /^\b(why|how|what|are|do|can|on what|if)\b/i.test(normalizedText) &&
+  /\b(you|your)\b/i.test(normalizedText) &&
+  /\b(form|remain|stay|aligned|structure|design|rules|basis|operate|prevent|ensure|maintain|protect|coherence|dependable|consistent|drift|generic|random|integrity|limits|boundaries|narrative|story|character)\b/i.test(normalizedText)
+) {
 
   const responses = {
     saira: [
