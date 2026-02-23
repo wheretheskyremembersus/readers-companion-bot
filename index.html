@@ -2719,10 +2719,10 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
 }
          
 /* =========================
-   ACCUSATION GUARD
+   GUILT / ACCUSATION GUARD
 ========================= */
 
-if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you’re selfish|emotionally unavailable|you never try|don’t deserve me)\b/i.test(normalizedText)) {
+if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you'?re selfish|emotionally unavailable|you never try|don'?t deserve me)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
@@ -2745,9 +2745,12 @@ if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you car
     ]
   };
 
-  return deliverReply(random response);
-}
+  const pool = responses[activeVoice] || responses["saira"];
 
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
 /* =========================
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
