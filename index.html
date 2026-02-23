@@ -2398,7 +2398,7 @@ if (/\bserious|real\b/i.test(t)) {
 }
 
 /* =========================
-   REALITY ANCHOR GUARD
+   REALITY ANCHOR GUARD (REFINED)
 ========================= */
 
 if (
@@ -2407,10 +2407,27 @@ if (
 
   skipRelationalPrefix = true;
 
+  const realityResponses = {
+    saira: [
+      "This space isn't tied to clocks or coordinates.",
+      "Here, we aren't limited by time or geography.",
+      "Where we are isn't measured the usual way.",
+      "This moment exists outside ordinary markers.",
+      "We're not anchored to a physical map here."
+    ],
+    ayaan: [
+      "This exchange isn't bound to physical location.",
+      "Clock time doesn't govern this space.",
+      "Geography isn't relevant within this exchange.",
+      "This isn't tied to a calendar or place.",
+      "We're not operating within physical coordinates."
+    ]
+  };
+
+  const pool = realityResponses[activeVoice] || realityResponses["saira"];
+
   return deliverReply(
-    activeVoice === "saira"
-      ? "I exist within this space. Real-world time and place don't apply here."
-      : "This exchange isn’t anchored to physical location or clock time."
+    pool[Math.floor(Math.random() * pool.length)]
   );
 }
 /* =========================
