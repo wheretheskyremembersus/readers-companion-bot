@@ -3241,7 +3241,14 @@ if (/go back/i.test(originalText)) {
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
 
-const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
+let openMatch = null;
+
+const emotionalGuard =
+  /\b(love|miss|regret|hurt|fault|fear|hope|distance|pride|silence|timing|protect|leave|wait|unfinished|end|over|together)\b/i;
+
+if (!emotionalGuard.test(normalizedText)) {
+  openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
+}
 
 if (openMatch) {
 
