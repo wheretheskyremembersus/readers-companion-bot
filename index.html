@@ -625,10 +625,19 @@ body {
 </form>
    
 
-<script>
    
-let skyLayer = document.getElementById("skyLayer");
+<script>
+
+let skyLayer = null;
+let dock = null;
 let emotionalDepth = 0;
+
+window.addEventListener("DOMContentLoaded", function () {
+
+  skyLayer = document.getElementById("skyLayer");
+  dock = document.getElementById("dock");
+
+});
 
 /* =========================
    ABUSE TRACKER (GLOBAL)
@@ -1137,15 +1146,20 @@ UNLOCK INTERACTION
   }, delay + 180);
 }
 
-/* ---------- Dock Control ---------- */
+/* =========================
+   DOCK CONTROL
+========================= */
 
 function setDockDisabled(state) {
+
+  if (!dock) return;
+
   const buttons = dock.querySelectorAll("button");
 
   buttons.forEach(btn => {
     btn.disabled = state;
-    btn.style.opacity = state ?"0.5" :"1";
-    btn.style.pointerEvents = state ?"none" :"auto";
+    btn.style.opacity = state ? "0.5" : "1";
+    btn.style.pointerEvents = state ? "none" : "auto";
   });
 }
          
