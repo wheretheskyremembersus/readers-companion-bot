@@ -2868,8 +2868,7 @@ if (
    TRUST / CREDIBILITY GUARD
 ========================= */
 
-if (/\b(trust|worthy|faithful|represent|generic chatbot|stay in character|drift|consisten|contradict|boundaries|structure|stage of the story|external systems|persuade|emotionally balanced|avoid it|decide what not to answer|reflect the novel|stable responses|limits)\b/i.test(normalizedText)) {
-  skipRelationalPrefix = true;
+if (/^(what guarantees|what ensures|what framework|what stops|how do you ensure|how do you handle|are you built to|are there internal|how stable|what governs|how do you maintain|what keeps|if i test|if i push|how do i know|is your|are your)\b/i.test(normalizedText)) {
 
   const responses = {
     saira: [
