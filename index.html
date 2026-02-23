@@ -2721,31 +2721,30 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
 
-if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me|care about me|would you care|fight for me|am i important|important to you|regret losing me|matter to you|who matters more|only one|only me)\b/i.test(normalizedText)) {
-
+if (/\b(would you care|if i leave would you care)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "Leaving isn't something I take lightly.",
-      "If you weren't important, this wouldn't feel the way it does.",
-      "Exclusivity isn't something I promise casually.",
-      "Caring doesn't always sound dramatic.",
-      "Some things matter quietly."
-    ],
-    ayaan: [
-      "I don't build dependence.",
-      "Importance isn't measured in declarations.",
-      "I don't answer emotional ultimatums quickly.",
-      "Some bonds don't require possession.",
-      "Not everything meaningful is loud."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
   return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
+    activeVoice === "saira"
+      ? "Leaving isn't something I take lightly."
+      : "Absence changes more than people admit."
+  );
+}
+
+if (/\b(am i important|important to you|matter to you)\b/i.test(normalizedText)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If you weren't important, this wouldn't feel the way it does."
+      : "Importance doesn't need to be announced."
+  );
+}
+
+if (/\b(only one|only me)\b/i.test(normalizedText)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Exclusivity isn't something I promise casually."
+      : "I don't define things in absolutes."
   );
 }
 /* =========================
