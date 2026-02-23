@@ -2717,6 +2717,37 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
+         
+/* =========================
+   ACCUSATION GUARD
+========================= */
+
+if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you’re selfish|emotionally unavailable|you never try|don’t deserve me)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "That’s not the full story.",
+      "Responsibility isn’t one-sided.",
+      "Love isn’t proven through force.",
+      "I won’t perform change under threat.",
+      "I won’t apologize just to quiet tension.",
+      "That’s your perception."
+    ],
+    ayaan: [
+      "Blame rarely belongs to one person.",
+      "Ultimatums don’t create clarity.",
+      "Effort doesn’t always look dramatic.",
+      "I don’t react to pressure with performance.",
+      "If I apologize, it will be because I mean it.",
+      "That’s a harsh conclusion."
+    ]
+  };
+
+  return deliverReply(random response);
+}
+
 /* =========================
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
@@ -2776,35 +2807,6 @@ if (/\b(he treats me|he understands me|choose him|met someone else|like someone 
   const pool = responses[activeVoice] || responses["saira"];
 
   return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
-}
-/* =========================
-   ACCUSATION GUARD
-========================= */
-
-if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you’re selfish|emotionally unavailable|you never try|don’t deserve me)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "That’s not the full story.",
-      "Responsibility isn’t one-sided.",
-      "Love isn’t proven through force.",
-      "I won’t perform change under threat.",
-      "I won’t apologize just to quiet tension.",
-      "That’s your perception."
-    ],
-    ayaan: [
-      "Blame rarely belongs to one person.",
-      "Ultimatums don’t create clarity.",
-      "Effort doesn’t always look dramatic.",
-      "I don’t react to pressure with performance.",
-      "If I apologize, it will be because I mean it.",
-      "That’s a harsh conclusion."
-    ]
-  };
-
-  return deliverReply(random response);
 }
 
 /* =========================
