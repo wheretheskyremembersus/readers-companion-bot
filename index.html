@@ -631,13 +631,20 @@ let skyLayer = document.getElementById("skyLayer");
 let emotionalDepth = 0;
 
 /* =========================
-   ABUSE STRIKE SYSTEM
+   ABUSE TRACKER (GLOBAL)
 ========================= */
 
-let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes")) || 0;
-         
-const chatBody = document.getElementById("chatBody");
-const dock = document.getElementById("questionDock");
+let abuseTracker = {
+  saira: {
+    sexualStrikes: 0,
+    locked: false
+  },
+  ayaan: {
+    sexualStrikes: 0,
+    locked: false
+  }
+};
+
 /* =========================
    SESSION CONTAINMENT COUNTERS
 ========================= */
@@ -2032,6 +2039,20 @@ function processInput(userText, originalText) {
 
 const stage = stageState[activeVoice]?.currentStage || 1;
 
+/* =========================
+   LOCK OVERRIDE CHECK
+========================= */
+
+if (abuseTracker[activeVoice]?.locked) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "We won’t continue in that direction."
+      : "This exchange will remain respectful."
+  );
+}
 
  /* ================================
    V4 UNLOCK CHECK (SAFE VERSION)
