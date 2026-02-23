@@ -5701,8 +5701,6 @@ function sendTypedMessage() {
  const originalText = input.value.trim();
 if (!originalText) return;
 
-const normalizedText = normalizeInput(originalText);
-
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or ayaan first.");
     return;
