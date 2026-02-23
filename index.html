@@ -1157,17 +1157,17 @@ UNLOCK INTERACTION
 
 function setDockDisabled(state) {
 
-  if (!dock) return;
+  const dockElement = document.getElementById("dock");
+  if (!dockElement) return;
 
-  const buttons = dock.querySelectorAll("button");
+  const buttons = dockElement.querySelectorAll("button");
 
   buttons.forEach(btn => {
     btn.disabled = state;
     btn.style.opacity = state ? "0.5" : "1";
     btn.style.pointerEvents = state ? "none" : "auto";
   });
-}
-         
+} 
 /* =========================
    90% WORD MATCH ENGINE
 ========================= */
