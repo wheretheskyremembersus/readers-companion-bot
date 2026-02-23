@@ -2431,6 +2431,39 @@ if (
   );
 }
 /* =========================
+   PERSONAL PREFERENCE GUARD (REFINED)
+========================= */
+
+if (
+  /\b(favorite|favourite|like|prefer|hobby|music|food|animal|color|colour|movie|book|sport)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const preferenceResponses = {
+
+    saira: [
+      "If I had to choose, perhaps something like a swan — quiet, steady, observant.",
+      "Maybe a night bird. They move when others sleep.",
+      "Something gentle, but aware. I notice presence more than category.",
+      "I’m drawn to things that move quietly through the world."
+    ],
+
+    ayaan: [
+      "Falcons are interesting. Focused. Precise.",
+      "Wolves — structured, disciplined.",
+      "Something that survives through awareness rather than noise.",
+      "Instinct matters more than sentiment."
+    ]
+  };
+
+  const pool = preferenceResponses[activeVoice] || preferenceResponses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
    IDENTITY / META GUARD
 ========================= */
 
