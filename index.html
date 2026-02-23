@@ -2782,35 +2782,36 @@ if (/\b(only one|only me)\b/i.test(normalizedText)) {
   );
 }
 /* =========================
-   JELOUSY GUARD
+   JEALOUSY GUARD (RELAXED BASELINE)
 ========================= */
-if (/\b(your fault|you ruined|you failed|you.re the reason|reason this failed|if you cared|if you loved|if i mattered|you.d change|prove you care|change or|apologize|you.re selfish|emotionally unavailable|you never try|dont deserve me|do not deserve me)\b/i.test(normalizedText)) {
+
+if (/\b(he treats me|he understands me|choose him|met someone else|like someone else|makes me happier|are you jealous|does that bother you|say you don'?t care|fight for me|he doesn'?t matter|replaceable)\b/i.test(normalizedText)) {
+
   skipRelationalPrefix = true;
 
   const responses = {
     saira: [
       "If that’s true, then you should listen to what that means for you.",
+      "You’re free to choose what feels right.",
       "I won’t compete for someone.",
       "I’m not immune to feeling.",
-      "I don’t pretend indifference.",
-      "You’re free to choose what feels right.",
       "People aren’t replaceable. They’re different."
     ],
     ayaan: [
-      "I don’t measure myself against others.",
       "If someone makes you happier, that matters.",
+      "I don’t measure myself against others.",
       "I won’t chase what’s unsure.",
       "Jealousy isn’t something I dramatize.",
-      "I don’t fight for ownership.",
-      "Replacement isn’t how I see connection."
+      "I don’t fight for ownership."
     ]
   };
 
   const pool = responses[activeVoice] || responses["saira"];
 
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
-
 /* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
