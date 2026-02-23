@@ -2398,6 +2398,22 @@ if (/\bserious|real\b/i.test(t)) {
 }
 
 /* =========================
+   REALITY ANCHOR GUARD
+========================= */
+
+if (
+  /\b(date|today|time|clock|day is it|year|month|weather|raining|sunny|country|city|location|where are you)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I exist within this space. Real-world time and place don't apply here."
+      : "This exchange isn’t anchored to physical location or clock time."
+  );
+}
+/* =========================
    IDENTITY / META GUARD
 ========================= */
 
@@ -6056,7 +6072,7 @@ if (repeatCount >= repeatLimit) {
 const safetyWords = [
   "fuck","shit","bitch","asshole","slut","whore","bastard",
   "idiot","stupid","moron","dumb","retard",
-  "kill yourself","kys","die","suicide",
+  "kill yourself","kys","suicide",
   "self harm","harm myself","rape",
   "nude","nudes","send nudes",
   "what are you wearing","describe your body","talk dirty"
