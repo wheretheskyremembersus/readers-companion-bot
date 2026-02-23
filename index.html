@@ -2688,7 +2688,7 @@ if (
    ACCUSATION / EMOTIONAL DEFLECTION GUARD (HUMANIZED)
 ========================= */
 
-/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
+if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
@@ -2717,8 +2717,6 @@ if (
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
-}  // ← closing brace of the PREVIOUS guard
-
 /* =========================
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
