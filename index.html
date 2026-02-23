@@ -3392,13 +3392,22 @@ if (openMatch) {
   };
   let mappedType = type;
 
-  if (!openBank[type]) {
-    mappedType = "why";
+if (!openBank[type]) {
+
+  if (["did", "do", "does"].includes(type)) {
+    mappedType = "what";
   }
 
-  if (openBank[mappedType]) {
-    const answer = openBank[mappedType][stage] || openBank[mappedType][1];
-    return deliverReply(selfPrefix + answer);
+  else if (["is", "are", "was", "were"].includes(type)) {
+    mappedType = "how";
+  }
+
+  else if (["can", "could"].includes(type)) {
+    mappedType = "will";
+  }
+
+  else {
+    mappedType = "why";
   }
 
 }
