@@ -2225,6 +2225,7 @@ if (operatorMatch || pureNumberMatch) {
    REALITY ANCHOR GUARD 
 ========================= */
   if (
+ if (
   /\bwhat\s+time\s+is\s+it\b/i.test(normalizedText) ||
   /\bwhat\s+date\s+is\s+it\b/i.test(normalizedText) ||
   /\bwhat\s+day\s+is\s+it\b/i.test(normalizedText) ||
@@ -2235,7 +2236,7 @@ if (operatorMatch || pureNumberMatch) {
   /\bwhat\s+city\s+are\s+you\s+in\b/i.test(normalizedText) ||
   /\bis\s+it\s+raining\b/i.test(normalizedText) ||
   /\bwhat\s+is\s+the\s+weather\b/i.test(normalizedText)
-).test(normalizedText)) {
+) {
 
   skipRelationalPrefix = true;
 
