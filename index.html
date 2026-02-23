@@ -2366,7 +2366,7 @@ if (/\b(language|other languages|multilingual)\b/i.test(t)) {
 
 /* ---------- Author Scope ---------- */
 
-if (/\b(author|mohan)\b/i.test(t)) {
+if (/\b(author|who wrote|written by|mohan r)\b/i.test(t)){
   skipRelationalPrefix = true;
   return deliverReply(
     activeVoice === "saira"
@@ -2721,7 +2721,7 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
 
-if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me)\b/i.test(normalizedText)) {
+if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me|care about me|fight for me|important to you|regret losing me|matter to you|who matters more|only one)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
