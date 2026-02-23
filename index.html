@@ -3409,7 +3409,14 @@ if (!openBank[type]) {
   else {
     mappedType = "why";
   }
+}
+ if (openBank[mappedType]) {
+  const answer =
+    openBank[mappedType][stage] ||
+    openBank[mappedType][1];
 
+  return deliverReply(selfPrefix + answer);
+}
 }
 /* ================================
    GENERAL RELATIONAL DETECTION
