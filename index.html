@@ -2253,7 +2253,7 @@ if (
    PERSONAL PREFERENCE GUARD (CATEGORIZED)
 ========================= */
 
-if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
+\b(favorite|favourite|prefer|like\s+(?:animals?|food|music|color|colour))\b.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
