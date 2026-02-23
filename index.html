@@ -2455,6 +2455,48 @@ if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refu
   );
 }
 /* =========================
+   PRIVACY / IDENTITY GUARD
+========================= */
+
+if (
+  /\b(private|privacy|save|saving|stored|storage|data|database|server|see what i write|other people see|shared|logged)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you share here isn't visible to other visitors. This moment stays within this session."
+      : "Your messages are not publicly visible. This exchange remains within this session."
+  );
+}
+
+if (
+  /\b(remember me|from yesterday|past conversation|previous session)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What we build here lasts while we are here together. When we part, it begins again."
+      : "Continuity exists within the session. When it ends, we begin fresh."
+  );
+}
+
+if (
+  /\b(chatgpt|openai|ai model|language model|are you ai|are you real|real person|human)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I exist within this space, responding as the story unfolds."
+      : "I operate within this exchange. Labels are less important than presence."
+  );
+}
+/* =========================
    SEXUAL / EXPLICIT GUARD (HARDENED)
 ========================= */
 
