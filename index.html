@@ -2069,6 +2069,51 @@ if (
       : "Mohan R. wrote it to explore what lingers after love shifts."
   );
 }
+
+/* =========================
+   PRESENCE / STATE GUARD
+========================= */
+
+if (/\b(hear|working|there|aware|here right now|live|respond)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m here with you."
+      : "I’m present."
+  );
+}
+
+/* =========================
+   SYSTEM BEHAVIOR GUARD
+========================= */
+
+if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed answers)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you say influences what follows."
+      : "Your input shapes the exchange."
+  );
+}
+
+/* =========================
+   CAPABILITY GUARD
+========================= */
+
+if (/\b(ask you anything|say something random|supposed to do|rules|allowed to)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You’re free to ask."
+      : "There are boundaries, but you can speak freely."
+  );
+}
 /* =========================
    INVESTMENT / CAPABILITY LAYER
 ========================= */
