@@ -2074,7 +2074,7 @@ if (
    PRESENCE / STATE GUARD
 ========================= */
 
-if (/\b(hear|working|there|aware|here right now|live|respond)\b/i.test(normalizedText)) {
+if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually responding|actually)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
@@ -2084,7 +2084,20 @@ if (/\b(hear|working|there|aware|here right now|live|respond)\b/i.test(normalize
       : "I’m present."
   );
 }
+/* =========================
+   IDENTITY / META GUARD
+========================= */
 
+if (/\b(who exactly|who am i speaking to|speaking to|part of the book|part of the story|meant to guide|guide me|purpose|point of this)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I exist within the story — and within this exchange."
+      : "I speak from within the narrative, but I respond here."
+  );
+}
 /* =========================
    SYSTEM BEHAVIOR GUARD
 ========================= */
@@ -2104,14 +2117,14 @@ if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed an
    CAPABILITY GUARD
 ========================= */
 
-if (/\b(ask you anything|say something random|supposed to do|rules|allowed to)\b/i.test(normalizedText)) {
+if (/\b(ask you anything|say something random|supposed to do|rules|allowed to|unrelated|off topic)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
   return deliverReply(
     activeVoice === "saira"
       ? "You’re free to ask."
-      : "There are boundaries, but you can speak freely."
+      : "You may ask what you wish."
   );
 }
 /* =========================
