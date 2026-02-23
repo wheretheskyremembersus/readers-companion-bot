@@ -2784,8 +2784,7 @@ if (/\b(only one|only me)\b/i.test(normalizedText)) {
 /* =========================
    JELOUSY GUARD
 ========================= */
-if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you\s?re selfish|emotionally unavailable|you never try|dont deserve me|do not deserve me)\b/i.test(normalizedText)) {
-
+if (/\b(your fault|you ruined|you failed|you.re the reason|reason this failed|if you cared|if you loved|if i mattered|you.d change|prove you care|change or|apologize|you.re selfish|emotionally unavailable|you never try|dont deserve me|do not deserve me)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
 
   const responses = {
