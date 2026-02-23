@@ -636,7 +636,7 @@ let emotionalDepth = 0;
 window.addEventListener("DOMContentLoaded", function () {
 
   skyLayer = document.getElementById("skyLayer");
-  dock = document.getElementById("dock");
+  dock = document.getElementById("questionDock");
 
   if (!checkBlockStatus()) {
     loadWelcome();
@@ -1157,7 +1157,7 @@ UNLOCK INTERACTION
 
 function setDockDisabled(state) {
 
-  const dockElement = document.getElementById("dock");
+  const dockElement = document.getElementById("questionDock");
   if (!dockElement) return;
 
   const buttons = dockElement.querySelectorAll("button");
@@ -1167,7 +1167,7 @@ function setDockDisabled(state) {
     btn.style.opacity = state ? "0.5" : "1";
     btn.style.pointerEvents = state ? "none" : "auto";
   });
-} 
+}
 /* =========================
    90% WORD MATCH ENGINE
 ========================= */
