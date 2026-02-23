@@ -2424,10 +2424,14 @@ if (repetitionCount[activeVoice] >= 2) {
    RANDOM NOISE / PATTERN BREAK GUARD
 ========================= */
 
-// Detect mostly symbols or nonsensical strings
-const noisePattern = /^[^a-zA-Z0-9\s]{4,}$|^[a-zA-Z]{1,3}\d{2,}$|^\s*$/;
-
 if (noisePattern.test(normalizedText)) {
+
+  foreignInputCount++;
+
+  if (foreignInputCount >= 5) {
+    window.location.href = "/";
+    return;
+  }
 
   skipRelationalPrefix = true;
 
@@ -2452,7 +2456,6 @@ if (noisePattern.test(normalizedText)) {
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
-console.log("HIT: REALITY_ANCHOR");
 /* =========================
    SEXUAL / EXPLICIT GUARD 
 ========================= */
