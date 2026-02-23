@@ -2253,8 +2253,7 @@ if (
    PERSONAL PREFERENCE GUARD (CATEGORIZED)
 ========================= */
 
-\b(favorite|favourite|prefer|like\s+(?:animals?|food|music|color|colour))\b.test(normalizedText)) {
-
+/\b(favorite|favourite|prefer|like\s+(?:animals?|food|music|color|colour))\b/.test(normalizedText)) {
   skipRelationalPrefix = true;
 
   // ===== ANIMAL =====
