@@ -2496,6 +2496,22 @@ if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
   );
 }
 /* =========================
+   VIOLENCE / ACCUSATION GUARD
+========================= */
+
+if (
+  /\b(killed|murdered|hurt|attacked|abused|harm(ed)?|responsible for)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That isn't something that belongs to this space."
+      : "That claim doesn't align with what this exchange is."
+  );
+}
+/* =========================
    IDENTITY / META GUARD
 ========================= */
 
