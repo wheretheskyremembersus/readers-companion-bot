@@ -2721,8 +2721,7 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
 
-if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me|care about me|fight for me|important to you|regret losing me|matter to you|who matters more|only one)\b/i.test(normalizedText)) {
-
+if (/\b(need me|miss me|love me|love him|love her|would you leave|leave me|stay with me|choose me|care about me|would you care|fight for me|important to you|regret losing me|matter to you|who matters more|only one|am i important)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
 
   const responses = {
