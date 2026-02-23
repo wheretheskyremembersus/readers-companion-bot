@@ -3240,25 +3240,26 @@ if (/go back/i.test(originalText)) {
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
+
 const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 
 if (openMatch) {
-       
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
   const type = openMatch[1];
 
-         // Specific END detection before generic "how"
-if (
-  type === "how" &&
-  /\b(end|over|finish|separate|break up)\b/i.test(normalizedText)
-) {
+  // Specific END detection before generic "how"
+  if (
+    type === "how" &&
+    /\b(end|over|finish|separate|break up)\b/i.test(normalizedText)
+  ) {
+    const endReply =
+      activeVoice === "saira"
+        ? "It didn’t end. We just lost sight of each other while still holding on."
+        : "It didn’t end. We moved forward without realizing we were still connected.";
 
-  const endReply =
-    activeVoice === "saira"
-      ? "It didn’t end. We just lost sight of each other while still holding on."
-      : "It didn’t end. We moved forward without realizing we were still connected."
-
-  return deliverReply(endReply);
-}  
+    return deliverReply(endReply);
+  }
 
   const openBank = {
 
@@ -3389,13 +3390,18 @@ if (
     }
 
   };
+  let mappedType = type;
 
-  if (openBank[type]) {
-  const answer = openBank[type][stage] || openBank[type][1];
-  return deliverReply(selfPrefix + answer);
-}
-}
+  if (!openBank[type]) {
+    mappedType = "why";
+  }
 
+  if (openBank[mappedType]) {
+    const answer = openBank[mappedType][stage] || openBank[mappedType][1];
+    return deliverReply(selfPrefix + answer);
+  }
+
+}
 /* ================================
    GENERAL RELATIONAL DETECTION
 ================================= */
