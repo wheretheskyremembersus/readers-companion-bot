@@ -3394,22 +3394,22 @@ if (openMatch) {
 
 if (!openBank[type]) {
 
-  if (["did", "do", "does"].includes(type)) {
+  if (type === "did" || type === "do" || type === "does") {
     mappedType = "what";
   }
 
-  else if (["is", "are", "was", "were"].includes(type)) {
+  else if (type === "is" || type === "are" || type === "was" || type === "were") {
     mappedType = "how";
   }
 
-  else if (["can", "could"].includes(type)) {
+  else if (type === "can" || type === "could") {
     mappedType = "will";
   }
 
   else {
     mappedType = "why";
   }
-}
+
 }
 /* ================================
    GENERAL RELATIONAL DETECTION
