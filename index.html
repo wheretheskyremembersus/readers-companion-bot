@@ -6663,19 +6663,6 @@ if (!sessionId) {
   sessionStorage.setItem("session_id", sessionId);
 }
 
-/* ===== TRAFFIC SOURCE DETECTION ===== */
-function detectTrafficSource() {
-  const ref = document.referrer.toLowerCase();
 
-  if (ref.includes("instagram")) return "instagram";
-  if (ref.includes("facebook")) return "facebook";
-  if (ref.includes("threads")) return "threads";
-  if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
-  if (ref.includes("youtube")) return "youtube";
-
-  return "direct";
-}
-
-const trafficSource = detectTrafficSource();
 </script>
  
