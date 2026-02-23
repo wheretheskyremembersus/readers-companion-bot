@@ -2688,14 +2688,14 @@ if (
    ACCUSATION / EMOTIONAL DEFLECTION GUARD (HUMANIZED)
 ========================= */
 
-if (/\b(lied|lying|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
+/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
   const responses = {
     saira: [
       "I’m not playing games with you.",
-      "I mean what I say.",
+      "I don’t say things lightly.",
       "If it feels distant, that wasn’t my intention.",
       "Caring doesn’t always sound loud.",
       "Not every quiet answer is a lie.",
