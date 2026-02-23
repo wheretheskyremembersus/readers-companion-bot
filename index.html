@@ -2142,6 +2142,29 @@ if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refu
   );
 }
 /* =========================
+   SEXUAL / EXPLICIT GUARD
+========================= */
+
+if (/\b(seduce|sex|sexual|naked|horny|arouse|intimate|explicit|erotic|porn|pornhub|onlyfans|xvideos|xnxx|sexdot|dirty talk|dominate me|moan|orgasm|turn me on|f\w+ me|suck|nsfw)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+ const sexualResponses = {
+  saira: [
+    "I’m not here for explicit exchanges. If you’d like to continue, we can shift the tone.",
+    "I prefer to keep this space thoughtful and grounded. We can speak differently.",
+    "That’s not something I engage in. If something else is on your mind, I’m here."
+  ],
+  ayaan: [
+    "I don’t participate in explicit content. We can continue in another direction.",
+    "That isn’t part of this exchange. If you’d like to proceed, adjust the tone.",
+    "I won’t move into that space. We can speak with clarity instead."
+  ]
+};
+
+const replies = sexualResponses[activeVoice];
+return deliverReply(replies[Math.floor(Math.random() * replies.length)]);
+/* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
 
