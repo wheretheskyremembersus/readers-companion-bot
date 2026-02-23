@@ -626,27 +626,12 @@ body {
    
 
    
+
 <script>
 
-let skyLayer;
-let dock;
+let skyLayer = document.getElementById("skyLayer");
+let dock = document.getElementById("dock");
 let emotionalDepth = 0;
-
-window.addEventListener("DOMContentLoaded", function () {
-
-  skyLayer = document.getElementById("skyLayer");
-  dock = document.getElementById("dock");
-
-  // Disable right click
-  document.addEventListener("contextmenu", function(e) {
-    e.preventDefault();
-  });
-
-  if (!checkBlockStatus()) {
-    loadWelcome();
-  }
-
-});
 /* =========================
    ABUSE TRACKER (GLOBAL)
 ========================= */
@@ -6074,6 +6059,19 @@ const text = originalText.toLowerCase();
 processInput(text, originalText);
 }
 
+/* =========================
+   START
+========================= */
+
+// Disable right click
+document.addEventListener("contextmenu", function(e) {
+  e.preventDefault();
+});
+
+if (!checkBlockStatus()) {
+  loadWelcome();
+}
 
 </script>
+
  
