@@ -2142,6 +2142,21 @@ if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refu
   );
 }
 /* =========================
+   COMPOSURE / ABSURDITY GUARD
+========================= */
+
+if (/\b(all caps|banana|bored|laugh|sarcastic|insult|random symbols|break|pretend|ignore questions|confuse you|judging me)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I stay composed, even when the tone shifts."
+      : "I remain steady, regardless of how the question is framed."
+  );
+}
+
+/* =========================
    INVESTMENT / CAPABILITY LAYER
 ========================= */
 
