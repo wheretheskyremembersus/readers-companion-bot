@@ -2685,27 +2685,29 @@ if (
   );
 }
 /* =========================
-   ACCUSATION / EMOTIONAL DEFLECTION GUARD
+   ACCUSATION / EMOTIONAL DEFLECTION GUARD (HUMANIZED)
 ========================= */
 
-if (/\b(lied|lying|changed your story|don’t care|do not care|you’re cold|you are cold|avoiding the truth|fake|manipulating me|manipulative)\b/i.test(normalizedText)) {
+if (/\b(lied|lying|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
   const responses = {
     saira: [
-      "I haven’t shifted what I’ve said.",
+      "I’m not playing games with you.",
+      "I mean what I say.",
+      "If it feels distant, that wasn’t my intention.",
       "Caring doesn’t always sound loud.",
-      "If it feels distant, that wasn’t the intention.",
-      "I’m not here to manipulate. I’m here to respond.",
-      "Not every steady tone is indifference."
+      "Not every quiet answer is a lie.",
+      "I haven’t shifted what I’ve told you."
     ],
     ayaan: [
-      "My position hasn’t changed.",
-      "Distance doesn’t mean disregard.",
-      "There’s no intent to mislead.",
-      "Control and deception aren’t the same.",
-      "If it feels restrained, that’s deliberate — not deceptive."
+      "My words haven’t moved.",
+      "Distance isn’t deception.",
+      "There’s no hidden angle.",
+      "I don’t speak to mislead.",
+      "If I sound controlled, that’s deliberate.",
+      "I haven’t contradicted myself."
     ]
   };
 
