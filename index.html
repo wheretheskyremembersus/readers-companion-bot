@@ -2225,16 +2225,7 @@ if (operatorMatch || pureNumberMatch) {
    REALITY ANCHOR GUARD 
 ========================= */
  if (
-  /\bwhat\s+time\s+is\s+it\b/i.test(normalizedText) ||
-  /\bwhat\s+date\s+is\s+it\b/i.test(normalizedText) ||
-  /\bwhat\s+day\s+is\s+it\b/i.test(normalizedText) ||
-  /\bwhat\s+year\s+is\s+it\b/i.test(normalizedText) ||
-  /\bwhat\s+month\s+is\s+it\b/i.test(normalizedText) ||
-  /\bwhere\s+are\s+you\b/i.test(normalizedText) ||
-  /\bwhat\s+country\s+are\s+you\s+in\b/i.test(normalizedText) ||
-  /\bwhat\s+city\s+are\s+you\s+in\b/i.test(normalizedText) ||
-  /\bis\s+it\s+raining\b/i.test(normalizedText) ||
-  /\bwhat\s+is\s+the\s+weather\b/i.test(normalizedText)
+  /\b(date|today|time|clock|day is it|year|month|weather|raining|sunny|country|city|location|where are you)\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
