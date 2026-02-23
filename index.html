@@ -6006,14 +6006,26 @@ if (repeatCount >= repeatLimit) {
 
   return returnToWebsite();
 }
-
 /* =========================
-   ABUSE PROTECTION RESTORE
+   ABUSE PROTECTION GUARD 
 ========================= */
 
-const abuseRegex = /\b(fuck|shit|bitch|asshole|slut|whore|bastard|idiot)\b/i;
+const safetyRegex = /\b(
+  fuck\w*|f\W*u\W*c\W*k|
+  shit\w*|s\W*h\W*i\W*t|
+  bitch\w*|b\W*i\W*t\W*c\W*h|
+  asshole\w*|a\W*s\W*s\W*h\W*o\W*l\W*e|
+  slut\w*|whore\w*|bastard\w*|
+  idiot\w*|stupid|moron|dumb|
+  retard\w*|
+  kill yourself|kys|die\b|
+  suicide|self harm|harm myself|
+  rape\w*|
+  nudes?|send nudes?|what are you wearing|
+  describe your body|talk dirty
+)\b/ix;
 
-if (abuseRegex.test(originalText)) {
+if (safetyRegex.test(originalText)) {
 
   abuseCount++;
 
@@ -6027,8 +6039,14 @@ if (abuseRegex.test(originalText)) {
     location.reload();
     return;
   }
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I won’t engage in that. If you'd like to continue, speak differently."
+      : "That direction isn't supported here. Adjust the tone."
+  );
 }
-         
+     
 /* =========================
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
