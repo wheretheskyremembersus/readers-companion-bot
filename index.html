@@ -4632,7 +4632,10 @@ if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
 }
 
 /* 4️⃣ Uncertainty */
-if (/^(idk|i dont know|not sure|maybe)$/i.test(micro)) {
+if (
+  /^(idk|i dont know|not sure|maybe)$/i.test(micro) &&
+  wordCount <= 3
+) {
 
   const uncertaintyBank = {
     saira: [
@@ -4652,7 +4655,6 @@ if (/^(idk|i dont know|not sure|maybe)$/i.test(micro)) {
 
   return deliverReply(pool[index]);
 }
-
 /* 5️⃣ Continuation Prompt */
 if (/^(go on|continue|and|then|so)$/i.test(micro)) {
   return deliverReply(
