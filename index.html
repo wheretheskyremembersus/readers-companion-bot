@@ -3738,8 +3738,8 @@ if (/\bwho\s+are\s+you\b/i.test(originalText)) {
 }
 
          
-if (/scripted|pre[- ]?written|just lines|just programmed/i.test(lower)) {
-
+if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(lower)) {
+         
   skipRelationalPrefix = true;
 
   return deliverReply(
