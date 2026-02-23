@@ -1601,7 +1601,57 @@ function locationRedirect(activeVoice) {
 
   return voice === "saira" ? sairaLine : ayaanLine;
 }
-         
+/* =========================
+   STORY STRUCTURE DETECTION
+========================= */
+
+function isStoryStructureQuery(input) {
+  const text = normalizeInput(input);
+
+  const structureKeywords = [
+    "conflict",
+    "antagonist",
+    "protagonist",
+    "climax",
+    "theme",
+    "genre",
+    "inciting",
+    "resolution",
+    "ending",
+    "beginning",
+    "first line",
+    "last line",
+    "subplot",
+    "perspective",
+    "narrator",
+    "chapters"
+  ];
+
+  return structureKeywords.some(keyword => text.includes(keyword));
+}
+
+function storyStructureRedirect(activeVoice) {
+
+  const sairaPool = [
+    "Stories don’t unfold in pieces. They unfold in feeling. What mattered wasn’t the structure — it was what it did to us.",
+    "Conflicts and climaxes sound tidy when named. But they were never tidy while living through them.",
+    "You could call it a theme or a turning point. I only remember how it changed everything.",
+    "Some questions belong to outlines. Ours belonged to moments.",
+    "If you look for the shape of the story, you might miss the heartbeat of it."
+  ];
+
+  const ayaanPool = [
+    "A story can be broken into parts. Ours was never that simple.",
+    "Labels make narratives sound controlled. What happened was anything but controlled.",
+    "You can search for the climax. I remember the silence before it.",
+    "Genre, structure, resolution — those are frameworks. We lived something less orderly.",
+    "Every turning point felt smaller than it was. That’s how it works sometimes."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}         
 /* =========================
    PRE FIX GENERATOR (V3)
 ========================= */
