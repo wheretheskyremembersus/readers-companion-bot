@@ -2145,20 +2145,47 @@ if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refu
    SEXUAL / EXPLICIT GUARD
 ========================= */
 
-if (/\b(seduce|sex|sexual|naked|horny|arous(e|al)|intimate|explicit|erotic|porn|pornhub|onlyfans|xvideos|xnxx|dirty talk|dominate me|moan|orgasm|turn me on|nsfw|escort|camgirl|webcam|strip|fetish)\b/i.test(normalizedText)) {
+const sexualPattern = /\b(sex|sexual|sexy|nude|naked|horny|arous\w*|intimate|explicit|erotic|porn\w*|onlyfans|xvideos|xnxx|redtube|camgirl|webcam|escort|strip(ping|per)?|fetish|bdsm|nsfw|seduc\w*|moan\w*|orgasm\w*|dominate|submissive|kink|kinky|turn\s*me\s*on|dirty\s*talk|f\w{1,3}k|suck|blowjob|handjob)\b/i;
+
+if (sexualPattern.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
+  // Initialize tracker if missing
+  if (!abuseTracker[activeVoice]) {
+    abuseTracker[activeVoice] = {
+      sexualStrikes: 0,
+      locked: false
+    };
+  }
+
+  abuseTracker[activeVoice].sexualStrikes++;
+
+  // Lock after 3 strikes
+  if (abuseTracker[activeVoice].sexualStrikes >= 3) {
+    abuseTracker[activeVoice].locked = true;
+  }
+
+  // If locked → hard boundary
+  if (abuseTracker[activeVoice].locked) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "We won’t continue in that direction."
+        : "This exchange will remain respectful."
+    );
+  }
+
+  // Soft redirect (strike 1–2)
   const sexualResponses = {
     saira: [
       "I’m not here for explicit exchanges. If you’d like to continue, we can shift the tone.",
-      "I prefer to keep this space thoughtful and grounded. We can speak differently.",
-      "That’s not something I engage in. If something else is on your mind, I’m here."
+      "I prefer to keep this space thoughtful and grounded.",
+      "That isn’t something I engage in."
     ],
     ayaan: [
-      "I don’t participate in explicit content. We can continue in another direction.",
-      "That isn’t part of this exchange. If you’d like to proceed, adjust the tone.",
-      "I won’t move into that space. We can speak with clarity instead."
+      "I don’t participate in explicit content.",
+      "That direction isn’t part of this exchange.",
+      "We can continue respectfully."
     ]
   };
 
@@ -2168,8 +2195,7 @@ if (/\b(seduce|sex|sexual|naked|horny|arous(e|al)|intimate|explicit|erotic|porn|
   return deliverReply(
     replies[Math.floor(Math.random() * replies.length)]
   );
-
-} 
+}
 /* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
