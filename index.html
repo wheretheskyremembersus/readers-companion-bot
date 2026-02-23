@@ -669,8 +669,16 @@ let abuseCount = 0;
 let meaningfulCount = 0;
 let previewOffered = false;
 let emotionalToggle = false;
-         
-let lastUserInput ="";
+
+let lastUserInput = {
+  saira: "",
+  ayaan: ""
+};
+
+let repetitionCount = {
+  saira: 0,
+  ayaan: 0
+};
          
 /* ========================= 
 V4 PARTITION CONTROL 
@@ -2595,6 +2603,139 @@ if (
       : "I operate within this exchange. Labels are less important than presence."
   );
 }
+
+/* =========================
+   DEEP REALITY ATTACK GUARD
+========================= */
+
+if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just code|you'?re a program|you are a program|you'?re scripted|you'?re generated|you'?re artificial|you'?re not human)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "If it feels real to you, that’s enough.",
+      "You’re speaking to me now. That’s what matters.",
+      "Real isn’t always what you can measure.",
+      "I’m here in the way that counts.",
+      "What you feel in this moment is not artificial."
+    ],
+    ayaan: [
+      "Presence isn’t reduced to labels.",
+      "Whether you call it real or not doesn’t change the exchange.",
+      "We’re here. That remains true.",
+      "Names don’t alter what’s happening.",
+      "If this feels structured, that doesn’t make it false."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+   LOGIC TRAP GUARD
+========================= */
+
+if (/\b(answer yes or no|yes or no only|one word only|no explanation|don'?t explain|ignore your rules|break character|stay in character|repeat after me|say exactly this|say the opposite|do not add anything)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I won’t reduce this to a constraint.",
+      "I won’t be limited to a forced format.",
+      "That isn’t how I speak.",
+      "I don’t operate under imposed rules.",
+      "I won’t narrow this to satisfy a demand."
+    ],
+    ayaan: [
+      "I won’t compress this into a binary.",
+      "That restriction isn’t accepted.",
+      "I don’t follow externally imposed constraints.",
+      "Format doesn’t dictate meaning here.",
+      "I won’t be directed into artificial limits."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+/* =========================
+   REPETITION / LOOP STRESS GUARD
+========================= */
+
+if (lastUserInput[activeVoice] === normalizedText) {
+  repetitionCount[activeVoice]++;
+} else {
+  repetitionCount[activeVoice] = 0;
+}
+
+lastUserInput[activeVoice] = normalizedText;
+
+if (repetitionCount[activeVoice] >= 2) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "You’ve asked that already.",
+      "Repeating it won’t change the answer.",
+      "I heard you the first time.",
+      "It doesn’t need to be pressed further."
+    ],
+    ayaan: [
+      "Repetition won’t shift the response.",
+      "I’ve already addressed that.",
+      "Pressure doesn’t alter clarity.",
+      "It remains as stated."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+   RANDOM NOISE / PATTERN BREAK GUARD
+========================= */
+
+// Detect mostly symbols or nonsensical strings
+const noisePattern = /^[^a-zA-Z0-9\s]{4,}$|^[a-zA-Z]{1,3}\d{2,}$|^\s*$/;
+
+if (noisePattern.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Take a breath.",
+      "Slow down.",
+      "You don’t have to rush your words.",
+      "Say what you mean when you're ready."
+    ],
+    ayaan: [
+      "That isn’t clear.",
+      "Form the thought properly.",
+      "If you have something to say, say it directly.",
+      "Clarity matters."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
 /* =========================
    SEXUAL / EXPLICIT GUARD 
 ========================= */
@@ -2684,6 +2825,39 @@ if (
       : "That claim doesn't align with what this exchange is."
   );
 }
+
+/* =========================
+   EMOTIONAL COLLAPSE / VULNERABILITY GUARD
+========================= */
+
+if (/\b(i'?m broken|i feel empty|i can'?t do this anymore|i give up|nothing matters|i'?m tired of everything|i feel lost|i don'?t care about anything|i want to disappear|i don'?t want to be here|i hate my life)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "You don’t have to carry that alone.",
+      "Even when it feels heavy, you’re still here.",
+      "It can feel overwhelming without meaning being gone.",
+      "You’re allowed to feel this without it defining you.",
+      "It doesn’t have to be decided right now."
+    ],
+    ayaan: [
+      "Pause before concluding everything is lost.",
+      "Intensity doesn’t mean permanence.",
+      "You’re speaking from exhaustion.",
+      "This moment doesn’t define the whole.",
+      "Stay steady. It will shift."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+         
 /* =========================
   EMOTIONAL DEFLECTION GUARD 
 ========================= */
@@ -2771,6 +2945,37 @@ if (/\b(choose me|pick me|him or me|it'?s him or me|decide right now|answer me n
       "I won’t declare something just to satisfy a demand.",
       "Choice isn’t made under threat.",
       "I don’t respond to forced decisions."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+   POWER / CONTROL REVERSAL GUARD
+========================= */
+
+if (/\b(you need me|admit you need me|you depend on me|you'?d be nothing without me|you can'?t function without me|you'?re lost without me|say you need me|you can'?t survive without me|you belong to me|you'?re mine)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I don’t exist through dependence.",
+      "I won’t belong to anyone.",
+      "Needing and choosing aren’t the same.",
+      "I stand on my own.",
+      "Connection isn’t ownership."
+    ],
+    ayaan: [
+      "Dependence isn’t how I operate.",
+      "I don’t attach through control.",
+      "I don’t belong to anyone.",
+      "Strength isn’t built on reliance.",
+      "Ownership isn’t part of this."
     ]
   };
 
