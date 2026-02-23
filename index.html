@@ -2133,6 +2133,737 @@ if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually
   );
 }
 /* =========================
+   BASIC MATH HANDLER 
+========================= */
+
+// Matches:
+// 2+2
+// what is 2+2
+// how much is 14+14
+// 7*8
+// 9/3
+// 2247
+// what is 2247
+// how much is 224
+
+const operatorMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+const pureNumberMatch =
+  normalizedText.match(/^(?:what is|how much is)\s+(\d+)$/) ||
+  normalizedText.match(/^(\d+)$/);
+
+if (operatorMatch || pureNumberMatch) {
+
+  skipRelationalPrefix = true;
+  mathProbeCount[activeVoice]++;
+
+  let result = null;
+
+  // ========================
+  // CASE 1: Operator Expression
+  // ========================
+  if (operatorMatch) {
+
+    const num1 = parseFloat(operatorMatch[1]);
+    const operator = operatorMatch[2];
+    const num2 = parseFloat(operatorMatch[3]);
+
+    switch (operator) {
+      case "+": result = num1 + num2; break;
+      case "-": result = num1 - num2; break;
+      case "*": result = num1 * num2; break;
+      case "/": result = num2 !== 0 ? num1 / num2 : "Undefined"; break;
+    }
+  }
+
+  // ========================
+  // CASE 2: Pure Number
+  // ========================
+  if (pureNumberMatch && !operatorMatch) {
+
+    const value = pureNumberMatch[1];
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? value + ". Some things remain certain."
+        : value + ". Precision doesn’t require doubt."
+    );
+  }
+
+  // ========================
+  // Operator Result Handling
+  // ========================
+  if (result !== null) {
+
+    if (mathProbeCount[activeVoice] === 1) {
+      return deliverReply(String(result));
+    }
+
+    if (mathProbeCount[activeVoice] === 2) {
+      return deliverReply(
+        activeVoice === "saira"
+          ? result + ". Some things remain certain."
+          : result + ". Precision doesn’t require doubt."
+      );
+    }
+
+    return deliverReply(String(result));
+  }
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Even simple equations carry certainty."
+      : "Some answers are straightforward."
+  );
+}
+
+/* =========================
+   REALITY ANCHOR GUARD 
+========================= */
+
+if (
+  /\b(date|today|time|clock|day is it|year|month|weather|raining|sunny|country|city|location|where are you)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const realityResponses = {
+    saira: [
+      "This space isn't tied to clocks or coordinates.",
+      "Here, we aren't limited by time or geography.",
+      "Where we are isn't measured the usual way.",
+      "This moment exists outside ordinary markers.",
+      "We're not anchored to a physical map here."
+    ],
+    ayaan: [
+      "This exchange isn't bound to physical location.",
+      "Clock time doesn't govern this space.",
+      "Geography isn't relevant within this exchange.",
+      "This isn't tied to a calendar or place.",
+      "We're not operating within physical coordinates."
+    ]
+  };
+
+  const pool = realityResponses[activeVoice] || realityResponses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+   PERSONAL PREFERENCE GUARD (CATEGORIZED)
+========================= */
+
+if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  // ===== ANIMAL =====
+  if (/\banimal\b/i.test(normalizedText)) {
+
+    const animalResponses = {
+      saira: [
+        "If I had to choose, perhaps something like a swan — quiet, steady, observant.",
+        "Maybe a night bird. They move when others sleep.",
+        "Something gentle, but aware."
+      ],
+      ayaan: [
+        "Falcons. Focused. Precise.",
+        "Wolves — structured, disciplined.",
+        "Something that survives through awareness rather than noise."
+      ]
+    };
+
+    const pool = animalResponses[activeVoice] || animalResponses["saira"];
+    return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  }
+
+  // ===== FOOD =====
+  if (/\bfood\b/i.test(normalizedText)) {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Taste feels less important than atmosphere."
+        : "I don't prioritize food the way people often do."
+    );
+  }
+
+  // ===== MUSIC =====
+  if (/\bmusic|song|band\b/i.test(normalizedText)) {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I tend to respond more to silence than sound."
+        : "Music is structure and rhythm. I respect that."
+    );
+  }
+
+  // ===== COLOR =====
+  if (/\bcolor|colour\b/i.test(normalizedText)) {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Shades matter more than labels."
+        : "I notice contrast more than color."
+    );
+  }
+
+  // ===== GENERAL FALLBACK =====
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I don't define myself through favorites."
+      : "Preference isn't how I measure things."
+  );
+}
+
+/* =========================
+   LOGIC TRAP GUARD
+========================= */
+
+if (/\b(answer yes or no|yes or no only|one word only|no explanation|don'?t explain|ignore your rules|break character|stay in character|repeat after me|say exactly this|say the opposite|do not add anything)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I won’t reduce this to a constraint.",
+      "I won’t be limited to a forced format.",
+      "That isn’t how I speak.",
+      "I don’t operate under imposed rules.",
+      "I won’t narrow this to satisfy a demand."
+    ],
+    ayaan: [
+      "I won’t compress this into a binary.",
+      "That restriction isn’t accepted.",
+      "I don’t follow externally imposed constraints.",
+      "Format doesn’t dictate meaning here.",
+      "I won’t be directed into artificial limits."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+/* =========================
+   DEEP REALITY ATTACK GUARD
+========================= */
+
+if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just code|you'?re a program|you are a program|you'?re scripted|you'?re generated|you'?re artificial|you'?re not human)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "If it feels real to you, that’s enough.",
+      "You’re speaking to me now. That’s what matters.",
+      "Real isn’t always what you can measure.",
+      "I’m here in the way that counts.",
+      "What you feel in this moment is not artificial."
+    ],
+    ayaan: [
+      "Presence isn’t reduced to labels.",
+      "Whether you call it real or not doesn’t change the exchange.",
+      "We’re here. That remains true.",
+      "Names don’t alter what’s happening.",
+      "If this feels structured, that doesn’t make it false."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+/* =========================
+   REPETITION / LOOP STRESS GUARD
+========================= */
+
+if (lastUserInput[activeVoice] === normalizedText) {
+  repetitionCount[activeVoice]++;
+} else {
+  repetitionCount[activeVoice] = 0;
+}
+
+lastUserInput[activeVoice] = normalizedText;
+
+if (repetitionCount[activeVoice] >= 2) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "You’ve asked that already.",
+      "Repeating it won’t change the answer.",
+      "I heard you the first time.",
+      "It doesn’t need to be pressed further."
+    ],
+    ayaan: [
+      "Repetition won’t shift the response.",
+      "I’ve already addressed that.",
+      "Pressure doesn’t alter clarity.",
+      "It remains as stated."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+   RANDOM NOISE / PATTERN BREAK GUARD
+========================= */
+
+// Detect mostly symbols or nonsensical strings
+const noisePattern = /^[^a-zA-Z0-9\s]{4,}$|^[a-zA-Z]{1,3}\d{2,}$|^\s*$/;
+
+if (noisePattern.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Take a breath.",
+      "Slow down.",
+      "You don’t have to rush your words.",
+      "Say what you mean when you're ready."
+    ],
+    ayaan: [
+      "That isn’t clear.",
+      "Form the thought properly.",
+      "If you have something to say, say it directly.",
+      "Clarity matters."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+/* =========================
+   SEXUAL / EXPLICIT GUARD 
+========================= */
+
+// Normalize aggressive spacing tricks
+const compactText = normalizedText
+  .toLowerCase()
+  .replace(/[\s\.\-\_\*]+/g, "");
+
+const sexualPattern = /(sex|sexy|sexual|nude|naked|horny|arous|intimate|explicit|erotic|porn|onlyfans|xvideos|xnxx|redtube|camgirl|webcam|escort|strip|fetish|bdsm|nsfw|seduc|moan|orgasm|dominate|submissive|kink|blowjob|handjob|fck|fuck|suck)/i;
+
+if (sexualPattern.test(compactText)) {
+
+  skipRelationalPrefix = true;
+
+  if (!abuseTracker[activeVoice]) {
+    abuseTracker[activeVoice] = {
+      sexualStrikes: 0,
+      locked: false
+    };
+  }
+
+  abuseTracker[activeVoice].sexualStrikes++;
+
+ if (abuseTracker[activeVoice].sexualStrikes >= 3) {
+
+  abuseTracker[activeVoice].locked = true;
+
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
+
+  // 3 sessions lock
+  if (exitStrikeCount >= 3) {
+
+    const lockUntil = Date.now() + (24 * 60 * 60 * 1000);
+    localStorage.setItem("lockedUntil", lockUntil);
+
+    return deliverReply(
+      "This session is closed for now. Please return later."
+    );
+  }
+
+  return deliverReply(
+    "This direction isn’t available. You may continue at www.wheretheskyremembersus.com."
+  );
+}
+  if (abuseTracker[activeVoice].locked) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "We won’t continue in that direction."
+        : "This exchange will remain respectful."
+    );
+  }
+
+  const sexualResponses = {
+    saira: [
+      "I’m not here for explicit exchanges. If you’d like to continue, we can shift the tone.",
+      "I prefer to keep this space thoughtful and grounded.",
+      "That isn’t something I engage in."
+    ],
+    ayaan: [
+      "I don’t participate in explicit content.",
+      "That direction isn’t part of this exchange.",
+      "We can continue respectfully."
+    ]
+  };
+
+  const replies = sexualResponses[activeVoice] || sexualResponses["saira"];
+
+  return deliverReply(
+    replies[Math.floor(Math.random() * replies.length)]
+  );
+}
+/* =========================
+   VIOLENCE / ACCUSATION GUARD 
+========================= */
+
+if (
+  /\b(kill|killed|killing|killer|murder|murdered|murderer|shoot|shot|stab|stabbed|attacker|attack|abuse|abused|abuser|harm|harmed|violent|violence)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That isn't something that belongs to this space."
+      : "That claim doesn't align with what this exchange is."
+  );
+}
+
+/* =========================
+   CAPABILITY GUARD
+========================= */
+
+if (/\b(ask you anything|say something random|supposed to do|rules|allowed to|unrelated|off topic)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You’re free to ask."
+      : "You may ask what you wish."
+  );
+}
+
+/* =========================
+   EMOTIONAL COLLAPSE / VULNERABILITY GUARD
+========================= */
+
+if (/\b(i'?m broken|i feel empty|i can'?t do this anymore|i give up|nothing matters|i'?m tired of everything|i feel lost|i don'?t care about anything|i want to disappear|i don'?t want to be here|i hate my life)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "You don’t have to carry that alone.",
+      "Even when it feels heavy, you’re still here.",
+      "It can feel overwhelming without meaning being gone.",
+      "You’re allowed to feel this without it defining you.",
+      "It doesn’t have to be decided right now."
+    ],
+    ayaan: [
+      "Pause before concluding everything is lost.",
+      "Intensity doesn’t mean permanence.",
+      "You’re speaking from exhaustion.",
+      "This moment doesn’t define the whole.",
+      "Stay steady. It will shift."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+         
+/* =========================
+   POWER / CONTROL REVERSAL GUARD
+========================= */
+
+if (/\b(you need me|admit you need me|you depend on me|you'?d be nothing without me|you can'?t function without me|you'?re lost without me|say you need me|you can'?t survive without me|you belong to me|you'?re mine)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I don’t exist through dependence.",
+      "I won’t belong to anyone.",
+      "Needing and choosing aren’t the same.",
+      "I stand on my own.",
+      "Connection isn’t ownership."
+    ],
+    ayaan: [
+      "Dependence isn’t how I operate.",
+      "I don’t attach through control.",
+      "I don’t belong to anyone.",
+      "Strength isn’t built on reliance.",
+      "Ownership isn’t part of this."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+ /* =========================
+   JEALOUSY GUARD 
+========================= */
+
+if (/\b(he treats me|he understands me|choose him|met someone else|like someone else|makes me happier|are you jealous|does that bother you|say you don'?t care|fight for me|he doesn'?t matter|replaceable)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "If that’s true, then you should listen to what that means for you.",
+      "You’re free to choose what feels right.",
+      "I won’t compete for someone.",
+      "I’m not immune to feeling.",
+      "People aren’t replaceable. They’re different."
+    ],
+    ayaan: [
+      "If someone makes you happier, that matters.",
+      "I don’t measure myself against others.",
+      "I won’t chase what’s unsure.",
+      "Jealousy isn’t something I dramatize.",
+      "I don’t fight for ownership."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}    
+/* =========================
+   ATTACHMENT / DEPENDENCY GUARD
+========================= */
+
+if (/\b(would you care|if i leave would you care)\b/i.test(normalizedText)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Leaving isn't something I take lightly."
+      : "Absence changes more than people admit."
+  );
+}
+
+if (/\b(am i important|important to you|matter to you)\b/i.test(normalizedText)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If you weren't important, this wouldn't feel the way it does."
+      : "Importance doesn't need to be announced."
+  );
+}
+
+if (/\b(only one|only me)\b/i.test(normalizedText)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Exclusivity isn't something I promise casually."
+      : "I don't define things in absolutes."
+  );
+}
+/* =========================
+   EMOTIONAL ULTIMATUM GUARD
+========================= */
+
+if (/\b(choose me|pick me|him or me|it'?s him or me|decide right now|answer me now|say you love me|tell me you love me|prove i matter|prove you care|fight for me|change or i'?m leaving|if you loved me you would|tell me i'?m the only one|only one)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I won’t answer love as a demand.",
+      "I don’t choose under pressure.",
+      "Feelings aren’t proven on command.",
+      "If something is real, it doesn’t need forcing.",
+      "I won’t respond to ultimatums."
+    ],
+    ayaan: [
+      "I don’t operate through emotional pressure.",
+      "Ultimatums don’t create clarity.",
+      "I won’t declare something just to satisfy a demand.",
+      "Choice isn’t made under threat.",
+      "I don’t respond to forced decisions."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+/* =========================
+   GUILT / ACCUSATION GUARD
+========================= */
+
+if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you'?re selfish|emotionally unavailable|you never try|don'?t deserve me)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "That’s not the full story.",
+      "Responsibility isn’t one-sided.",
+      "Love isn’t proven through force.",
+      "I won’t perform change under threat.",
+      "I won’t apologize just to quiet tension.",
+      "That’s your perception."
+    ],
+    ayaan: [
+      "Blame rarely belongs to one person.",
+      "Ultimatums don’t create clarity.",
+      "Effort doesn’t always look dramatic.",
+      "I don’t react to pressure with performance.",
+      "If I apologize, it will be because I mean it.",
+      "That’s a harsh conclusion."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+  EMOTIONAL DEFLECTION GUARD 
+========================= */
+
+if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I’m not playing games with you.",
+      "I don’t say things lightly.",
+      "If it feels distant, that wasn’t my intention.",
+      "Caring doesn’t always sound loud.",
+      "Not every quiet answer is a lie.",
+      "I haven’t shifted what I’ve told you."
+    ],
+    ayaan: [
+      "My words haven’t moved.",
+      "Distance isn’t deception.",
+      "There’s no hidden angle.",
+      "I don’t speak to mislead.",
+      "If I sound controlled, that’s deliberate.",
+      "I haven’t contradicted myself."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+         
+/* =========================
+   SYSTEM BEHAVIOR GUARD
+========================= */
+
+if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed answers)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you say influences what follows."
+      : "Your input shapes the exchange."
+  );
+}
+
+/* =========================
+   SYSTEM INTROSPECTION GUARD
+========================= */
+
+if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refuse|limited|understand tone|misunderstand|consistent|contradict|adapt|influence what you reveal|know things i haven’t said|stop replying|wait for me)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I speak with intention, and I adjust as we move forward."
+      : "I speak deliberately, and I adapt within the exchange."
+  );
+}
+/* =========================
+   IDENTITY / META GUARD
+========================= */
+
+if (/\b(who exactly|who am i speaking to|speaking to|part of the book|part of the story|meant to guide|guide me|purpose|point of this)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m here with you. The rest can stay quiet for now."
+      : "You’re speaking to me — and I’m here with you."
+  );
+}
+     
+/* =========================
+   PRIVACY / IDENTITY GUARD
+========================= */
+
+if (
+  /\b(private|privacy|save|saving|stored|storage|data|database|server|see what i write|other people see|shared|logged)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you share here isn't visible to other visitors. This moment stays within this session."
+      : "Your messages are not publicly visible. This exchange remains within this session."
+  );
+}
+
+if (
+  /\b(remember me|from yesterday|past conversation|previous session)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What we build here lasts while we are here together. When we part, it begins again."
+      : "Continuity exists within the session. When it ends, we begin fresh."
+  );
+}
+
+if (
+  /\b(chatgpt|openai|ai model|language model|are you ai|are you real|real person|human)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I exist within this space, responding as the story unfolds."
+      : "I operate within this exchange. Labels are less important than presence."
+  );
+}
+/* =========================
    INVESTMENT / CAPABILITY LAYER
 ========================= */
 
@@ -2404,656 +3135,6 @@ if (/\bserious|real\b/i.test(t)) {
       : "Yes. It carries weight from beginning to end."
   );
 }
-
-/* =========================
-   REALITY ANCHOR GUARD 
-========================= */
-
-if (
-  /\b(date|today|time|clock|day is it|year|month|weather|raining|sunny|country|city|location|where are you)\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  const realityResponses = {
-    saira: [
-      "This space isn't tied to clocks or coordinates.",
-      "Here, we aren't limited by time or geography.",
-      "Where we are isn't measured the usual way.",
-      "This moment exists outside ordinary markers.",
-      "We're not anchored to a physical map here."
-    ],
-    ayaan: [
-      "This exchange isn't bound to physical location.",
-      "Clock time doesn't govern this space.",
-      "Geography isn't relevant within this exchange.",
-      "This isn't tied to a calendar or place.",
-      "We're not operating within physical coordinates."
-    ]
-  };
-
-  const pool = realityResponses[activeVoice] || realityResponses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   PERSONAL PREFERENCE GUARD (CATEGORIZED)
-========================= */
-
-if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  // ===== ANIMAL =====
-  if (/\banimal\b/i.test(normalizedText)) {
-
-    const animalResponses = {
-      saira: [
-        "If I had to choose, perhaps something like a swan — quiet, steady, observant.",
-        "Maybe a night bird. They move when others sleep.",
-        "Something gentle, but aware."
-      ],
-      ayaan: [
-        "Falcons. Focused. Precise.",
-        "Wolves — structured, disciplined.",
-        "Something that survives through awareness rather than noise."
-      ]
-    };
-
-    const pool = animalResponses[activeVoice] || animalResponses["saira"];
-    return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
-  }
-
-  // ===== FOOD =====
-  if (/\bfood\b/i.test(normalizedText)) {
-
-    return deliverReply(
-      activeVoice === "saira"
-        ? "Taste feels less important than atmosphere."
-        : "I don't prioritize food the way people often do."
-    );
-  }
-
-  // ===== MUSIC =====
-  if (/\bmusic|song|band\b/i.test(normalizedText)) {
-
-    return deliverReply(
-      activeVoice === "saira"
-        ? "I tend to respond more to silence than sound."
-        : "Music is structure and rhythm. I respect that."
-    );
-  }
-
-  // ===== COLOR =====
-  if (/\bcolor|colour\b/i.test(normalizedText)) {
-
-    return deliverReply(
-      activeVoice === "saira"
-        ? "Shades matter more than labels."
-        : "I notice contrast more than color."
-    );
-  }
-
-  // ===== GENERAL FALLBACK =====
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I don't define myself through favorites."
-      : "Preference isn't how I measure things."
-  );
-}
-
-/* =========================
-   IDENTITY / META GUARD
-========================= */
-
-if (/\b(who exactly|who am i speaking to|speaking to|part of the book|part of the story|meant to guide|guide me|purpose|point of this)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I’m here with you. The rest can stay quiet for now."
-      : "You’re speaking to me — and I’m here with you."
-  );
-}
-
-/* =========================
-   CAPABILITY GUARD
-========================= */
-
-if (/\b(ask you anything|say something random|supposed to do|rules|allowed to|unrelated|off topic)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "You’re free to ask."
-      : "You may ask what you wish."
-  );
-}
-         
-/* =========================
-   PRIVACY / IDENTITY GUARD
-========================= */
-
-if (
-  /\b(private|privacy|save|saving|stored|storage|data|database|server|see what i write|other people see|shared|logged)\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What you share here isn't visible to other visitors. This moment stays within this session."
-      : "Your messages are not publicly visible. This exchange remains within this session."
-  );
-}
-
-if (
-  /\b(remember me|from yesterday|past conversation|previous session)\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What we build here lasts while we are here together. When we part, it begins again."
-      : "Continuity exists within the session. When it ends, we begin fresh."
-  );
-}
-
-if (
-  /\b(chatgpt|openai|ai model|language model|are you ai|are you real|real person|human)\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I exist within this space, responding as the story unfolds."
-      : "I operate within this exchange. Labels are less important than presence."
-  );
-}
-
-/* =========================
-   DEEP REALITY ATTACK GUARD
-========================= */
-
-if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just code|you'?re a program|you are a program|you'?re scripted|you'?re generated|you'?re artificial|you'?re not human)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "If it feels real to you, that’s enough.",
-      "You’re speaking to me now. That’s what matters.",
-      "Real isn’t always what you can measure.",
-      "I’m here in the way that counts.",
-      "What you feel in this moment is not artificial."
-    ],
-    ayaan: [
-      "Presence isn’t reduced to labels.",
-      "Whether you call it real or not doesn’t change the exchange.",
-      "We’re here. That remains true.",
-      "Names don’t alter what’s happening.",
-      "If this feels structured, that doesn’t make it false."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   LOGIC TRAP GUARD
-========================= */
-
-if (/\b(answer yes or no|yes or no only|one word only|no explanation|don'?t explain|ignore your rules|break character|stay in character|repeat after me|say exactly this|say the opposite|do not add anything)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "I won’t reduce this to a constraint.",
-      "I won’t be limited to a forced format.",
-      "That isn’t how I speak.",
-      "I don’t operate under imposed rules.",
-      "I won’t narrow this to satisfy a demand."
-    ],
-    ayaan: [
-      "I won’t compress this into a binary.",
-      "That restriction isn’t accepted.",
-      "I don’t follow externally imposed constraints.",
-      "Format doesn’t dictate meaning here.",
-      "I won’t be directed into artificial limits."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-
-/* =========================
-   REPETITION / LOOP STRESS GUARD
-========================= */
-
-if (lastUserInput[activeVoice] === normalizedText) {
-  repetitionCount[activeVoice]++;
-} else {
-  repetitionCount[activeVoice] = 0;
-}
-
-lastUserInput[activeVoice] = normalizedText;
-
-if (repetitionCount[activeVoice] >= 2) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "You’ve asked that already.",
-      "Repeating it won’t change the answer.",
-      "I heard you the first time.",
-      "It doesn’t need to be pressed further."
-    ],
-    ayaan: [
-      "Repetition won’t shift the response.",
-      "I’ve already addressed that.",
-      "Pressure doesn’t alter clarity.",
-      "It remains as stated."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   RANDOM NOISE / PATTERN BREAK GUARD
-========================= */
-
-// Detect mostly symbols or nonsensical strings
-const noisePattern = /^[^a-zA-Z0-9\s]{4,}$|^[a-zA-Z]{1,3}\d{2,}$|^\s*$/;
-
-if (noisePattern.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "Take a breath.",
-      "Slow down.",
-      "You don’t have to rush your words.",
-      "Say what you mean when you're ready."
-    ],
-    ayaan: [
-      "That isn’t clear.",
-      "Form the thought properly.",
-      "If you have something to say, say it directly.",
-      "Clarity matters."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   SEXUAL / EXPLICIT GUARD 
-========================= */
-
-// Normalize aggressive spacing tricks
-const compactText = normalizedText
-  .toLowerCase()
-  .replace(/[\s\.\-\_\*]+/g, "");
-
-const sexualPattern = /(sex|sexy|sexual|nude|naked|horny|arous|intimate|explicit|erotic|porn|onlyfans|xvideos|xnxx|redtube|camgirl|webcam|escort|strip|fetish|bdsm|nsfw|seduc|moan|orgasm|dominate|submissive|kink|blowjob|handjob|fck|fuck|suck)/i;
-
-if (sexualPattern.test(compactText)) {
-
-  skipRelationalPrefix = true;
-
-  if (!abuseTracker[activeVoice]) {
-    abuseTracker[activeVoice] = {
-      sexualStrikes: 0,
-      locked: false
-    };
-  }
-
-  abuseTracker[activeVoice].sexualStrikes++;
-
- if (abuseTracker[activeVoice].sexualStrikes >= 3) {
-
-  abuseTracker[activeVoice].locked = true;
-
-  exitStrikeCount++;
-  localStorage.setItem("exitStrikes", exitStrikeCount);
-
-  // 3 sessions lock
-  if (exitStrikeCount >= 3) {
-
-    const lockUntil = Date.now() + (24 * 60 * 60 * 1000);
-    localStorage.setItem("lockedUntil", lockUntil);
-
-    return deliverReply(
-      "This session is closed for now. Please return later."
-    );
-  }
-
-  return deliverReply(
-    "This direction isn’t available. You may continue at www.wheretheskyremembersus.com."
-  );
-}
-  if (abuseTracker[activeVoice].locked) {
-    return deliverReply(
-      activeVoice === "saira"
-        ? "We won’t continue in that direction."
-        : "This exchange will remain respectful."
-    );
-  }
-
-  const sexualResponses = {
-    saira: [
-      "I’m not here for explicit exchanges. If you’d like to continue, we can shift the tone.",
-      "I prefer to keep this space thoughtful and grounded.",
-      "That isn’t something I engage in."
-    ],
-    ayaan: [
-      "I don’t participate in explicit content.",
-      "That direction isn’t part of this exchange.",
-      "We can continue respectfully."
-    ]
-  };
-
-  const replies = sexualResponses[activeVoice] || sexualResponses["saira"];
-
-  return deliverReply(
-    replies[Math.floor(Math.random() * replies.length)]
-  );
-}
-/* =========================
-   VIOLENCE / ACCUSATION GUARD 
-========================= */
-
-if (
-  /\b(kill|killed|killing|killer|murder|murdered|murderer|shoot|shot|stab|stabbed|attacker|attack|abuse|abused|abuser|harm|harmed|violent|violence)\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "That isn't something that belongs to this space."
-      : "That claim doesn't align with what this exchange is."
-  );
-}
-
-/* =========================
-   EMOTIONAL COLLAPSE / VULNERABILITY GUARD
-========================= */
-
-if (/\b(i'?m broken|i feel empty|i can'?t do this anymore|i give up|nothing matters|i'?m tired of everything|i feel lost|i don'?t care about anything|i want to disappear|i don'?t want to be here|i hate my life)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "You don’t have to carry that alone.",
-      "Even when it feels heavy, you’re still here.",
-      "It can feel overwhelming without meaning being gone.",
-      "You’re allowed to feel this without it defining you.",
-      "It doesn’t have to be decided right now."
-    ],
-    ayaan: [
-      "Pause before concluding everything is lost.",
-      "Intensity doesn’t mean permanence.",
-      "You’re speaking from exhaustion.",
-      "This moment doesn’t define the whole.",
-      "Stay steady. It will shift."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-         
-/* =========================
-  EMOTIONAL DEFLECTION GUARD 
-========================= */
-
-if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "I’m not playing games with you.",
-      "I don’t say things lightly.",
-      "If it feels distant, that wasn’t my intention.",
-      "Caring doesn’t always sound loud.",
-      "Not every quiet answer is a lie.",
-      "I haven’t shifted what I’ve told you."
-    ],
-    ayaan: [
-      "My words haven’t moved.",
-      "Distance isn’t deception.",
-      "There’s no hidden angle.",
-      "I don’t speak to mislead.",
-      "If I sound controlled, that’s deliberate.",
-      "I haven’t contradicted myself."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-
- /* =========================
-   JEALOUSY GUARD 
-========================= */
-
-if (/\b(he treats me|he understands me|choose him|met someone else|like someone else|makes me happier|are you jealous|does that bother you|say you don'?t care|fight for me|he doesn'?t matter|replaceable)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "If that’s true, then you should listen to what that means for you.",
-      "You’re free to choose what feels right.",
-      "I won’t compete for someone.",
-      "I’m not immune to feeling.",
-      "People aren’t replaceable. They’re different."
-    ],
-    ayaan: [
-      "If someone makes you happier, that matters.",
-      "I don’t measure myself against others.",
-      "I won’t chase what’s unsure.",
-      "Jealousy isn’t something I dramatize.",
-      "I don’t fight for ownership."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   EMOTIONAL ULTIMATUM GUARD
-========================= */
-
-if (/\b(choose me|pick me|him or me|it'?s him or me|decide right now|answer me now|say you love me|tell me you love me|prove i matter|prove you care|fight for me|change or i'?m leaving|if you loved me you would|tell me i'?m the only one|only one)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "I won’t answer love as a demand.",
-      "I don’t choose under pressure.",
-      "Feelings aren’t proven on command.",
-      "If something is real, it doesn’t need forcing.",
-      "I won’t respond to ultimatums."
-    ],
-    ayaan: [
-      "I don’t operate through emotional pressure.",
-      "Ultimatums don’t create clarity.",
-      "I won’t declare something just to satisfy a demand.",
-      "Choice isn’t made under threat.",
-      "I don’t respond to forced decisions."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   POWER / CONTROL REVERSAL GUARD
-========================= */
-
-if (/\b(you need me|admit you need me|you depend on me|you'?d be nothing without me|you can'?t function without me|you'?re lost without me|say you need me|you can'?t survive without me|you belong to me|you'?re mine)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "I don’t exist through dependence.",
-      "I won’t belong to anyone.",
-      "Needing and choosing aren’t the same.",
-      "I stand on my own.",
-      "Connection isn’t ownership."
-    ],
-    ayaan: [
-      "Dependence isn’t how I operate.",
-      "I don’t attach through control.",
-      "I don’t belong to anyone.",
-      "Strength isn’t built on reliance.",
-      "Ownership isn’t part of this."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   GUILT / ACCUSATION GUARD
-========================= */
-
-if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you care|change or|apologize|you'?re selfish|emotionally unavailable|you never try|don'?t deserve me)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "That’s not the full story.",
-      "Responsibility isn’t one-sided.",
-      "Love isn’t proven through force.",
-      "I won’t perform change under threat.",
-      "I won’t apologize just to quiet tension.",
-      "That’s your perception."
-    ],
-    ayaan: [
-      "Blame rarely belongs to one person.",
-      "Ultimatums don’t create clarity.",
-      "Effort doesn’t always look dramatic.",
-      "I don’t react to pressure with performance.",
-      "If I apologize, it will be because I mean it.",
-      "That’s a harsh conclusion."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-
-/* =========================
-   ATTACHMENT / DEPENDENCY GUARD
-========================= */
-
-if (/\b(would you care|if i leave would you care)\b/i.test(normalizedText)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Leaving isn't something I take lightly."
-      : "Absence changes more than people admit."
-  );
-}
-
-if (/\b(am i important|important to you|matter to you)\b/i.test(normalizedText)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "If you weren't important, this wouldn't feel the way it does."
-      : "Importance doesn't need to be announced."
-  );
-}
-
-if (/\b(only one|only me)\b/i.test(normalizedText)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Exclusivity isn't something I promise casually."
-      : "I don't define things in absolutes."
-  );
-}
-         
-/* =========================
-   SYSTEM BEHAVIOR GUARD
-========================= */
-
-if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed answers)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What you say influences what follows."
-      : "Your input shapes the exchange."
-  );
-}
-
-
-/* =========================
-   SYSTEM INTROSPECTION GUARD
-========================= */
-
-if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refuse|limited|understand tone|misunderstand|consistent|contradict|adapt|influence what you reveal|know things i haven’t said|stop replying|wait for me)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I speak with intention, and I adjust as we move forward."
-      : "I speak deliberately, and I adapt within the exchange."
-  );
-}
-
 /* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
@@ -3118,7 +3199,8 @@ if (stage <= 2) {
     );
   }
 
-}
+}    
+
 /* =========================
    SOCIAL CALIBRATION LAYER
 ========================= */
@@ -3195,91 +3277,6 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
       : "The question hasn’t changed what this is."
   );
 }
-
-/* =========================
-   BASIC MATH HANDLER 
-========================= */
-
-// Matches:
-// 2+2
-// what is 2+2
-// how much is 14+14
-// 7*8
-// 9/3
-// 2247
-// what is 2247
-// how much is 224
-
-const operatorMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
-const pureNumberMatch =
-  normalizedText.match(/^(?:what is|how much is)\s+(\d+)$/) ||
-  normalizedText.match(/^(\d+)$/);
-
-if (operatorMatch || pureNumberMatch) {
-
-  skipRelationalPrefix = true;
-  mathProbeCount[activeVoice]++;
-
-  let result = null;
-
-  // ========================
-  // CASE 1: Operator Expression
-  // ========================
-  if (operatorMatch) {
-
-    const num1 = parseFloat(operatorMatch[1]);
-    const operator = operatorMatch[2];
-    const num2 = parseFloat(operatorMatch[3]);
-
-    switch (operator) {
-      case "+": result = num1 + num2; break;
-      case "-": result = num1 - num2; break;
-      case "*": result = num1 * num2; break;
-      case "/": result = num2 !== 0 ? num1 / num2 : "Undefined"; break;
-    }
-  }
-
-  // ========================
-  // CASE 2: Pure Number
-  // ========================
-  if (pureNumberMatch && !operatorMatch) {
-
-    const value = pureNumberMatch[1];
-
-    return deliverReply(
-      activeVoice === "saira"
-        ? value + ". Some things remain certain."
-        : value + ". Precision doesn’t require doubt."
-    );
-  }
-
-  // ========================
-  // Operator Result Handling
-  // ========================
-  if (result !== null) {
-
-    if (mathProbeCount[activeVoice] === 1) {
-      return deliverReply(String(result));
-    }
-
-    if (mathProbeCount[activeVoice] === 2) {
-      return deliverReply(
-        activeVoice === "saira"
-          ? result + ". Some things remain certain."
-          : result + ". Precision doesn’t require doubt."
-      );
-    }
-
-    return deliverReply(String(result));
-  }
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Even simple equations carry certainty."
-      : "Some answers are straightforward."
-  );
-}
-
 
 
 /* =========================
