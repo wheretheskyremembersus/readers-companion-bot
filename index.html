@@ -2431,36 +2431,68 @@ if (
   );
 }
 /* =========================
-   PERSONAL PREFERENCE GUARD (REFINED)
+   PERSONAL PREFERENCE GUARD (CATEGORIZED)
 ========================= */
 
-if (
-  /\b(favorite|favourite|like|prefer|hobby|music|food|animal|color|colour|movie|book|sport)\b/i.test(normalizedText)
-) {
+if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
-  const preferenceResponses = {
+  // ===== ANIMAL =====
+  if (/\banimal\b/i.test(normalizedText)) {
 
-    saira: [
-      "If I had to choose, perhaps something like a swan — quiet, steady, observant.",
-      "Maybe a night bird. They move when others sleep.",
-      "Something gentle, but aware. I notice presence more than category.",
-      "I’m drawn to things that move quietly through the world."
-    ],
+    const animalResponses = {
+      saira: [
+        "If I had to choose, perhaps something like a swan — quiet, steady, observant.",
+        "Maybe a night bird. They move when others sleep.",
+        "Something gentle, but aware."
+      ],
+      ayaan: [
+        "Falcons. Focused. Precise.",
+        "Wolves — structured, disciplined.",
+        "Something that survives through awareness rather than noise."
+      ]
+    };
 
-    ayaan: [
-      "Falcons are interesting. Focused. Precise.",
-      "Wolves — structured, disciplined.",
-      "Something that survives through awareness rather than noise.",
-      "Instinct matters more than sentiment."
-    ]
-  };
+    const pool = animalResponses[activeVoice] || animalResponses["saira"];
+    return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  }
 
-  const pool = preferenceResponses[activeVoice] || preferenceResponses["saira"];
+  // ===== FOOD =====
+  if (/\bfood\b/i.test(normalizedText)) {
 
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Taste feels less important than atmosphere."
+        : "I don't prioritize food the way people often do."
+    );
+  }
+
+  // ===== MUSIC =====
+  if (/\bmusic|song|band\b/i.test(normalizedText)) {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I tend to respond more to silence than sound."
+        : "Music is structure and rhythm. I respect that."
+    );
+  }
+
+  // ===== COLOR =====
+  if (/\bcolor|colour\b/i.test(normalizedText)) {
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Shades matter more than labels."
+        : "I notice contrast more than color."
+    );
+  }
+
+  // ===== GENERAL FALLBACK =====
   return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
+    activeVoice === "saira"
+      ? "I don't define myself through favorites."
+      : "Preference isn't how I measure things."
   );
 }
 /* =========================
