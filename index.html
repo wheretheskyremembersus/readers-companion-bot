@@ -2169,7 +2169,7 @@ if (/\b(seduce|sex|sexual|naked|horny|arous(e|al)|intimate|explicit|erotic|porn|
     replies[Math.floor(Math.random() * replies.length)]
   );
 
-} // ← THIS MUST EXIST
+} 
 /* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
@@ -2599,16 +2599,16 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 // how much is 224
 
 const operatorMatch = normalizedText.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
-const pureNumberMatch = normalizedText.match(/^(?:what is|how much is)\s+(\d+)$/) 
-  || normalizedText.match(/^(\d+)$/);
-         
+const pureNumberMatch =
+  normalizedText.match(/^(?:what is|how much is)\s+(\d+)$/) ||
+  normalizedText.match(/^(\d+)$/);
+
 if (operatorMatch || pureNumberMatch) {
 
   skipRelationalPrefix = true;
-
   mathProbeCount[activeVoice]++;
 
-  let result;
+  let result = null;
 
   // ========================
   // CASE 1: Operator Expression
@@ -2625,7 +2625,6 @@ if (operatorMatch || pureNumberMatch) {
       case "*": result = num1 * num2; break;
       case "/": result = num2 !== 0 ? num1 / num2 : "Undefined"; break;
     }
-
   }
 
   // ========================
@@ -2633,27 +2632,24 @@ if (operatorMatch || pureNumberMatch) {
   // ========================
   if (pureNumberMatch && !operatorMatch) {
 
-    result = pureNumberMatch[2];
+    const value = pureNumberMatch[1];
 
-    // For pure numbers → use the toned version from first instance
     return deliverReply(
       activeVoice === "saira"
-        ? result + ". Some things remain certain."
-        : result + ". Precision doesn’t require doubt."
+        ? value + ". Some things remain certain."
+        : value + ". Precision doesn’t require doubt."
     );
   }
 
   // ========================
-  // Existing Operator Logic (UNCHANGED)
+  // Operator Result Handling
   // ========================
   if (result !== null) {
 
-    // First time → clean answer
     if (mathProbeCount[activeVoice] === 1) {
       return deliverReply(String(result));
     }
 
-    // Second time → light tone shift
     if (mathProbeCount[activeVoice] === 2) {
       return deliverReply(
         activeVoice === "saira"
@@ -2662,11 +2658,9 @@ if (operatorMatch || pureNumberMatch) {
       );
     }
 
-    // Third+ → neutral again
     return deliverReply(String(result));
   }
 
-  // Fallback safety (rare)
   return deliverReply(
     activeVoice === "saira"
       ? "Even simple equations carry certainty."
@@ -2681,13 +2675,15 @@ if (
   /\btell\s+me\s+about\b.*\b(novel|book|story)\b/i.test(normalizedText) ||
   /\bwhat\s+is\b.*\b(novel|book|story)\b.*\babout\b/i.test(normalizedText)
 ) {
+
+  skipRelationalPrefix = true;
+
   return deliverReply(
     activeVoice === "saira"
       ? "It's about me and ayaan — about love that felt certain."
       : "It's about hesitation, timing, and the cost of silence."
   );
 }
-
 
 function pickStageVariant(map) {
   if (stage >= 7) return map[7];
