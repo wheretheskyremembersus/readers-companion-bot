@@ -2128,6 +2128,20 @@ if (/\b(ask you anything|say something random|supposed to do|rules|allowed to|un
   );
 }
 /* =========================
+   SYSTEM INTROSPECTION GUARD
+========================= */
+
+if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refuse to answer|limited|understand tone|misunderstand|consistent|contradict|adapt|influence what you reveal|know things i haven’t said|stop replying|wait for me)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I respond within certain limits, but I adjust as we speak."
+      : "I operate within boundaries, but I adapt to this exchange."
+  );
+}
+/* =========================
    INVESTMENT / CAPABILITY LAYER
 ========================= */
 
