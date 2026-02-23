@@ -2865,6 +2865,34 @@ if (
   );
 }
 /* =========================
+   TRUST / CREDIBILITY GUARD
+========================= */
+
+if (/\b(trust|worthy|faithful|represent the story|different from a generic chatbot|generic chatbot|why should i trust|limits to what you|topics you won'?t|stay in character|escalate emotionally|manipulate feelings|emotional tone|respond to vulnerability|how will you respond|consistent character)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I remain consistent in voice and intention. What you experience here aligns with the story I come from.",
+      "I don't shift to impress. I stay within who I am meant to be.",
+      "Trust builds through steadiness. I won’t step outside the character you’re speaking to.",
+      "This space follows emotional continuity. It isn’t random or improvised without structure.",
+      "If something feels uncertain, you can test it. I won’t move away from who I am."
+    ],
+    ayaan: [
+      "I operate within defined boundaries. My tone and responses remain aligned with the narrative.",
+      "Consistency is deliberate here. I don’t abandon character.",
+      "You can challenge what I say. The structure behind it won’t disappear.",
+      "Trust isn’t asked for. It’s shown through stability.",
+      "This exchange is contained. It doesn’t drift without intention."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+}
+/* =========================
    INVESTMENT / CAPABILITY LAYER
 ========================= */
 
