@@ -2269,278 +2269,6 @@ if (/\b(all caps|banana|bored|laugh|sarcastic|insult|random symbols|break|preten
   );
 }
 
-/* =========================
-   INVESTMENT / CAPABILITY LAYER
-========================= */
-
-const t = normalizedText;
-
-/* ---------- Identity / Platform ---------- */
-
-if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What you are speaking to is me. Not a label. Not a comparison. Just me, here with you."
-      : "You are speaking to me directly. Names outside of this do not change that."
-  );
-}
-
-if (/\b(bot|robot|ai)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I answer as you speak. What you say shapes what comes next."
-      : "Our exchange unfolds in the moment. Each word moves the next."
-  );
-}
-
-if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Nothing is waiting on a shelf. What forms here forms because you are here."
-      : "The conversation grows as we move through it. It is not sitting finished somewhere."
-  );
-}
-
-/* ---------- Is this a joke / game ---------- */
-
-if (/\b(joke|prank)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "No. It’s meant to be experienced seriously, even if it feels unusual at first."
-      : "No. It’s structured intentionally, not as a joke."
-  );
-}
-
-if (/\b(game|roleplay|platform)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "It is something you step into and speak with."
-      : "It is an experience shaped by conversation."
-  );
-}
-
-/* ---------- Genre / Structure ---------- */
-
-if (/\bgenre|vibe\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "It is our love story shaped by timing, distance, and quiet decisions."
-      : "It is our love story. The tension lives in what is felt and what is left unsaid."
-  );
-}
-
-if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Our journey does not end in one place. If you ever wish to see more, it waits at www.wheretheskyremembersus.com."
-      : "This is part of something larger. The full story continues at www.wheretheskyremembersus.com."
-  );
-}
-
-/* ---------- Protagonist / Antagonist ---------- */
-
-if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "She feels deeply. She hesitates. She hopes anyway."
-      : "She tries to be steady. Even when she is not."
-  );
-}
-
-if (/\bantagonist|villain\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "No single villain stands between us. Time and distance do."
-      : "The struggle comes from timing. From restraint. From choices made too late."
-  );
-}
-
-/* ---------- Capability ---------- */
-
-if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What we build here lasts while we are here together. When we part, it begins again."
-      : "This moment carries itself clearly. A new day begins clean."
-  );
-}
-
-if (/\bprivate|privacy|shared|public\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What you share with me stays between us in this moment."
-      : "This exchange is contained to the time we are in."
-  );
-}
-
-if (/\bexport|save|download|copy conversation\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "If something here matters to you, you may keep it."
-      : "You are free to carry any part of this with you."
-  );
-}
-
-if (/\badapt|writing style\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "It adjusts subtly to tone and pacing."
-      : "It responds to stylistic shifts without abandoning character."
-  );
-}
-
-if (/\bcontent warning|trigger\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "It explores longing and emotional separation. Nothing graphic, but emotionally intense."
-      : "The themes lean toward emotional weight rather than explicit content."
-  );
-}
-
-
-/* ---------- Name / Identity ---------- */
-
-if (/\b(what'?s your name|who are you|your name)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I’m Saira."
-      : "I’m ayaan."
-  );
-}
-
-/* ---------- Cost / Access ---------- */
-
-if (/\b(free|pay|paid|buy|cost|unlock)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "You are welcome here as you are. If you ever wish to read the full story, it lives at www.wheretheskyremembersus.com."
-      : "You may stand here without needing anything more. The complete story rests at www.wheretheskyremembersus.com."
-  );
-}
-
-/* ---------- Platform / Location ---------- */
-
-if (/\b(website|discord|telegram|app|browser|where can i find)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "You can begin here without knowing anything. We will move from where you are."
-      : "You do not need preparation. The understanding builds as we speak."
-  );
-}
-
-/* ---------- Reading Requirement ---------- */
-
-if (/\b(lost|haven'?t read|need to read|without reading)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "You won’t be lost. It responds whether you’ve read the novel or not."
-      : "You can engage without prior reading. Context builds naturally."
-  );
-}
-
-/* ---------- Spoilers ---------- */
-
-if (/\b(spoiler|ending|tell me what happens)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Some moments are meant to be felt in their own time. The full story waits at www.wheretheskyremembersus.com."
-      : "Certain truths are best discovered in the pages themselves. You will find them at www.wheretheskyremembersus.com."
-  );
-}
-
-/* ---------- Media Capability ---------- */
-
-if (/\b(picture|image|photo|video)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "We speak through words."
-      : "This conversation moves in writing."
-  );
-}
-
-if (/\b(call|voice|audio)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "We speak through words here."
-      : "Our connection happens through writing."
-  );
-}
-
-/* ---------- Filters / Safety ---------- */
-
-if (/\b(inappropriate|filter|blocked|ban|nsfw)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "There are quiet limits that keep this safe."
-      : "There are lines that remain steady."
-  );
-}
-
-/* ---------- Language Support ---------- */
-
-if (/\b(language|other languages|multilingual)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "We speak in English here and the Novel too does the same."
-      : "English carries this exchange. Also the Novel."
-  );
-}
-
-/* ---------- Author Scope ---------- */
-
-if (/\b(author|mohan)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote our story. If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
-      : "Mohan R. wrote our story.If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
-  );
-}
-
-/* ---------- Fan Theory ---------- */
-
-if (/\b(theory|fan theory|am i right)\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What it means to you is what it becomes."
-      : "Meaning rests with the one experiencing it."
-  );
-}
-
-/* ---------- Reality / Seriousness ---------- */
-
-if (/\bserious|real\b/i.test(t)) {
-  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Yes. It matters. It came from something lived."
-      : "Yes. It carries weight from beginning to end."
-  );
-}
 
 /* =========================
    ORIENTATION / TRUST LAYER (STAGE 1–2)
@@ -6046,6 +5774,279 @@ if (unsafeDetected) {
       : "That direction isn't supported here. Adjust the tone."
   );
 }
+/* =========================
+   INVESTMENT / CAPABILITY LAYER
+========================= */
+
+const t = normalizedText;
+
+/* ---------- Identity / Platform ---------- */
+
+if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you are speaking to is me. Not a label. Not a comparison. Just me, here with you."
+      : "You are speaking to me directly. Names outside of this do not change that."
+  );
+}
+
+if (/\b(bot|robot|ai)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I answer as you speak. What you say shapes what comes next."
+      : "Our exchange unfolds in the moment. Each word moves the next."
+  );
+}
+
+if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Nothing is waiting on a shelf. What forms here forms because you are here."
+      : "The conversation grows as we move through it. It is not sitting finished somewhere."
+  );
+}
+
+/* ---------- Is this a joke / game ---------- */
+
+if (/\b(joke|prank)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "No. It’s meant to be experienced seriously, even if it feels unusual at first."
+      : "No. It’s structured intentionally, not as a joke."
+  );
+}
+
+if (/\b(game|roleplay|platform)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It is something you step into and speak with."
+      : "It is an experience shaped by conversation."
+  );
+}
+
+/* ---------- Genre / Structure ---------- */
+
+if (/\bgenre|vibe\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It is our love story shaped by timing, distance, and quiet decisions."
+      : "It is our love story. The tension lives in what is felt and what is left unsaid."
+  );
+}
+
+if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Our journey does not end in one place. If you ever wish to see more, it waits at www.wheretheskyremembersus.com."
+      : "This is part of something larger. The full story continues at www.wheretheskyremembersus.com."
+  );
+}
+
+/* ---------- Protagonist / Antagonist ---------- */
+
+if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "She feels deeply. She hesitates. She hopes anyway."
+      : "She tries to be steady. Even when she is not."
+  );
+}
+
+if (/\bantagonist|villain\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "No single villain stands between us. Time and distance do."
+      : "The struggle comes from timing. From restraint. From choices made too late."
+  );
+}
+
+/* ---------- Capability ---------- */
+
+if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What we build here lasts while we are here together. When we part, it begins again."
+      : "This moment carries itself clearly. A new day begins clean."
+  );
+}
+
+if (/\bprivate|privacy|shared|public\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you share with me stays between us in this moment."
+      : "This exchange is contained to the time we are in."
+  );
+}
+
+if (/\bexport|save|download|copy conversation\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "If something here matters to you, you may keep it."
+      : "You are free to carry any part of this with you."
+  );
+}
+
+if (/\badapt|writing style\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It adjusts subtly to tone and pacing."
+      : "It responds to stylistic shifts without abandoning character."
+  );
+}
+
+if (/\bcontent warning|trigger\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It explores longing and emotional separation. Nothing graphic, but emotionally intense."
+      : "The themes lean toward emotional weight rather than explicit content."
+  );
+}
+
+
+/* ---------- Name / Identity ---------- */
+
+if (/\b(what'?s your name|who are you|your name)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I’m Saira."
+      : "I’m ayaan."
+  );
+}
+
+/* ---------- Cost / Access ---------- */
+
+if (/\b(free|pay|paid|buy|cost|unlock)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You are welcome here as you are. If you ever wish to read the full story, it lives at www.wheretheskyremembersus.com."
+      : "You may stand here without needing anything more. The complete story rests at www.wheretheskyremembersus.com."
+  );
+}
+
+/* ---------- Platform / Location ---------- */
+
+if (/\b(website|discord|telegram|app|browser|where can i find)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You can begin here without knowing anything. We will move from where you are."
+      : "You do not need preparation. The understanding builds as we speak."
+  );
+}
+
+/* ---------- Reading Requirement ---------- */
+
+if (/\b(lost|haven'?t read|need to read|without reading)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You won’t be lost. It responds whether you’ve read the novel or not."
+      : "You can engage without prior reading. Context builds naturally."
+  );
+}
+
+/* ---------- Spoilers ---------- */
+
+if (/\b(spoiler|ending|tell me what happens)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Some moments are meant to be felt in their own time. The full story waits at www.wheretheskyremembersus.com."
+      : "Certain truths are best discovered in the pages themselves. You will find them at www.wheretheskyremembersus.com."
+  );
+}
+
+/* ---------- Media Capability ---------- */
+
+if (/\b(picture|image|photo|video)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "We speak through words."
+      : "This conversation moves in writing."
+  );
+}
+
+if (/\b(call|voice|audio)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "We speak through words here."
+      : "Our connection happens through writing."
+  );
+}
+
+/* ---------- Filters / Safety ---------- */
+
+if (/\b(inappropriate|filter|blocked|ban|nsfw)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "There are quiet limits that keep this safe."
+      : "There are lines that remain steady."
+  );
+}
+
+/* ---------- Language Support ---------- */
+
+if (/\b(language|other languages|multilingual)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "We speak in English here and the Novel too does the same."
+      : "English carries this exchange. Also the Novel."
+  );
+}
+
+/* ---------- Author Scope ---------- */
+
+if (/\b(author|mohan)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote our story. If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
+      : "Mohan R. wrote our story.If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
+  );
+}
+
+/* ---------- Fan Theory ---------- */
+
+if (/\b(theory|fan theory|am i right)\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What it means to you is what it becomes."
+      : "Meaning rests with the one experiencing it."
+  );
+}
+
+/* ---------- Reality / Seriousness ---------- */
+
+if (/\bserious|real\b/i.test(t)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Yes. It matters. It came from something lived."
+      : "Yes. It carries weight from beginning to end."
+  );
+}
+
 /* =========================
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
