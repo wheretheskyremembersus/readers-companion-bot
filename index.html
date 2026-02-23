@@ -4652,11 +4652,12 @@ if (nameMatch) {
   skipRelationalPrefix = true;
 
   return deliverReply(
-    activeVoice === "saira"
-      ? I'm glad to meet you, ${sessionUserName}.
-      : Good to meet you, ${sessionUserName}.
+    activeVoice ==="saira"
+      ? `I'm glad to meet you, ${sessionUserName}.`
+      : `Good to meet you, ${sessionUserName}.`
   );
 }
+
 /* ================================
    V3 MICRO INTERACTION LAYER (25 INTENTS)
 ================================= */
