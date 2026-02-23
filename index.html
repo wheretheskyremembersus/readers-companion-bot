@@ -2186,10 +2186,28 @@ if (sexualPattern.test(compactText)) {
 
   abuseTracker[activeVoice].sexualStrikes++;
 
-  if (abuseTracker[activeVoice].sexualStrikes >= 3) {
-    abuseTracker[activeVoice].locked = true;
+ if (abuseTracker[activeVoice].sexualStrikes >= 3) {
+
+  abuseTracker[activeVoice].locked = true;
+
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
+
+  // 3 sessions lock
+  if (exitStrikeCount >= 3) {
+
+    const lockUntil = Date.now() + (24 * 60 * 60 * 1000);
+    localStorage.setItem("lockedUntil", lockUntil);
+
+    return deliverReply(
+      "This session is closed for now. Please return later."
+    );
   }
 
+  return deliverReply(
+    "This direction isn’t available. You may continue at www.wheretheskyremembersus.com."
+  );
+}
   if (abuseTracker[activeVoice].locked) {
     return deliverReply(
       activeVoice === "saira"
