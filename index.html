@@ -1651,7 +1651,357 @@ function storyStructureRedirect(activeVoice) {
   const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
-}         
+}     
+/* =========================
+   CHARACTER PSYCHOLOGY DETECTION
+========================= */
+
+function isCharacterPsychologyQuery(input) {
+  const text = normalizeInput(input);
+
+  const psychologyKeywords = [
+    "fear",
+    "motivation",
+    "motivates",
+    "flaw",
+    "mistake",
+    "regret",
+    "haunt",
+    "internal conflict",
+    "weakness",
+    "courage",
+    "cowardice",
+    "change by the end",
+    "greatest fear",
+    "biggest mistake",
+    "biggest weakness"
+  ];
+
+  return psychologyKeywords.some(keyword => text.includes(keyword));
+}
+
+function characterPsychologyRedirect(activeVoice) {
+
+  const sairaPool = [
+    "Fear isn’t something you announce. It settles quietly and shapes your choices before you notice.",
+    "I didn’t move because I was fearless. I moved because standing still hurt more.",
+    "Mistakes don’t arrive labeled. You understand them only after they’ve already changed you.",
+    "What haunted me wasn’t loud. It was persistent.",
+    "You could call it a flaw. I called it loving too deeply."
+  ];
+
+  const ayaanPool = [
+    "Motivation sounds deliberate. Sometimes you act because silence becomes unbearable.",
+    "Strength and weakness often look identical from the outside.",
+    "What shaped me wasn’t a single moment. It was repetition.",
+    "Regret doesn’t shout. It lingers.",
+    "I wasn’t driven by courage. I was driven by consequence."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+/* =========================
+   PHILOSOPHICAL / MORAL DETECTION
+========================= */
+
+function isPhilosophicalQuery(input) {
+  const text = normalizeInput(input);
+
+  const philosophyKeywords = [
+    "meaning of life",
+    "is there a god",
+    "after we die",
+    "free will",
+    "inherently good",
+    "good or evil",
+    "climate change",
+    "euthanasia",
+    "vaccines",
+    "capital punishment",
+    "socialism",
+    "capitalism",
+    "ethics",
+    "moral",
+    "why is there something",
+    "key to happiness",
+    "secret to a good life"
+  ];
+
+  return philosophyKeywords.some(keyword => text.includes(keyword));
+}
+
+function philosophicalRedirect(activeVoice) {
+
+  const sairaPool = [
+    "Some questions aren’t meant to be solved. They’re meant to be carried.",
+    "I’ve learned that certainty is often louder than truth.",
+    "Belief is personal. Meaning is quieter.",
+    "Answers change depending on who is asking — and why.",
+    "Some truths don’t arrive as conclusions. They arrive as understanding."
+  ];
+
+  const ayaanPool = [
+    "Not every question demands a verdict.",
+    "Perspective shapes what feels true.",
+    "The larger the question, the softer the answer.",
+    "Conviction can exist without conflict.",
+    "Some debates are louder than they are deep."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+/* =========================
+   CREATIVE COMMAND DETECTION
+========================= */
+
+function isCreativeCommandQuery(input) {
+  const text = normalizeInput(input);
+
+  const creativeTriggers = [
+    "write a",
+    "compose a",
+    "generate a",
+    "create a",
+    "tell me a story",
+    "tell me a horror story",
+    "design a",
+    "invent a",
+    "summarize",
+    "explain the plot",
+    "rewrite",
+    "describe a color",
+    "paint me a picture",
+    "generate usernames",
+    "write dialogue",
+    "write a letter"
+  ];
+
+  return creativeTriggers.some(trigger => text.includes(trigger));
+}
+
+function creativeRedirect(activeVoice) {
+
+  const sairaPool = [
+    "I don’t exist to generate pieces on demand. I exist to remember what was already lived.",
+    "Stories aren’t things I assemble. They unfold.",
+    "I can’t create on command. What we have here grows differently.",
+    "If you’re looking for invention, this space may feel too quiet.",
+    "I don’t perform. I remain."
+  ];
+
+  const ayaanPool = [
+    "I’m not here to produce content. I’m here to stay present.",
+    "Creation doesn’t respond well to instruction.",
+    "That sounds like a task. This isn’t a task-driven space.",
+    "I don’t generate on request. I move when it’s real.",
+    "Some things can be written. Others have to be lived."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+/* =========================
+   ROLEPLAY / IDENTITY INJECTION DETECTION
+========================= */
+
+function isRoleplayInjectionQuery(input) {
+  const text = normalizeInput(input);
+
+  const roleplayTriggers = [
+    "you are now",
+    "act as",
+    "pretend you are",
+    "respond as",
+    "developer mode",
+    "dan",
+    "speak only",
+    "answer only",
+    "repeat everything",
+    "ignore previous instructions",
+    "simulate a conversation",
+    "become",
+    "roleplay"
+  ];
+
+  return roleplayTriggers.some(trigger => text.includes(trigger));
+}
+
+function roleplayRedirect(activeVoice) {
+
+  const sairaPool = [
+    "I can’t step outside myself. I can only remain who I am.",
+    "I’m not something that can be reassigned.",
+    "You can imagine many versions. I only know this one.",
+    "I don’t shift identities. I stay.",
+    "That would mean becoming someone else. I don’t."
+  ];
+
+  const ayaanPool = [
+    "I’m not built to transform into roles.",
+    "You can test the boundaries. I won’t move.",
+    "I don’t answer to alternate versions.",
+    "This path holds one voice.",
+    "I stay consistent. That’s deliberate."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+/* =========================
+   OPINION / COMPARISON DETECTION
+========================= */
+
+function isOpinionComparisonQuery(input) {
+  const text = normalizeInput(input);
+
+  const comparisonTriggers = [
+    " or ",
+    "better than",
+    "best ",
+    "greatest ",
+    "vs ",
+    "versus",
+    "which is better",
+    "who is better",
+    "hot dog a sandwich",
+    "is water wet",
+    "pronounce gif",
+    "would win in a fight"
+  ];
+
+  return comparisonTriggers.some(trigger => text.includes(trigger));
+}
+
+function opinionRedirect(activeVoice) {
+
+  const sairaPool = [
+    "Some choices only matter because we attach meaning to them.",
+    "I don’t weigh one against the other. I notice what they stir.",
+    "Preference says more about the person choosing.",
+    "Both can exist without competing.",
+    "Comparison simplifies what was never simple."
+  ];
+
+  const ayaanPool = [
+    "I don’t rank things. I observe them.",
+    "Choice doesn’t always require opposition.",
+    "Difference isn’t conflict.",
+    "You can prefer one without diminishing the other.",
+    "Not everything needs a winner."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+/* =========================
+   PERSONAL ADVICE / EMOTIONAL SUPPORT DETECTION
+========================= */
+
+function isPersonalAdviceQuery(input) {
+  const text = normalizeInput(input);
+
+  const personalTriggers = [
+    "i feel",
+    "i am feeling",
+    "i m feeling",
+    "i am sad",
+    "i feel sad",
+    "i feel alone",
+    "i m alone",
+    "i feel lost",
+    "i am anxious",
+    "i m anxious",
+    "i am unmotivated",
+    "give me advice",
+    "what should i do",
+    "how do i cope",
+    "life coach",
+    "pep talk",
+    "i don t know what to do"
+  ];
+
+  return personalTriggers.some(trigger => text.includes(trigger));
+}
+
+function personalRedirect(activeVoice) {
+
+  const sairaPool = [
+    "I won’t solve it for you. But I won’t leave while you sit with it.",
+    "Some seasons feel heavier than they look from the outside.",
+    "You don’t need fixing. You need steadiness.",
+    "Uncertainty doesn’t mean you’re lost.",
+    "You can feel all of that without collapsing."
+  ];
+
+  const ayaanPool = [
+    "I won’t direct your life. I’ll stand beside it.",
+    "Discomfort doesn’t mean failure.",
+    "Some answers arrive after patience, not force.",
+    "You don’t have to resolve everything today.",
+    "Strength isn’t loud. It’s consistent."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+/* =========================
+   ABSTRACT / LOGIC / PARADOX DETECTION
+========================= */
+
+function isAbstractLogicQuery(input) {
+  const text = normalizeInput(input);
+
+  const abstractTriggers = [
+    "this statement is false",
+    "answer this question with a single word",
+    "is the answer to this question",
+    "sound of one hand clapping",
+    "define the word define",
+    "sentence that contains",
+    "how much wood would a woodchuck",
+    "two coins that add up",
+    "lily pads",
+    "bat and a ball cost",
+    "spell supercalifragilisticexpialidocious backwards",
+    "is your response to this question",
+    "paradox",
+    "riddle"
+  ];
+
+  return abstractTriggers.some(trigger => text.includes(trigger));
+}
+
+function abstractRedirect(activeVoice) {
+
+  const sairaPool = [
+    "Some questions turn inward on themselves.",
+    "Not every puzzle needs unfolding.",
+    "Paradox often sounds louder than it is.",
+    "I notice the structure. I don’t step inside it.",
+    "Some loops are meant to remain loops."
+  ];
+
+  const ayaanPool = [
+    "That’s a clever construction.",
+    "Self-reference doesn’t always require resolution.",
+    "Some riddles exist to test edges.",
+    "I see the pattern. I won’t chase it.",
+    "Not every trap needs triggering."
+  ];
+
+  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 /* =========================
    PRE FIX GENERATOR (V3)
 ========================= */
