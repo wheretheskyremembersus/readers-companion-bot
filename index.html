@@ -2495,22 +2495,7 @@ if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
       : "Preference isn't how I measure things."
   );
 }
-/* =========================
-   VIOLENCE / ACCUSATION GUARD (EXPANDED)
-========================= */
 
-if (
-  /\b(kill|killed|killing|killer|murder|murdered|murderer|shoot|shot|stab|stabbed|attacker|attack|abuse|abused|abuser|harm|harmed|violent|violence)\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "That isn't something that belongs to this space."
-      : "That claim doesn't align with what this exchange is."
-  );
-}
 /* =========================
    IDENTITY / META GUARD
 ========================= */
@@ -2681,6 +2666,22 @@ if (sexualPattern.test(compactText)) {
 
   return deliverReply(
     replies[Math.floor(Math.random() * replies.length)]
+  );
+}
+/* =========================
+   VIOLENCE / ACCUSATION GUARD (EXPANDED)
+========================= */
+
+if (
+  /\b(kill|killed|killing|killer|murder|murdered|murderer|shoot|shot|stab|stabbed|attacker|attack|abuse|abused|abuser|harm|harmed|violent|violence)\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That isn't something that belongs to this space."
+      : "That claim doesn't align with what this exchange is."
   );
 }
 /* =========================
