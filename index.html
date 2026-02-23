@@ -4638,11 +4638,11 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
     );
   }
 /* ================================
-   SELF INTRODUCTION HANDLER 
+   SELF INTRODUCTION HANDLER (V3)
 ================================= */
 
 const nameMatch = originalText.match(
-  /^(i am|i'm|my name is)\s+([a-zA-Z]{2,20})(?:\s+[a-zA-Z]{2,20})*$/i
+  /^(i am|i'm|my name is)\s+([a-zA-Z]{2,20})$/i
 );
 
 if (nameMatch) {
