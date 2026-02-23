@@ -1581,8 +1581,12 @@ function normalizeInput(text) {
     // Collapse excessive repeated letters (heyyyy → heyy)
     .replace(/([a-z])\1{3,}/g, "$1$1")
 
-    // Remove punctuation except apostrophes
-    .replace(/[^\w\s']/g, " ")
+    // Normalize special characters
+    .replace(/’/g, "'")
+    .replace(/×/g, "*")
+
+    // Remove punctuation except apostrophes and math operators
+    .replace(/[^a-z0-9\s'\+\-\*\/]/g, " ")
 
     // Collapse multiple spaces
     .replace(/\s+/g, " ")
@@ -1590,7 +1594,6 @@ function normalizeInput(text) {
     // Trim edges
     .trim();
 }
-
 /* =========================
    LOCATION / PLACE DETECTION (STRUCTURAL)
 ========================= */
