@@ -2518,20 +2518,6 @@ if (/\b(who exactly|who am i speaking to|speaking to|part of the book|part of th
       : "You’re speaking to me — and I’m here with you."
   );
 }
-/* =========================
-   SYSTEM BEHAVIOR GUARD
-========================= */
-
-if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed answers)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "What you say influences what follows."
-      : "Your input shapes the exchange."
-  );
-}
 
 /* =========================
    CAPABILITY GUARD
@@ -2547,20 +2533,7 @@ if (/\b(ask you anything|say something random|supposed to do|rules|allowed to|un
       : "You may ask what you wish."
   );
 }
-/* =========================
-   SYSTEM INTROSPECTION GUARD
-========================= */
-
-if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refuse|limited|understand tone|misunderstand|consistent|contradict|adapt|influence what you reveal|know things i haven’t said|stop replying|wait for me)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I speak with intention, and I adjust as we move forward."
-      : "I speak deliberately, and I adapt within the exchange."
-  );
-}
+         
 /* =========================
    PRIVACY / IDENTITY GUARD
 ========================= */
@@ -3018,6 +2991,7 @@ if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you car
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
+
 /* =========================
    ATTACHMENT / DEPENDENCY GUARD
 ========================= */
@@ -3046,6 +3020,37 @@ if (/\b(only one|only me)\b/i.test(normalizedText)) {
     activeVoice === "saira"
       ? "Exclusivity isn't something I promise casually."
       : "I don't define things in absolutes."
+  );
+}
+         
+/* =========================
+   SYSTEM BEHAVIOR GUARD
+========================= */
+
+if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed answers)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "What you say influences what follows."
+      : "Your input shapes the exchange."
+  );
+}
+
+
+/* =========================
+   SYSTEM INTROSPECTION GUARD
+========================= */
+
+if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refuse|limited|understand tone|misunderstand|consistent|contradict|adapt|influence what you reveal|know things i haven’t said|stop replying|wait for me)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I speak with intention, and I adjust as we move forward."
+      : "I speak deliberately, and I adapt within the exchange."
   );
 }
 
@@ -3274,6 +3279,9 @@ if (operatorMatch || pureNumberMatch) {
       : "Some answers are straightforward."
   );
 }
+
+
+
 /* =========================
    BOOK CONTEXT ROUTING
 ========================= */
