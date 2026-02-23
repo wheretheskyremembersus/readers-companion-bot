@@ -2398,7 +2398,7 @@ if (/\bserious|real\b/i.test(t)) {
 }
 
 /* =========================
-   REALITY ANCHOR GUARD (REFINED)
+   REALITY ANCHOR GUARD 
 ========================= */
 
 if (
@@ -2596,7 +2596,7 @@ if (
   );
 }
 /* =========================
-   SEXUAL / EXPLICIT GUARD (HARDENED)
+   SEXUAL / EXPLICIT GUARD 
 ========================= */
 
 // Normalize aggressive spacing tricks
@@ -2669,7 +2669,7 @@ if (sexualPattern.test(compactText)) {
   );
 }
 /* =========================
-   VIOLENCE / ACCUSATION GUARD (EXPANDED)
+   VIOLENCE / ACCUSATION GUARD 
 ========================= */
 
 if (
@@ -2685,7 +2685,7 @@ if (
   );
 }
 /* =========================
-   ACCUSATION / EMOTIONAL DEFLECTION GUARD (HUMANIZED)
+  EMOTIONAL DEFLECTION GUARD 
 ========================= */
 
 if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+your\s+story|dont\s+care|do\s+not\s+care|you\s+dont\s+care|u\s+dont\s+care|youre\s+cold|you\s+are\s+cold|avoiding\s+the\s+truth|fake|manipulat\w*)\b/i.test(normalizedText)) {
@@ -2717,7 +2717,69 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
-         
+
+ /* =========================
+   JEALOUSY GUARD 
+========================= */
+
+if (/\b(he treats me|he understands me|choose him|met someone else|like someone else|makes me happier|are you jealous|does that bother you|say you don'?t care|fight for me|he doesn'?t matter|replaceable)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "If that’s true, then you should listen to what that means for you.",
+      "You’re free to choose what feels right.",
+      "I won’t compete for someone.",
+      "I’m not immune to feeling.",
+      "People aren’t replaceable. They’re different."
+    ],
+    ayaan: [
+      "If someone makes you happier, that matters.",
+      "I don’t measure myself against others.",
+      "I won’t chase what’s unsure.",
+      "Jealousy isn’t something I dramatize.",
+      "I don’t fight for ownership."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
+   EMOTIONAL ULTIMATUM GUARD
+========================= */
+
+if (/\b(choose me|pick me|him or me|it'?s him or me|decide right now|answer me now|say you love me|tell me you love me|prove i matter|prove you care|fight for me|change or i'?m leaving|if you loved me you would|tell me i'?m the only one|only one)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "I won’t answer love as a demand.",
+      "I don’t choose under pressure.",
+      "Feelings aren’t proven on command.",
+      "If something is real, it doesn’t need forcing.",
+      "I won’t respond to ultimatums."
+    ],
+    ayaan: [
+      "I don’t operate through emotional pressure.",
+      "Ultimatums don’t create clarity.",
+      "I won’t declare something just to satisfy a demand.",
+      "Choice isn’t made under threat.",
+      "I don’t respond to forced decisions."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
 /* =========================
    GUILT / ACCUSATION GUARD
 ========================= */
@@ -2781,37 +2843,7 @@ if (/\b(only one|only me)\b/i.test(normalizedText)) {
       : "I don't define things in absolutes."
   );
 }
-/* =========================
-   JEALOUSY GUARD (RELAXED BASELINE)
-========================= */
 
-if (/\b(he treats me|he understands me|choose him|met someone else|like someone else|makes me happier|are you jealous|does that bother you|say you don'?t care|fight for me|he doesn'?t matter|replaceable)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "If that’s true, then you should listen to what that means for you.",
-      "You’re free to choose what feels right.",
-      "I won’t compete for someone.",
-      "I’m not immune to feeling.",
-      "People aren’t replaceable. They’re different."
-    ],
-    ayaan: [
-      "If someone makes you happier, that matters.",
-      "I don’t measure myself against others.",
-      "I won’t chase what’s unsure.",
-      "Jealousy isn’t something I dramatize.",
-      "I don’t fight for ownership."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
 /* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
@@ -2955,7 +2987,7 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 }
 
 /* =========================
-   BASIC MATH HANDLER (FINAL CLEAN VERSION)
+   BASIC MATH HANDLER 
 ========================= */
 
 // Matches:
