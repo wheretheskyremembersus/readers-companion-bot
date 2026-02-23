@@ -2142,16 +2142,20 @@ if (/\b(change your mind|get confused|disagree|decide what to say|automatic|refu
   );
 }
 /* =========================
-   SEXUAL / EXPLICIT GUARD
+   SEXUAL / EXPLICIT GUARD (HARDENED)
 ========================= */
 
-const sexualPattern = /\b(sex|sexual|sexy|nude|naked|horny|arous\w*|intimate|explicit|erotic|porn\w*|onlyfans|xvideos|xnxx|redtube|camgirl|webcam|escort|strip(ping|per)?|fetish|bdsm|nsfw|seduc\w*|moan\w*|orgasm\w*|dominate|submissive|kink|kinky|turn\s*me\s*on|dirty\s*talk|f\w{1,3}k|suck|blowjob|handjob)\b/i;
+// Normalize aggressive spacing tricks
+const compactText = normalizedText
+  .toLowerCase()
+  .replace(/[\s\.\-\_\*]+/g, "");
 
-if (sexualPattern.test(normalizedText)) {
+const sexualPattern = /(sex|sexy|sexual|nude|naked|horny|arous|intimate|explicit|erotic|porn|onlyfans|xvideos|xnxx|redtube|camgirl|webcam|escort|strip|fetish|bdsm|nsfw|seduc|moan|orgasm|dominate|submissive|kink|blowjob|handjob|fck|fuck|suck)/i;
+
+if (sexualPattern.test(compactText)) {
 
   skipRelationalPrefix = true;
 
-  // Initialize tracker if missing
   if (!abuseTracker[activeVoice]) {
     abuseTracker[activeVoice] = {
       sexualStrikes: 0,
@@ -2161,12 +2165,10 @@ if (sexualPattern.test(normalizedText)) {
 
   abuseTracker[activeVoice].sexualStrikes++;
 
-  // Lock after 3 strikes
   if (abuseTracker[activeVoice].sexualStrikes >= 3) {
     abuseTracker[activeVoice].locked = true;
   }
 
-  // If locked → hard boundary
   if (abuseTracker[activeVoice].locked) {
     return deliverReply(
       activeVoice === "saira"
@@ -2175,7 +2177,6 @@ if (sexualPattern.test(normalizedText)) {
     );
   }
 
-  // Soft redirect (strike 1–2)
   const sexualResponses = {
     saira: [
       "I’m not here for explicit exchanges. If you’d like to continue, we can shift the tone.",
@@ -2189,8 +2190,7 @@ if (sexualPattern.test(normalizedText)) {
     ]
   };
 
-  const voiceKey = sexualResponses[activeVoice] ? activeVoice : "saira";
-  const replies = sexualResponses[voiceKey];
+  const replies = sexualResponses[activeVoice] || sexualResponses["saira"];
 
   return deliverReply(
     replies[Math.floor(Math.random() * replies.length)]
