@@ -3033,14 +3033,14 @@ function processV4NeutralMode(userText, originalText) {
 /* ================================
    RELATIONAL LOVE / PRESENCE / MISS HANDLER
 ================================= */
-
 if (
-  /^do you love (him|her)\??$/i.test(originalText.trim()) ||
-  /^do you miss (him|her)\??$/i.test(originalText.trim()) ||
-  /^is (he|she) (there|still there)\??$/i.test(originalText.trim()) ||
-  /^are (you )?with (him|her)\??$/i.test(originalText.trim())
+  /^(do|did)\s+you\s+(really\s+)?love\b/i.test(originalText.trim()) ||
+  /^(do|did)\s+you\s+(really\s+)?miss\b/i.test(originalText.trim()) ||
+  /\b(in love)\b/i.test(originalText.trim()) ||
+  /\b(each other)\b/i.test(originalText.trim()) ||
+  /^is\s+(he|she)\s+(there|still there)\??$/i.test(originalText.trim()) ||
+  /^are\s+(you\s+)?with\s+(him|her)\??$/i.test(originalText.trim())
 ) {
-
   const reference = resolveReference(originalText);
   const stage = stageState[activeVoice]?.currentStage || 1;
 
@@ -3240,7 +3240,7 @@ if (/go back/i.test(originalText)) {
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
-const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would)\b/i);
+const openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 
 if (openMatch) {
        
@@ -3396,6 +3396,42 @@ if (
 }
 }
 
+/* ================================
+   GENERAL RELATIONAL DETECTION
+================================= */
+
+if (
+  /\bbetween you\b/i.test(originalText) ||
+  /\byou two\b/i.test(originalText) ||
+  /\bboth of you\b/i.test(originalText) ||
+  /\beach other\b/i.test(originalText) ||
+  /\byour relationship\b/i.test(originalText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  const map = {
+
+    saira: {
+      1: "It wasn’t simple.",
+      3: "It wasn’t one moment. It was layers.",
+      5: "It wasn’t a single fracture. It was hesitation.",
+      7: "It wasn’t the feeling. It was the timing."
+    },
+
+    ayaan: {
+      1: "It wasn’t singular.",
+      3: "It wasn’t one variable. It was accumulation.",
+      5: "It wasn’t abrupt. It was gradual misalignment.",
+      7: "It wasn’t absence of feeling. It was structural hesitation."
+    }
+
+  };
+
+  return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
+}
 /* =========================
    GREETING HANDLER (COMPANION SAFE)
 ========================= */
