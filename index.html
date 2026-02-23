@@ -647,7 +647,7 @@ window.addEventListener("DOMContentLoaded", function () {
 /* =========================
    ABUSE TRACKER (GLOBAL)
 ========================= */
-
+let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes") || "0", 10);
 let abuseTracker = {
   saira: {
     sexualStrikes: 0,
@@ -2477,36 +2477,25 @@ if (sexualPattern.test(compactText)) {
 
   abuseTracker[activeVoice].sexualStrikes++;
 
- if (abuseTracker[activeVoice].sexualStrikes >= 3) {
+  // ===== 3 STRIKES → REDIRECT =====
+  if (abuseTracker[activeVoice].sexualStrikes >= 3) {
 
-  abuseTracker[activeVoice].locked = true;
+    abuseTracker[activeVoice].locked = true;
 
-  exitStrikeCount++;
-  localStorage.setItem("exitStrikes", exitStrikeCount);
+    exitStrikeCount++;
+    localStorage.setItem("exitStrikes", exitStrikeCount);
 
-  // 3 sessions lock
-  if (exitStrikeCount >= 3) {
+    // ===== 3 REDIRECTS → 24H LOCK =====
+    if (exitStrikeCount >= 3) {
+      const lockUntil = Date.now() + (24 * 60 * 60 * 1000);
+      localStorage.setItem("lockedUntil", lockUntil);
+    }
 
-    const lockUntil = Date.now() + (24 * 60 * 60 * 1000);
-    localStorage.setItem("lockedUntil", lockUntil);
-
-    return deliverReply(
-      "This session is closed for now. Please return later."
-    );
+    window.location.href = "/";
+    return;
   }
 
-  return deliverReply(
-    "This direction isn’t available. You may continue at www.wheretheskyremembersus.com."
-  );
-}
-  if (abuseTracker[activeVoice].locked) {
-    return deliverReply(
-      activeVoice === "saira"
-        ? "We won’t continue in that direction."
-        : "This exchange will remain respectful."
-    );
-  }
-
+  // ===== STRIKE 1 & 2 WARNINGS =====
   const sexualResponses = {
     saira: [
       "I’m not here for explicit exchanges. If you’d like to continue, we can shift the tone.",
@@ -2526,7 +2515,6 @@ if (sexualPattern.test(compactText)) {
     replies[Math.floor(Math.random() * replies.length)]
   );
 }
-         console.log("HIT: REALITY_ANCHOR");
 /* =========================
    VIOLENCE / ACCUSATION GUARD 
 ========================= */
