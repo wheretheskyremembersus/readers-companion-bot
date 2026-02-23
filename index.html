@@ -2496,11 +2496,11 @@ if (/\bfavorite|favourite|prefer|like\b/i.test(normalizedText)) {
   );
 }
 /* =========================
-   VIOLENCE / ACCUSATION GUARD
+   VIOLENCE / ACCUSATION GUARD (ROBUST)
 ========================= */
 
 if (
-  /\b(killed|murdered|hurt|attacked|abused|harm(ed)?|responsible for)\b/i.test(normalizedText)
+  /\b(kill|killed|killing|murder|murdered|shoot|shot|stab|stabbed|attack|attacked|abuse|abused|harm|harmed)\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
