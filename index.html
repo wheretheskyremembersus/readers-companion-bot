@@ -2248,7 +2248,7 @@ if (/\bexport|save|download|copy conversation\b/i.test(t)) {
   );
 }
 
-if (/\badapt|writing style\b/i.test(t)) {
+if (/\b(adapt|writing style)\b/i.test(t)) {
   skipRelationalPrefix = true;
   return deliverReply(
     activeVoice === "saira"
