@@ -22,7 +22,12 @@ default-src 'self';
 img-src 'self' data:;
 script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
 style-src 'self' 'unsafe-inline';
-connect-src 'self' https://formspree.io https://*.supabase.co https://cdn.jsdelivr.net;
+connect-src 
+  'self'
+  https://formspree.io
+  https://*.supabase.co
+  wss://*.supabase.co
+  https://cdn.jsdelivr.net;
 ">
    
 <style>
@@ -6632,18 +6637,10 @@ processInput(text, originalText);
 <!-- SAFE ANALYTICS BLOCK -->
 
 <script>
-window.trackEvent = async function(eventType, extraData = {}) {
-  await fetch("https://gocmauqnfdcwfaqlpjrv.functions.supabase.co/quick-responder", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      event_type: eventType,
-      ...extraData
-    })
-  });
-};
+window.supabaseClient = window.supabase.createClient(
+  "https://gocmauqnfdcwfaqlpjrv.supabase.co",
+  "YOUR_REAL_ANON_KEY"
+);
 </script>
 </body>
 </html>
