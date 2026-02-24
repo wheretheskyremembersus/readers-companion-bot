@@ -32,34 +32,6 @@ connect-src
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
-<script>
-const supabase = window.supabase.createClient(
-  "https://gocmauqnfdcwfaqlpjrv.supabase.co",
-  "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
-);
-
-if (!localStorage.getItem("session_id")) {
-  localStorage.setItem("session_id", crypto.randomUUID());
-}
-
-window.trackEvent = async function(eventType, extraData = {}) {
-  const { error } = await supabase
-    .from("events")
-    .insert([
-      {
-        event_type: eventType,
-        session_id: localStorage.getItem("session_id"),
-        traffic_source: document.referrer || "direct",
-        ...extraData
-      }
-    ]);
-
-  if (error) console.error("Analytics error:", error);
-};
-
-window.supabaseClient = supabase;
-</script>
-
 
 <style>
 /* =========================
@@ -6663,6 +6635,34 @@ if (isDirectionalDeviation(originalText)) {
 const text = originalText.toLowerCase();
 processInput(text, originalText);
 }
+<script>
+  
+const supabase = window.supabase.createClient(
+  "https://gocmauqnfdcwfaqlpjrv.supabase.co",
+  "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
+);
+
+if (!localStorage.getItem("session_id")) {
+  localStorage.setItem("session_id", crypto.randomUUID());
+}
+
+window.trackEvent = async function(eventType, extraData = {}) {
+  const { error } = await supabase
+    .from("events")
+    .insert([
+      {
+        event_type: eventType,
+        session_id: localStorage.getItem("session_id"),
+        traffic_source: document.referrer || "direct",
+        ...extraData
+      }
+    ]);
+
+  if (error) console.error("Analytics error:", error);
+};
+
+window.supabaseClient = supabase;
+
   
 </script>
 </body>
