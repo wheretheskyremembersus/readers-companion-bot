@@ -20,9 +20,9 @@ of this content is prohibited.
 content="
 default-src 'self';
 img-src 'self' data:;
-script-src 'self' 'unsafe-inline';
+script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
 style-src 'self' 'unsafe-inline';
-connect-src 'self' https://formspree.io https://gocmauqnfdcwfaqlpjrv.supabase.co;
+connect-src 'self' https://formspree.io https://*.supabase.co;
 ">
 
 <style>
@@ -6628,10 +6628,8 @@ const text = originalText.toLowerCase();
 processInput(text, originalText);
 
 }  
-<script>
 <!-- SAFE ANALYTICS BLOCK -->
-<script>
-(function() {
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
