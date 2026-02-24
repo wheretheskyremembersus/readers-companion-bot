@@ -6629,39 +6629,28 @@ processInput(text, originalText);
 
 }  
 
-</script>
 
-<!-- SAFE ANALYTICS BLOCK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-(function() {
+const supabase = window.supabase.createClient(
+  "https://gocmauqnfdcwfaqlpjrv.supabase.co",
+  "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
+);
 
-  const SUPABASE_URL = "https://gocmauqnfdcwfaqlpjrv.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P";
+window.trackEvent = async function(eventType, extraData = {}) {
+  const { error } = await supabase
+    .from("Events")
+    .insert([
+      { event_type: eventType, ...extraData }
+    ]);
 
-  window.trackEvent = async function(eventType, extraData = {}) {
-    try {
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/Events`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`,
-          "Prefer": "return=minimal"
-        },
-        body: JSON.stringify({
-          event_type: eventType,
-          ...extraData
-        })
-      });
-
-      console.log("Tracking status:", response.status);
-
-    } catch (error) {
-      console.log("Tracking error:", error);
-    }
-  };
-
-})();
+  if (error) {
+    console.log("Insert error:", error);
+  } else {
+    console.log("Inserted successfully");
+  }
+};
 </script>
 
 </body>
