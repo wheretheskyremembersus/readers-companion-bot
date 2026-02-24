@@ -6592,45 +6592,51 @@ if (unsafeDetected) {
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
 
-const wordCount = originalText.trim().split(/\s+/).length;
+(function handleProgression(originalText) {
 
-if (wordCount >= 5) {
-  tollState[activeVoice].freeCount++;
-}
+  if (!originalText) return;
 
-const freeProgress = tollState[activeVoice].freeCount;
+  const wordCount = originalText.trim().split(/\s+/).length;
 
-// 🔓 Unlock ONLY at 10 free interactions
-if (freeProgress >= 10) {
-  tollState[activeVoice].unlocked = true;
-
-  if (!transitionAcknowledged[activeVoice]) {
-
-    const bridgeLine =
-      activeVoice === "saira"
-        ? "You didn't just pass through that."
-        : "You stayed with it.";
-
-    transitionAcknowledged[activeVoice] = true;
-
-    deliverReply(bridgeLine);
+  if (wordCount >= 5 && tollState?.[activeVoice]) {
+    tollState[activeVoice].freeCount++;
   }
-}
+
+  const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
+
+  if (freeProgress >= 10) {
+    tollState[activeVoice].unlocked = true;
+
+    if (!transitionAcknowledged?.[activeVoice]) {
+
+      const bridgeLine =
+        activeVoice === "saira"
+          ? "You didn't just pass through that."
+          : "You stayed with it.";
+
+      transitionAcknowledged[activeVoice] = true;
+      deliverReply(bridgeLine);
+    }
+  }
+
+})(originalText);
+
 
 /* =========================
-   META REDIRECT LAYER (SAFE INSERT)
+META REDIRECT LAYER
 ========================= */
 
-if (isDirectionalDeviation(originalText)) { 
+if (isDirectionalDeviation(originalText)) {
   return deliverReply(relationalRedirect(activeVoice));
 }
 
 const text = originalText.toLowerCase();
-
 processInput(text, originalText);
-}
-</script>  
 
+</script>
+
+
+<!-- SAFE ANALYTICS BLOCK -->
 <script>
 (function() {
 
@@ -6639,7 +6645,7 @@ processInput(text, originalText);
 
   window.trackEvent = async function(eventType, extraData = {}) {
     try {
-      await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -6651,6 +6657,9 @@ processInput(text, originalText);
           ...extraData
         })
       });
+
+      console.log("Tracking status:", response.status);
+
     } catch (error) {
       console.log("Tracking error:", error);
     }
@@ -6658,5 +6667,6 @@ processInput(text, originalText);
 
 })();
 </script>
+
 </body>
 </html>
