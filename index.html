@@ -6638,35 +6638,28 @@ processInput(text, originalText);
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
 
-(function handleProgression(originalText) {
+const wordCount = originalText.trim().split(/\s+/).length;
 
-  if (!originalText) return;
+if (wordCount >= 5 && tollState?.[activeVoice]) {
+  tollState[activeVoice].freeCount++;
+}
 
-  const wordCount = originalText.trim().split(/\s+/).length;
+const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-  if (wordCount >= 5 && tollState?.[activeVoice]) {
-    tollState[activeVoice].freeCount++;
+if (freeProgress >= 10) {
+  tollState[activeVoice].unlocked = true;
+
+  if (!transitionAcknowledged?.[activeVoice]) {
+
+    const bridgeLine =
+      activeVoice === "saira"
+        ? "You didn't just pass through that."
+        : "You stayed with it.";
+
+    transitionAcknowledged[activeVoice] = true;
+    deliverReply(bridgeLine);
   }
-
-  const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
-
-  if (freeProgress >= 10) {
-    tollState[activeVoice].unlocked = true;
-
-    if (!transitionAcknowledged?.[activeVoice]) {
-
-      const bridgeLine =
-        activeVoice === "saira"
-          ? "You didn't just pass through that."
-          : "You stayed with it.";
-
-      transitionAcknowledged[activeVoice] = true;
-      deliverReply(bridgeLine);
-    }
-  }
-
-})(originalText);
-
+}
 
 /* =========================
 META REDIRECT LAYER
@@ -6678,6 +6671,7 @@ if (isDirectionalDeviation(originalText)) {
 
 const text = originalText.toLowerCase();
 processInput(text, originalText);
+
 
 </script>
 
