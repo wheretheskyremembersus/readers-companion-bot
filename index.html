@@ -6634,7 +6634,7 @@ processInput(text, originalText);
 <script>
 (function() {
 
-   const SUPABASE_URL = "https://gocmauqnfdcwfaqlpjrv.supabase.co";
+  const SUPABASE_URL = "https://gocmauqnfdcwfaqlpjrv.supabase.co";
   const SUPABASE_KEY = "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P";
 
   window.trackEvent = async function(eventType, extraData = {}) {
@@ -6643,7 +6643,8 @@ processInput(text, originalText);
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": SUPABASE_KEY
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
         },
         body: JSON.stringify({
           event_type: eventType,
