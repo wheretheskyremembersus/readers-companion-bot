@@ -6633,7 +6633,7 @@ processInput(text, originalText);
 
 <script>
 window.trackEvent = async function(eventType, extraData = {}) {
-  await fetch("YOUR_FUNCTION_URL_HERE", {
+  await fetch("https://gocmauqnfdcwfaqlpjrv.functions.supabase.co/quick-responder", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -6645,7 +6645,6 @@ window.trackEvent = async function(eventType, extraData = {}) {
   });
 };
 </script>
-
 </body>
 </html>
 
