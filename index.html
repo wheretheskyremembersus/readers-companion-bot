@@ -6631,26 +6631,18 @@ processInput(text, originalText);
 
 <!-- SAFE ANALYTICS BLOCK -->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const supabaseClient = window.supabase.createClient(
-  "https://gocmauqnfdcwfaqlpjrv.supabase.co",
-  "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
-);
-
 window.trackEvent = async function(eventType, extraData = {}) {
-  const { error } = await supabaseClient
-    .from("Events")
-    .insert([
-      { event_type: eventType, ...extraData }
-    ]);
-
-  if (error) {
-    console.log("Insert error:", error);
-  } else {
-    console.log("Inserted successfully");
-  }
+  await fetch("YOUR_FUNCTION_URL_HERE", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      event_type: eventType,
+      ...extraData
+    })
+  });
 };
 </script>
 
