@@ -6654,6 +6654,29 @@ function detectTrafficSource() {
 
 const trafficSource = detectTrafficSource();
 
+/* ===== SESSION ID ===== */
+let sessionId = sessionStorage.getItem("session_id");
+
+if (!sessionId) {
+  sessionId = crypto.randomUUID();
+  sessionStorage.setItem("session_id", sessionId);
+}
+
+/* ===== TRAFFIC SOURCE DETECTION ===== */
+function detectTrafficSource() {
+  const ref = document.referrer.toLowerCase();
+
+  if (ref.includes("instagram")) return "instagram";
+  if (ref.includes("facebook")) return "facebook";
+  if (ref.includes("threads")) return "threads";
+  if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
+  if (ref.includes("youtube")) return "youtube";
+
+  return "direct";
+}
+
+const trafficSource = detectTrafficSource();
+
 /* ===== SUPABASE CONFIG ===== */
 const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
 const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
@@ -6680,6 +6703,5 @@ async function trackEvent(eventType, extraData = {}) {
   } catch (error) {
     console.log("Tracking error:", error);
   }
-}
-</script>
+}>
  
