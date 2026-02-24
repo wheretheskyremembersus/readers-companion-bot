@@ -6635,7 +6635,7 @@ processInput(text, originalText);
 (function() {
 
   const SUPABASE_URL = "https://abcxyz123.supabase.co";
-  const SUPABASE_KEY = "your-real-anon-key";
+  const SUPABASE_KEY = "YOUR_REAL_ANON_KEY";
 
   window.trackEvent = async function(eventType, extraData = {}) {
     try {
@@ -6643,8 +6643,7 @@ processInput(text, originalText);
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "apikey": SUPABASE_KEY,
-          "Authorization": `Bearer ${SUPABASE_KEY}`
+          "apikey": SUPABASE_KEY
         },
         body: JSON.stringify({
           event_type: eventType,
