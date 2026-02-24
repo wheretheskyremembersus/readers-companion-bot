@@ -6633,7 +6633,7 @@ processInput(text, originalText);
 
 <script>
 window.trackEvent = async function(eventType, extraData = {}) {
-  await fetch("https://gocmauqnfdcwfaqlpjrv.supabase.co/functions/v1/quick-responder", {
+  await fetch("https://gocmauqnfdcwfaqlpjrv.functions.supabase.co/quick-responder", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
