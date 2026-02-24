@@ -6632,11 +6632,13 @@ processInput(text, originalText);
 </script>
 
 <!-- SAFE ANALYTICS BLOCK -->
+</script>
+
 <script>
 (function() {
 
-  const SUPABASE_URL = "https://abcxyz123.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+  const SUPABASE_URL = "https://your-project-id.supabase.co";
+  const SUPABASE_KEY = "your-real-anon-key";
 
   window.trackEvent = async function(eventType, extraData = {}) {
     try {
