@@ -6677,31 +6677,80 @@ function detectTrafficSource() {
 
 const trafficSource = detectTrafficSource();
 
-/* ===== SUPABASE CONFIG ===== */
-const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
-const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
+<script>
+(function() {
 
-/* ===== EVENT TRACKER ===== */
-async function trackEvent(eventType, extraData = {}) {
-  try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`
-      },
-      body: JSON.stringify({
-        event_type: eventType,
-        session_id: sessionId,
-        traffic_source: trafficSource,
-        ...extraData
-      })
-    });
-
-    console.log("Tracking status:", response.status);
-  } catch (error) {
-    console.log("Tracking error:", error);
+  // ===== SESSION ID =====
+  let sessionId = sessionStorage.getItem("session_id");
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    sessionStorage.setItem("session_id", sessionId);
   }
-}>
- 
+
+  // ===== TRAFFIC SOURCE =====
+  function detectTrafficSource() {
+    const ref = document.referrer.toLowerCase();
+
+    if (ref.includes("instagram")) return "instagram";
+    if (ref.includes("facebook")) return "facebook";
+    if (ref.includes("threads")) return "threads";
+    if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
+    if (ref.includes("youtube")) return "youtube";
+
+    return "direct";
+  }
+
+  const trafficSource = detectTrafficSource();
+<script>
+(function() {
+
+  // ===== SESSION ID =====
+  let sessionId = sessionStorage.getItem("session_id");
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+    sessionStorage.setItem("session_id", sessionId);
+  }
+
+  // ===== TRAFFIC SOURCE =====
+  function detectTrafficSource() {
+    const ref = document.referrer.toLowerCase();
+
+    if (ref.includes("instagram")) return "instagram";
+    if (ref.includes("facebook")) return "facebook";
+    if (ref.includes("threads")) return "threads";
+    if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
+    if (ref.includes("youtube")) return "youtube";
+
+    return "direct";
+  }
+
+  const trafficSource = detectTrafficSource();
+
+  // ===== SUPABASE CONFIG =====
+  const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+  const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
+
+  // ===== TRACK FUNCTION =====
+  window.trackEvent = async function(eventType, extraData = {}) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_KEY,
+          "Authorization": `Bearer ${SUPABASE_KEY}`
+        },
+        body: JSON.stringify({
+          event_type: eventType,
+          session_id: sessionId,
+          traffic_source: trafficSource,
+          ...extraData
+        })
+      });
+    } catch (error) {
+      console.log("Tracking error:", error);
+    }
+  };
+
+})();
+</script>
