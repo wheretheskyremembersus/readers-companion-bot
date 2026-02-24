@@ -6604,7 +6604,6 @@ const freeProgress = tollState[activeVoice].freeCount;
 if (freeProgress >= 10) {
   tollState[activeVoice].unlocked = true;
 
-  // Optional: subtle bridge only at real unlock
   if (!transitionAcknowledged[activeVoice]) {
 
     const bridgeLine =
@@ -6630,107 +6629,15 @@ const text = originalText.toLowerCase();
 processInput(text, originalText);
 }
 
-<script>
-/* ===== SESSION ID ===== */
-let sessionId = sessionStorage.getItem("session_id");
+</script>
 
-if (!sessionId) {
-  sessionId = crypto.randomUUID();
-  sessionStorage.setItem("session_id", sessionId);
-}
-
-/* ===== TRAFFIC SOURCE DETECTION ===== */
-function detectTrafficSource() {
-  const ref = document.referrer.toLowerCase();
-
-  if (ref.includes("instagram")) return "instagram";
-  if (ref.includes("facebook")) return "facebook";
-  if (ref.includes("threads")) return "threads";
-  if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
-  if (ref.includes("youtube")) return "youtube";
-
-  return "direct";
-}
-
-const trafficSource = detectTrafficSource();
-
-/* ===== SESSION ID ===== */
-let sessionId = sessionStorage.getItem("session_id");
-
-if (!sessionId) {
-  sessionId = crypto.randomUUID();
-  sessionStorage.setItem("session_id", sessionId);
-}
-
-/* ===== TRAFFIC SOURCE DETECTION ===== */
-function detectTrafficSource() {
-  const ref = document.referrer.toLowerCase();
-
-  if (ref.includes("instagram")) return "instagram";
-  if (ref.includes("facebook")) return "facebook";
-  if (ref.includes("threads")) return "threads";
-  if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
-  if (ref.includes("youtube")) return "youtube";
-
-  return "direct";
-}
-
-const trafficSource = detectTrafficSource();
-
+<!-- SAFE ANALYTICS BLOCK -->
 <script>
 (function() {
 
-  // ===== SESSION ID =====
-  let sessionId = sessionStorage.getItem("session_id");
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    sessionStorage.setItem("session_id", sessionId);
-  }
+  const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+  const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
 
-  // ===== TRAFFIC SOURCE =====
-  function detectTrafficSource() {
-    const ref = document.referrer.toLowerCase();
-
-    if (ref.includes("instagram")) return "instagram";
-    if (ref.includes("facebook")) return "facebook";
-    if (ref.includes("threads")) return "threads";
-    if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
-    if (ref.includes("youtube")) return "youtube";
-
-    return "direct";
-  }
-
-  const trafficSource = detectTrafficSource();
-<script>
-(function() {
-
-  // ===== SESSION ID =====
-  let sessionId = sessionStorage.getItem("session_id");
-  if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    sessionStorage.setItem("session_id", sessionId);
-  }
-
-  // ===== TRAFFIC SOURCE =====
-  function detectTrafficSource() {
-    const ref = document.referrer.toLowerCase();
-
-    if (ref.includes("instagram")) return "instagram";
-    if (ref.includes("facebook")) return "facebook";
-    if (ref.includes("threads")) return "threads";
-    if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
-    if (ref.includes("youtube")) return "youtube";
-
-    return "direct";
-  }
-
-  const trafficSource = detectTrafficSource();
-         
-<script>
-(function() {
-
-
-  // ===== TRACK FUNCTION =====
   window.trackEvent = async function(eventType, extraData = {}) {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/events`, {
@@ -6742,8 +6649,6 @@ const trafficSource = detectTrafficSource();
         },
         body: JSON.stringify({
           event_type: eventType,
-          session_id: sessionId,
-          traffic_source: trafficSource,
           ...extraData
         })
       });
@@ -6754,5 +6659,6 @@ const trafficSource = detectTrafficSource();
 
 })();
 </script>
+
 </body>
 </html>
