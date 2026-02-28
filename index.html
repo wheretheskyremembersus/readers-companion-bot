@@ -6228,6 +6228,7 @@ function startReflection() {
 }
 
 function nextReflection() {
+
   const sets = {
     saira: [
       ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
@@ -6241,7 +6242,12 @@ function nextReflection() {
     ]
   };
 
-  if (reflectionStep === 3) {
+  if (reflectionStep >= 3) {
+    submitReflection();
+    return;
+  }
+
+  if (!sets[activeVoice] || !sets[activeVoice][reflectionStep]) {
     submitReflection();
     return;
   }
@@ -6257,7 +6263,7 @@ function nextReflection() {
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
     btn.onclick = () => {
-      playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
+      playTone(520, 60, 0.02);
       reflections.push(e);
       reflectionStep++;
       nextReflection();
@@ -6272,22 +6278,23 @@ function nextReflection() {
 
 function submitReflection() {
 
-  // Prevent multiple submissions from same browser
+  // Prevent multiple submissions
   if (localStorage.getItem("reflectionDone")) {
     return;
   }
 
+  const form = document.getElementById("reflectionForm");
+  if (!form) return;
+
+  // Fill hidden fields
   document.getElementById("formVoice").value = activeVoice;
-  document.getElementById("r1").value = reflections[0];
-  document.getElementById("r2").value = reflections[1];
-  document.getElementById("r3").value = reflections[2];
+  document.getElementById("r1").value = reflections[0] || "";
+  document.getElementById("r2").value = reflections[1] || "";
+  document.getElementById("r3").value = reflections[2] || "";
   document.getElementById("formTime").value = new Date().toISOString();
 
-  const form = document.getElementById("reflectionForm");
-
   /* =========================
-     SAFE SUPABASE INSERT
-     (does NOT interfere with Formspree)
+     SUPABASE INSERT (SAFE)
   ========================= */
 
   try {
@@ -6298,9 +6305,9 @@ function submitReflection() {
 
     const scale3 = ["🚶","👀","💫","❤️","📖"];
 
-    const r1Score = scale1.indexOf(reflections[0]) + 1;
-    const r2Score = scale1.indexOf(reflections[1]) + 1;
-    const r3Score = scale3.indexOf(reflections[2]) + 1;
+    const r1Score = scale1.indexOf(reflections[0]) + 1 || null;
+    const r2Score = scale1.indexOf(reflections[1]) + 1 || null;
+    const r3Score = scale3.indexOf(reflections[2]) + 1 || null;
 
     if (window.supabaseClient) {
       window.supabaseClient
@@ -6308,45 +6315,44 @@ function submitReflection() {
         .insert([{
           session_id: localStorage.getItem("session_id"),
           voice: activeVoice,
-          reflection_1_emoji: reflections[0],
+          reflection_1_emoji: reflections[0] || null,
           reflection_1_score: r1Score,
-          reflection_2_emoji: reflections[1],
+          reflection_2_emoji: reflections[1] || null,
           reflection_2_score: r2Score,
-          reflection_3_emoji: reflections[2],
+          reflection_3_emoji: reflections[2] || null,
           reflection_3_score: r3Score,
           source: localStorage.getItem("source") || "unknown",
           entry_point: localStorage.getItem("entry_point") || "unknown"
-        }]);
+        }])
+        .catch(err => console.warn("Supabase insert failed:", err));
     }
 
   } catch (err) {
-    console.warn("Reflection Supabase insert failed:", err);
+    console.warn("Reflection logic error:", err);
   }
 
   /* =========================
-     FORM SPREE SUBMISSION
+     FORM SPREE SUBMIT
   ========================= */
 
   fetch(form.action, {
-    method:"POST",
+    method: "POST",
     body: new FormData(form),
     headers: { 'Accept': 'application/json' }
-  })
-  .then(response => {})
-  .catch(error => {});
+  }).catch(() => {});
 
-  // Mark as completed
-  localStorage.setItem("reflectionDone","true");
+  // Mark completed
+  localStorage.setItem("reflectionDone", "true");
 
-  dock.innerHTML ="";
+  clearDock();
 
   chatBody.insertAdjacentHTML(
-   "beforeend",
-    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
+    "beforeend",
+    `<div class="message ${activeVoice === "saira" ? "saira-msg" : "ayaan-msg"}">
        <div class="bubble">
-         ${activeVoice ==="saira"
-           ?"Thank you for staying with us. It means more than you know."
-           :"Thank you for staying. Not everyone chooses to listen this closely."}
+         ${activeVoice === "saira"
+           ? "Thank you for staying with us. It means more than you know."
+           : "Thank you for staying. Not everyone chooses to listen this closely."}
          <br><br>
          <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
        </div>
