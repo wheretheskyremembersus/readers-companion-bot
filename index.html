@@ -6242,19 +6242,30 @@ function nextReflection() {
     ]
   };
 
-  if (reflectionStep >= 3) {
-    submitReflection();
+  // Safety: voice must exist
+  if (!activeVoice || !sets[activeVoice]) {
+    console.warn("Invalid activeVoice:", activeVoice);
     return;
   }
 
-  if (!sets[activeVoice] || !sets[activeVoice][reflectionStep]) {
+  // If completed all questions → submit
+  if (reflectionStep >= sets[activeVoice].length) {
     submitReflection();
     return;
   }
 
   clearDock();
 
-  const [question, emojis] = sets[activeVoice][reflectionStep];
+  const currentSet = sets[activeVoice][reflectionStep];
+
+  // Extra safety
+  if (!currentSet) {
+    submitReflection();
+    return;
+  }
+
+  const question = currentSet[0];
+  const emojis = currentSet[1];
 
   addSystemMessage(question);
 
@@ -6262,12 +6273,13 @@ function nextReflection() {
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
+
     btn.onclick = () => {
-      playTone(520, 60, 0.02);
       reflections.push(e);
       reflectionStep++;
       nextReflection();
     };
+
     dock.appendChild(btn);
   });
 }
