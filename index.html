@@ -6641,47 +6641,61 @@ processInput(text, originalText);
 <!-- SUPABASE INITIALIZATION -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+
   const supabase = window.supabase.createClient(
     "https://gocmauqnfdcwfaqlpjrv.supabase.co",
     "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
   );
 
+  // Create session id if not exists
   if (!localStorage.getItem("session_id")) {
     localStorage.setItem("session_id", crypto.randomUUID());
   }
 
- window.trackEvent = async function(eventType, extraData = {}) {
-  try {
+  // -----------------------------
+  // Core Track Function
+  // -----------------------------
+  window.trackEvent = async function(eventType, extraData = {}) {
+    try {
 
-    const platform = "web";     // GitHub bot on website
-    const source = "canva";     // Hosted via Canva site
+      await supabase.from("events").insert([
+        {
+          event_type: eventType,
+          session_id: localStorage.getItem("session_id"),
+          traffic_source: document.referrer || "direct",
+          platform: "web",
+          source: "canva",
+          ...extraData
+        }
+      ]);
 
-    await supabase.from("events").insert([
-      {
-        event_type: eventType,
-        session_id: localStorage.getItem("session_id"),
-        traffic_source: document.referrer || "direct",
-        platform: platform,
-        source: source,
-        ...extraData
-      }
-    ]);
+    } catch (e) {
+      console.warn("Analytics failed:", e);
+    }
+  };
 
-  } catch (e) {
-    console.warn("Analytics failed:", e);
-  }
-};
-document.addEventListener("click", function(e) {
+  window.supabaseClient = supabase;
 
-  const button = e.target.closest("button");
-  if (!button) return;
+  // -----------------------------
+  // 1️⃣ Track Chat Loaded
+  // -----------------------------
+  trackEvent("chat_loaded");
 
-  trackEvent("quick_button_clicked", {
-    button_text: button.innerText.trim()
+  // -----------------------------
+  // 2️⃣ Track Quick Reply Buttons
+  // (Tracks any button inside page)
+  // -----------------------------
+  document.addEventListener("click", function(e) {
+
+    const button = e.target.closest("button");
+    if (!button) return;
+
+    trackEvent("quick_button_clicked", {
+      button_text: button.innerText.trim()
+    });
+
   });
 
-});
-  window.supabaseClient = supabase;
 });
 </script>
 
