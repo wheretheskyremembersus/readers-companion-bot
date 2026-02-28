@@ -6241,7 +6241,7 @@ function nextReflection() {
     ]
   };
 
-  if (reflectionStep === 3) {
+if (reflectionStep >= sets[activeVoice].length) {
     submitReflection();
     return;
   }
