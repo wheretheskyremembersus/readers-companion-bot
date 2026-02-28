@@ -6209,16 +6209,16 @@ function declineReflection() {
   clearDock();
 
   addSystemMessage(
-    activeVoice === "saira"
-      ? "Thank you for sitting with us."
-      : "Thank you for staying."
-  );
+  activeVoice ==="saira"
+    ?"Thank you for sitting with us."
+    :"Thank you for staying."
+);
 
   dock.innerHTML = `
     <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
   `;
 }
-
+   
 function startReflection() {
   playTone(520, 60, 0.02);
 
@@ -6228,7 +6228,6 @@ function startReflection() {
 }
 
 function nextReflection() {
-
   const sets = {
     saira: [
       ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
@@ -6242,7 +6241,7 @@ function nextReflection() {
     ]
   };
 
-  if (reflectionStep >= sets[activeVoice].length) {
+  if (reflectionStep === 3) {
     submitReflection();
     return;
   }
@@ -6258,6 +6257,7 @@ function nextReflection() {
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
     btn.onclick = () => {
+      playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
       reflections.push(e);
       reflectionStep++;
       nextReflection();
@@ -6272,6 +6272,7 @@ function nextReflection() {
 
 function submitReflection() {
 
+  // Prevent multiple submissions from same browser
   if (localStorage.getItem("reflectionDone")) {
     return;
   }
@@ -6285,24 +6286,25 @@ function submitReflection() {
   const form = document.getElementById("reflectionForm");
 
   fetch(form.action, {
-    method: "POST",
+    method:"POST",
     body: new FormData(form),
     headers: { 'Accept': 'application/json' }
   })
   .then(response => {})
   .catch(error => {});
 
-  localStorage.setItem("reflectionDone", "true");
+  // Mark as completed
+  localStorage.setItem("reflectionDone","true");
 
-  dock.innerHTML = "";
+  dock.innerHTML ="";
 
   chatBody.insertAdjacentHTML(
-    "beforeend",
-    `<div class="message ${activeVoice === "saira" ? "saira-msg" : "ayaan-msg"}">
+   "beforeend",
+    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
        <div class="bubble">
-         ${activeVoice === "saira"
-           ? "Thank you for staying with us. It means more than you know."
-           : "Thank you for staying. Not everyone chooses to listen this closely."}
+         ${activeVoice ==="saira"
+           ?"Thank you for staying with us. It means more than you know."
+           :"Thank you for staying. Not everyone chooses to listen this closely."}
          <br><br>
          <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
        </div>
@@ -6311,6 +6313,7 @@ function submitReflection() {
 
   autoScroll();
 }
+
 /* =========================
    RETURN TO WEBSITE (CINEMATIC EXIT)
 ========================= */
