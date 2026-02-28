@@ -6209,16 +6209,16 @@ function declineReflection() {
   clearDock();
 
   addSystemMessage(
-  activeVoice ==="saira"
-    ?"Thank you for sitting with us."
-    :"Thank you for staying."
-);
+    activeVoice === "saira"
+      ? "Thank you for sitting with us."
+      : "Thank you for staying."
+  );
 
   dock.innerHTML = `
     <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
   `;
 }
-   
+
 function startReflection() {
   playTone(520, 60, 0.02);
 
@@ -6242,30 +6242,14 @@ function nextReflection() {
     ]
   };
 
-  // Safety: voice must exist
-  if (!activeVoice || !sets[activeVoice]) {
-    console.warn("Invalid activeVoice:", activeVoice);
-    return;
-  }
-
-  // If completed all questions → submit
-  if (reflectionStep >= sets[activeVoice].length) {
+  if (reflectionStep === 3) {
     submitReflection();
     return;
   }
 
   clearDock();
 
-  const currentSet = sets[activeVoice][reflectionStep];
-
-  // Extra safety
-  if (!currentSet) {
-    submitReflection();
-    return;
-  }
-
-  const question = currentSet[0];
-  const emojis = currentSet[1];
+  const [question, emojis] = sets[activeVoice][reflectionStep];
 
   addSystemMessage(question);
 
@@ -6273,13 +6257,11 @@ function nextReflection() {
     const btn = document.createElement("button");
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
-
     btn.onclick = () => {
       reflections.push(e);
       reflectionStep++;
       nextReflection();
     };
-
     dock.appendChild(btn);
   });
 }
@@ -6290,73 +6272,29 @@ function nextReflection() {
 
 function submitReflection() {
 
-  // Prevent multiple submissions
   if (localStorage.getItem("reflectionDone")) {
     return;
   }
 
-  const form = document.getElementById("reflectionForm");
-  if (!form) return;
-
-  // Fill hidden fields
   document.getElementById("formVoice").value = activeVoice;
-  document.getElementById("r1").value = reflections[0] || "";
-  document.getElementById("r2").value = reflections[1] || "";
-  document.getElementById("r3").value = reflections[2] || "";
+  document.getElementById("r1").value = reflections[0];
+  document.getElementById("r2").value = reflections[1];
+  document.getElementById("r3").value = reflections[2];
   document.getElementById("formTime").value = new Date().toISOString();
 
-  /* =========================
-     SUPABASE INSERT (SAFE)
-  ========================= */
-
-  try {
-
-    const scale1 = activeVoice === "ayaan"
-      ? ["🌑","🌘","🌗","🌕","☀️"]
-      : ["🌫️","🌱","💛","🌙","✨"];
-
-    const scale3 = ["🚶","👀","💫","❤️","📖"];
-
-    const r1Score = scale1.indexOf(reflections[0]) + 1 || null;
-    const r2Score = scale1.indexOf(reflections[1]) + 1 || null;
-    const r3Score = scale3.indexOf(reflections[2]) + 1 || null;
-
-    if (window.supabaseClient) {
-      window.supabaseClient
-        .from("reflections")
-        .insert([{
-          session_id: localStorage.getItem("session_id"),
-          voice: activeVoice,
-          reflection_1_emoji: reflections[0] || null,
-          reflection_1_score: r1Score,
-          reflection_2_emoji: reflections[1] || null,
-          reflection_2_score: r2Score,
-          reflection_3_emoji: reflections[2] || null,
-          reflection_3_score: r3Score,
-          source: localStorage.getItem("source") || "unknown",
-          entry_point: localStorage.getItem("entry_point") || "unknown"
-        }])
-        .catch(err => console.warn("Supabase insert failed:", err));
-    }
-
-  } catch (err) {
-    console.warn("Reflection logic error:", err);
-  }
-
-  /* =========================
-     FORM SPREE SUBMIT
-  ========================= */
+  const form = document.getElementById("reflectionForm");
 
   fetch(form.action, {
     method: "POST",
     body: new FormData(form),
     headers: { 'Accept': 'application/json' }
-  }).catch(() => {});
+  })
+  .then(response => {})
+  .catch(error => {});
 
-  // Mark completed
   localStorage.setItem("reflectionDone", "true");
 
-  clearDock();
+  dock.innerHTML = "";
 
   chatBody.insertAdjacentHTML(
     "beforeend",
