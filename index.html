@@ -6650,20 +6650,27 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("session_id", crypto.randomUUID());
   }
 
-  window.trackEvent = async function(eventType, extraData = {}) {
-    try {
-      await supabase.from("events").insert([
-        {
-          event_type: eventType,
-          session_id: localStorage.getItem("session_id"),
-          traffic_source: document.referrer || "direct",
-          ...extraData
-        }
-      ]);
-    } catch (e) {
-      console.warn("Analytics failed:", e);
-    }
-  };
+ window.trackEvent = async function(eventType, extraData = {}) {
+  try {
+
+    const platform = "web";     // GitHub bot on website
+    const source = "canva";     // Hosted via Canva site
+
+    await supabase.from("events").insert([
+      {
+        event_type: eventType,
+        session_id: localStorage.getItem("session_id"),
+        traffic_source: document.referrer || "direct",
+        platform: platform,
+        source: source,
+        ...extraData
+      }
+    ]);
+
+  } catch (e) {
+    console.warn("Analytics failed:", e);
+  }
+};
 
   window.supabaseClient = supabase;
 });
