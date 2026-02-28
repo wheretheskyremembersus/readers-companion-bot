@@ -6228,6 +6228,7 @@ function startReflection() {
 }
 
 function nextReflection() {
+
   const sets = {
     saira: [
       ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
@@ -6241,14 +6242,27 @@ function nextReflection() {
     ]
   };
 
-if (reflectionStep >= sets[activeVoice].length) {
+  if (!activeVoice || !sets[activeVoice]) {
+    console.warn("Reflection started without activeVoice");
+    return;
+  }
+
+  if (reflectionStep >= sets[activeVoice].length) {
     submitReflection();
     return;
   }
 
-  clearDock();
+  const current = sets[activeVoice][reflectionStep];
 
-  const [question, emojis] = sets[activeVoice][reflectionStep];
+  if (!current) {
+    submitReflection();
+    return;
+  }
+
+  const question = current[0];
+  const emojis = current[1];
+
+  clearDock();
 
   addSystemMessage(question);
 
@@ -6257,7 +6271,7 @@ if (reflectionStep >= sets[activeVoice].length) {
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
     btn.onclick = () => {
-      playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
+      playTone(520, 60, 0.02);
       reflections.push(e);
       reflectionStep++;
       nextReflection();
@@ -6265,7 +6279,6 @@ if (reflectionStep >= sets[activeVoice].length) {
     dock.appendChild(btn);
   });
 }
-
 /* =========================
    SUBMIT
 ========================= */
