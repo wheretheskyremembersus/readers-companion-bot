@@ -6242,19 +6242,23 @@ function nextReflection() {
     ]
   };
 
-  if (!activeVoice || !sets[activeVoice]) {
-    console.warn("Reflection started without activeVoice");
+  // Hard guard — never touch sets before this
+  const voiceSet = sets?.[activeVoice];
+
+  if (!voiceSet) {
+    console.warn("Reflection aborted — invalid activeVoice:", activeVoice);
     return;
   }
 
-  if (reflectionStep >= sets[activeVoice].length) {
+  if (reflectionStep >= voiceSet.length) {
     submitReflection();
     return;
   }
 
-  const current = sets[activeVoice][reflectionStep];
+  const current = voiceSet[reflectionStep];
 
-  if (!current) {
+  if (!Array.isArray(current)) {
+    console.warn("Reflection step invalid:", reflectionStep);
     submitReflection();
     return;
   }
@@ -6263,7 +6267,6 @@ function nextReflection() {
   const emojis = current[1];
 
   clearDock();
-
   addSystemMessage(question);
 
   emojis.forEach(e => {
