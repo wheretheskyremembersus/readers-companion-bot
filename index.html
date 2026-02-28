@@ -6647,17 +6647,12 @@ document.addEventListener("DOMContentLoaded", function () {
     "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
   );
 
-  // Create session id if not exists
   if (!localStorage.getItem("session_id")) {
     localStorage.setItem("session_id", crypto.randomUUID());
   }
 
-  // -----------------------------
-  // Core Track Function
-  // -----------------------------
   window.trackEvent = async function(eventType, extraData = {}) {
     try {
-
       await supabase.from("events").insert([
         {
           event_type: eventType,
@@ -6668,32 +6663,44 @@ document.addEventListener("DOMContentLoaded", function () {
           ...extraData
         }
       ]);
-
     } catch (e) {
       console.warn("Analytics failed:", e);
     }
   };
 
-  window.supabaseClient = supabase;
-
-  // -----------------------------
-  // 1️⃣ Track Chat Loaded
-  // -----------------------------
   trackEvent("chat_loaded");
 
-  // -----------------------------
-  // 2️⃣ Track Quick Reply Buttons
-  // (Tracks any button inside page)
-  // -----------------------------
-  document.addEventListener("click", function(e) {
+  setTimeout(function () {
 
+    if (typeof window.processInput === "function") {
+
+      const originalProcessInput = window.processInput;
+
+      window.processInput = function(text, originalText) {
+
+        if (!window.chatStarted) {
+          window.chatStarted = true;
+          trackEvent("chat_initiated");
+        }
+
+        trackEvent("user_message", {
+          message_length: originalText ? originalText.length : 0
+        });
+
+        return originalProcessInput.apply(this, arguments);
+      };
+
+    }
+
+  }, 500);
+
+  document.addEventListener("click", function(e) {
     const button = e.target.closest("button");
     if (!button) return;
 
     trackEvent("quick_button_clicked", {
       button_text: button.innerText.trim()
     });
-
   });
 
 });
@@ -6701,4 +6708,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </body>
 </html>
+
 
