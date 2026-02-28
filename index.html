@@ -6671,7 +6671,16 @@ document.addEventListener("DOMContentLoaded", function () {
     console.warn("Analytics failed:", e);
   }
 };
+document.addEventListener("click", function(e) {
 
+  const button = e.target.closest("button");
+  if (!button) return;
+
+  trackEvent("quick_button_clicked", {
+    button_text: button.innerText.trim()
+  });
+
+});
   window.supabaseClient = supabase;
 });
 </script>
