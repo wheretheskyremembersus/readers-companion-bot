@@ -16,12 +16,23 @@ of this content is prohibited.
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Our Story - Readers' Companion</title>
+<!--
 <meta http-equiv="Content-Security-Policy" 
-content="default-src 'self'; 
-         img-src 'self' data:; 
-         script-src 'self' 'unsafe-inline'; 
-         style-src 'self' 'unsafe-inline'; 
-         connect-src https://formspree.io;">
+content="
+default-src 'self';
+img-src 'self' data:;
+script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+style-src 'self' 'unsafe-inline';
+connect-src 
+  'self'
+  https://formspree.io
+  https://gocmauqnfdcwfaqlpjrv.supabase.co
+  wss://gocmauqnfdcwfaqlpjrv.supabase.co
+  https://cdn.jsdelivr.net;
+">
+-->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <style>
 /* =========================
@@ -6217,6 +6228,7 @@ function startReflection() {
 }
 
 function nextReflection() {
+
   const sets = {
     saira: [
       ["How closely did this story stay with you?", ["🌫️","🌱","💛","🌙","✨"]],
@@ -6230,15 +6242,31 @@ function nextReflection() {
     ]
   };
 
-  if (reflectionStep === 3) {
+  // Hard guard — never touch sets before this
+  const voiceSet = sets?.[activeVoice];
+
+  if (!voiceSet) {
+    console.warn("Reflection aborted — invalid activeVoice:", activeVoice);
+    return;
+  }
+
+  if (reflectionStep >= voiceSet.length) {
     submitReflection();
     return;
   }
 
+  const current = voiceSet[reflectionStep];
+
+  if (!Array.isArray(current)) {
+    console.warn("Reflection step invalid:", reflectionStep);
+    submitReflection();
+    return;
+  }
+
+  const question = current[0];
+  const emojis = current[1];
+
   clearDock();
-
-  const [question, emojis] = sets[activeVoice][reflectionStep];
-
   addSystemMessage(question);
 
   emojis.forEach(e => {
@@ -6246,7 +6274,7 @@ function nextReflection() {
     btn.className = "btn " + activeVoice;
     btn.textContent = e;
     btn.onclick = () => {
-      playTone(520, 60, 0.02);   // ← add sound here for emoji clicks
+      playTone(520, 60, 0.02);
       reflections.push(e);
       reflectionStep++;
       nextReflection();
@@ -6254,7 +6282,6 @@ function nextReflection() {
     dock.appendChild(btn);
   });
 }
-
 /* =========================
    SUBMIT
 ========================= */
@@ -6292,7 +6319,7 @@ function submitReflection() {
     `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
        <div class="bubble">
          ${activeVoice ==="saira"
-           ?"Thank you for sitting with us. It means more than you know."
+           ?"Thank you for staying with us. It means more than you know."
            :"Thank you for staying. Not everyone chooses to listen this closely."}
          <br><br>
          <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
@@ -6594,66 +6621,139 @@ V3 FREEHAND PROGRESSION + TOLLGATE
 
 const wordCount = originalText.trim().split(/\s+/).length;
 
-if (wordCount >= 5) {
+if (wordCount >= 5 && tollState?.[activeVoice]) {
   tollState[activeVoice].freeCount++;
 }
 
-const freeProgress = tollState[activeVoice].freeCount;
+const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-// 🔓 Unlock ONLY at 10 free interactions
 if (freeProgress >= 10) {
   tollState[activeVoice].unlocked = true;
 
-  // Optional: subtle bridge only at real unlock
-  if (!transitionAcknowledged[activeVoice]) {
-
+  if (!transitionAcknowledged?.[activeVoice]) {
     const bridgeLine =
       activeVoice === "saira"
         ? "You didn't just pass through that."
         : "You stayed with it.";
 
     transitionAcknowledged[activeVoice] = true;
-
     deliverReply(bridgeLine);
   }
 }
 
 /* =========================
-   META REDIRECT LAYER (SAFE INSERT)
+META REDIRECT LAYER
 ========================= */
 
-if (isDirectionalDeviation(originalText)) { 
+if (isDirectionalDeviation(originalText)) {
   return deliverReply(relationalRedirect(activeVoice));
 }
 
 const text = originalText.toLowerCase();
 processInput(text, originalText);
 }
-
-/* ===== SESSION ID ===== */
-let sessionId = sessionStorage.getItem("session_id");
-
-if (!sessionId) {
-  sessionId = crypto.randomUUID();
-  sessionStorage.setItem("session_id", sessionId);
-}
-
-/* ===== TRAFFIC SOURCE DETECTION ===== */
-function detectTrafficSource() {
-  const ref = document.referrer.toLowerCase();
-
-  if (ref.includes("instagram")) return "instagram";
-  if (ref.includes("facebook")) return "facebook";
-  if (ref.includes("threads")) return "threads";
-  if (ref.includes("twitter") || ref.includes("t.co") || ref.includes("x.com")) return "x";
-  if (ref.includes("youtube")) return "youtube";
-
-  return "direct";
-}
-
-const trafficSource = detectTrafficSource();
-
 </script>
+
+<!-- SUPABASE ANALYTICS -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // -------------------------------
+  // Create Supabase Client
+  // -------------------------------
+  const supabase = window.supabase.createClient(
+    "https://gocmauqnfdcwfaqlpjrv.supabase.co",
+    "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
+  );
+
+  // -------------------------------
+  // Create Session ID
+  // -------------------------------
+  if (!localStorage.getItem("session_id")) {
+    localStorage.setItem("session_id", crypto.randomUUID());
+  }
+
+  // -------------------------------
+  // Core Tracking Function
+  // -------------------------------
+  window.trackEvent = async function(eventType, extraData = {}) {
+    try {
+      await supabase.from("events").insert([
+        {
+          event_type: eventType,
+          session_id: localStorage.getItem("session_id"),
+          traffic_source: document.referrer || "direct",
+          platform: "web",
+          source: "canva",
+          ...extraData
+        }
+      ]);
+    } catch (e) {
+      console.warn("Analytics failed:", e);
+    }
+  };
+
+  // -------------------------------
+  // Track Chat Loaded
+  // -------------------------------
+  trackEvent("chat_loaded");
+
+  // -------------------------------
+  // Reliable processInput Wrapper
+  // -------------------------------
+  let wrapped = false;
+  let attempts = 0;
+
+  const wrapperInterval = setInterval(function () {
+
+    if (!wrapped && typeof window.processInput === "function") {
+
+      const originalProcessInput = window.processInput;
+
+      window.processInput = function(text, originalText) {
+
+        if (!window.chatStarted) {
+          window.chatStarted = true;
+          trackEvent("chat_initiated");
+        }
+
+        trackEvent("user_message", {
+          message_length: originalText ? originalText.length : 0
+        });
+
+        return originalProcessInput.apply(this, arguments);
+      };
+
+      wrapped = true;
+      clearInterval(wrapperInterval);
+    }
+
+    attempts++;
+    if (attempts > 30) {
+      clearInterval(wrapperInterval);
+    }
+
+  }, 300);
+
+  // -------------------------------
+  // Track Button Clicks
+  // -------------------------------
+  document.addEventListener("click", function(e) {
+    const button = e.target.closest("button");
+if (!button) return;
+
+const text = button.innerText.trim();
+if (!text || text === "Send") return;
+
+trackEvent("quick_button_clicked", {
+  button_text: text
+});
+  });
+
+});
+</script>
+
 </body>
 </html>
- 
+
+
