@@ -6285,6 +6285,48 @@ function submitReflection() {
 
   const form = document.getElementById("reflectionForm");
 
+  /* =========================
+     SAFE SUPABASE INSERT
+     (does NOT interfere with Formspree)
+  ========================= */
+
+  try {
+
+    const scale1 = activeVoice === "ayaan"
+      ? ["🌑","🌘","🌗","🌕","☀️"]
+      : ["🌫️","🌱","💛","🌙","✨"];
+
+    const scale3 = ["🚶","👀","💫","❤️","📖"];
+
+    const r1Score = scale1.indexOf(reflections[0]) + 1;
+    const r2Score = scale1.indexOf(reflections[1]) + 1;
+    const r3Score = scale3.indexOf(reflections[2]) + 1;
+
+    if (window.supabaseClient) {
+      window.supabaseClient
+        .from("reflections")
+        .insert([{
+          session_id: localStorage.getItem("session_id"),
+          voice: activeVoice,
+          reflection_1_emoji: reflections[0],
+          reflection_1_score: r1Score,
+          reflection_2_emoji: reflections[1],
+          reflection_2_score: r2Score,
+          reflection_3_emoji: reflections[2],
+          reflection_3_score: r3Score,
+          source: localStorage.getItem("source") || "unknown",
+          entry_point: localStorage.getItem("entry_point") || "unknown"
+        }]);
+    }
+
+  } catch (err) {
+    console.warn("Reflection Supabase insert failed:", err);
+  }
+
+  /* =========================
+     FORM SPREE SUBMISSION
+  ========================= */
+
   fetch(form.action, {
     method:"POST",
     body: new FormData(form),
@@ -6303,7 +6345,7 @@ function submitReflection() {
     `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
        <div class="bubble">
          ${activeVoice ==="saira"
-           ?"Thank you for sitting with us. It means more than you know."
+           ?"Thank you for staying with us. It means more than you know."
            :"Thank you for staying. Not everyone chooses to listen this closely."}
          <br><br>
          <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
@@ -6313,7 +6355,6 @@ function submitReflection() {
 
   autoScroll();
 }
-
 /* =========================
    RETURN TO WEBSITE (CINEMATIC EXIT)
 ========================= */
