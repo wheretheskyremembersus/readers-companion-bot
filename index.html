@@ -6638,19 +6638,28 @@ processInput(text, originalText);
 }
 </script>
 
-<!-- SUPABASE INITIALIZATION -->
+<!-- SUPABASE ANALYTICS -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+  // -------------------------------
+  // Create Supabase Client
+  // -------------------------------
   const supabase = window.supabase.createClient(
     "https://gocmauqnfdcwfaqlpjrv.supabase.co",
     "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
   );
 
+  // -------------------------------
+  // Create Session ID
+  // -------------------------------
   if (!localStorage.getItem("session_id")) {
     localStorage.setItem("session_id", crypto.randomUUID());
   }
 
+  // -------------------------------
+  // Core Tracking Function
+  // -------------------------------
   window.trackEvent = async function(eventType, extraData = {}) {
     try {
       await supabase.from("events").insert([
@@ -6668,11 +6677,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
+  // -------------------------------
+  // Track Chat Loaded
+  // -------------------------------
   trackEvent("chat_loaded");
 
-  setTimeout(function () {
+  // -------------------------------
+  // Reliable processInput Wrapper
+  // -------------------------------
+  let wrapped = false;
+  let attempts = 0;
 
-    if (typeof window.processInput === "function") {
+  const wrapperInterval = setInterval(function () {
+
+    if (!wrapped && typeof window.processInput === "function") {
 
       const originalProcessInput = window.processInput;
 
@@ -6690,10 +6708,20 @@ document.addEventListener("DOMContentLoaded", function () {
         return originalProcessInput.apply(this, arguments);
       };
 
+      wrapped = true;
+      clearInterval(wrapperInterval);
     }
 
-  }, 500);
+    attempts++;
+    if (attempts > 30) {
+      clearInterval(wrapperInterval);
+    }
 
+  }, 300);
+
+  // -------------------------------
+  // Track Button Clicks
+  // -------------------------------
   document.addEventListener("click", function(e) {
     const button = e.target.closest("button");
     if (!button) return;
