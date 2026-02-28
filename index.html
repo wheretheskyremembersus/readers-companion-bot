@@ -6724,11 +6724,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // -------------------------------
   document.addEventListener("click", function(e) {
     const button = e.target.closest("button");
-    if (!button) return;
+if (!button) return;
 
-    trackEvent("quick_button_clicked", {
-      button_text: button.innerText.trim()
-    });
+const text = button.innerText.trim();
+if (!text || text === "Send") return;
+
+trackEvent("quick_button_clicked", {
+  button_text: text
+});
   });
 
 });
