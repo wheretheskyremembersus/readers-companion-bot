@@ -6695,7 +6695,8 @@ document.addEventListener("contextmenu", function (e) {
   // -------------------------------
   // Core Tracking Function
   // -------------------------------
-  window.trackEvent = async function(eventType, extraData = {}) {
+window.trackEvent = async function(eventType, extraData) {
+  extraData = extraData || {};
     try {
       await supabase.from("events").insert([
         {
