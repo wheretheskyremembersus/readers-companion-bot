@@ -6680,7 +6680,8 @@ document.addEventListener("contextmenu", function (e) {
   // -------------------------------
   // Create Supabase Client
   // -------------------------------
-  const supabase = window.supabase.createClient(
+window.supabaseClient = window.supabaseClient || 
+  window.supabase.createClient(
     "https://gocmauqnfdcwfaqlpjrv.supabase.co",
     "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
   );
@@ -6698,7 +6699,7 @@ document.addEventListener("contextmenu", function (e) {
 window.trackEvent = async function(eventType, extraData) {
   extraData = extraData || {};
     try {
-      await supabase.from("events").insert([
+      await window.supabaseClient.from("events").insert([
         {
           event_type: eventType,
           session_id: localStorage.getItem("session_id"),
