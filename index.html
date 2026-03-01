@@ -6672,7 +6672,10 @@ processInput(text, originalText);
 
 <!-- SUPABASE ANALYTICS -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+// Disable right click
+document.addEventListener("contextmenu", function (e) {
+  e.preventDefault();
+});
 
   // -------------------------------
   // Create Supabase Client
