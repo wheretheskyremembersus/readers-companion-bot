@@ -6288,10 +6288,26 @@ function nextReflection() {
 
 function submitReflection() {
 
-  // Prevent multiple submissions from same browser
   if (localStorage.getItem("reflectionDone")) {
-    return;
-  }
+
+  dock.innerHTML = "";
+
+  chatBody.insertAdjacentHTML(
+    "beforeend",
+    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
+       <div class="bubble">
+         ${activeVoice ==="saira"
+           ?"Thank you for staying with us. It means more than you know."
+           :"Thank you for staying. Not everyone chooses to listen this closely."}
+         <br><br>
+         <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+       </div>
+     </div>`
+  );
+
+  autoScroll();
+  return;
+}
 
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
@@ -6755,5 +6771,3 @@ trackEvent("quick_button_clicked", {
 
 </body>
 </html>
-
-
