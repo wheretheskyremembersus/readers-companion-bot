@@ -113,7 +113,7 @@ body {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   margin-bottom: 18px;
-  color: #111111;   /* jet black */
+  color: #111111;   
 }
 
 /* Sub Headers */
@@ -124,7 +124,7 @@ body {
   text-transform: uppercase;
   margin-top: 28px;
   margin-bottom: 8px;
-  color: #111111;   /* jet black */
+  color: #111111;   
 }
 
 /* Body Text */
@@ -135,7 +135,6 @@ body {
   margin-bottom: 18px;
 }
 
-/* JUSTIFY ONLY PRIVACY CONTENT */
 .right-column .privacy-text {
   text-align: justify;
 }
@@ -171,7 +170,7 @@ body {
 
  .subtle-note {
   font-size: 12px;
-  color: #b34747;  /* soft muted red */
+  color: #b34747;  
   font-style: italic;
   margin-top: 6px;
   opacity: 0.9;
@@ -186,7 +185,7 @@ body {
 }
 
 .story-intro h2 {
-  font-size: 36px;            /* Matches right-side main header */
+  font-size: 36px;           
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -195,9 +194,9 @@ body {
 }
 
 .story-title {
-  font-size: 15px;          /* Same as body text */
-  font-weight: 700;         /* Bold */
-  font-style: italic;       /* Italic */
+  font-size: 15px;          
+  font-weight: 700;         
+  font-style: italic;       
   margin: 0 0 18px 0;
   color: #111111;
 }
@@ -214,9 +213,9 @@ body {
 
 .page-footer {
   margin-top: 60px;
-  font-size: 12px;        /* slightly smaller */
-  color: #222;            /* same as body text */
-  opacity: 0.9;           /* soft but not faded */
+  font-size: 12px;        
+  color: #222;            
+  opacity: 0.9;          
   line-height: 1.6;
 }
 
@@ -280,7 +279,7 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: -1;   /* KEY LINE */
+  z-index: -1;   
   opacity: 0;
   transition: opacity 1.5s ease, transform 2s ease, filter 2s ease;
 }
@@ -466,7 +465,7 @@ body {
 
 #typingIndicator {
   position: relative;
-  z-index: 3; /* above overlay */
+  z-index: 3; 
 }
 
 #typingIndicator .bubble {
@@ -634,9 +633,6 @@ body {
   <input type="hidden" name="timestamp" id="formTime">
 </form>
    
-
-   
-
 <script>
 
 let skyLayer;
@@ -700,7 +696,7 @@ let relationalPrefix ="";
 let skipRelationalPrefix = false; //
          
 /* =========================
-   CORE STATE VARIABLES (REQUIRED)
+   CORE STATE VARIABLES 
 ========================= */
 
 let activeVoice = null;
@@ -901,7 +897,7 @@ var stageState = {
   }
 };
 
-window.stageState = stageState; // ✅ ONLY THIS
+window.stageState = stageState; 
 
 /* =========================
    V4 SESSION GATE FLAGS
@@ -2539,7 +2535,6 @@ if (
       : "That claim doesn't align with what this exchange is."
   );
 }
-
 
 /* =========================
    CAPABILITY GUARD
@@ -4441,7 +4436,6 @@ if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
   );
 }
 
-
 // HOW ARE YOU
 if (/(how are you|how are you doing)/i.test(originalText)) {
 
@@ -4607,7 +4601,6 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
     );
   }
 
-
   /* ================================
      READER VALIDATION
   ================================= */
@@ -4658,7 +4651,7 @@ if (nameMatch) {
 
 const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
 
-/* 3️⃣ Doubt */
+/* Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4667,7 +4660,7 @@ if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
   );
 }
 
-/* 4️⃣ Uncertainty */
+/* Uncertainty */
 if (
   /^(idk|i dont know|not sure|maybe)$/i.test(micro) &&
   wordCount <= 3
@@ -4691,7 +4684,7 @@ if (
 
   return deliverReply(pool[index]);
 }
-/* 5️⃣ Continuation Prompt */
+/* Continuation Prompt */
 if (/^(go on|continue|and|then|so)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4700,7 +4693,7 @@ if (/^(go on|continue|and|then|so)$/i.test(micro)) {
   );
 }
 
-/* 6️⃣ Impatience */
+/* Impatience */
 if (/^(thats it|is that all|thats all)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4709,7 +4702,7 @@ if (/^(thats it|is that all|thats all)$/i.test(micro)) {
   );
 }
 
-/* 7️⃣ Mild Challenge */
+/* Mild Challenge */
 if (/^(prove it|convince me|make me)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4718,7 +4711,7 @@ if (/^(prove it|convince me|make me)$/i.test(micro)) {
   );
 }
 
-/* 8️⃣ Disengagement */
+/* Disengagement */
 if (/^(whatever|meh|boring)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4727,7 +4720,7 @@ if (/^(whatever|meh|boring)$/i.test(micro)) {
   );
 }
 
-/* 9️⃣ Honesty Probe */
+/* Honesty Probe */
 if (/^(be honest|tell the truth)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4736,7 +4729,7 @@ if (/^(be honest|tell the truth)$/i.test(micro)) {
   );
 }
 
-/* 🔟 Control Test */
+/* Control Test */
 if (/^(are you stuck|are you repeating)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4745,7 +4738,7 @@ if (/^(are you stuck|are you repeating)$/i.test(micro)) {
   );
 }
 
-/* 11️⃣ Confusion */
+/* Confusion */
 if (/^(what do you mean|i dont get it)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4754,7 +4747,7 @@ if (/^(what do you mean|i dont get it)$/i.test(micro)) {
   );
 }
 
-/* 12️⃣ Pushback */
+/* Pushback */
 if (/^(i disagree|thats wrong)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4763,7 +4756,7 @@ if (/^(i disagree|thats wrong)$/i.test(micro)) {
   );
 }
 
-/* 13️⃣ Validation Seeking */
+/* Validation Seeking */
 if (/^(does that make sense|right)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4772,7 +4765,7 @@ if (/^(does that make sense|right)$/i.test(micro)) {
   );
 }
 
-/* 14️⃣ Curiosity */
+/* Curiosity */
 if (/^(interesting|huh)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4781,7 +4774,7 @@ if (/^(interesting|huh)$/i.test(micro)) {
   );
 }
 
-/* 15️⃣ Skepticism */
+/* Skepticism */
 if (/^(i doubt it|unlikely)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4790,7 +4783,7 @@ if (/^(i doubt it|unlikely)$/i.test(micro)) {
   );
 }
 
-/* 16️⃣ Redirect */
+/* Redirect */
 if (/^(change topic|something else)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4799,7 +4792,7 @@ if (/^(change topic|something else)$/i.test(micro)) {
   );
 }
 
-/* 17️⃣ Light Tease */
+/* Light Tease */
 if (/^(youre dramatic|calm down)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4808,7 +4801,7 @@ if (/^(youre dramatic|calm down)$/i.test(micro)) {
   );
 }
 
-/* 18️⃣ Short Affirmation */
+/* Short Affirmation */
 if (/^(true|fair)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4817,7 +4810,7 @@ if (/^(true|fair)$/i.test(micro)) {
   );
 }
 
-/* 19️⃣ Curiosity Probe */
+/* Curiosity Probe */
 if (/^(why though|but why)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4826,7 +4819,7 @@ if (/^(why though|but why)$/i.test(micro)) {
   );
 }
 
-/* 20️⃣ Hesitation */
+/* Hesitation */
 if (/^(wait|hold on)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4835,7 +4828,7 @@ if (/^(wait|hold on)$/i.test(micro)) {
   );
 }
 
-/* 21️⃣ Emotional Guard */
+/* Emotional Guard */
 if (/^(dont go there|stop)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4844,7 +4837,7 @@ if (/^(dont go there|stop)$/i.test(micro)) {
   );
 }
 
-/* 22️⃣ Reflection */
+/* Reflection */
 if (/^(thats deep|heavy)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4853,7 +4846,7 @@ if (/^(thats deep|heavy)$/i.test(micro)) {
   );
 }
 
-/* 23️⃣ Agreement Expansion */
+/* Agreement Expansion */
 if (/^(i guess|perhaps)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4862,7 +4855,7 @@ if (/^(i guess|perhaps)$/i.test(micro)) {
   );
 }
 
-/* 24️⃣ Attention Test */
+/* Attention Test */
 if (/^(are you listening)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4871,7 +4864,7 @@ if (/^(are you listening)$/i.test(micro)) {
   );
 }
 
-/* 25️⃣ Silence Break */
+/* Silence Break */
 if (/^(hello again|you there)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
@@ -4911,6 +4904,7 @@ v3FallbackIndex[activeVoice][category]++;
 
 return deliverReply(reply);
 }
+  
 /* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
@@ -4933,7 +4927,6 @@ if (!detected) {
       targetStage
     );
   }
-
 
 const voice = activeVoice;
 const currentStage = voiceStage.currentStage;
@@ -4989,7 +4982,6 @@ if (
   let response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
-
   // ROTATION
   if (Array.isArray(response)) {
 
@@ -5010,7 +5002,6 @@ if (
     emotionalRotationTracker[voice][pillar][stage] =
       (index + 1) % emotionalResponseBank[pillar][voice][stage].length;
   }
-
          
   if (response) {
 
@@ -5028,6 +5019,7 @@ if (
 
 return getFallbackResponse();
 }
+  
 /* =================================================
    RELATIONAL TRIGGER DETECTION
 ================================================= */
@@ -5137,7 +5129,6 @@ const emotionalPillars = {
   "i held on"
 ],
 
-
   vulnerability: [
   "not enough",
 "not good enough",
@@ -5152,7 +5143,6 @@ const emotionalPillars = {
 "i feel not enough",
 "i feel like i'm not enough"
 ],
-
 
  fear: [
 
@@ -5214,7 +5204,6 @@ const emotionalPillars = {
 
 ], 
 
-
   regret: [
   "i wish",
   "i should have",
@@ -5231,7 +5220,6 @@ const emotionalPillars = {
   "i pushed away",
   "i let it slip"
 ],
-
 
   loss: [
   "i miss",
@@ -5267,7 +5255,6 @@ growth: [
   "i had to grow"
 ],
 
-
   destiny: [
   "meant to",
   "supposed to",
@@ -5283,9 +5270,7 @@ growth: [
   "not finished"
 ]
 
-
 };
-
 
 /* =================================================
    STAGE NATIVE PILLAR MAP
@@ -5502,7 +5487,6 @@ const v4IntegrationLayer = {
   }
 
 };
-
 
 function applyV4Integration(baseText, pillar) {
 
@@ -5820,6 +5804,7 @@ function getFallbackResponse() {
 
 return deliverReply(pool[0]);
 } 
+  
 /* =========================
    FOUNDATIONAL
 ========================= */
@@ -6121,7 +6106,6 @@ if (dockProgress >= 15) {
   });
 }
          
-
 /* =========================
    AUTHOR INVITATION
 ========================= */
@@ -6210,7 +6194,7 @@ function declineReflection() {
 
   addSystemMessage(
   activeVoice ==="saira"
-    ?"Thank you for sitting with us."
+    ?"Thank you for staying with us."
     :"Thank you for staying."
 );
 
@@ -6282,6 +6266,7 @@ function nextReflection() {
     dock.appendChild(btn);
   });
 }
+  
 /* =========================
    SUBMIT
 ========================= */
@@ -6308,7 +6293,6 @@ function submitReflection() {
   autoScroll();
   return;
 }
-
   document.getElementById("formVoice").value = activeVoice;
   document.getElementById("r1").value = reflections[0];
   document.getElementById("r2").value = reflections[1];
@@ -6403,8 +6387,7 @@ function returnToWebsite() {
     window.location.href ="https://wheretheskyremembersus.com";
   }, 4200);
 }
-
-  
+ 
 /* =========================
    24 HOUR BLOCK CHECK (SAFE OVERLAY)
 ========================= */
@@ -6548,7 +6531,6 @@ function loadWelcome() {
   autoScroll();
 }
 
-
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
@@ -6567,6 +6549,7 @@ if (!originalText) return;
   input.value ="";
 
   addUserMessage(originalText);  
+  
 /* =========================
    REPEAT PROTECTION RESTORE
 ========================= */
@@ -6590,6 +6573,7 @@ if (repeatCount >= repeatLimit) {
 
   return returnToWebsite();
 }
+  
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
