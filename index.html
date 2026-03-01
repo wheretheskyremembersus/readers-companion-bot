@@ -3248,7 +3248,7 @@ if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Hi… I’m Saira."
-      : "Hello. I’m ayaan."
+      : "Hello. I’m Ayaan."
   );
 }
 
@@ -6490,7 +6490,7 @@ function selectVoice(v) {
   const firstLine =
     v === "saira"
       ? "Hi… I’m Saira."
-      : "Hello. I’m ayaan.";
+      : "Hello. I’m Ayaan.";
 
   const secondLine =
     v === "saira"
@@ -6535,7 +6535,7 @@ function loadWelcome() {
 
   addSystemMessage("Hello.");
   addSystemMessage("This is a quiet space.");
-  addSystemMessage("You can listen to our story through Saira or ayaan.");
+  addSystemMessage("You can listen to our story through Saira or Ayaan.");
   addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below... or speak freely in your own words.</span>");
   addSystemMessage("When you're ready, you can choose a voice.");
 
@@ -6771,5 +6771,3 @@ trackEvent("quick_button_clicked", {
 
 </body>
 </html>
-
-
