@@ -4018,6 +4018,36 @@ if (/^(tell me|explain|can you explain|what do you mean)$/i.test(normalizedText)
   );
 }
   
+ /* =========================
+   STORY CONTINUATION INTENT
+========================= */
+
+if (
+/^(tell me more|and then|so what happened|what happened next|then what)$/i
+.test(normalizedText)
+) {
+
+skipRelationalPrefix = true;
+
+const responses = {
+  saira: [
+    "Some things unfolded quietly after that.",
+    "It didn't change all at once.",
+    "The shift happened before either of us fully saw it."
+  ],
+  ayaan: [
+    "What followed wasn't immediate.",
+    "Things developed more slowly than expected.",
+    "The consequence appeared later."
+  ]
+};
+
+const pool = responses[activeVoice];
+
+return deliverReply(
+  pool[Math.floor(Math.random() * pool.length)]
+);
+} 
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
