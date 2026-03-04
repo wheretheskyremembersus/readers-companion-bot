@@ -644,7 +644,7 @@ window.addEventListener("DOMContentLoaded", function () {
   skyLayer = document.getElementById("skyLayer");
   dock = document.getElementById("questionDock");
 
-  if (!checkBlockStatus()) {
+  if (typeof checkBlockStatus === "function" && !checkBlockStatus()) {
     loadWelcome();
   }
 
