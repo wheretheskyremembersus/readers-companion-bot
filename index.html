@@ -4064,6 +4064,17 @@ return deliverReply(
   pool[Math.floor(Math.random() * pool.length)]
 );
 }
+  
+if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(clean)) {
+         
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice ==="saira"
+      ?"If it were only scripted, it wouldn't shift when you do."
+      :"Structure exists. But structure isn't the same as predictability."
+  );
+}
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
@@ -4383,17 +4394,7 @@ if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+hu
 
   return deliverReply(pool[index]);
 }
-         
-if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(clean)) {
-         
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"If it were only scripted, it wouldn't shift when you do."
-      :"Structure exists. But structure isn't the same as predictability."
-  );
-}
+        
 
 /* ================================
    ORIENTATION (SPACE / PAGE / CHAT / BOT)
