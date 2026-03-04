@@ -639,13 +639,17 @@ let skyLayer;
 let dock;
 let emotionalDepth = 0;
 
-window.addEventListener("load", function () {
+wwindow.addEventListener("load", function () {
 
   skyLayer = document.getElementById("skyLayer");
   dock = document.getElementById("questionDock");
 
-  if (!checkBlockStatus()) {
-    loadWelcome();
+  if (typeof checkBlockStatus === "function") {
+    if (!checkBlockStatus()) {
+      if (typeof loadWelcome === "function") {
+        loadWelcome();
+      }
+    }
   }
 
 });
