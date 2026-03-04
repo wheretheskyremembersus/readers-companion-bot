@@ -1080,33 +1080,23 @@ function removeTypingIndicator() {
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
 
 function deliverReply(replyText, callback) {
+
   if (!replyText) return;
 
-  const baseDelay = 300;
-  const lengthDelay = replyText.length * 6;
-  const delay = baseDelay + lengthDelay + Math.random() * 300;
+  /* =========================
+     AUTO RELATIONAL PREFIX
+  ========================= */
 
-  setTimeout(() => {
-
-    appendMessage(replyText);
-
-    if (callback) callback();
-
-  }, delay);
-}
-/* =========================
-   AUTO RELATIONAL PREFIX (V3 ONLY)
-========================= */
-
-if (
-  !emotionalModeActive &&
-  relationalPrefix &&
-  !skipRelationalPrefix
-) {
-  if (!replyText.startsWith(relationalPrefix)) {
-    replyText = relationalPrefix + replyText;
+  if (
+    !emotionalModeActive &&
+    relationalPrefix &&
+    !skipRelationalPrefix
+  ) {
+    if (!replyText.startsWith(relationalPrefix)) {
+      replyText = relationalPrefix + replyText;
+    }
   }
-}
+
   interactionLocked = true;
   setDockDisabled(true);
 
@@ -1115,69 +1105,53 @@ if (
     Math.max(700, replyText.length * 18)
   );
 
-  // Small natural pause before typing starts
+  // small pause before typing indicator
   setTimeout(() => {
     showTypingIndicator();
   }, 180);
 
   setTimeout(() => {
+
     removeTypingIndicator();
 
     addVoiceMessage(replyText);
-    playTone(420, 120, 0.025, 360);
+    playTone(420,120,0.025,360);
 
-/* =========================
-   ATMOSPHERE PROGRESSION (SEAMLESS ARC)
-========================= */
+    /* =========================
+       ATMOSPHERE PROGRESSION
+    ========================= */
 
-emotionalDepth++;
+    emotionalDepth++;
 
-/*
-We use a smooth sine curve instead of linear math.
-This makes the transition invisible.
-*/
+    const maxDepth = 28;
+    const arcPosition = Math.min(emotionalDepth,maxDepth);
+    const depthFactor = Math.sin((arcPosition / maxDepth) * Math.PI);
 
-const maxDepth = 28; // full arc length
-const arcPosition = Math.min(emotionalDepth, maxDepth);
+    const overlayValue = 0.32 - depthFactor * 0.22;
 
-/*
-0 → π gives full rise and fall
-*/
-const depthFactor = Math.sin((arcPosition / maxDepth) * Math.PI);
+    chatBody.style.setProperty("--overlayStrength",overlayValue);
 
-/*
-depthFactor now:
-0 → 1 → 0
-Smoothly. No visible break.
-*/
+    if (skyLayer) {
+      skyLayer.style.filter = `
+        brightness(${1 - depthFactor * 0.55})
+        contrast(${1 + depthFactor * 1.1})
+        saturate(${1 + depthFactor * 0.9})
+      `;
+    }
 
-// Overlay evolution (subtle)
-const overlayValue = 0.32 - depthFactor * 0.22;
-
-chatBody.style.setProperty("--overlayStrength", overlayValue);
-
-// Sky evolution (gentle cinematic feel)
-if (skyLayer) {
-  skyLayer.style.filter = `
-    brightness(${1 - depthFactor * 0.55})
-    contrast(${1 + depthFactor * 1.1})
-    saturate(${1 + depthFactor * 0.9})
-  `;
-}
-/* =========================
-UNLOCK INTERACTION
-========================= */
+    /* =========================
+       UNLOCK INTERACTION
+    ========================= */
 
     interactionLocked = false;
     setDockDisabled(false);
 
-    if (typeof callback ==="function") {
+    if (typeof callback === "function") {
       callback();
     }
 
   }, delay + 180);
 }
-
 /* =========================
    DOCK CONTROL
 ========================= */
