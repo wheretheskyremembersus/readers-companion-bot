@@ -639,22 +639,18 @@ let skyLayer;
 let dock;
 let emotionalDepth = 0;
 
-window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("load", function () {
 
   skyLayer = document.getElementById("skyLayer");
   dock = document.getElementById("questionDock");
 
-  if (typeof window.checkBlockStatus === "function") {
-    if (!window.checkBlockStatus()) {
-      loadWelcome();
-    }
-  } else {
+  if (!checkBlockStatus()) {
     loadWelcome();
   }
 
 });
 
-</script>     
+</script>>     
 /* =========================
    ABUSE TRACKER (GLOBAL)
 ========================= */
