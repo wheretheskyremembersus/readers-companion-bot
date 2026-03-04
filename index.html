@@ -4650,7 +4650,8 @@ if (nameMatch) {
 ================================= */
 
 const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
-
+const wordCount = originalText.trim().split(/\s+/).length;
+  
 /* Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
   return deliverReply(
@@ -4796,7 +4797,7 @@ if (/^(i disagree|thats wrong)$/i.test(micro)) {
 }
 
 /* Validation Seeking */
-if (/^(does that make sense|right)$/i.test(micro)) {
+if (/^(does that make sense)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
       ?"It does - if you meant it."
@@ -4939,8 +4940,6 @@ if (/(what is this story|what is this about)/i.test(originalText)) {
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
-
-const wordCount = originalText.trim().split(/\s+/).length;
 
 let category ="neutral";
 
