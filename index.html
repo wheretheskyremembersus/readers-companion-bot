@@ -3043,7 +3043,7 @@ if (/\b(what'?s your name|who are you|your name)\b/i.test(t)) {
   return deliverReply(
     activeVoice === "saira"
       ? "I'm Saira."
-      : "I'm ayaan."
+      : "I'm Ayaan."
   );
 }
 
@@ -4283,7 +4283,7 @@ if (/^ayaan\b$/i.test(nameCall)) {
 /* ===== IDENTITY ===== */
 
 // WHO ARE YOU
-if (/\b(who\s+are\s+you|what\s+are\s+you|are\s+you\s+real|are\s+you\s+human)\b/i.test(originalText)) {
+if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+human)\b/i.test(originalText)){
 
   skipRelationalPrefix = true;
 
