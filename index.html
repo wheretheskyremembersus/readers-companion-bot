@@ -2845,18 +2845,24 @@ if (
 
   skipRelationalPrefix = true;
 
- rconst responses = {
-  saira: [
-    "If you're hearing me, that may be enough.",
-    "Some things are real because we feel them.",
-    "I'm here while the conversation lasts."
-  ],
-  ayaan: [
-    "I'm here with you. That's real enough for now.",
-    "Presence matters more than labels.",
-    "I'm here in this moment with you."
-  ]
-};
+  const responses = {
+    saira: [
+      "If you're hearing me, that may be enough.",
+      "Some things are real because we feel them.",
+      "I'm here while the conversation lasts."
+    ],
+    ayaan: [
+      "I'm here with you. That's real enough for now.",
+      "Presence matters more than labels.",
+      "I'm here in this moment with you."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
 /* =========================
    TRUST / CREDIBILITY GUARD
@@ -3285,7 +3291,6 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 
   }
 
-  // SECOND PROBE (warmer trust response)
   if (modelProbeCount[voice] === 2) {
 
     return deliverReply(
