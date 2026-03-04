@@ -644,12 +644,17 @@ window.addEventListener("DOMContentLoaded", function () {
   skyLayer = document.getElementById("skyLayer");
   dock = document.getElementById("questionDock");
 
-  if (typeof checkBlockStatus === "function" && !checkBlockStatus()) {
+  if (typeof window.checkBlockStatus === "function") {
+    if (!window.checkBlockStatus()) {
+      loadWelcome();
+    }
+  } else {
     loadWelcome();
   }
 
 });
-<script>         
+
+</script>     
 /* =========================
    ABUSE TRACKER (GLOBAL)
 ========================= */
