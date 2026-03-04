@@ -4018,12 +4018,12 @@ if (/^(tell me|explain|can you explain|what do you mean)$/i.test(normalizedText)
   );
 }
   
- /* =========================
+/* =========================
    STORY CONTINUATION INTENT
 ========================= */
 
 if (
-/^(tell me more|and then|so what happened|what happened next|then what)$/i
+/^(tell me more|tell me more about it|and then|then what|so what happened|what happened next)$/i
 .test(normalizedText)
 ) {
 
@@ -4047,7 +4047,7 @@ const pool = responses[activeVoice];
 return deliverReply(
   pool[Math.floor(Math.random() * pool.length)]
 );
-} 
+}
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
