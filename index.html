@@ -4363,18 +4363,23 @@ if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+hu
   skipRelationalPrefix = true;
 
   const responses = {
-  saira: [
-    "Part of a story that never quite finished.",
-    "Someone who stayed when the moment passed.",
-    "A voice from something that once mattered."
-  ],
-  ayaan: [
-    "I'm part of this story, just as you are now.",
-    "Someone shaped by what happened.",
-    "More than a line of words, less than a life."
-  ]
-};
+    saira: [
+      "Part of a story that never quite finished.",
+      "Someone who stayed when the moment passed.",
+      "A voice from something that once mattered."
+    ],
+    ayaan: [
+      "I'm part of this story, just as you are now.",
+      "Someone shaped by what happened.",
+      "More than a line of words, less than a life."
+    ]
+  };
 
+  const pool = responses[activeVoice];
+  const index = Math.floor(Math.random() * pool.length);
+
+  return deliverReply(pool[index]);
+}
          
 if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(lower)) {
          
