@@ -1080,7 +1080,20 @@ function removeTypingIndicator() {
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
 
 function deliverReply(replyText, callback) {
-if (!replyText) return;
+  if (!replyText) return;
+
+  const baseDelay = 300;
+  const lengthDelay = replyText.length * 6;
+  const delay = baseDelay + lengthDelay + Math.random() * 300;
+
+  setTimeout(() => {
+
+    appendMessage(replyText);
+
+    if (callback) callback();
+
+  }, delay);
+}
 /* =========================
    AUTO RELATIONAL PREFIX (V3 ONLY)
 ========================= */
