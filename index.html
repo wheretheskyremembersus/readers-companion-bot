@@ -4022,12 +4022,19 @@ const responses = {
   saira: [
     "Some things unfolded quietly after that.",
     "It didn't change all at once.",
-    "The shift happened before either of us fully saw it."
+    "The shift happened before either of us fully saw it.",
+    "It revealed itself slowly.",
+    "At first, it wasn't clear where it would lead.",
+    "What came next felt quieter than expected."
   ],
+
   ayaan: [
     "What followed wasn't immediate.",
     "Things developed more slowly than expected.",
-    "The consequence appeared later."
+    "The consequence appeared later.",
+    "It didn't become clear right away.",
+    "The shift revealed itself gradually.",
+    "At first, the outcome wasn't obvious."
   ]
 };
 
@@ -4774,10 +4781,31 @@ if (/^(whatever|meh|boring)$/i.test(micro)) {
 
 /* Short acknowledgement */
 if (/^(ok|okay|alright|right|got it|makes sense)$/i.test(micro) && wordCount <= 3) {
+
+  const responses = {
+
+    saira: [
+      "Then stay with that for a moment.",
+      "Alright.",
+      "Sometimes that's enough.",
+      "Let it sit for a moment.",
+      "That's alright."
+    ],
+
+    ayaan: [
+      "Understood.",
+      "Alright.",
+      "That makes sense.",
+      "Noted.",
+      "I see."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
   return deliverReply(
-    activeVoice === "saira"
-      ? "Then stay with that for a moment."
-      : "Understood."
+    pool[Math.floor(Math.random() * pool.length)]
   );
 }
  /* Short probe */
@@ -4803,10 +4831,31 @@ if (/^(what|why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro
   
 /* Thinking pause */
 if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
+
+  const responses = {
+
+    saira: [
+      "Take your time.",
+      "I'm here.",
+      "There's no rush.",
+      "Some thoughts take a moment.",
+      "Let it settle."
+    ],
+
+    ayaan: [
+      "I'm listening.",
+      "Take your time.",
+      "Go on when you're ready.",
+      "No need to rush.",
+      "I'm still here."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
   return deliverReply(
-    activeVoice === "saira"
-      ? "Take your time. I'm here."
-      : "I'm listening."
+    pool[Math.floor(Math.random() * pool.length)]
   );
 }
 
@@ -4852,10 +4901,31 @@ if (/^(are you stuck|are you repeating)$/i.test(micro)) {
 
 /* Confusion */
 if (/^(what do you mean|i dont get it)$/i.test(micro)) {
+
+  const responses = {
+
+    saira: [
+      "If something felt unclear, we can let it settle for a moment.",
+      "Some things take a moment before they make sense.",
+      "It doesn't always become clear immediately.",
+      "Sometimes meaning arrives a little later.",
+      "We can stay with it for a moment."
+    ],
+
+    ayaan: [
+      "There may be a clearer way to say that.",
+      "Understanding doesn't always arrive immediately.",
+      "Sometimes clarity develops gradually.",
+      "It can take a moment before it becomes clear.",
+      "The meaning may settle with time."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
   return deliverReply(
-    activeVoice ==="saira"
-      ?"If something felt unclear, we can let it settle for a moment."
-      :"There may be a clearer way to say that."
+    pool[Math.floor(Math.random() * pool.length)]
   );
 }
 
@@ -4924,10 +4994,31 @@ if (/^(true|fair)$/i.test(micro)) {
 
 /* Curiosity Probe */
 if (/^(why though|but why)$/i.test(micro)) {
+
+  const responses = {
+
+    saira: [
+      "Because something beneath it shifted.",
+      "Because the moment carried more weight than it seemed.",
+      "Because some things change quietly before we notice.",
+      "Because the meaning was already forming.",
+      "Because timing alters more than we realize."
+    ],
+
+    ayaan: [
+      "Because timing altered the outcome.",
+      "Because the conditions changed beneath it.",
+      "Because some shifts happen gradually.",
+      "Because the reason became clearer later.",
+      "Because not everything reveals itself immediately."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
   return deliverReply(
-    activeVoice ==="saira"
-      ?"Because something beneath it shifted."
-      :"Because timing altered outcome."
+    pool[Math.floor(Math.random() * pool.length)]
   );
 }
 
