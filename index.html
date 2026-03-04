@@ -3988,7 +3988,36 @@ if (/go back/i.test(originalText)) {
   return deliverReply(voiceData.goBack[stage] || voiceData.goBack[1]);
 }
 
-}         
+}      
+
+/* =========================
+   CLARIFICATION / CONTINUATION INTENT
+========================= */
+
+if (/^(tell me|explain|can you explain|what do you mean)$/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "There's more beneath it.",
+      "It's not simple to explain in one line.",
+      "Some things make more sense if you stay with them."
+    ],
+    ayaan: [
+      "Some things take a moment to unfold.",
+      "It isn't always immediate.",
+      "Understanding sometimes arrives gradually."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+  
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
