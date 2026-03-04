@@ -1100,12 +1100,13 @@ if (
 interactionLocked = true;
 setDockDisabled(true);
 
-const delay = Math.min(
+let delay = Math.min(
   3000,
   Math.max(700, replyText.length * 18)
 );
 
-// small natural pause before typing indicator
+delay = Math.max(delay, 850);
+
 const typingStart = 120 + Math.random() * 220;
 
 setTimeout(() => {
