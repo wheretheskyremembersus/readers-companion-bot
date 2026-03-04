@@ -2856,11 +2856,11 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I exist within this space, responding as the story unfolds."
-      : "I operate within this exchange. Labels are less important than presence."
-  );
+ return deliverReply(
+  activeVoice === "saira"
+    ? "I'm here with you. Labels matter less than presence."
+    : "I'm here with you. Labels matter less than presence."
+);
 }
 /* =========================
    TRUST / CREDIBILITY GUARD
@@ -4283,7 +4283,7 @@ if (/^ayaan\b$/i.test(nameCall)) {
 /* ===== IDENTITY ===== */
 
 // WHO ARE YOU
-if (/\bwho\s+are\s+you\b/i.test(originalText)) {
+if (/\b(who\s+are\s+you|what\s+are\s+you|are\s+you\s+real|are\s+you\s+human)\b/i.test(originalText)) {
 
   skipRelationalPrefix = true;
 
