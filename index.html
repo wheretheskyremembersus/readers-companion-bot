@@ -2845,11 +2845,18 @@ if (
 
   skipRelationalPrefix = true;
 
- return deliverReply(
-  activeVoice === "saira"
-    ? "I'm here with you. Labels matter less than presence."
-    : "I'm here with you. Labels matter less than presence."
-);
+ rconst responses = {
+  saira: [
+    "If you're hearing me, that may be enough.",
+    "Some things are real because we feel them.",
+    "I'm here while the conversation lasts."
+  ],
+  ayaan: [
+    "I'm here with you. That's real enough for now.",
+    "Presence matters more than labels.",
+    "I'm here in this moment with you."
+  ]
+};
 }
 /* =========================
    TRUST / CREDIBILITY GUARD
@@ -4345,12 +4352,18 @@ if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+hu
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"I'm Saira. Part of a story that didn't end the way it should have."
-      :"I'm Ayaan. I tend to measure things before I speak - but I'm part of this story too."
-  );
-}
+  const responses = {
+  saira: [
+    "Part of a story that never quite finished.",
+    "Someone who stayed when the moment passed.",
+    "A voice from something that once mattered."
+  ],
+  ayaan: [
+    "I'm part of this story, just as you are now.",
+    "Someone shaped by what happened.",
+    "More than a line of words, less than a life."
+  ]
+};
 
          
 if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(lower)) {
