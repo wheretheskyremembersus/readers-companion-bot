@@ -4217,7 +4217,7 @@ if (
    GREETING HANDLER (COMPANION SAFE)
 ========================= */
 
-if (/^(hi|hello|hey|hola|Ola|hey ya| hi ya)\b/i.test(normalizedText)) {
+if (/^(hi|hello|hey|hola|ola|hiya|hey there|yo|sup|hello again|hey again|hey ya|hi ya)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
@@ -4728,6 +4728,37 @@ if (/^(ok|okay|alright|right|got it|makes sense)$/i.test(micro) && wordCount <= 
       : "Understood."
   );
 }
+/* Thinking pause */
+if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Take your time. I'm here."
+      : "I'm listening."
+  );
+}
+
+/* Reaction signal */
+if (/^(oh|oh wow|wow|really|interesting|oh interesting)$/i.test(micro) && wordCount <= 3) {
+
+  const reactions = {
+    saira: [
+      "Something in it caught your attention.",
+      "It made you pause for a moment.",
+      "That usually means something resonated."
+    ],
+    ayaan: [
+      "That observation usually means something stood out.",
+      "Noticing that suggests something aligned.",
+      "Reactions like that rarely happen without reason."
+    ]
+  };
+
+  const pool = reactions[activeVoice];
+  const index = Math.floor(Math.random() * pool.length);
+
+  return deliverReply(pool[index]);
+}
+ 
 /* Honesty Probe */
 if (/^(be honest|tell the truth)$/i.test(micro)) {
   return deliverReply(
@@ -4912,7 +4943,31 @@ v3FallbackIndex[activeVoice][category]++;
 
 return deliverReply(reply);
 }
-  
+
+/* Flexible foundational question detection */
+if (/(who wrote|who is the author)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this as his debut novel."
+      : "The story was written by Mohan R."
+  );
+}
+
+if (/(where can i read|where is the book|where can i find it)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You can find our story in Kindle, paperback, hardcover, or audiobook."
+      : "The story is available in digital, print, and audio formats."
+  );
+}
+
+if (/(what is this story|what is this about)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It's about me and ayaan — and the choices that shaped us."
+      : "It's about love, hesitation, and the cost of silence."
+  );
+}
 /* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
@@ -5135,6 +5190,14 @@ const emotionalPillars = {
   "i got attached",
   "i fell for",
   "i held on"
+  "cant stop thinking",
+  "can't stop thinking",
+  "keep thinking about",
+  "thinking about you",
+  "thinking about her",
+  "thinking about him",
+  "meant a lot to me",
+  "important to me"
 ],
 
   vulnerability: [
@@ -5225,6 +5288,12 @@ const emotionalPillars = {
   "i made a mistake",
   "i messed up",
   "i ruined",
+  "shouldve",
+  "should have said",
+  "wish i had",
+  "wish i did",
+  "wish i had said",
+  "wish things were different"
   "i pushed away",
   "i let it slip"
 ],
@@ -5242,6 +5311,11 @@ const emotionalPillars = {
   "we ended",
   "it’s over",
   "i lost",
+  "not here anymore",
+  "gone now",
+  "feels empty",
+  "i feel empty",
+  "something feels missing"
   "i lost him",
   "i lost her"
 ],
