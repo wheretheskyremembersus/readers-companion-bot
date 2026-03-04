@@ -4911,7 +4911,31 @@ if (/^(hello again|you there)$/i.test(micro)) {
       :"Still here."
   );
 }
- 
+ /* Flexible foundational question detection */
+
+if (/(who wrote|who is the author)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this as his debut novel."
+      : "The story was written by Mohan R."
+  );
+}
+
+if (/(where can i read|where is the book|where can i find it)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "You can find our story in Kindle, paperback, hardcover, or audiobook."
+      : "The story is available in digital, print, and audio formats."
+  );
+}
+
+if (/(what is this story|what is this about)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "It's about me and ayaan — and the choices that shaped us."
+      : "It's about love, hesitation, and the cost of silence."
+  );
+}
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
@@ -4944,31 +4968,7 @@ v3FallbackIndex[activeVoice][category]++;
 return deliverReply(reply);
 }
 
-/* Flexible foundational question detection */
 
-if (/(who wrote|who is the author)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote this as his debut novel."
-      : "The story was written by Mohan R."
-  );
-}
-
-if (/(where can i read|where is the book|where can i find it)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
-      ? "You can find our story in Kindle, paperback, hardcover, or audiobook."
-      : "The story is available in digital, print, and audio formats."
-  );
-}
-
-if (/(what is this story|what is this about)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
-      ? "It's about me and ayaan — and the choices that shaped us."
-      : "It's about love, hesitation, and the cost of silence."
-  );
-}
 /* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
