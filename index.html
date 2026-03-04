@@ -1084,39 +1084,40 @@ function deliverReply(replyText, callback) {
   if (!replyText) return;
 
   /* =========================
-     AUTO RELATIONAL PREFIX
-  ========================= */
+   AUTO RELATIONAL PREFIX
+========================= */
 
-  if (
-    !emotionalModeActive &&
-    relationalPrefix &&
-    !skipRelationalPrefix
-  ) {
-    if (!replyText.startsWith(relationalPrefix)) {
-      replyText = relationalPrefix + replyText;
-    }
+if (
+  !emotionalModeActive &&
+  relationalPrefix &&
+  !skipRelationalPrefix
+) {
+  if (!replyText.startsWith(relationalPrefix)) {
+    replyText = relationalPrefix + replyText;
   }
+}
 
-  interactionLocked = true;
-  setDockDisabled(true);
+interactionLocked = true;
+setDockDisabled(true);
 
-  const delay = Math.min(
-    3000,
-    Math.max(700, replyText.length * 18)
-  );
+const delay = Math.min(
+  3000,
+  Math.max(700, replyText.length * 18)
+);
 
-  // small pause before typing indicator
-  setTimeout(() => {
-    showTypingIndicator();
-  }, 180);
+// small natural pause before typing indicator
+const typingStart = 120 + Math.random() * 220;
 
-  setTimeout(() => {
+setTimeout(() => {
+  showTypingIndicator();
+}, typingStart);
 
-    removeTypingIndicator();
+setTimeout(() => {
 
-    addVoiceMessage(replyText);
-    playTone(420,120,0.025,360);
+  removeTypingIndicator();
 
+  addVoiceMessage(replyText);
+  playTone(420,120,0.025,360);
     /* =========================
        ATMOSPHERE PROGRESSION
     ========================= */
