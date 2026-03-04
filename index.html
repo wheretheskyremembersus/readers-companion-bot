@@ -6915,11 +6915,13 @@ META REDIRECT LAYER
 ========================= */
 
 if (isDirectionalDeviation(originalText)) {
-  return deliverReply(relationalRedirect(activeVoice));
+  deliverReply(relationalRedirect(activeVoice));
+  return;
 }
 
 const text = originalText.toLowerCase();
 processInput(text, originalText);
+}cessInput(text, originalText);
 }
 </script>
 
