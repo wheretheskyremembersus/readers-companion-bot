@@ -4791,6 +4791,15 @@ if (/^(ok|okay|alright|right|got it|makes sense)$/i.test(micro) && wordCount <= 
       : "Understood."
   );
 }
+ /* Short probe */
+if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Sometimes the answer sits just beneath the surface."
+      : "It usually reveals itself with a little patience."
+  );
+}
 /* Thinking pause */
 if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
   return deliverReply(
