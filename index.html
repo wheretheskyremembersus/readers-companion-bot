@@ -4352,7 +4352,7 @@ if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+hu
   return deliverReply(
     activeVoice ==="saira"
       ?"I'm Saira. Part of a story that didn't end the way it should have."
-      :"I'm ayaan. I tend to measure things before I speak - but I'm part of this story too."
+      :"I'm Ayaan. I tend to measure things before I speak - but I'm part of this story too."
   );
 }
 
@@ -5006,6 +5006,16 @@ if (/(what is this story|what is this about)/i.test(originalText)) {
     activeVoice === "saira"
       ? "It's about me and ayaan - and the choices that shaped us."
       : "It's about love, hesitation, and the cost of silence."
+  );
+}
+/* Soft emotional signals */
+
+if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalizedText)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Sometimes those feelings stay with us longer than expected."
+      : "Some things linger longer than we anticipate."
   );
 }
 /* =========================
