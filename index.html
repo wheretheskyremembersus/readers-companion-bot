@@ -4800,6 +4800,18 @@ if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
       : "It usually reveals itself with a little patience."
   );
 }
+
+/* Conversational probe */
+
+if (/^(what|why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro)) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Sometimes the next part appears once we stay with it."
+      : "Some things reveal themselves gradually."
+  );
+}
+  
 /* Thinking pause */
 if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
   return deliverReply(
