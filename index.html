@@ -3336,12 +3336,6 @@ if (
   );
 }
 } 
-function pickStageVariant(map) {
-  if (stage >= 7) return map[7];
-  if (stage >= 5) return map[5];
-  if (stage >= 3) return map[3];
-  return map[1];
-}
 
   // Reset relational state per message
   relationalPrefix = "";
@@ -3357,6 +3351,12 @@ if (reference.type === "self") {
   selfPrefix = getSelfReferencePrefix(stage);
 }
 
+function pickStageVariant(map) {
+  if (stage >= 7) return map[7];
+  if (stage >= 5) return map[5];
+  if (stage >= 3) return map[3];
+  return map[1];
+}
 /* ================================
    SURFACE EMOTION CATCH (V3 STABILITY)
 ================================= */
