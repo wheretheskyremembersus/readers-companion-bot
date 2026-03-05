@@ -3352,6 +3352,30 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
 
   return deliverReply(pickResponse(pool));
 }
+
+/* Uncertainty */
+if (/^(idk|i dont know|not sure|maybe)$/i.test(micro) && wordCount <= 3) {
+
+  const responses = {
+
+    saira: [
+      "Not knowing is still a kind of honesty.",
+      "Sometimes uncertainty is the most truthful place to stand.",
+      "It's alright not to have the answer yet."
+    ],
+
+    ayaan: [
+      "Uncertainty still reveals something.",
+      "Not knowing is still information.",
+      "Clarity doesn't always arrive immediately."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pickResponse(pool));
+}
 /* =========================
    MODEL / GPT DEFLECTION
 ========================= */
