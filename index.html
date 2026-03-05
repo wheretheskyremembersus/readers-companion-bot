@@ -5286,9 +5286,9 @@ if (/^(tell me more|go on|what happened next|and then)$/i.test(micro)) {
    META CONVERSATION DETECTION
 ========================= */
 
-if (/why (did|would|are) you say (that|this)/i.test(clean) ||
-    /why did you say that/i.test(clean) ||
-    /why are you saying that/i.test(clean)) {
+if (/why (did|would|are) you say (that|this)/i.test(micro) ||
+    /why did you say that/i.test(micro) ||
+    /why are you saying that/i.test(micro)) {
 
   skipRelationalPrefix = true;
 
