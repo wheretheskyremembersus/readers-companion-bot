@@ -1081,19 +1081,11 @@ function removeTypingIndicator() {
   if (el) el.remove();
 }
 
-let lastReply = null;
-
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
 
 function deliverReply(replyText, callback) {
 
   if (!replyText) return;
-
-  if (replyText === lastReply) {
-    lastReply = null;
-  } else {
-    lastReply = replyText;
-  }
  
   /* =========================
    AUTO RELATIONAL PREFIX
