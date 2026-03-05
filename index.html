@@ -1464,7 +1464,34 @@ neutral: [
 ]
   }
 };
-         
+/* =========================
+   V3 FALLBACK SELECTOR
+========================= */
+
+function getV3Fallback() {
+
+  const voice = activeVoice;
+  const stage = stageState[voice]?.currentStage || 1;
+
+  let category;
+
+  if (stage <= 2) {
+    category = "firm";
+  } else if (stage <= 4) {
+    category = "neutral";
+  } else {
+    category = "reflective";
+  }
+
+  const index = v3FallbackIndex[voice][category];
+  const bank = v3FallbackBank[voice][category];
+
+  const line = bank[index % bank.length];
+
+  v3FallbackIndex[voice][category]++;
+
+  return line;
+}         
 /* =================================================
    CORE EXECUTION PIPELINE
 ================================================= */
@@ -3514,7 +3541,7 @@ if (
   const reply =
     activeVoice === "saira"
       ? "I'm not just what you see. There's more beneath what I show."
-      : "What you see isn't the whole of me."
+      : "What you see isn't the whole of me.";
 
   return deliverReply(reply);
 }
@@ -4619,7 +4646,7 @@ if (
      LOVE CONFESSION
   ================================= */
 
-  if (/love you|i love you/i.test(lower)) {
+ if (/love you|i love you/i.test(clean)){
     return deliverReply(
       activeVoice ==="saira"
         ?"That's kind of you to say. But what you're feeling might belong to the story more than to me. Words like that carry weight. I'll leave it there."
