@@ -1086,7 +1086,7 @@ function removeTypingIndicator() {
 function deliverReply(replyText, callback) {
 
   if (!replyText) return;
-
+ 
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
@@ -4745,13 +4745,24 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
    SELF INTRODUCTION HANDLER (V3)
 ================================= */
 
-const nameMatch = originalText.match(
-  /^(i am|i'm|my name is)\s+([a-zA-Z]{2,20})$/i
+let nameMatch = originalText.match(
+  /\b(i am|i'm|my name is)\s+([a-z]{3,20})\b/i
 );
 
 if (nameMatch) {
 
-  sessionUserName = nameMatch[2];
+ const banned = [
+  "mad","sad","angry","tired","confused","getting","panicked","bored","upset","anxious",
+  "afraid","scared"
+];
+  if (banned.includes(nameMatch[2].toLowerCase())) nameMatch = null;
+
+}
+
+if (nameMatch) {
+
+sessionUserName =
+  nameMatch[2].charAt(0).toUpperCase() + nameMatch[2].slice(1).toLowerCase();
 
   skipRelationalPrefix = true;
 
@@ -5198,7 +5209,6 @@ v3FallbackIndex[activeVoice][category]++;
 
 return deliverReply(reply);
 }
-
 
 /* =========================
    V4 EMOTIONAL MODE ENGINE
