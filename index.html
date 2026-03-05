@@ -4842,8 +4842,7 @@ if (nameMatch) {
 
 const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
 const wordCount = originalText.trim().split(/\s+/).length;
-const clean = micro;
-const trimmed = micro;
+let trimmed = micro;
   
 /* Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
