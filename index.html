@@ -5365,7 +5365,7 @@ function handleMicroIntent(text) {
     },
 
     {
-      pattern: /tell me more/,
+      pattern: /^tell me more$/,
       responses: [
         "Some parts of the story reveal themselves slowly.",
         "What followed wasn't what anyone expected."
@@ -5373,7 +5373,7 @@ function handleMicroIntent(text) {
     },
 
     {
-      pattern: /and then/,
+      pattern: /^and then$/,
       responses: [
         "After that, things didn't return to what they had been.",
         "That moment was only the beginning."
@@ -5385,7 +5385,7 @@ function handleMicroIntent(text) {
   for (const intent of microIntents) {
     if (intent.pattern.test(text)) {
       const r = intent.responses;
-      return r[Math.floor(Math.random() * r.length)];
+     return pickResponse(r);
     }
   }
 
