@@ -5229,7 +5229,7 @@ if (/^(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)$/i.test(clean)) {
     "Even a small response can hold a lot."
   ];
 
-  return deliverReply(responses[Math.floor(Math.random() * responses.length)]);
+  return deliverReply(pickResponse(responses));
 }
 
 /* =========================
