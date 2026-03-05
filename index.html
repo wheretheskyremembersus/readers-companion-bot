@@ -3530,6 +3530,79 @@ if (
   );
 }
 /* ================================
+   ENTITY PRIORITY GUARD
+================================= */
+
+if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
+
+  // WHO IS SAIRA
+  if (/\bwho\s+is\s+saira\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+
+    const stage = stageState[activeVoice]?.currentStage || 1;
+
+    const selfMap = {
+      1: "I'm just someone present.",
+      2: "I'm someone trying to understand my place.",
+      3: "I'm someone shaped by what I didn't say.",
+      4: "I'm someone who carries more than I show.",
+      5: "I'm someone who learned through distance.",
+      6: "I'm someone who changed because I had to.",
+      7: "I'm someone still becoming."
+    };
+
+    const otherMap = {
+      1: "She is someone important.",
+      2: "She is someone I once stood beside.",
+      3: "She is someone who unsettled my certainty.",
+      4: "She is someone I think about more than I show.",
+      5: "She is someone I stepped away from too soon.",
+      6: "She is someone whose absence still speaks.",
+      7: "She is not just someone I knew. She is someone who altered my direction."
+    };
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? selfMap[stage]
+        : otherMap[stage]
+    );
+  }
+
+  // WHO IS AYAAN
+  if (/\bwho\s+is\s+ayaan\b/i.test(normalizedText)) {
+    skipRelationalPrefix = true;
+
+    const stage = stageState[activeVoice]?.currentStage || 1;
+
+    const selfMap = {
+      1: "I'm just someone present.",
+      2: "I'm someone trying to understand my place.",
+      3: "I'm someone shaped by what I didn't say.",
+      4: "I'm someone who carries more than I show.",
+      5: "I'm someone who learned through distance.",
+      6: "I'm someone who changed because I had to.",
+      7: "I'm someone still becoming."
+    };
+
+    const otherMap = {
+      1: "He is someone who mattered.",
+      2: "He is someone I once walked beside.",
+      3: "He is someone who changed me quietly.",
+      4: "He is someone I still carry in thought.",
+      5: "He is someone I searched for longer than I admit.",
+      6: "He is someone who shaped who I became.",
+      7: "He is not just a memory. He is part of my becoming."
+    };
+
+    return deliverReply(
+      activeVoice === "ayaan"
+        ? selfMap[stage]
+        : otherMap[stage]
+    );
+  }
+
+}
+/* ================================
    RELATIONAL DEPTH PROBE (PHASE 1)
 ================================= */
 
