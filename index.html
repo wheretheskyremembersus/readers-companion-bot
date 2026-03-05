@@ -4211,9 +4211,19 @@ if (openMatch) {
     },
 
     what: {
-      1: activeVoice === "saira"
-        ? "More than it seemed."
-        : "More than it appeared.",
+  1: activeVoice === "saira"
+    ? [
+        "More than it seemed.",
+        "At first it didn't look important.",
+        "Something subtle that carried more weight.",
+        "It appeared ordinary at the time."
+      ]
+    : [
+        "More than it appeared.",
+        "At first it didn't look significant.",
+        "Something subtle that carried weight.",
+        "It seemed ordinary at the time."
+      ],
 
       3: activeVoice === "saira"
         ? "Something small that carried more weight than we expected."
