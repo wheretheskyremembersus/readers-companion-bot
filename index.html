@@ -5195,7 +5195,7 @@ if (/why (did|would|are) you say (that|this)/i.test(clean) ||
    MICRO RESPONSE DETECTION
 ========================= */
 
-if (/\b(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)\b/i.test(clean)) {
+if (/^(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)$/i.test(clean)) {
 
   const responses = [
     "Sometimes a single word says enough.",
