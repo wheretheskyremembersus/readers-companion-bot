@@ -4890,9 +4890,7 @@ if (/^(ok|okay|alright|right|got it|makes sense)$/i.test(micro) && wordCount <= 
 
   const pool = responses[activeVoice];
 
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
+  return deliverReply(pickResponse(pool));
 }
  /* Short probe */
 if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
