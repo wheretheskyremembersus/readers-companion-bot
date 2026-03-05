@@ -5415,11 +5415,11 @@ else if (wordCount >= 8) {
   category ="reflective";
 }
 
-if (originalText === lastUserInput) {
+if (originalText === lastUserInput[activeVoice]) {
   category ="firm";
 }
 
-lastUserInput = originalText;
+lastUserInput[activeVoice] = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
