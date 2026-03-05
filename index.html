@@ -982,7 +982,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   if (inputField) {
     inputField.addEventListener("keydown", function (e) {
-      if (e.key ==="Enter") {
+      if (e.key === "Enter") {
         e.preventDefault();
         sendTypedMessage();
       }
@@ -997,7 +997,7 @@ function autoScroll() {
 
   chatBody.scrollTo({
     top: chatBody.scrollHeight,
-    behavior:"smooth"
+    behavior: "smooth"
   });
 }
 
@@ -1009,28 +1009,50 @@ function sanitize(text) {
   return div.innerHTML;
 }
 
+/* =========================
+   RESPONSE PICKER (NO IMMEDIATE REPEAT)
+========================= */
+
+function pickResponse(responses) {
+
+  if (responses.length === 1) {
+    return responses[0];
+  }
+
+  let choice;
+
+  do {
+    choice = responses[Math.floor(Math.random() * responses.length)];
+  } while (choice === lastResponse);
+
+  lastResponse = choice;
+
+  return choice;
+}
+
 function addUserMessage(text) {
   const safeText = sanitize(text);
 
   chatBody.insertAdjacentHTML(
-   "beforeend",
+    "beforeend",
     `<div class="message user">
         <div class="bubble"><strong>${safeText}</strong></div>
      </div>`
   );
+
   autoScroll();
 }
 
 function addVoiceMessage(text) {
   const side =
-    activeVoice ==="saira"
-      ?"saira-msg"
-      : activeVoice ==="ayaan"
-      ?"ayaan-msg"
-      :"system-msg";
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "ayaan"
+      ? "ayaan-msg"
+      : "system-msg";
 
   chatBody.insertAdjacentHTML(
-   "beforeend",
+    "beforeend",
     `<div class="message ${side}">
         <div class="bubble">${text}</div>
      </div>`
@@ -1041,14 +1063,14 @@ function addVoiceMessage(text) {
 
 function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
-   "beforeend",
+    "beforeend",
     `<div class="message system-msg">
         <div class="bubble">${text}</div>
      </div>`
   );
+
   autoScroll();
 }
-
 /* =========================
    TYPING INDICATOR FUNCTIONS
 ========================= */
