@@ -3536,7 +3536,7 @@ if (
 if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
 
   // WHO IS SAIRA
-  if (/\bwho\s+(?:exactly\s+|really\s+|actually\s+)?is\s+saira\b/i.test(normalizedText)) {
+  if (/\bwho\s+(?:exactly\s+|really\s+|actually\s+)?is\s+saira\b(?:\s+to\s+you)?/i.test(normalizedText)) {
     skipRelationalPrefix = true;
 
     const stage = stageState[activeVoice]?.currentStage || 1;
@@ -3569,7 +3569,7 @@ if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
   }
 
   // WHO IS AYAAN
-  if (/\bwho\s+(?:exactly\s+|really\s+|actually\s+)?is\s+ayaan\b/i.test(normalizedText)) {
+  if (/\bwho\s+(?:exactly\s+|really\s+|actually\s+)?is\s+ayaan\b(?:\s+to\s+you)?/i.test(normalizedText)) {
     skipRelationalPrefix = true;
 
     const stage = stageState[activeVoice]?.currentStage || 1;
@@ -3746,6 +3746,14 @@ if (
 return deliverReply(selfPrefix + answer);
 }
 
+if (/\bwhere\s+were\s+you\s+when\b/i.test(normalizedText)) {
+  skipRelationalPrefix = true;
+  return deliverReply(
+    activeVoice === "saira"
+      ? "That moment began quietly, before we understood what it would become."
+      : "It started earlier than we expected, in a moment that seemed ordinary."
+  );
+}
  /* ================================
    RELATIONAL POSITIONAL HANDLER
 ================================= */
