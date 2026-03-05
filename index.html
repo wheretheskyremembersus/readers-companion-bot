@@ -5240,7 +5240,7 @@ function handleMicroIntent(text) {
       ]
     },
 {
-  pattern: /\bi see\b/,
+  pattern: /^i see$/,
   responses: [
     "Sometimes understanding arrives quietly like that.",
     "Yes. Some things settle once you see them clearly.",
@@ -5282,6 +5282,17 @@ function handleMicroIntent(text) {
 
   return null;
 }
+
+ /* =========================
+   MICRO INTENT ROUTER EXECUTION
+========================= */
+
+const microIntent = handleMicroIntent(clean);
+
+if (microIntent) {
+  return deliverReply(microIntent);
+}
+
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
