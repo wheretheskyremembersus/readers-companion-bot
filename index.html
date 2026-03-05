@@ -4600,8 +4600,8 @@ if (/^(no|nope)$/i.test(originalText)) {
    GOODBYE / EXIT (ROBUST SAFE)
 ================================= */
 
-const cleanExit = lower.replace(/[^\w\s]/g,"").trim();
-
+const cleanExit = normalizedText.replace(/[^\w\s]/g,"").trim();
+  
 if (
   /^(bye|goodbye|tata|tada|see you|see ya|later|good day|goodday|have a nice one|have a good one|take care)(\s+.*)?$/.test(cleanExit)
 ) {
