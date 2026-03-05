@@ -4751,14 +4751,18 @@ let nameMatch = originalText.match(
 
 if (nameMatch) {
 
-  const banned = ["mad","sad","angry","tired","confused","getting"];
+ const banned = [
+  "mad","sad","angry","tired","confused","getting",
+  "afraid","scared"
+];
   if (banned.includes(nameMatch[2].toLowerCase())) nameMatch = null;
 
 }
 
 if (nameMatch) {
 
-  sessionUserName = nameMatch[2];
+sessionUserName =
+  nameMatch[2].charAt(0).toUpperCase() + nameMatch[2].slice(1).toLowerCase();
 
   skipRelationalPrefix = true;
 
