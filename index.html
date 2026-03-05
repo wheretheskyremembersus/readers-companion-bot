@@ -706,6 +706,7 @@ let skipRelationalPrefix = false; //
 let activeVoice = null;
 let interactionLocked = false;
 let sessionUserName = null;
+let lastEntity = null;
 
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
@@ -3386,6 +3387,9 @@ if (
   const intentState = handleIntelligence(normalizedText, normalizedText);
   const reference = resolveReference(normalizedText);
          
+if (reference.target === "ayaan") lastEntity = "ayaan";
+if (reference.target === "saira") lastEntity = "saira";
+
 let selfPrefix = "";
 
 if (reference.type === "self") {
