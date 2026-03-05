@@ -5300,7 +5300,7 @@ if (/why (did|would|are) you say (that|this)/i.test(clean) ||
     "Because what we were speaking about doesn't disappear just because time moves."
   ];
 
-  return deliverReply(responses[Math.floor(Math.random() * responses.length)]);
+  return deliverReply(pickResponse(responses));
 }
 /* =========================
    MICRO RESPONSE DETECTION
