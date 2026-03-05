@@ -1019,11 +1019,13 @@ function pickResponse(responses) {
     return responses[0];
   }
 
-  let choice;
+  let pool = responses.filter(r => r !== lastResponse);
 
-  do {
-    choice = responses[Math.floor(Math.random() * responses.length)];
-  } while (choice === lastResponse);
+  if (pool.length === 0) {
+    pool = responses;
+  }
+
+  const choice = pool[Math.floor(Math.random() * pool.length)];
 
   lastResponse = choice;
 
