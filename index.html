@@ -1081,12 +1081,18 @@ function removeTypingIndicator() {
   if (el) el.remove();
 }
 
+let lastReply = null;
+
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
 
 function deliverReply(replyText, callback) {
 
   if (!replyText) return;
 
+  if (replyText === lastReply) return;
+  lastReply = replyText;
+
+ 
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
