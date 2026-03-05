@@ -3899,8 +3899,11 @@ if (
    RELATIONAL SAFETY / RETURN / FUTURE HANDLER (REFINED)
 ================================= */
 
-const clean = originalText.toLowerCase();
-
+const clean = originalText
+  .toLowerCase()
+  .replace(/[^\w\s]/g, "")
+  .trim();
+  
 if (
 
   /\bis\s+(he|she)\s+(safe|okay|ok)\b/.test(clean) ||
