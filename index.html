@@ -4745,14 +4745,19 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
    SELF INTRODUCTION HANDLER (V3)
 ================================= */
 
-const nameMatch = originalText.match(
-/\b(i am|i'm|my name is)\s+([a-z]{3,20})\b/i
+let nameMatch = originalText.match(
+  /\b(i am|i'm|my name is)\s+([a-z]{3,20})\b/i
 );
 
 if (nameMatch) {
 
-const banned = ["mad","sad","angry","tired","confused","getting"];
-if (banned.includes(nameMatch[2].toLowerCase())) return;
+  const banned = ["mad","sad","angry","tired","confused","getting"];
+  if (banned.includes(nameMatch[2].toLowerCase())) nameMatch = null;
+
+}
+
+if (nameMatch) {
+
   sessionUserName = nameMatch[2];
 
   skipRelationalPrefix = true;
