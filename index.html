@@ -5241,6 +5241,31 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalize
       : "Some things linger longer than we anticipate."
   );
 }
+/* Story continuation prompt */
+if (/^(tell me more|go on|what happened next|and then)$/i.test(trimmed)) {
+
+  const responses = {
+
+    saira: [
+      "Some parts of the story reveal themselves slowly.",
+      "There was more to it than what appeared at first.",
+      "The next part didn't feel dramatic at the time.",
+      "What came next was quieter than we expected."
+    ],
+
+    ayaan: [
+      "What followed wasn't what either of us expected.",
+      "The moment after that changed things.",
+      "The next part matters more than it first seemed.",
+      "Some things only made sense later."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pickResponse(pool));
+}
 /* =========================
    META CONVERSATION DETECTION
 ========================= */
