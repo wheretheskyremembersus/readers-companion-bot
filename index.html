@@ -1089,9 +1089,11 @@ function deliverReply(replyText, callback) {
 
   if (!replyText) return;
 
-  if (replyText === lastReply) return;
-  lastReply = replyText;
-
+  if (replyText === lastReply) {
+    lastReply = null;
+  } else {
+    lastReply = replyText;
+  }
  
   /* =========================
    AUTO RELATIONAL PREFIX
