@@ -4746,7 +4746,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
 ================================= */
 
 const nameMatch = originalText.match(
- /\b(i am|i'm|my name is)\s+([a-zA-Z]{2,20})\b/i
+ /\b(i am|i'm|my name is)\s+([A-Z][a-z]{2,20})\b/
 );
 
 if (nameMatch) {
