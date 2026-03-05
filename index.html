@@ -5266,6 +5266,29 @@ if (/^(tell me more|go on|what happened next|and then)$/i.test(trimmed)) {
 
   return deliverReply(pickResponse(pool));
 }
+/* Confusion / surprise */
+if (/^(what|what\?|wait what|huh)$/i.test(trimmed)) {
+
+  const responses = {
+
+    saira: [
+      "Sometimes the meaning takes a moment to surface.",
+      "It can feel unclear at first.",
+      "Some things only make sense once you sit with them."
+    ],
+
+    ayaan: [
+      "It may sound unclear at first.",
+      "Some explanations take a moment to settle.",
+      "Clarity doesn't always arrive immediately."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pickResponse(pool));
+}
 /* =========================
    META CONVERSATION DETECTION
 ========================= */
