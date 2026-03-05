@@ -3323,13 +3323,32 @@ if (/^how are you\b/i.test(trimmed)) {
 
 // Light affirmations
 if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
+
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Alright."
-      : "Understood."
-  );
+  const responses = {
+
+    saira: [
+      "Then stay with that for a moment.",
+      "Alright.",
+      "Sometimes that's enough.",
+      "Let it sit for a moment.",
+      "That's alright."
+    ],
+
+    ayaan: [
+      "Understood.",
+      "Alright.",
+      "That makes sense.",
+      "Noted.",
+      "I see."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pickResponse(pool));
 }
 /* =========================
    MODEL / GPT DEFLECTION
