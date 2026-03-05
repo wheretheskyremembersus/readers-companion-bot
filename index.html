@@ -4872,10 +4872,10 @@ if (
   };
 
   const pool = uncertaintyBank[activeVoice];
-  const index = Math.floor(Math.random() * pool.length);
 
-  return deliverReply(pool[index]);
+  return deliverReply(pickResponse(pool));
 }
+  
 /* Continuation Prompt */
 if (/^(go on|continue|and|then|so)$/i.test(micro)) {
   return deliverReply(
@@ -4951,7 +4951,7 @@ if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
 
 /* Conversational probe */
 
-if (/^(what|why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro)) {
+if (/^(why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro)) {
 
   return deliverReply(
     activeVoice === "saira"
@@ -4985,9 +4985,7 @@ if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
 
   const pool = responses[activeVoice];
 
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
+  return deliverReply(pickResponse(pool));
 }
 
 /* Reaction signal */
@@ -5007,9 +5005,7 @@ if (/^(oh|oh wow|wow|really|interesting|oh interesting)$/i.test(micro) && wordCo
   };
 
   const pool = reactions[activeVoice];
-  const index = Math.floor(Math.random() * pool.length);
-
-  return deliverReply(pool[index]);
+ return deliverReply(pickResponse(pool));
 }
  
 /* Honesty Probe */
@@ -5028,6 +5024,29 @@ if (/^(are you stuck|are you repeating)$/i.test(micro)) {
       ?"No. I move carefully."
       :"Repetition is deliberate."
   );
+}
+/* Confusion / surprise */
+if (/^(what|what\?|wait what|huh)$/i.test(micro)) {
+
+  const responses = {
+
+    saira: [
+      "Sometimes the meaning takes a moment to surface.",
+      "It can feel unclear at first.",
+      "Some things only make sense once you sit with them."
+    ],
+
+    ayaan: [
+      "It may sound unclear at first.",
+      "Some explanations take a moment to settle.",
+      "Clarity doesn't always arrive immediately."
+    ]
+
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pickResponse(pool));
 }
 
 /* Confusion */
@@ -5055,9 +5074,7 @@ if (/^(what do you mean|i dont get it)$/i.test(micro)) {
 
   const pool = responses[activeVoice];
 
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
+ return deliverReply(pickResponse(pool));
 }
 
 /* Pushback */
@@ -5148,9 +5165,7 @@ if (/^(why though|but why)$/i.test(micro)) {
 
   const pool = responses[activeVoice];
 
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
+return deliverReply(pickResponse(pool));
 }
 
 /* Hesitation */
@@ -5242,7 +5257,7 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalize
   );
 }
 /* Story continuation prompt */
-if (/^(tell me more|go on|what happened next|and then)$/i.test(trimmed)) {
+if (/^(tell me more|go on|what happened next|and then)$/i.test(micro)) {
 
   const responses = {
 
@@ -5266,29 +5281,7 @@ if (/^(tell me more|go on|what happened next|and then)$/i.test(trimmed)) {
 
   return deliverReply(pickResponse(pool));
 }
-/* Confusion / surprise */
-if (/^(what|what\?|wait what|huh)$/i.test(trimmed)) {
 
-  const responses = {
-
-    saira: [
-      "Sometimes the meaning takes a moment to surface.",
-      "It can feel unclear at first.",
-      "Some things only make sense once you sit with them."
-    ],
-
-    ayaan: [
-      "It may sound unclear at first.",
-      "Some explanations take a moment to settle.",
-      "Clarity doesn't always arrive immediately."
-    ]
-
-  };
-
-  const pool = responses[activeVoice];
-
-  return deliverReply(pickResponse(pool));
-}
 /* =========================
    META CONVERSATION DETECTION
 ========================= */
@@ -5312,7 +5305,7 @@ if (/why (did|would|are) you say (that|this)/i.test(clean) ||
    MICRO RESPONSE DETECTION
 ========================= */
 
-if (/^(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)$/i.test(clean)) {
+if (/^(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)$/i.test(micro)) {
 
   const responses = [
     "Sometimes a single word says enough.",
@@ -5403,8 +5396,8 @@ function handleMicroIntent(text) {
    MICRO INTENT ROUTER EXECUTION
 ========================= */
 
-const microIntent = handleMicroIntent(clean);
-
+const microIntent = handleMicroIntent(micro);
+  
 if (microIntent) {
   return deliverReply(microIntent);
 }
