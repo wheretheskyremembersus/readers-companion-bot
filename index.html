@@ -5329,7 +5329,7 @@ if (/^(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)$/i.test(clean)) {
    CLARIFICATION MICRO INTENT
 ========================= */
 
-if (/^(what|what\?|what do you mean|i dont understand|that's confusing|that is confusing)$/i.test(clean)) {
+if (/\b(what do you mean|i dont understand|i do not understand|thats confusing|that is confusing)\b/i.test(originalText)) {
 
   const responses = [
     "Some things are easier to feel than explain directly.",
@@ -5340,7 +5340,6 @@ if (/^(what|what\?|what do you mean|i dont understand|that's confusing|that is c
 
   return deliverReply(pickResponse(responses));
 }
-
 /* =========================
    MICRO INTENT ROUTER
 ========================= */
