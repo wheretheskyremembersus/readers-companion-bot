@@ -3623,6 +3623,13 @@ if (
   return deliverReply(reply);
 }
 
+if (/\bhe\b/i.test(normalizedText) && lastEntity === "ayaan") {
+  normalizedText = normalizedText.replace(/\bhe\b/i, "ayaan");
+}
+
+if (/\bshe\b/i.test(normalizedText) && lastEntity === "saira") {
+  normalizedText = normalizedText.replace(/\bshe\b/i, "saira");
+}
 /* ================================
    RELATIONAL IDENTITY HANDLER 
 ================================= */
