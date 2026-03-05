@@ -689,8 +689,6 @@ let repetitionCount = {
   saira: 0,
   ayaan: 0
 };
-
-let lastResponse = "";
          
 /* ========================= 
 V4 PARTITION CONTROL 
@@ -982,7 +980,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   if (inputField) {
     inputField.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
+      if (e.key ==="Enter") {
         e.preventDefault();
         sendTypedMessage();
       }
@@ -997,7 +995,7 @@ function autoScroll() {
 
   chatBody.scrollTo({
     top: chatBody.scrollHeight,
-    behavior: "smooth"
+    behavior:"smooth"
   });
 }
 
@@ -1009,52 +1007,28 @@ function sanitize(text) {
   return div.innerHTML;
 }
 
-/* =========================
-   RESPONSE PICKER (NO IMMEDIATE REPEAT)
-========================= */
-
-function pickResponse(responses) {
-
-  if (responses.length === 1) {
-    return responses[0];
-  }
-
-  let pool = responses.filter(r => r !== lastResponse);
-
-  if (pool.length === 0) {
-    pool = responses;
-  }
-
-  const choice = pool[Math.floor(Math.random() * pool.length)];
-
-  lastResponse = choice;
-
-  return choice;
-}
-
 function addUserMessage(text) {
   const safeText = sanitize(text);
 
   chatBody.insertAdjacentHTML(
-    "beforeend",
+   "beforeend",
     `<div class="message user">
         <div class="bubble"><strong>${safeText}</strong></div>
      </div>`
   );
-
   autoScroll();
 }
 
 function addVoiceMessage(text) {
   const side =
-    activeVoice === "saira"
-      ? "saira-msg"
-      : activeVoice === "ayaan"
-      ? "ayaan-msg"
-      : "system-msg";
+    activeVoice ==="saira"
+      ?"saira-msg"
+      : activeVoice ==="ayaan"
+      ?"ayaan-msg"
+      :"system-msg";
 
   chatBody.insertAdjacentHTML(
-    "beforeend",
+   "beforeend",
     `<div class="message ${side}">
         <div class="bubble">${text}</div>
      </div>`
@@ -1065,14 +1039,14 @@ function addVoiceMessage(text) {
 
 function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
-    "beforeend",
+   "beforeend",
     `<div class="message system-msg">
         <div class="bubble">${text}</div>
      </div>`
   );
-
   autoScroll();
 }
+
 /* =========================
    TYPING INDICATOR FUNCTIONS
 ========================= */
@@ -2114,12 +2088,9 @@ function getSelfReferencePrefix(stage) {
 
 function processInput(userText, originalText) {
 
-const normalizedText = normalizeInput(originalText);
-const lower = normalizedText;
-const nameCall = normalizedText;
-
-const micro = normalizedText;
-const wordCount = normalizedText ? normalizedText.split(/\s+/).length : 0;
+  const normalizedText = normalizeInput(originalText);
+  const lower = normalizedText;
+  const nameCall = normalizedText;
 
 const stage = stageState[activeVoice]?.currentStage || 1;
 
@@ -3326,58 +3297,13 @@ if (/^how are you\b/i.test(trimmed)) {
 
 // Light affirmations
 if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
-
   skipRelationalPrefix = true;
 
-  const responses = {
-
-   saira: [
-  "Then stay with that for a moment.",
-  "Alright.",
-  "Sometimes that's enough.",
-  "Let it sit for a moment.",
-  "That's alright.",
-  "There's no need to rush it.",
-  "We can leave it there for now."
-],
-
-    ayaan: [
-      "Understood.",
-      "Alright.",
-      "That makes sense.",
-      "Noted.",
-      "I see."
-    ]
-
-  };
-
-  const pool = responses[activeVoice];
-
-  return deliverReply(pickResponse(pool));
-}
-
-/* Uncertainty */
-if (/^(idk|i dont know|not sure|maybe)$/i.test(micro) && wordCount <= 3) {
-
-  const responses = {
-
-    saira: [
-      "Not knowing is still a kind of honesty.",
-      "Sometimes uncertainty is the most truthful place to stand.",
-      "It's alright not to have the answer yet."
-    ],
-
-    ayaan: [
-      "Uncertainty still reveals something.",
-      "Not knowing is still information.",
-      "Clarity doesn't always arrive immediately."
-    ]
-
-  };
-
-  const pool = responses[activeVoice];
-
-  return deliverReply(pickResponse(pool));
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Alright."
+      : "Understood."
+  );
 }
 /* =========================
    MODEL / GPT DEFLECTION
@@ -3973,11 +3899,8 @@ if (
    RELATIONAL SAFETY / RETURN / FUTURE HANDLER (REFINED)
 ================================= */
 
-const clean = originalText
-  .toLowerCase()
-  .replace(/[^\w\s]/g, "")
-  .trim();
-  
+const clean = originalText.toLowerCase();
+
 if (
 
   /\bis\s+(he|she)\s+(safe|okay|ok)\b/.test(clean) ||
@@ -4838,13 +4761,13 @@ if (nameMatch) {
       : `Good to meet you, ${sessionUserName}.`
   );
 }
+
 /* ================================
    V3 MICRO INTERACTION LAYER (25 INTENTS)
 ================================= */
 
-micro = normalizedText;
-wordCount = normalizedText.split(/\s+/).length;
-  
+const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
+const wordCount = originalText.trim().split(/\s+/).length;
   
 /* Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
@@ -4875,10 +4798,10 @@ if (
   };
 
   const pool = uncertaintyBank[activeVoice];
+  const index = Math.floor(Math.random() * pool.length);
 
-  return deliverReply(pickResponse(pool));
+  return deliverReply(pool[index]);
 }
-  
 /* Continuation Prompt */
 if (/^(go on|continue|and|then|so)$/i.test(micro)) {
   return deliverReply(
@@ -4916,7 +4839,7 @@ if (/^(whatever|meh|boring)$/i.test(micro)) {
 }
 
 /* Short acknowledgement */
-if (/^(ok|okay|alright|right|got it|makes sense|hmm)$/i.test(micro) && wordCount <= 3) {
+if (/^(ok|okay|alright|right|got it|makes sense)$/i.test(micro) && wordCount <= 3) {
 
   const responses = {
 
@@ -4940,7 +4863,9 @@ if (/^(ok|okay|alright|right|got it|makes sense|hmm)$/i.test(micro) && wordCount
 
   const pool = responses[activeVoice];
 
-  return deliverReply(pickResponse(pool));
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
  /* Short probe */
 if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
@@ -4954,7 +4879,7 @@ if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
 
 /* Conversational probe */
 
-if (/^(why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro)) {
+if (/^(what|why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro)) {
 
   return deliverReply(
     activeVoice === "saira"
@@ -4988,7 +4913,9 @@ if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
 
   const pool = responses[activeVoice];
 
-  return deliverReply(pickResponse(pool));
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
 
 /* Reaction signal */
@@ -5008,7 +4935,9 @@ if (/^(oh|oh wow|wow|really|interesting|oh interesting)$/i.test(micro) && wordCo
   };
 
   const pool = reactions[activeVoice];
- return deliverReply(pickResponse(pool));
+  const index = Math.floor(Math.random() * pool.length);
+
+  return deliverReply(pool[index]);
 }
  
 /* Honesty Probe */
@@ -5027,29 +4956,6 @@ if (/^(are you stuck|are you repeating)$/i.test(micro)) {
       ?"No. I move carefully."
       :"Repetition is deliberate."
   );
-}
-/* Confusion / surprise */
-if (/^(what|what\?|wait what|huh)$/i.test(micro)) {
-
-  const responses = {
-
-    saira: [
-      "Sometimes the meaning takes a moment to surface.",
-      "It can feel unclear at first.",
-      "Some things only make sense once you sit with them."
-    ],
-
-    ayaan: [
-      "It may sound unclear at first.",
-      "Some explanations take a moment to settle.",
-      "Clarity doesn't always arrive immediately."
-    ]
-
-  };
-
-  const pool = responses[activeVoice];
-
-  return deliverReply(pickResponse(pool));
 }
 
 /* Confusion */
@@ -5077,7 +4983,9 @@ if (/^(what do you mean|i dont get it)$/i.test(micro)) {
 
   const pool = responses[activeVoice];
 
- return deliverReply(pickResponse(pool));
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
 
 /* Pushback */
@@ -5168,7 +5076,9 @@ if (/^(why though|but why)$/i.test(micro)) {
 
   const pool = responses[activeVoice];
 
-return deliverReply(pickResponse(pool));
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
 
 /* Hesitation */
@@ -5251,7 +5161,7 @@ if (/(what is this story|what is this about)/i.test(originalText)) {
 }
 /* Soft emotional signals */
 
-if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(micro)) {
+if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice === "saira"
@@ -5259,152 +5169,6 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(micro)) {
       : "Some things linger longer than we anticipate."
   );
 }
-/* Story continuation prompt */
-if (/^(tell me more|go on|what happened next|and then)$/i.test(micro)) {
-
-  const responses = {
-
-    saira: [
-      "Some parts of the story reveal themselves slowly.",
-      "There was more to it than what appeared at first.",
-      "The next part didn't feel dramatic at the time.",
-      "What came next was quieter than we expected."
-    ],
-
-    ayaan: [
-      "What followed wasn't what either of us expected.",
-      "The moment after that changed things.",
-      "The next part matters more than it first seemed.",
-      "Some things only made sense later."
-    ]
-
-  };
-
-  const pool = responses[activeVoice];
-
-  return deliverReply(pickResponse(pool));
-}
-
-/* =========================
-   META CONVERSATION DETECTION
-========================= */
-
-if (/why (did|would|are) you say (that|this)/i.test(micro) ||
-    /why did you say that/i.test(micro) ||
-    /why are you saying that/i.test(micro)) {
-
-  skipRelationalPrefix = true;
-
-  const responses = [
-    "Because some things don't fade the way people expect them to.",
-    "Because what we were touching on carries more weight than it first appears.",
-    "Because certain moments stay with you longer than you think they will.",
-    "Because what we were speaking about doesn't disappear just because time moves."
-  ];
-
-  return deliverReply(pickResponse(responses));
-}
-/* =========================
-   MICRO RESPONSE DETECTION
-========================= */
-
-if (/^(ok|okay|hmm|maybe|may be|right|true|yeah|yes|i see)$/i.test(micro)) {
-
-  const responses = [
-    "Sometimes a single word says enough.",
-    "That pause can carry more meaning than it seems.",
-    "Some things settle quietly like that.",
-    "You don't have to say much for something to land.",
-    "Even a small response can hold a lot."
-  ];
-
-  return deliverReply(pickResponse(responses));
-}
-
-/* =========================
-   CLARIFICATION MICRO INTENT
-========================= */
-
-if (/\b(what do you mean|i dont understand|i do not understand|thats confusing|that is confusing)\b/i.test(originalText)) {
-
-  const responses = [
-    "Some things are easier to feel than explain directly.",
-    "It's not simple to capture in one line.",
-    "Some moments only make sense once you've seen where they lead.",
-    "What we were speaking about carries more weight than it first appears."
-  ];
-
-  return deliverReply(pickResponse(responses));
-}
-/* =========================
-   MICRO INTENT ROUTER
-========================= */
-
-function handleMicroIntent(text) {
-
-  const microIntents = [
-
-    {
-      pattern: /^why\??$/,
-      responses: [
-        "Some reasons only reveal themselves over time.",
-        "Because the moment carried more weight than it first appeared."
-      ]
-    },
-{
-  pattern: /^i see$/,
-  responses: [
-    "Sometimes understanding arrives quietly like that.",
-    "Yes. Some things settle once you see them clearly.",
-    "It's different once you notice it, isn't it?"
-  ]
-},
-    {
-      pattern: /^really\??$/,
-      responses: [
-        "It might sound surprising at first.",
-        "Sometimes the truth feels unexpected."
-      ]
-    },
-
-    {
-      pattern: /^tell me more$/,
-      responses: [
-        "Some parts of the story reveal themselves slowly.",
-        "What followed wasn't what anyone expected."
-      ]
-    },
-
-    {
-      pattern: /^and then$/,
-      responses: [
-        "After that, things didn't return to what they had been.",
-        "That moment was only the beginning."
-      ]
-    }
-
-  ];
-
-  for (const intent of microIntents) {
-    if (intent.pattern.test(text)) {
-      const r = intent.responses;
-     return pickResponse(r);
-    }
-  }
-
-  return null;
-}
-
- /* =========================
-   MICRO INTENT ROUTER EXECUTION
-========================= */
-
-const microIntent = handleMicroIntent(micro);
-  
-if (microIntent) {
-  return deliverReply(microIntent);
-}
-
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
@@ -5418,11 +5182,11 @@ else if (wordCount >= 8) {
   category ="reflective";
 }
 
-if (originalText === lastUserInput[activeVoice]) {
+if (originalText === lastUserInput) {
   category ="firm";
 }
 
-lastUserInput[activeVoice] = originalText;
+lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
@@ -6807,69 +6571,58 @@ function nextReflection() {
 
 function submitReflection() {
 
-  // Prevent duplicate submissions
   if (localStorage.getItem("reflectionDone")) {
-
-    dock.innerHTML = "";
-
-    chatBody.insertAdjacentHTML(
-      "beforeend",
-      `<div class="message ${activeVoice === "saira" ? "saira-msg" : "ayaan-msg"}">
-        <div class="bubble">
-          ${activeVoice === "saira"
-            ? "Thank you for staying with us. It means more than you know."
-            : "Thank you for staying. Not everyone chooses to listen this closely."}
-          <br><br>
-          <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
-        </div>
-      </div>`
-    );
-
-    autoScroll();
-    return;
-  }
-
-  // Safety check: ensure reflections exist
-  if (!reflections || reflections.length < 3) {
-    console.warn("Reflection submission blocked: incomplete data.");
-    return;
-  }
-
-  // Populate form fields safely
-  document.getElementById("formVoice").value = activeVoice;
-  document.getElementById("r1").value = reflections[0] || "";
-  document.getElementById("r2").value = reflections[1] || "";
-  document.getElementById("r3").value = reflections[2] || "";
-  document.getElementById("formTime").value = new Date().toISOString();
-
-  const form = document.getElementById("reflectionForm");
-
-  fetch(form.action, {
-    method: "POST",
-    body: new FormData(form),
-    headers: { "Accept": "application/json" }
-  })
-  .then(() => {
-    // Mark completed only after successful send
-    localStorage.setItem("reflectionDone","true");
-  })
-  .catch((error) => {
-    console.warn("Reflection submission failed:", error);
-  });
 
   dock.innerHTML = "";
 
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message ${activeVoice === "saira" ? "saira-msg" : "ayaan-msg"}">
-      <div class="bubble">
-        ${activeVoice === "saira"
-          ? "Thank you for staying with us. It means more than you know."
-          : "Thank you for staying. Not everyone chooses to listen this closely."}
-        <br><br>
-        <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
-      </div>
-    </div>`
+    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
+       <div class="bubble">
+         ${activeVoice ==="saira"
+           ?"Thank you for staying with us. It means more than you know."
+           :"Thank you for staying. Not everyone chooses to listen this closely."}
+         <br><br>
+         <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+       </div>
+     </div>`
+  );
+
+  autoScroll();
+  return;
+}
+  document.getElementById("formVoice").value = activeVoice;
+  document.getElementById("r1").value = reflections[0];
+  document.getElementById("r2").value = reflections[1];
+  document.getElementById("r3").value = reflections[2];
+  document.getElementById("formTime").value = new Date().toISOString();
+
+  const form = document.getElementById("reflectionForm");
+
+  fetch(form.action, {
+    method:"POST",
+    body: new FormData(form),
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(response => {})
+  .catch(error => {});
+
+  // Mark as completed
+  localStorage.setItem("reflectionDone","true");
+
+  dock.innerHTML ="";
+
+  chatBody.insertAdjacentHTML(
+   "beforeend",
+    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
+       <div class="bubble">
+         ${activeVoice ==="saira"
+           ?"Thank you for staying with us. It means more than you know."
+           :"Thank you for staying. Not everyone chooses to listen this closely."}
+         <br><br>
+         <button class="btn primary" onclick="returnToWebsite()">Return to the main site</button>
+       </div>
+     </div>`
   );
 
   autoScroll();
