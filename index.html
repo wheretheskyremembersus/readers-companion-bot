@@ -5220,6 +5220,58 @@ if (/^(what|what\?)$/.test(clean)) {
 
   return deliverReply(responses[Math.floor(Math.random() * responses.length)]);
 }
+
+/* =========================
+   MICRO INTENT ROUTER
+========================= */
+
+function handleMicroIntent(text) {
+
+  const microIntents = [
+
+    {
+      pattern: /^why\??$/,
+      responses: [
+        "Some reasons only reveal themselves over time.",
+        "Because the moment carried more weight than it first appeared."
+      ]
+    },
+
+    {
+      pattern: /^really\??$/,
+      responses: [
+        "It might sound surprising at first.",
+        "Sometimes the truth feels unexpected."
+      ]
+    },
+
+    {
+      pattern: /tell me more/,
+      responses: [
+        "Some parts of the story reveal themselves slowly.",
+        "What followed wasn't what anyone expected."
+      ]
+    },
+
+    {
+      pattern: /and then/,
+      responses: [
+        "After that, things didn't return to what they had been.",
+        "That moment was only the beginning."
+      ]
+    }
+
+  ];
+
+  for (const intent of microIntents) {
+    if (intent.pattern.test(text)) {
+      const r = intent.responses;
+      return r[Math.floor(Math.random() * r.length)];
+    }
+  }
+
+  return null;
+}
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
