@@ -4746,11 +4746,13 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
 ================================= */
 
 const nameMatch = originalText.match(
- /\b(i am|i'm|my name is)\s+([A-Z][a-z]{2,20})\b/
+/\b(i am|i'm|my name is)\s+([a-z]{3,20})\b/i
 );
 
 if (nameMatch) {
 
+const banned = ["mad","sad","angry","tired","confused","getting"];
+if (banned.includes(nameMatch[2].toLowerCase())) return;
   sessionUserName = nameMatch[2];
 
   skipRelationalPrefix = true;
