@@ -2114,9 +2114,12 @@ function getSelfReferencePrefix(stage) {
 
 function processInput(userText, originalText) {
 
-  const normalizedText = normalizeInput(originalText);
-  const lower = normalizedText;
-  const nameCall = normalizedText;
+const normalizedText = normalizeInput(originalText);
+const lower = normalizedText;
+const nameCall = normalizedText;
+
+const micro = normalizedText;
+const wordCount = normalizedText ? normalizedText.split(/\s+/).length : 0;
 
 const stage = stageState[activeVoice]?.currentStage || 1;
 
