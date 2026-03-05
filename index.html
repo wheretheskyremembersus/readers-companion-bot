@@ -4835,13 +4835,14 @@ if (nameMatch) {
       : `Good to meet you, ${sessionUserName}.`
   );
 }
-
 /* ================================
    V3 MICRO INTERACTION LAYER (25 INTENTS)
 ================================= */
 
-const micro = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
-const wordCount = originalText.trim().split(/\s+/).length;
+const normalizedText = originalText.toLowerCase().replace(/[^\w\s]/g,"").trim();
+const micro = normalizedText;
+const wordCount = normalizedText.split(/\s+/).length;
+  
   
 /* Doubt */
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
@@ -5248,7 +5249,7 @@ if (/(what is this story|what is this about)/i.test(originalText)) {
 }
 /* Soft emotional signals */
 
-if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalizedText)) {
+if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(micro)) {
 
   return deliverReply(
     activeVoice === "saira"
