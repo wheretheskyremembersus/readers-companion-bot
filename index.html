@@ -4206,6 +4206,17 @@ if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText
   );
 }
 /* =========================
+   STRUCTURE QUERY DETECTOR
+========================= */
+
+const structureQuery =
+  /\bchapters?\b/i.test(originalText) ||
+  /\bpages?\b/i.test(originalText) ||
+  /\bbook\s+length\b/i.test(originalText) ||
+  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
+  /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
+  
+/* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
 
@@ -4221,7 +4232,7 @@ if (!emotionalGuard.test(normalizedText) && !identityGuard.test(normalizedText))
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
 
-if (openMatch) {
+if (openMatch && !structureQuery) {
 
   const stage = stageState[activeVoice]?.currentStage || 1;
   const type = openMatch[1];
@@ -4582,32 +4593,7 @@ if (structureQuery) {
 }
 
 
-/* ================================
-   WH QUESTION ROUTER
-================================= */
 
-if (openMatch) {
-
-  const responses = {
-    saira: [
-      "Not always where you'd expect.",
-      "More than it seemed.",
-      "Something subtle that carried more weight.",
-      "It appeared ordinary at the time."
-    ],
-    ayaan: [
-      "It shifted slowly.",
-      "It changed gradually.",
-      "It carried more meaning than it first seemed.",
-      "At first it didn't look important."
-    ]
-  };
-
-  const pool = responses[activeVoice];
-  const reply = pool[Math.floor(Math.random() * pool.length)];
-
-  return deliverReply(reply);
-}
 /* =========================
    TYPED QUESTION MATCHING 
 ========================= */
