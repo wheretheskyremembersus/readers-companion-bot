@@ -4554,7 +4554,24 @@ if (
       :"This space allows you to explore our story through dialogue. It's not built for quick answers - it's built for reflection. If you prefer structure, the dock questions can guide you."
   );
 }
-// V3 STRUCTURE CAPTURE — chapters/pages/length
+
+
+  // V3 STRUCTURE CAPTURE — chapters/pages/length
+
+  if (openMatch) {
+
+  // Guard for structure questions
+  if (/\b(chapters?|pages?|length)\b/i.test(originalText)) {
+    // let V3 handle it
+  } else {
+
+    // existing WH router logic
+    const responses = ...
+    return deliverReply(...);
+
+  }
+}
+  
 if (/\b(chapters?|pages?|length)\b/i.test(originalText)) {
   return deliverReply(
     activeVoice === "saira"
