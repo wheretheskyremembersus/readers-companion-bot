@@ -4206,6 +4206,17 @@ if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText
   );
 }
 /* =========================
+   STRUCTURE QUERY DETECTOR
+========================= */
+
+const structureQuery =
+  /\bchapters?\b/i.test(originalText) ||
+  /\bpages?\b/i.test(originalText) ||
+  /\bbook\s+length\b/i.test(originalText) ||
+  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
+  /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
+  
+/* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
 
@@ -4221,8 +4232,13 @@ if (!emotionalGuard.test(normalizedText) && !identityGuard.test(normalizedText))
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
 
-if (openMatch) {
-
+if (
+  openMatch &&
+  !/\bchapters?\b/i.test(originalText) &&
+  !/\bpages?\b/i.test(originalText) &&
+  !/\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) &&
+  !/\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText)
+) {
   const stage = stageState[activeVoice]?.currentStage || 1;
   const type = openMatch[1];
 
@@ -4554,6 +4570,22 @@ if (
       :"This space allows you to explore our story through dialogue. It's not built for quick answers - it's built for reflection. If you prefer structure, the dock questions can guide you."
   );
 }
+
+/* ================================
+   V3 STRUCTURE CAPTURE
+================================= */
+
+if (structureQuery) {
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
+      : "The structure of the story becomes clearer within the book itself."
+  );
+
+}
+
+
 
 /* =========================
    TYPED QUESTION MATCHING 
