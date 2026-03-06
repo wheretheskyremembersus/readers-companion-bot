@@ -2097,8 +2097,6 @@ function processInput(userText, originalText) {
   const lower = normalizedText;
   const nameCall = normalizedText;
 
-const stage = stageState[activeVoice]?.currentStage || 1;
-
 /* ================================
    PRONOUN NORMALIZATION
 ================================= */
@@ -2110,6 +2108,8 @@ if (lastEntity === "ayaan") {
 if (lastEntity === "saira") {
   normalizedText = normalizedText.replace(/\bshe\b/g, "saira");
 }
+
+const stage = stageState[activeVoice]?.currentStage || 1;
 /* =========================
    LOCK OVERRIDE CHECK
 ========================= */
