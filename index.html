@@ -4241,11 +4241,12 @@ if (
 
 if (
   openMatch &&
+  !structureQuery &&
   !/\bchapters?\b/i.test(originalText) &&
   !/\bpages?\b/i.test(originalText) &&
   !/\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) &&
   !/\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText)
-) {
+){
   const stage = stageState[activeVoice]?.currentStage || 1;
   const type = openMatch[1];
 
