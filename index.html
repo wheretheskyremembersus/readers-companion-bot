@@ -4554,7 +4554,14 @@ if (
       :"This space allows you to explore our story through dialogue. It's not built for quick answers - it's built for reflection. If you prefer structure, the dock questions can guide you."
   );
 }
-
+// V3 STRUCTURE CAPTURE — chapters/pages/length
+if (/(chapters?|pages?|book\s+length|how\s+many\s+(chapters|pages)|how\s+long\s+is\s+the\s+book)/i.test(originalText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
+      : "The structure of the story becomes clearer within the book itself."
+  );
+}
 /* =========================
    TYPED QUESTION MATCHING 
 ========================= */
@@ -4791,14 +4798,6 @@ if (
     );
   }
 
-// V3 STRUCTURE CAPTURE — chapters/pages/length
-if (/(chapters?|pages?|book\s+length|how\s+many\s+(chapters|pages)|how\s+long\s+is\s+the\s+book)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
-      : "The structure of the story becomes clearer within the book itself."
-  );
-}
   /* ================================
    JEALOUSY / CROSS GENDER (SELF-REFERENCE SAFE)
 ================================= */
