@@ -4558,9 +4558,8 @@ if (
 
   // V3 STRUCTURE CAPTURE — chapters/pages/length
 
-  if (openMatch) {
+if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
 
-  // Guard for structure questions
   if (/\b(chapters?|pages?|length)\b/i.test(originalText)) {
     // let V3 handle it
   } else {
