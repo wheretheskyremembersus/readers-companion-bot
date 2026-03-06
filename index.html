@@ -4555,29 +4555,25 @@ if (
   );
 }
 
-
- /* ================================
+/* ================================
    WH QUESTION ROUTER
 ================================= */
 
 if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
 
   const responses = {
-
     saira: [
       "Not always where you'd expect.",
       "More than it seemed.",
       "Something subtle that carried more weight.",
       "It appeared ordinary at the time."
     ],
-
     ayaan: [
       "It shifted slowly.",
       "It changed gradually.",
       "It carried more meaning than it first seemed.",
       "At first it didn't look important."
     ]
-
   };
 
   const pool = responses[activeVoice];
@@ -4592,13 +4588,11 @@ if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
 ================================= */
 
 if (/\b(chapters?|pages?|length)\b/i.test(originalText)) {
-
   return deliverReply(
     activeVoice === "saira"
       ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
       : "The structure of the story becomes clearer within the book itself."
   );
-
 }
 /* =========================
    TYPED QUESTION MATCHING 
