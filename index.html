@@ -3787,13 +3787,13 @@ if (
   if (reference.type === "self") {
 
     const selfMap = {
-      1: "I'm still present with it.",
-      2: "I'm still present with it. Present.",
-      3: "I'm still present with it. Not distant.",
-      4: "I'm still present with it. I didn't disappear.",
-      5: "I'm still present with it.- even if things changed.",
-      6: "I'm still present with it. Just not who I used to be.",
-      7: "I'm still present with it. Some things remain."
+      1: "I'm still here.",
+      2: "I'm still here. Present.",
+      3: "I'm still here. Not distant.",
+      4: "I'm still here. I didn't disappear.",
+      5: "I'm still here.- even if things changed.",
+      6: "I'm still here. Just not who I used to be.",
+      7: "I'm still here. Some things remain."
     };
 
     return deliverReply(selfMap[stage]);
@@ -4516,7 +4516,7 @@ if (/^saira\b$/i.test(nameCall)) {
   skipRelationalPrefix = true;
 
   if (activeVoice ==="saira") {
-    return deliverReply("Yes... I'm still present with it.");
+    return deliverReply("Yes... I'm still here.");
   } else {
     return deliverReply("You're calling her.");
   }
@@ -5250,7 +5250,7 @@ if (/^(why though|but why)$/i.test(micro)) {
 if (/^(wait|hold on)$/i.test(micro)) {
   return deliverReply(
     activeVoice ==="saira"
-      ?"I'm still present with it."
+      ?"I'm still here."
       :"Go ahead."
   );
 }
