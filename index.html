@@ -4228,7 +4228,14 @@ const emotionalGuard =
 const identityGuard =
   /\b(who\s+are\s+you|what\s+are\s+you|who\s+are\s+you\s+really)\b/i;
 
-if (!emotionalGuard.test(normalizedText) && !identityGuard.test(normalizedText)) {
+const interpretationGuard =
+  /\b(are you saying|do you mean|what do you mean|are you suggesting|so you're saying)\b/i;
+
+if (
+  !emotionalGuard.test(normalizedText) &&
+  !identityGuard.test(normalizedText) &&
+  !interpretationGuard.test(normalizedText)
+) {
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
 
@@ -4330,19 +4337,19 @@ if (
     },
 
     what: {
-  1: activeVoice === "saira"
-    ? [
-        "More than it seemed.",
-        "At first it didn't look important.",
-        "Something subtle that carried more weight.",
-        "It appeared ordinary at the time."
-      ]
-    : [
-        "More than it appeared.",
-        "At first it didn't look significant.",
-        "Something subtle that carried weight.",
-        "It seemed ordinary at the time."
-      ],
+      1: activeVoice === "saira"
+        ? [
+            "More than it seemed.",
+            "At first it didn't look important.",
+            "Something subtle that carried more weight.",
+            "It appeared ordinary at the time."
+          ]
+        : [
+            "More than it appeared.",
+            "At first it didn't look significant.",
+            "Something subtle that carried weight.",
+            "It seemed ordinary at the time."
+          ],
 
       3: activeVoice === "saira"
         ? "Something small that carried more weight than we expected."
@@ -4394,33 +4401,35 @@ if (
     }
 
   };
+
   let mappedType = type;
 
-if (!openBank[type]) {
+  if (!openBank[type]) {
 
-  if (type === "did" || type === "do" || type === "does") {
-    mappedType = "what";
+    if (type === "did" || type === "do" || type === "does") {
+      mappedType = "what";
+    }
+
+    else if (type === "is" || type === "are" || type === "was" || type === "were") {
+      mappedType = "how";
+    }
+
+    else if (type === "can" || type === "could") {
+      mappedType = "will";
+    }
+
+    else {
+      mappedType = "why";
+    }
   }
 
-  else if (type === "is" || type === "are" || type === "was" || type === "were") {
-    mappedType = "how";
-  }
+  if (openBank[mappedType]) {
+    const answer =
+      openBank[mappedType][stage] ||
+      openBank[mappedType][1];
 
-  else if (type === "can" || type === "could") {
-    mappedType = "will";
+    return deliverReply(selfPrefix + answer);
   }
-
-  else {
-    mappedType = "why";
-  }
-}
- if (openBank[mappedType]) {
-  const answer =
-    openBank[mappedType][stage] ||
-    openBank[mappedType][1];
-
-  return deliverReply(selfPrefix + answer);
-}
 }
 /* ================================
    GENERAL RELATIONAL DETECTION
