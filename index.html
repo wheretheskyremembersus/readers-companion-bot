@@ -4232,8 +4232,13 @@ if (!emotionalGuard.test(normalizedText) && !identityGuard.test(normalizedText))
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
 
-if (openMatch && !structureQuery) {
-
+if (
+  openMatch &&
+  !/\bchapters?\b/i.test(originalText) &&
+  !/\bpages?\b/i.test(originalText) &&
+  !/\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) &&
+  !/\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText)
+) {
   const stage = stageState[activeVoice]?.currentStage || 1;
   const type = openMatch[1];
 
