@@ -4556,10 +4556,22 @@ if (
 }
 
 /* ================================
+   STRUCTURE QUERY DETECTOR
+================================= */
+
+const structureQuery =
+  /\bchapters?\b/i.test(originalText) ||
+  /\bpages?\b/i.test(originalText) ||
+  /\bbook\s+length\b/i.test(originalText) ||
+  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
+  /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
+
+
+/* ================================
    WH QUESTION ROUTER
 ================================= */
 
-if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
+if (openMatch && !structureQuery) {
 
   const responses = {
     saira: [
@@ -4577,9 +4589,9 @@ if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
   };
 
   const pool = responses[activeVoice];
-  const index = Math.floor(Math.random() * pool.length);
+  const reply = pool[Math.floor(Math.random() * pool.length)];
 
-  return deliverReply(pool[index]);
+  return deliverReply(reply);
 }
 
 
@@ -4587,13 +4599,7 @@ if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
    V3 STRUCTURE CAPTURE
 ================================= */
 
-if (
-  /\bchapters?\b/i.test(originalText) ||
-  /\bpages?\b/i.test(originalText) ||
-  /\bbook\s+length\b/i.test(originalText) ||
-  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
-  /\bhow\s+long\s+is\s+the\s+book\b/i.test(originalText)
-) {
+if (structureQuery) {
 
   return deliverReply(
     activeVoice === "saira"
