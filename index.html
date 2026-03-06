@@ -4792,7 +4792,7 @@ if (
   }
 
 // V3 STRUCTURE CAPTURE — chapters/pages/length
-if (/\b(chapters?|pages?|book length|how many (chapters|pages)|how long is the book)\b/i.test(normalizedText)) {
+if (/(chapters?|pages?|book\s+length|how\s+many\s+(chapters|pages)|how\s+long\s+is\s+the\s+book)/i.test(normalizedText)) {
   return deliverReply(
     activeVoice === "saira"
       ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
