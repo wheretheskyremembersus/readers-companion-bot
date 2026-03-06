@@ -2266,7 +2266,7 @@ if (operatorMatch || pureNumberMatch) {
    REALITY ANCHOR GUARD 
 ========================= */
  if (
-  /\b(date|today|time|clock|day is it|year|month|weather|raining|sunny|country|city|location|where are you)\b/i.test(normalizedText)
+  /\b(what\s+date|today'?s\s+date|what\s+time\s+is\s+it|current\s+time|what\s+day\s+is\s+it|current\s+year|current\s+month|weather\s+(today|now)|raining\s+now|sunny\s+now|your\s+location|where\s+are\s+you)\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
