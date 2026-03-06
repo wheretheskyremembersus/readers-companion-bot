@@ -4791,6 +4791,14 @@ if (
     );
   }
 
+// V3 STRUCTURE CAPTURE — chapters/pages/length
+if (/\b(chapters?|pages?|book length|how long is the book|how many chapters)\b/i.test(normalizedText)) {
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
+      : "The structure of the story becomes clearer within the book itself."
+  );
+}
   /* ================================
    JEALOUSY / CROSS GENDER (SELF-REFERENCE SAFE)
 ================================= */
