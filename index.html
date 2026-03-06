@@ -4587,12 +4587,20 @@ if (openMatch && !/\b(chapters?|pages?|length)\b/i.test(originalText)) {
    V3 STRUCTURE CAPTURE
 ================================= */
 
-if (/\b(chapters?|pages?|length)\b/i.test(originalText)) {
+if (
+  /\bchapters?\b/i.test(originalText) ||
+  /\bpages?\b/i.test(originalText) ||
+  /\bbook\s+length\b/i.test(originalText) ||
+  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
+  /\bhow\s+long\s+is\s+the\s+book\b/i.test(originalText)
+) {
+
   return deliverReply(
     activeVoice === "saira"
       ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
       : "The structure of the story becomes clearer within the book itself."
   );
+
 }
 /* =========================
    TYPED QUESTION MATCHING 
