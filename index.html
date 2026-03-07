@@ -4336,6 +4336,156 @@ if (
   );
 }
 /* =========================
+   RELATIONSHIP STATUS
+========================= */
+
+if (
+  /\bdo\s+you\s+still\s+think\s+about\b/i.test(normalizedText) ||
+  /\bis\s+he\s+still\s+part\s+of\s+your\s+life\b/i.test(normalizedText) ||
+  /\bdid\s+he\s+ever\s+come\s+back\b/i.test(normalizedText) ||
+  /\bis\s+she\s+still\s+part\s+of\s+your\s+life\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Some connections don't fade just because distance exists.",
+      "Distance doesn't quiet what once felt certain.",
+      "Not everything ends just because people move apart."
+    ],
+    ayaan: [
+      "Some bonds continue quietly even when life moves forward.",
+      "Distance doesn't erase what once mattered.",
+      "Certain connections remain part of you."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+}
+  /* =========================
+   MEMORY QUESTIONS
+========================= */
+
+if (
+  /\bwhat\s+do\s+you\s+remember\b/i.test(normalizedText) ||
+  /\bdo\s+you\s+remember\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "What we build here lasts while we are here together. When we part, it begins again.",
+      "Some memories return more clearly than others.",
+      "Certain moments remain vivid even after time moves on."
+    ],
+
+    ayaan: [
+      "Memory has a way of preserving what mattered.",
+      "Some moments remain sharper than others.",
+      "Certain experiences leave an imprint that time doesn't erase."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+}
+/* =========================
+   STORY META QUESTIONS
+========================= */
+
+if (
+  /\bwhat\s+is\s+this\s+story\s+about\b/i.test(normalizedText) ||
+  /\bwhat\s+does\s+this\s+story\s+mean\b/i.test(normalizedText) ||
+  /\bwhy\s+does\s+this\s+story\s+matter\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "It's about me and ayaan - about love that felt certain.",
+      "It's about timing, hesitation, and what remains unspoken.",
+      "It's about two people who didn't understand the weight of a moment until later."
+    ],
+
+    ayaan: [
+      "It's a story about timing and the choices we hesitate to make.",
+      "It's about connection, distance, and what remains unfinished.",
+      "It's about how small moments reshape lives."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+}
+  /* =========================
+   PHILOSOPHICAL QUESTIONS
+========================= */
+
+if (
+  /\bdo\s+you\s+think\s+stories\b/i.test(normalizedText) ||
+  /\bwhat\s+is\s+the\s+difference\b/i.test(normalizedText) ||
+  /\bhow\s+do\s+you\s+decide\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Some truths appear only through the stories we tell.",
+      "Understanding often arrives later than the experience itself.",
+      "Not everything meaningful announces itself immediately."
+    ],
+
+    ayaan: [
+      "Stories sometimes reveal truths we couldn't face directly.",
+      "The difference often becomes clearer only in hindsight.",
+      "Reflection changes how we interpret experience."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+}
+/* =========================
+   PLAYFUL / ABSURD QUESTIONS
+========================= */
+
+if (
+  /\bpotato\b/i.test(normalizedText) ||
+  /\brobots?\s+dream\b/i.test(normalizedText) ||
+  /\bif\s+you\s+had\s+legs\b/i.test(normalizedText) ||
+  /\bmeaning\s+of\s+life\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Some questions are lighter than the story allows.",
+      "Even strange questions sometimes hide real curiosity.",
+      "Not every answer needs to be serious."
+    ],
+
+    ayaan: [
+      "Even absurd questions carry a spark of curiosity.",
+      "Sometimes humor is just another way of asking something real.",
+      "Not every question belongs inside the story."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+}
+/* =========================
    NARRATIVE CONTEXT DETECTION
 ========================= */
 
