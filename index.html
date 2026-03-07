@@ -4208,11 +4208,11 @@ if (
 ========================= */
 
 if (
-  /\bwhy\s+do\s+.*(stay|remain|linger)\b/i.test(normalizedText) ||
-  /\bwhy\s+does\s+.*matter\b/i.test(normalizedText) ||
-  /\bwhy\s+do\s+some\s+connections\b/i.test(normalizedText) ||
-  /\bwhy\s+do\s+memories\b/i.test(normalizedText) ||
-  /\bwhy\s+do\s+certain\s+moments\b/i.test(normalizedText)
+  /\bwhy\s+(do|does)\s+.*(stay|remain|linger)\b/i.test(normalizedText) ||
+  /\bwhy\s+(do|does)\s+.*matter\b/i.test(normalizedText) ||
+  /\bwhy\s+(do|does)\s+some\s+connections\b/i.test(normalizedText) ||
+  /\bwhy\s+(do|does)\s+memories\b/i.test(normalizedText) ||
+  /\bwhy\s+(do|does)\s+certain\s+moments\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
