@@ -4206,6 +4206,16 @@ if (/^ayaan\b$/i.test(nameCall)) {
     return deliverReply("You're calling him.");
   }
 }
+if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText)) {
+  
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice ==="saira"
+      ?"If it were only scripted, it wouldn't shift when you do."
+      :"Structure exists. But structure isn't the same as predictability."
+  );
+}
 
 /* =========================
    CHARACTER IDENTITY DETECTION
@@ -4370,16 +4380,6 @@ return deliverReply(
 );
 }
   
-if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText)) {
-  
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"If it were only scripted, it wouldn't shift when you do."
-      :"Structure exists. But structure isn't the same as predictability."
-  );
-}
 
 /* =========================
    IDENTITY / META QUESTIONS
