@@ -4249,7 +4249,8 @@ if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
 
 if (
   /\b(goa|venice|trip|journey|moment|night|conversation|place)\b/i.test(originalText) &&
-  /^(what|why|how|when|did|does|was|were)/i.test(normalizedText)
+  /^(what|why|how|when|did|does|was|were)/i.test(normalizedText) &&
+  !/^what\s+is\s+this\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
