@@ -4144,7 +4144,7 @@ const structureQuery =
    CLARIFICATION / CONTINUATION INTENT
 ========================= */
 
-if (/^(tell me|explain|can you explain|what do you mean)$/i.test(normalizedText)) {
+if (/^(tell me|explain|explain that|can you explain|what do you mean)$/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
@@ -4301,10 +4301,10 @@ return deliverReply(
 
 if (
  /^what\s+is\s+this\b/i.test(normalizedText) ||
- /^what\s+can\s+we\s+talk\s+about\b/i.test(normalizedText) ||
- /^why\s+are\s+you\s+here\b/i.test(normalizedText) ||
+ /^what\s+can\s+we\s+talk\s+about/i.test(normalizedText) ||
+ /^why\s+are\s+you\s+here/i.test(normalizedText) ||
+ /^why\s+are\s+we\s+having\s+this\s+conversation/i.test(normalizedText) ||
  /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
- /\bwhy\s+are\s+we\s+having\s+this\s+conversation\b/i.test(normalizedText) ||
  /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
  /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText)
 ) {
