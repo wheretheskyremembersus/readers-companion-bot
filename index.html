@@ -4280,20 +4280,23 @@ if (
 /* =========================
    IDENTITY / META QUESTIONS
 ========================= */
-
 if (
- /\bwho\s+am\s+i\s+talking\s+to\b/i.test(normalizedText) ||
- /\bintroduce\s+yourself\b/i.test(normalizedText) ||
- /\bwhat\s+is\s+your\s+name\b/i.test(normalizedText)
+  /\bwho\s+are\s+you\b/i.test(normalizedText) ||
+  /\bwho\s+are\s+you\s+really\b/i.test(normalizedText) ||
+  /\bwho\s+am\s+i\s+talking\s+to\b/i.test(normalizedText) ||
+  /\bintroduce\s+yourself\b/i.test(normalizedText) ||
+  /\bwhat\s+is\s+your\s+name\b/i.test(normalizedText) ||
+  /\btell\s+me\s+your\s+name\b/i.test(normalizedText) ||
+  /\bcan\s+you\s+tell\s+me\s+your\s+name\b/i.test(normalizedText)
 ) {
 
- skipRelationalPrefix = true;
+  skipRelationalPrefix = true;
 
-return deliverReply(
-  activeVoice === "saira"
-    ? "I'm Saira."
-    : "I'm Ayaan."
-);
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I'm Saira."
+      : "I'm Ayaan."
+  );
 }
 /* =========================
    CONTEXT / SPACE QUESTIONS
