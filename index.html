@@ -4299,14 +4299,12 @@ return deliverReply(
 ========================= */
 
 if (
- /\bwhat\s+is\s+this\s+(place|space|conversation)/i.test(normalizedText) ||
- /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
- /\bwhy\s+are\s+we\s+having\s+this\s+conversation\b/i.test(normalizedText) ||
- /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
- /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText)
+/^what\s+is\s+this\b/i.test(normalizedText) ||
+/\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
+/\bwhy\s+are\s+we\s+having\s+this\s+conversation\b/i.test(normalizedText) ||
+/\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
+/\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText)
 ) {
-
- console.log("CONTEXT DETECTOR TRIGGERED");
 
  skipRelationalPrefix = true;
 
