@@ -4306,6 +4306,8 @@ if (
  /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText)
 ) {
 
+ console.log("CONTEXT DETECTOR TRIGGERED");
+
  skipRelationalPrefix = true;
 
  return deliverReply(
