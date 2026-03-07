@@ -4496,24 +4496,25 @@ if (
   /\bhow\s+would\s+you\s+compare\b/i.test(normalizedText) ||
   /\bhow\s+do\s+you\s+decide\b/i.test(normalizedText) ||
   /\bhow\s+do\s+you\s+handle\b/i.test(normalizedText) ||
-  /\bdo\s+you\s+think\s+stories\b/i.test(normalizedText) ||
   /\bwhat\s+is\s+the\s+difference\b/i.test(normalizedText) ||
-  /\bcan\s+you\s+recognise\b/i.test(normalizedText)
+  /\bdo\s+you\s+think\s+stories\b/i.test(normalizedText) ||
+  /\bcan\s+you\s+recognise\b/i.test(normalizedText) ||
+  /\bcuriosity\s+and\s+intrusion\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
 
   const responses = {
     saira: [
-      "Some truths appear only through the stories we tell.",
-      "Understanding often arrives later than the experience itself.",
-      "Some meanings take time to become clear."
+      "Understanding often arrives after the moment has passed.",
+      "Some meanings take time before they reveal themselves.",
+      "Not everything needs to be explained immediately."
     ],
 
     ayaan: [
-      "Stories sometimes reveal truths we couldn't face directly.",
-      "The difference often becomes clearer only in hindsight.",
-      "Reflection changes how we interpret experience."
+      "Perspective often changes the meaning of what we experienced.",
+      "Some truths only become visible through reflection.",
+      "Time has a way of clarifying what once seemed uncertain."
     ]
   };
 
