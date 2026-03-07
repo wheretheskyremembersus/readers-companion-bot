@@ -4295,6 +4295,26 @@ return deliverReply(
 );
 }
 /* =========================
+   CONTEXT / SPACE QUESTIONS
+========================= */
+
+if (
+ /\bwhat\s+is\s+this\s+(place|space|conversation)\b/i.test(normalizedText) ||
+ /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
+ /\bwhy\s+are\s+we\s+having\s+this\s+conversation\b/i.test(normalizedText) ||
+ /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
+ /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText)
+) {
+
+ skipRelationalPrefix = true;
+
+ return deliverReply(
+   activeVoice === "saira"
+   ? "This space lets you explore our story through conversation rather than explanation."
+   : "This conversation lets the story unfold through the questions you choose to ask."
+ );
+}
+/* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
 
