@@ -4307,7 +4307,9 @@ if (
 if (
   /\b(goa|venice|trip|journey|moment|night|conversation|place)\b/i.test(originalText) &&
   /^(what|why|how|when|did|does|was|were)/i.test(normalizedText) &&
-  !/^what\s+is\s+this\b/i.test(normalizedText)
+  !/\bmean\b/i.test(normalizedText) &&
+  !/\bmattered\b/i.test(normalizedText) &&
+  !/\bimportant\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
