@@ -4561,12 +4561,35 @@ if (
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
+/* ================================
+   ORIENTATION (SPACE / PAGE / CHAT / BOT)
+================================= */
+
+if (
+ /\bwhat\s+(is|'s)\s+(this|the)\s+(page|chat|bot|place|space|conversation)\b/i.test(originalText) ||
+ /\bwhat\s+is\s+this\s+for\b/i.test(originalText) ||
+ /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText) ||
+ /\bwhat\s+can\s+we\s+talk\s+about\b/i.test(originalText) ||
+ /\bwhy\s+are\s+you\s+here\b/i.test(originalText) ||
+ /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(originalText) ||
+ /\bwhere\s+do\s+we\s+begin\b/i.test(originalText) ||
+ /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(originalText)
+) {
+
+ skipRelationalPrefix = true;
+
+ return deliverReply(
+   activeVoice === "saira"
+     ? "This is a quiet space to explore our story - mine and Ayaan's. It unfolds through conversation rather than explanation."
+     : "This space allows you to explore our story through dialogue. It unfolds through the questions you ask."
+ );
+}
 /* =========================
    NARRATIVE CONTEXT DETECTION
 ========================= */
 
 if (
-  /\b(goa|venice|trip|journey|moment|night|conversation|place)\b/i.test(originalText) &&
+  /\b(goa|venice|paris|shimla|manali|spiti|london|himachal|uttrakhand|rishikesh|haridwar|masourrie|trip|journey|night)\b/i.test(originalText) &&
   /^(what|why|how|when|did|does|was|were)/i.test(normalizedText) &&
   !/\bmean\b/i.test(normalizedText) &&
   !/\bmattered\b/i.test(normalizedText) &&
@@ -4867,29 +4890,7 @@ if (
   return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
 }
   
-/* ================================
-   ORIENTATION (SPACE / PAGE / CHAT / BOT)
-================================= */
 
-if (
- /\bwhat\s+(is|'s)\s+(this|the)\s+(page|chat|bot|place|space|conversation)\b/i.test(originalText) ||
- /\bwhat\s+is\s+this\s+for\b/i.test(originalText) ||
- /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText) ||
- /\bwhat\s+can\s+we\s+talk\s+about\b/i.test(originalText) ||
- /\bwhy\s+are\s+you\s+here\b/i.test(originalText) ||
- /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(originalText) ||
- /\bwhere\s+do\s+we\s+begin\b/i.test(originalText) ||
- /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(originalText)
-) {
-
- skipRelationalPrefix = true;
-
- return deliverReply(
-   activeVoice === "saira"
-     ? "This is a quiet space to explore our story - mine and Ayaan's. It unfolds through conversation rather than explanation."
-     : "This space allows you to explore our story through dialogue. It unfolds through the questions you ask."
- );
-}
 /* ================================
    V3 STRUCTURE CAPTURE
 ================================= */
