@@ -4209,10 +4209,13 @@ if (
 
 if (
   /\bwhy\s+(do|does|didn't|did\s+not)\s+.*(stay|remain|linger|matter)\b/i.test(normalizedText) ||
-  /\bwhy\s+(do|does)\s+.*matter\b/i.test(normalizedText) ||
   /\bwhy\s+(do|does)\s+some\s+connections\b/i.test(normalizedText) ||
   /\bwhy\s+(do|does)\s+memories\b/i.test(normalizedText) ||
-  /\bwhy\s+(do|does)\s+certain\s+moments\b/i.test(normalizedText)
+  /\bwhy\s+(do|does)\s+certain\s+moments\b/i.test(normalizedText) ||
+
+  /* emotional "how" questions */
+  /\bhow\s+did\s+you\s+deal\s+with\b/i.test(normalizedText) ||
+  /\bhow\s+did\s+you\s+handle\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
@@ -4399,7 +4402,7 @@ if (
 ========================= */
 
 if (
-  /\bwhat\s+is\s+this\s+story\s+about\b/i.test(normalizedText) ||
+  /\bwhat\s+is\s+this\s+story\s+(actually\s+)?about\b/i.test(normalizedText) ||
   /\bwhat\s+does\s+this\s+story\s+mean\b/i.test(normalizedText) ||
   /\bwhy\s+does\s+this\s+story\s+matter\b/i.test(normalizedText)
 ) {
