@@ -4341,6 +4341,7 @@ if (
 
 if (
   openMatch &&
+  !/^what\s+is\s+this\b/i.test(normalizedText) &&
   !structureQuery &&
   !/\bchapters?\b/i.test(originalText) &&
   !/\bpages?\b/i.test(originalText) &&
