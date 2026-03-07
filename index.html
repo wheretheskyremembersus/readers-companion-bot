@@ -4338,10 +4338,8 @@ if (
   !orientationGuard.test(normalizedText)
 ) {
   
- openMatch = !/^what\s+is\s+this\b/i.test(normalizedText)
-  ? normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i)
-  : null;
-
+ openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
+}
 if (
   openMatch &&
   !structureQuery &&
