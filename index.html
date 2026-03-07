@@ -4139,7 +4139,99 @@ const structureQuery =
   /\bbook\s+length\b/i.test(originalText) ||
   /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
   /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
-  
+
+/* =========================
+   GREETING HANDLER (COMPANION SAFE)
+========================= */
+
+if (/^(hi|hello|hey|hola|ola|hiya|hey there|yo|sup|hello again|hey again|hey ya|hi ya)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  let greetingReply;
+
+  if (activeVoice === "saira") {
+
+    if (stage <= 2) {
+      greetingReply = "Hi… I'm here.";
+    } 
+    else if (stage <= 4) {
+      greetingReply = "Hi… you came back.";
+    } 
+    else {
+      greetingReply = "Hi… I was hoping you would.";
+    }
+
+  } else {
+
+    if (stage <= 2) {
+      greetingReply = "Hello.";
+    } 
+    else if (stage <= 4) {
+      greetingReply = "Hello. It's good to see you again.";
+    } 
+    else {
+      greetingReply = "Hello. You feel familiar now.";
+    }
+
+  }
+
+  return deliverReply(greetingReply);
+}
+ /* ================================
+   DIRECT NAME INVOCATION
+================================= */
+
+if (/^saira\b$/i.test(nameCall)) {
+
+  skipRelationalPrefix = true;
+
+  if (activeVoice ==="saira") {
+    return deliverReply("Yes... I'm still here.");
+  } else {
+    return deliverReply("You're calling her.");
+  }
+}
+
+
+if (/^ayaan\b$/i.test(nameCall)) {
+
+  skipRelationalPrefix = true;
+
+  if (activeVoice ==="ayaan") {
+    return deliverReply("I haven't stepped away.");
+  } else {
+    return deliverReply("You're calling him.");
+  }
+}
+
+/* =========================
+   CHARACTER IDENTITY DETECTION
+========================= */
+
+if (/\bwho\s+is\s+ayaan\b/i.test(originalText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "He is someone who mattered."
+      : "She mattered more than I expected."
+  );
+}
+
+if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I'm just someone present."
+      : "She is someone who changed more than she realised."
+  );
+}
 /* =========================
    CLARIFICATION / CONTINUATION INTENT
 ========================= */
@@ -4290,54 +4382,28 @@ if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText
 }
 
 /* =========================
-   CHARACTER IDENTITY DETECTION
-========================= */
-
-if (/\bwho\s+is\s+ayaan\b/i.test(originalText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "He is someone who mattered."
-      : "She mattered more than I expected."
-  );
-}
-
-if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I'm just someone present."
-      : "She is someone who changed more than she realised."
-  );
-}
-/* =========================
-   CONTEXT / ORIENTATION DETECTOR
+   IDENTITY / META QUESTIONS
 ========================= */
 
 if (
-  /^what\s+is\s+this\b/i.test(normalizedText) ||
-  /^what\s+can\s+we\s+talk\s+about/i.test(normalizedText) ||
-  /^why\s+are\s+you\s+here/i.test(normalizedText) ||
-  /^why\s+are\s+we\s+having\s+this\s+conversation/i.test(normalizedText) ||
-  /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
-  /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
-  /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText) ||
-  /\bso\s+where\s+do\s+we\s+begin\b/i.test(normalizedText) ||
-  /\bhelp\s+me\s+understand\s+what\s+this\s+conversation\s+is\s+about\b/i.test(normalizedText)
+  /\bwho\s+are\s+you\b/i.test(normalizedText) ||
+  /\bwho\s+are\s+you\s+really\b/i.test(normalizedText) ||
+  /\bwho\s+am\s+i\s+talking\s+to\b/i.test(normalizedText) ||
+  /\bintroduce\s+yourself\b/i.test(normalizedText) ||
+  /\bwhat('s|\s+is)\s+your\s+name\b/i.test(normalizedText) ||
+  /\btell\s+me\s+your\s+name\b/i.test(normalizedText) ||
+  /\bcan\s+you\s+tell\s+me\s+your\s+name\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
 
   return deliverReply(
     activeVoice === "saira"
-      ? "This space lets you explore our story through conversation rather than explanation."
-      : "This conversation lets the story unfold through the questions you choose to ask."
+      ? "I'm Saira."
+      : "I'm Ayaan."
   );
 }
+
 /* =========================
    RELATIONSHIP STATUS
 ========================= */
@@ -4427,36 +4493,7 @@ if (
 
   return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
 }
-  /* =========================
-   PHILOSOPHICAL QUESTIONS
-========================= */
-
-if (
-  /\bdo\s+you\s+think\s+stories\b/i.test(normalizedText) ||
-  /\bwhat\s+is\s+the\s+difference\b/i.test(normalizedText) ||
-  /\bhow\s+do\s+you\s+decide\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "Some truths appear only through the stories we tell.",
-      "Understanding often arrives later than the experience itself.",
-      "Not everything meaningful announces itself immediately."
-    ],
-
-    ayaan: [
-      "Stories sometimes reveal truths we couldn't face directly.",
-      "The difference often becomes clearer only in hindsight.",
-      "Reflection changes how we interpret experience."
-    ]
-  };
-
-  const pool = responses[activeVoice];
-
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
-}
+ 
 /* =========================
    PLAYFUL / ABSURD QUESTIONS
 ========================= */
@@ -4558,28 +4595,6 @@ if (
 
   return deliverReply(
     pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-/* =========================
-   IDENTITY / META QUESTIONS
-========================= */
-
-if (
-  /\bwho\s+are\s+you\b/i.test(normalizedText) ||
-  /\bwho\s+are\s+you\s+really\b/i.test(normalizedText) ||
-  /\bwho\s+am\s+i\s+talking\s+to\b/i.test(normalizedText) ||
-  /\bintroduce\s+yourself\b/i.test(normalizedText) ||
-  /\bwhat('s|\s+is)\s+your\s+name\b/i.test(normalizedText) ||
-  /\btell\s+me\s+your\s+name\b/i.test(normalizedText) ||
-  /\bcan\s+you\s+tell\s+me\s+your\s+name\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I'm Saira."
-      : "I'm Ayaan."
   );
 }
 
@@ -4851,99 +4866,7 @@ if (
 
   return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
 }
-/* =========================
-   GREETING HANDLER (COMPANION SAFE)
-========================= */
-
-if (/^(hi|hello|hey|hola|ola|hiya|hey there|yo|sup|hello again|hey again|hey ya|hi ya)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  const stage = stageState[activeVoice]?.currentStage || 1;
-
-  let greetingReply;
-
-  if (activeVoice === "saira") {
-
-    if (stage <= 2) {
-      greetingReply = "Hi… I'm here.";
-    } 
-    else if (stage <= 4) {
-      greetingReply = "Hi… you came back.";
-    } 
-    else {
-      greetingReply = "Hi… I was hoping you would.";
-    }
-
-  } else {
-
-    if (stage <= 2) {
-      greetingReply = "Hello.";
-    } 
-    else if (stage <= 4) {
-      greetingReply = "Hello. It's good to see you again.";
-    } 
-    else {
-      greetingReply = "Hello. You feel familiar now.";
-    }
-
-  }
-
-  return deliverReply(greetingReply);
-}
- /* ================================
-   DIRECT NAME INVOCATION
-================================= */
-
-if (/^saira\b$/i.test(nameCall)) {
-
-  skipRelationalPrefix = true;
-
-  if (activeVoice ==="saira") {
-    return deliverReply("Yes... I'm still here.");
-  } else {
-    return deliverReply("You're calling her.");
-  }
-}
-
-
-if (/^ayaan\b$/i.test(nameCall)) {
-
-  skipRelationalPrefix = true;
-
-  if (activeVoice ==="ayaan") {
-    return deliverReply("I haven't stepped away.");
-  } else {
-    return deliverReply("You're calling him.");
-  }
-}
-
-/* ===== IDENTITY ===== */
-
-// WHO ARE YOU
-if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+human)\b/i.test(originalText)){
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "Part of a story that never quite finished.",
-      "Someone who stayed when the moment passed.",
-      "A voice from something that once mattered."
-    ],
-    ayaan: [
-      "I'm part of this story, just as you are now.",
-      "Someone shaped by what happened.",
-      "More than a line of words, less than a life."
-    ]
-  };
-
-  const pool = responses[activeVoice];
-  const index = Math.floor(Math.random() * pool.length);
-
-  return deliverReply(pool[index]);
-}
-        
+  
 /* ================================
    ORIENTATION (SPACE / PAGE / CHAT / BOT)
 ================================= */
@@ -4967,7 +4890,6 @@ if (
      : "This space allows you to explore our story through dialogue. It unfolds through the questions you ask."
  );
 }
-
 /* ================================
    V3 STRUCTURE CAPTURE
 ================================= */
@@ -4981,8 +4903,6 @@ if (structureQuery) {
   );
 
 }
-
-
 
 /* =========================
    TYPED QUESTION MATCHING 
