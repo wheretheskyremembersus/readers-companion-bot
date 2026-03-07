@@ -4242,7 +4242,30 @@ if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
       : "She is someone who changed more than she realised."
   );
 }
+/* =========================
+   CONTEXT / ORIENTATION DETECTOR
+========================= */
 
+if (
+  /^what\s+is\s+this\b/i.test(normalizedText) ||
+  /^what\s+can\s+we\s+talk\s+about/i.test(normalizedText) ||
+  /^why\s+are\s+you\s+here/i.test(normalizedText) ||
+  /^why\s+are\s+we\s+having\s+this\s+conversation/i.test(normalizedText) ||
+  /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
+  /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
+  /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText) ||
+  /\bso\s+where\s+do\s+we\s+begin\b/i.test(normalizedText) ||
+  /\bhelp\s+me\s+understand\s+what\s+this\s+conversation\s+is\s+about\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "This space lets you explore our story through conversation rather than explanation."
+      : "This conversation lets the story unfold through the questions you choose to ask."
+  );
+}
 /* =========================
    NARRATIVE CONTEXT DETECTION
 ========================= */
@@ -4298,30 +4321,7 @@ if (
       : "I'm Ayaan."
   );
 }
-/* =========================
-   CONTEXT / ORIENTATION DETECTOR
-========================= */
 
-if (
-  /^what\s+is\s+this\b/i.test(normalizedText) ||
-  /^what\s+can\s+we\s+talk\s+about/i.test(normalizedText) ||
-  /^why\s+are\s+you\s+here/i.test(normalizedText) ||
-  /^why\s+are\s+we\s+having\s+this\s+conversation/i.test(normalizedText) ||
-  /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
-  /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
-  /\bwhere\s+does\s+this\s+story\s+begin\b/i.test(normalizedText) ||
-  /\bso\s+where\s+do\s+we\s+begin\b/i.test(normalizedText) ||
-  /\bhelp\s+me\s+understand\s+what\s+this\s+conversation\s+is\s+about\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "This space lets you explore our story through conversation rather than explanation."
-      : "This conversation lets the story unfold through the questions you choose to ask."
-  );
-}
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
