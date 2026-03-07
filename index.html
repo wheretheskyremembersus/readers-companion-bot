@@ -4167,7 +4167,42 @@ if (/^(tell me|explain|explain that|can you explain|what do you mean)$/i.test(no
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
-  
+
+/* =========================
+   INTERPRETATION / MEANING INTENT
+========================= */
+
+if (
+  /\bwhat\s+does\s+.*\s+mean\b/i.test(normalizedText) ||
+  /\bwhat\s+does\s+that\s+place\s+mean\b/i.test(normalizedText) ||
+  /\bwhat\s+stayed\s+with\s+you\b/i.test(normalizedText) ||
+  /\bwhat\s+mattered\s+most\b/i.test(normalizedText) ||
+  /\bwhat\s+made\s+that\s+moment\s+important\b/i.test(normalizedText) ||
+  /\bwhat\s+part\s+of\s+the\s+story\s+.*misunderstand\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Some meanings settle quietly over time.",
+      "It wasn't obvious then, but it stayed with me.",
+      "Certain moments carry more weight long after they pass."
+    ],
+
+    ayaan: [
+      "The significance became clearer only later.",
+      "Some experiences reshape you before you fully understand them.",
+      "What mattered wasn't obvious at first."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
 /* =========================
    STORY CONTINUATION INTENT
 ========================= */
