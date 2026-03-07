@@ -4630,19 +4630,20 @@ if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+hu
 ================================= */
 
 if (
-  /\bwhat\s+(is|'s)\s+(this|the)\s+(page|chat|bot|place|space|conversation|website)\b/i.test(originalText) ||
-  /\bwhat\s+is\s+this\s+for\b/i.test(originalText) ||
-  /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText) ||
-  /\bwhat\s+is\s+this\s+supposed\s+to\s+be\b/i.test(originalText)
+ /\bwhat\s+(is|'s)\s+(this|the)\s+(page|chat|bot|place|space|conversation)\b/i.test(originalText) ||
+ /\bwhat\s+is\s+this\s+for\b/i.test(originalText) ||
+ /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText) ||
+ /\bwhat\s+can\s+we\s+talk\s+about\b/i.test(originalText) ||
+ /\bwhy\s+are\s+you\s+here\b/i.test(originalText)
 ) {
 
-  skipRelationalPrefix = true;
+ skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice ==="saira"
-      ?"This is a quiet space to explore our story - mine and ayaan's. It unfolds through conversation rather than explanation. If you're unsure where to begin, the questions resting in the dock below can guide you gently."
-      :"This space allows you to explore our story through dialogue. It's not built for quick answers - it's built for reflection. If you prefer structure, the dock questions can guide you."
-  );
+ return deliverReply(
+   activeVoice === "saira"
+     ? "This is a quiet space to explore our story - mine and Ayaan's. It unfolds through conversation rather than explanation."
+     : "This space allows you to explore our story through dialogue. It unfolds through the questions you ask."
+ );
 }
 
 /* ================================
