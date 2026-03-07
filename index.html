@@ -4215,7 +4215,32 @@ const structureQuery =
   /\bbook\s+length\b/i.test(originalText) ||
   /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
   /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
-  
+
+/* =========================
+   CHARACTER IDENTITY DETECTION
+========================= */
+
+if (/\bwho\s+is\s+ayaan\b/i.test(originalText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "He is someone who mattered."
+      : "She mattered more than I expected."
+  );
+}
+
+if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I'm just someone present."
+      : "She is someone who changed more than she realised."
+  );
+}
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
@@ -4226,8 +4251,19 @@ const emotionalGuard =
   /\b(love|miss|regret|hurt|fault|fear|hope|distance|pride|silence|timing|protect|leave|wait|unfinished|end|over|together)\b/i;
 
 const identityGuard =
-  /\b(who\s+are\s+you|what\s+are\s+you|who\s+are\s+you\s+really)\b/i;
-
+  const identityGuard =
+/\b(
+who\s+are\s+you|
+who\s+are\s+you\s+really|
+what\s+are\s+you|
+who\s+am\s+i\s+talking\s+to|
+what\s+is\s+your\s+name|
+tell\s+me\s+your\s+name|
+introduce\s+yourself|
+are\s+you\s+real|
+are\s+you\s+a\s+character
+)\b/i;
+  
 const interpretationGuard =
   /\b(are you saying|do you mean|what do you mean|are you suggesting|so you're saying)\b/i;
 
@@ -4429,7 +4465,12 @@ if (
       openBank[mappedType][stage] ||
       openBank[mappedType][1];
 
-    return deliverReply(selfPrefix + answer);
+    let finalAnswer = answer;
+
+if (Array.isArray(answer)) {
+  finalAnswer = answer[Math.floor(Math.random() * answer.length)];
+}
+    return deliverReply(selfPrefix + finalAnswer);
   }
 }
 /* ================================
@@ -4561,15 +4602,15 @@ if (/\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|are\s+you\s+hu
   return deliverReply(pool[index]);
 }
         
-
 /* ================================
    ORIENTATION (SPACE / PAGE / CHAT / BOT)
 ================================= */
 
 if (
-  /\bwhat\s+(is|'s)\s+(this|the)\s+(page|chat|bot)\b/i.test(originalText) ||
+  /\bwhat\s+(is|'s)\s+(this|the)\s+(page|chat|bot|place|space|conversation|website)\b/i.test(originalText) ||
   /\bwhat\s+is\s+this\s+for\b/i.test(originalText) ||
-  /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText)
+  /\bwhat\s+is\s+this\s+all\s+about\b/i.test(originalText) ||
+  /\bwhat\s+is\s+this\s+supposed\s+to\s+be\b/i.test(originalText)
 ) {
 
   skipRelationalPrefix = true;
