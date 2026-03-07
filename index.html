@@ -4304,10 +4304,14 @@ const identityGuard = /\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+
 const interpretationGuard =
   /\b(are you saying|do you mean|what do you mean|are you suggesting|so you're saying)\b/i;
 
+const orientationGuard =
+ /\b(place|space|conversation|talk about|why are you here)\b/i;
+
 if (
   !emotionalGuard.test(normalizedText) &&
   !identityGuard.test(normalizedText) &&
-  !interpretationGuard.test(normalizedText)
+  !interpretationGuard.test(normalizedText) &&
+  !orientationGuard.test(normalizedText)
 ) {
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
