@@ -4130,6 +4130,17 @@ if (/go back/i.test(originalText)) {
 }      
 
 /* =========================
+   STRUCTURE QUERY DETECTOR
+========================= */
+
+const structureQuery =
+  /\bchapters?\b/i.test(originalText) ||
+  /\bpages?\b/i.test(originalText) ||
+  /\bbook\s+length\b/i.test(originalText) ||
+  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
+  /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
+  
+/* =========================
    CLARIFICATION / CONTINUATION INTENT
 ========================= */
 
@@ -4205,16 +4216,6 @@ if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText
       :"Structure exists. But structure isn't the same as predictability."
   );
 }
-/* =========================
-   STRUCTURE QUERY DETECTOR
-========================= */
-
-const structureQuery =
-  /\bchapters?\b/i.test(originalText) ||
-  /\bpages?\b/i.test(originalText) ||
-  /\bbook\s+length\b/i.test(originalText) ||
-  /\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) ||
-  /\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText);
 
 /* =========================
    CHARACTER IDENTITY DETECTION
@@ -4250,9 +4251,8 @@ let openMatch = null;
 const emotionalGuard =
   /\b(love|miss|regret|hurt|fault|fear|hope|distance|pride|silence|timing|protect|leave|wait|unfinished|end|over|together)\b/i;
 
-
 const identityGuard = /\b(who\s+are\s+you|who\s+are\s+you\s+really|what\s+are\s+you|who\s+am\s+i\s+talking\s+to|what\s+is\s+your\s+name|tell\s+me\s+your\s+name|introduce\s+yourself|are\s+you\s+real|are\s+you\s+a\s+character)\b/i;
-  
+
 const interpretationGuard =
   /\b(are you saying|do you mean|what do you mean|are you suggesting|so you're saying)\b/i;
 
