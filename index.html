@@ -4337,7 +4337,11 @@ if (
   !interpretationGuard.test(normalizedText) &&
   !orientationGuard.test(normalizedText)
 ) {
+  
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
+
+if (/^what\s+is\s+this\b/i.test(normalizedText)) {
+  openMatch = null;
 }
 
 if (
