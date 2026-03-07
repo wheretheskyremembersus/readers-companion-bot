@@ -4299,9 +4299,7 @@ return deliverReply(
 ========================= */
 
 if (
- /\bwhat\s+is\s+this\s+(place|space|conversation)\b/i.test(normalizedText) ||
- /\bwhat\s+is\s+this\s+place\s+supposed\s+to\s+be\b/i.test(normalizedText) ||
- /\bwhat\s+is\s+this\s+conversation\s+about\b/i.test(normalizedText) ||
+ /\bwhat\s+is\s+this\s+(place|space|conversation)(\s+.*)?$/i.test(normalizedText) ||
  /\bwhat\s+are\s+we\s+doing\s+here\b/i.test(normalizedText) ||
  /\bwhy\s+are\s+we\s+having\s+this\s+conversation\b/i.test(normalizedText) ||
  /\bhow\s+should\s+i\s+talk\s+to\s+you\b/i.test(normalizedText) ||
@@ -4312,8 +4310,8 @@ if (
 
  return deliverReply(
    activeVoice === "saira"
-   ? "This space lets you explore our story through conversation rather than explanation."
-   : "This conversation lets the story unfold through the questions you choose to ask."
+     ? "This space lets you explore our story through conversation rather than explanation."
+     : "This conversation lets the story unfold through the questions you choose to ask."
  );
 }
 /* =========================
