@@ -4277,6 +4277,20 @@ if (
   );
 }
 /* =========================
+   IDENTITY / META QUESTIONS
+========================= */
+
+if (
+ /\bwho\s+am\s+i\s+talking\s+to\b/i.test(normalizedText) ||
+ /\bintroduce\s+yourself\b/i.test(normalizedText) ||
+ /\bwhat\s+is\s+your\s+name\b/i.test(normalizedText)
+) {
+
+ skipRelationalPrefix = true;
+
+ return deliverReply("I'm Saira.");
+}
+/* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
 
