@@ -4288,7 +4288,11 @@ if (
 
  skipRelationalPrefix = true;
 
- return deliverReply("I'm Saira.");
+return deliverReply(
+  activeVoice === "saira"
+    ? "I'm Saira."
+    : "I'm Ayaan."
+);
 }
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
