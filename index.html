@@ -4177,7 +4177,8 @@ if (
   /\bwhat\s+stayed\s+with\s+you\b/i.test(normalizedText) ||
   /\bwhat\s+mattered\s+most\b/i.test(normalizedText) ||
   /\bwhat\s+made\s+.*\s+important\b/i.test(normalizedText) ||
-  /\bwhat\s+part\s+of\s+the\s+story\b/i.test(normalizedText)
+  /\bwhat\s+part\s+of\s+the\s+story\b/i.test(normalizedText) ||
+  /\bwhat\s+about\s+.*\s+stayed\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
