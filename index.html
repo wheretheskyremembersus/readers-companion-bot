@@ -4242,6 +4242,40 @@ if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
       : "She is someone who changed more than she realised."
   );
 }
+
+/* =========================
+   NARRATIVE CONTEXT DETECTION
+========================= */
+
+if (
+  /\b(goa|venice|trip|journey|moment|night|conversation|place)\b/i.test(originalText) &&
+  /^(what|why|how|when|did|does|was|were)/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "That moment carried more weight than it seemed at first.",
+      "It began quietly, before either of us understood where it would lead.",
+      "Some places stay with you longer than the moment itself.",
+      "It was one of those moments that only reveals its meaning later."
+    ],
+
+    ayaan: [
+      "The significance wasn't obvious at the time.",
+      "Some moments only reveal their structure in hindsight.",
+      "It seemed ordinary then. It wasn't.",
+      "The impact became clearer long after the moment passed."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
 /* =========================
    OPEN QUESTION ROUTER (V3 AMBIGUOUS)
 ========================= */
