@@ -4563,7 +4563,15 @@ const orientationGuard =
 if (
   !emotionalGuard.test(normalizedText) &&
   !identityGuard.test(normalizedText) &&
-  !interpretationGuard.test(normalizedText)
+  !interpretationGuard.test(normalizedText) &&
+  !orientationGuard.test(normalizedText) &&
+  !/\bremember\b/i.test(normalizedText) &&
+  !/\bstory\b/i.test(normalizedText) &&
+  !/\bthink\s+about\b/i.test(normalizedText) &&
+  !/\bconnections?\b/i.test(normalizedText) &&
+  !/\bmemories?\b/i.test(normalizedText) &&
+  !/\bpotato\b/i.test(normalizedText) &&
+  !/\brobots?\b/i.test(normalizedText)
 ) {
   openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
