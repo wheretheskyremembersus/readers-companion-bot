@@ -4334,12 +4334,11 @@ const orientationGuard =
 if (
   !emotionalGuard.test(normalizedText) &&
   !identityGuard.test(normalizedText) &&
-  !interpretationGuard.test(normalizedText) &&
-  !orientationGuard.test(normalizedText)
+  !interpretationGuard.test(normalizedText)
 ) {
-  
- openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
+  openMatch = normalizedText.match(/^(why|how|when|where|what|will|would|did|do|does|is|are|was|were|can|could)\b/i);
 }
+
 if (
   openMatch &&
   !structureQuery &&
