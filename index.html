@@ -4204,6 +4204,40 @@ if (
   );
 }
 /* =========================
+   REFLECTION / EMOTIONAL QUESTIONS
+========================= */
+
+if (
+  /\bwhy\s+do\s+.*(stay|remain|linger)\b/i.test(normalizedText) ||
+  /\bwhy\s+does\s+.*matter\b/i.test(normalizedText) ||
+  /\bwhy\s+do\s+some\s+connections\b/i.test(normalizedText) ||
+  /\bwhy\s+do\s+memories\b/i.test(normalizedText) ||
+  /\bwhy\s+do\s+certain\s+moments\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "Some things stay with you quietly.",
+      "Not everything fades just because time passes.",
+      "When something matters, it doesn't disappear easily."
+    ],
+
+    ayaan: [
+      "Some experiences leave a mark long after they pass.",
+      "The mind doesn't always let go of what mattered.",
+      "Certain moments remain because they shaped what followed."
+    ]
+  };
+
+  const pool = responses[activeVoice];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+/* =========================
    STORY CONTINUATION INTENT
 ========================= */
 
