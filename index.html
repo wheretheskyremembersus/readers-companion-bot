@@ -4174,11 +4174,10 @@ if (/^(tell me|explain|explain that|can you explain|what do you mean)$/i.test(no
 
 if (
   /\bwhat\s+does\s+.*\s+mean\b/i.test(normalizedText) ||
-  /\bwhat\s+does\s+that\s+place\s+mean\b/i.test(normalizedText) ||
   /\bwhat\s+stayed\s+with\s+you\b/i.test(normalizedText) ||
   /\bwhat\s+mattered\s+most\b/i.test(normalizedText) ||
-  /\bwhat\s+made\s+that\s+moment\s+important\b/i.test(normalizedText) ||
-  /\bwhat\s+part\s+of\s+the\s+story\s+.*misunderstand\b/i.test(normalizedText)
+  /\bwhat\s+made\s+.*\s+important\b/i.test(normalizedText) ||
+  /\bwhat\s+part\s+of\s+the\s+story\b/i.test(normalizedText)
 ) {
 
   skipRelationalPrefix = true;
