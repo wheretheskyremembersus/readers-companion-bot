@@ -7423,15 +7423,13 @@ if (unsafeDetected) {
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
 
-const wordCount = originalText.trim().split(/\s+/).length;
-
-if (wordCount >= 5 && tollState?.[activeVoice]) {
+if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
   tollState[activeVoice].freeCount++;
 }
 
 const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-if (freeProgress >= 10) {
+if (freeProgress >= 20) {
   tollState[activeVoice].unlocked = true;
 
   if (!transitionAcknowledged?.[activeVoice]) {
