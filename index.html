@@ -2104,24 +2104,28 @@ if (interactionLocked) return;
 
 let normalizedText = normalizeInput(originalText);
 
+/* DEBUG TRACE */
 console.log("INPUT:", normalizedText);
 console.log("LAST:", lastUserInput[activeVoice]);
 console.log("COUNT:", repetitionCount[activeVoice]);
-  
+
 /* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
 const repeatKey = normalizedText;
 
+// Detect repetition
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
 } else {
   repetitionCount[activeVoice] = 1;
 }
 
+// Store last input
 lastUserInput[activeVoice] = repeatKey;
 
+// Trigger repetition response on second identical message
 if (repetitionCount[activeVoice] >= 2) {
 
   skipRelationalPrefix = true;
@@ -2148,6 +2152,7 @@ if (repetitionCount[activeVoice] >= 2) {
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
+
 const lower = normalizedText;
 const nameCall = normalizedText;
 
