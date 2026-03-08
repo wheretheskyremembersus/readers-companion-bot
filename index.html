@@ -2104,6 +2104,10 @@ if (interactionLocked) return;
 
 let normalizedText = normalizeInput(originalText);
 
+console.log("INPUT:", normalizedText);
+console.log("LAST:", lastUserInput[activeVoice]);
+console.log("COUNT:", repetitionCount[activeVoice]);
+  
 /* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
