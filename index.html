@@ -4021,6 +4021,31 @@ if (/\b(happy|hurt|regret|fault|over him|over her|guilty)\b/i.test(normalizedTex
     );
   }
 }
+
+function processInput(text, originalText) {
+
+  const normalizedText = normalizeInput(originalText);
+
+  /* ================================
+     HARD PARTITION
+  ================================= */
+
+  if (tollState?.[activeVoice]?.unlocked === true) {
+
+    const normalized = normalizeInput(originalText);
+
+    const isQuestion =
+      /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
+      .test(normalized);
+
+    const detected = detectEmotionalPillar(normalized);
+
+    if (!isQuestion && detected && detected.primaryScore >= 3) {
+      return processEmotionalMode(originalText, originalText);
+    }
+
+    return processV4NeutralMode(originalText, originalText);
+  }
 /* ================================
    RELATIONAL LONGING CAPTURE (V3)
 ================================= */
