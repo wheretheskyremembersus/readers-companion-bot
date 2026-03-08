@@ -1102,7 +1102,7 @@ if (
  !emotionalModeActive &&
  relationalPrefix &&
  !skipRelationalPrefix &&
- !greetingPattern.test(replyText)
+ !greetingPattern.test(originalText)
 ) {
  if (!replyText.startsWith(relationalPrefix)) {
   replyText = relationalPrefix + replyText;
