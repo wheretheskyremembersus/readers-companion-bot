@@ -2240,12 +2240,18 @@ V4 EMOTIONAL ENGINE
 function runV4Engine(text, originalText) {
 
   const voice =
-  activeVoice === "saira" || activeVoice === "ayaan"
-    ? activeVoice
-    : "saira";
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  if (!stageState[voice]) {
+    stageState[voice] = { currentStage: 1 };
+  }
+
   if (!v4RotationIndex[voice]) {
-  v4RotationIndex[voice] = {};
-}
+    v4RotationIndex[voice] = {};
+  }
+
   const stage = stageState?.[voice]?.currentStage || 1;
 
   /* =========================
