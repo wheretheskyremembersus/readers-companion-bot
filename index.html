@@ -2270,7 +2270,8 @@ function runV4Engine(text, originalText) {
   if (!stageState[voice]) {
     stageState[voice] = { currentStage: 1 };
   }
-
+  
+if (!v4RotationIndex) v4RotationIndex = {};
   if (!v4RotationIndex[voice]) {
     v4RotationIndex[voice] = {};
   }
