@@ -2100,6 +2100,8 @@ function getSelfReferencePrefix(stage) {
 
 function processInput(userText, originalText) {
 
+if (interactionLocked) return;
+
 let normalizedText = normalizeInput(originalText);
 
 /* =========================
