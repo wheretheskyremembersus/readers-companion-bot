@@ -2270,8 +2270,11 @@ function runV4Engine(text, originalText) {
 
     const targetStage = pillarToStage?.[pillar] || stage;
 
-    if (targetStage > stageState[voice].currentStage) {
-      stageState[voice].currentStage = targetStage;
+    if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
+      if (!stageState) stageState = {};
+if (!stageState[voice]) stageState[voice] = { currentStage: 1 };
+
+stageState[voice].currentStage = targetStage;
     }
 
     const anchor = emotionalAnchors?.[voice]?.[pillar];
