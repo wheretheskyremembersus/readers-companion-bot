@@ -2100,10 +2100,7 @@ function getSelfReferencePrefix(stage) {
 
 function processInput(userText, originalText) {
 
-  let normalizedText = normalizeInput(originalText);
-  const lower = normalizedText;
-  const nameCall = normalizedText;
-
+let normalizedText = normalizeInput(originalText);
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
@@ -2111,33 +2108,10 @@ function processInput(userText, originalText) {
 
 const repeatKey = normalizedText;
 
-// --- Exact repetition
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
 } else {
-
-  // --- Near repeat detection
-  const previous = lastUserInput[activeVoice] || "";
-
-  const wordsA = repeatKey.split(" ");
-  const wordsB = previous.split(" ");
-
-  let match = 0;
-
-  wordsA.forEach(w => {
-    if (wordsB.includes(w)) match++;
-  });
-
-  const similarity =
-    Math.max(wordsA.length, wordsB.length) > 0
-      ? match / Math.max(wordsA.length, wordsB.length)
-      : 0;
-
-  if (similarity >= 0.7) {
-    repetitionCount[activeVoice]++;
-  } else {
-    repetitionCount[activeVoice] = 0;
-  }
+  repetitionCount[activeVoice] = 0;
 }
 
 lastUserInput[activeVoice] = repeatKey;
@@ -2169,6 +2143,10 @@ if (repetitionCount[activeVoice] >= 1) {
   );
 }
 
+/* continue with the rest of the engine */
+
+const lower = normalizedText;
+const nameCall = normalizedText;
 
 /* ================================
    PRONOUN NORMALIZATION
