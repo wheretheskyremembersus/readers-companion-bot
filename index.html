@@ -3293,11 +3293,21 @@ const trimmed = normalizedText.trim();
 
 // Greeting
 if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
+
   skipRelationalPrefix = true;
+
+  if (!sessionUserName) {
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Hi… I'm Saira."
+        : "Hello. I'm Ayaan."
+    );
+  }
+
   return deliverReply(
     activeVoice === "saira"
-      ? "Hi… I'm Saira."
-      : "Hello. I'm Ayaan."
+      ? "Hi again."
+      : "Hello again."
   );
 }
 
