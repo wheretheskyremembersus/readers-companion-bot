@@ -2133,12 +2133,12 @@ if (abuseTracker[activeVoice]?.locked) {
 }
 
  /* ================================
-   V4 UNLOCK CHECK (SAFE VERSION)
+   V4 UNLOCK CHECK
 ================================= */
 
 if (
-  tollState[activeVoice]?.dockCount >= 15 ||
-  tollState[activeVoice]?.freeCount >= 10
+  tollState[activeVoice]?.dockCount >= 20 ||
+  tollState[activeVoice]?.freeCount >= 20
 ) {
   tollState[activeVoice].unlocked = true;
 
