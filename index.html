@@ -2101,19 +2101,43 @@ function getSelfReferencePrefix(stage) {
 function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
-const lower = normalizedText;
-const nameCall = normalizedText;
+  const lower = normalizedText;
+  const nameCall = normalizedText;
+
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
-const repeatKey = normalizeInput(originalText); // raw normalized input
+const repeatKey = normalizedText;
 
+// --- Exact repetition
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
 } else {
-  repetitionCount[activeVoice] = 0;
+
+  // --- Near repeat detection
+  const previous = lastUserInput[activeVoice] || "";
+
+  const wordsA = repeatKey.split(" ");
+  const wordsB = previous.split(" ");
+
+  let match = 0;
+
+  wordsA.forEach(w => {
+    if (wordsB.includes(w)) match++;
+  });
+
+  const similarity =
+    Math.max(wordsA.length, wordsB.length) > 0
+      ? match / Math.max(wordsA.length, wordsB.length)
+      : 0;
+
+  if (similarity >= 0.7) {
+    repetitionCount[activeVoice]++;
+  } else {
+    repetitionCount[activeVoice] = 0;
+  }
 }
 
 lastUserInput[activeVoice] = repeatKey;
@@ -2139,10 +2163,13 @@ if (repetitionCount[activeVoice] >= 1) {
 
   const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
   const pool = repetitionResponses[voice];
-  const reply = pool[Math.floor(Math.random() * pool.length)];
 
-  return deliverReply(reply);
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
 }
+
+
 /* ================================
    PRONOUN NORMALIZATION
 ================================= */
