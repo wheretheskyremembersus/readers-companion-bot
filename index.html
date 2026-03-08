@@ -2202,8 +2202,8 @@ ENGINE PARTITION ROUTER
 (STRICT V3 → V4 ISOLATION)
 ================================= */
 
-if (tollState?.[activeVoice]?.unlocked === true && typeof runV4Engine === "function") {
-  runV4Engine(userText, originalText);
+if (tollState?.[activeVoice]?.unlocked && typeof runV4Engine === "function") {
+  return runV4Engine(userText, originalText);
 }
 
 /* ================================
@@ -2238,7 +2238,7 @@ function runV4Engine(text, originalText) {
 
   const voice = activeVoice || "saira";
   const stage = stageState?.[voice]?.currentStage || 1;
-window.runV4Engine = runV4Engine;
+
   /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -2422,7 +2422,7 @@ window.runV4Engine = runV4Engine;
   return deliverReply(line);
 
 }
-
+window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
