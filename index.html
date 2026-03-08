@@ -2244,6 +2244,10 @@ function runV4Engine(text, originalText) {
       ? activeVoice
       : "saira";
 
+  if (!stageState) {
+    stageState = {};
+  }
+
   if (!stageState[voice]) {
     stageState[voice] = { currentStage: 1 };
   }
