@@ -1092,17 +1092,14 @@ function deliverReply(replyText, callback) {
   replyText = replyText[Math.floor(Math.random() * replyText.length)];
 }
  
- /* =========================
+  /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
-
-const greetingPattern = /^(hi|hello|hey|hola|ola)\b/i;
 
 if (
   !emotionalModeActive &&
   relationalPrefix &&
-  !skipRelationalPrefix &&
-  !greetingPattern.test(lastUserInput || "")
+  !skipRelationalPrefix
 ) {
   if (!replyText.startsWith(relationalPrefix)) {
     replyText = relationalPrefix + replyText;
