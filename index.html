@@ -3901,20 +3901,21 @@ if (isLocationQuery(originalText)) {
   return deliverReply(locationRedirect(activeVoice));
 }
 /* ================================
-   EMOTIONAL ROUTING
+   V4 PARTITION ROUTER
 ================================= */
 
 if (tollState[activeVoice]?.unlocked === true) {
 
-  const softDetected = detectEmotionalPillar(normalizedText);
+  const normalized = normalizeInput(originalText);
+  const detected = detectEmotionalPillar(normalized);
 
-  if (softDetected && softDetected.primaryScore >= 3) {
-    return processEmotionalMode(userText, originalText);
+  // Emotional pillar detected → V4 emotional engine
+  if (detected && detected.primaryScore >= 3) {
+    return processEmotionalMode(originalText, originalText);
   }
 
-  // If unlocked but not strong emotional trigger,
-  // stay in V4 tone - NEVER fall back to V3.
-  return processV4NeutralMode(userText, originalText);
+  // No pillar → V4 neutral mode
+  return processV4NeutralMode(originalText, originalText);
 }
 
 /* ================================
@@ -3923,7 +3924,7 @@ if (tollState[activeVoice]?.unlocked === true) {
 
 function processV4NeutralMode(userText, originalText) {
 
-  const voice = activeVoice;
+  const voice = activeVoice || "saira";
 
   const v4NeutralResponses = {
     saira: [
