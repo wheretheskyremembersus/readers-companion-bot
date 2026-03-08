@@ -1272,6 +1272,55 @@ function applyStageAtmosphere(stage) {
 }
 
 /* =========================
+   EMOTIONAL PILLAR KEYWORDS
+========================= */
+
+const emotionalPillars = {
+
+  affection: [
+    "love","care","miss","heart","bond","attach",
+    "connection","close","belong","together",
+    "want","desire","admire","cherish"
+  ],
+
+  vulnerability: [
+    "open","expose","unguard","fragile","soft",
+    "honest","truth","reveal","admit","confess",
+    "bare","share"
+  ],
+
+  fear: [
+    "fear","afraid","scare","risk","danger",
+    "hesitate","uncertain","doubt","worry",
+    "anxious","nervous"
+  ],
+
+  regret: [
+    "regret","mistake","sorry","apology",
+    "should have","shouldnt","wish","if only",
+    "guilt"
+  ],
+
+  loss: [
+    "loss","lost","losing","gone","leave","left",
+    "goodbye","absence","separate","separation",
+    "ended","break","broken"
+  ],
+
+  growth: [
+    "change","grow","growth","learn","realise",
+    "understand","reflection","reflect",
+    "become","evolve"
+  ],
+
+  destiny: [
+    "fate","destiny","meant","timing",
+    "future","return","again","chance",
+    "coincidence","purpose","path"
+  ]
+
+};
+/* =========================
    EMOTIONAL ANCHORS
 ========================= */
 
@@ -1314,13 +1363,13 @@ function detectEmotionalPillar(text) {
     .map(w => normalizeWord(w));
 
   const pillarOrder = [
-   "affection",
-   "fear",
-   "vulnerability",
-   "regret",
-   "loss",
-   "growth",
-   "destiny"
+    "affection",
+    "fear",
+    "vulnerability",
+    "regret",
+    "loss",
+    "growth",
+    "destiny"
   ];
 
   let scores = {};
@@ -1333,7 +1382,7 @@ function detectEmotionalPillar(text) {
 
       if (keyword.includes(" ")) {
         if (lower.includes(keyword)) {
-          score += 3; // strong phrase
+          score += 3;
         }
       } else {
         const keywordRoot = normalizeWord(keyword);
@@ -1354,19 +1403,21 @@ function detectEmotionalPillar(text) {
   const primary = sorted[0];
   const secondary = sorted[1];
 
-const confidenceThreshold = 2; // minimum score
+  const confidenceThreshold = 1;
 
-if (primary[1] >= confidenceThreshold) {
+  if (primary[1] >= confidenceThreshold) {
 
-  return {
-    primary: primary[0],
-    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
-    primaryScore: primary[1],
-    secondaryScore: secondary ? secondary[1] : 0
-  };
-}
+    return {
+      primary: primary[0],
+      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+      primaryScore: primary[1],
+      secondaryScore: secondary ? secondary[1] : 0
+    };
+
+  }
 
   return null;
+
 }
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
