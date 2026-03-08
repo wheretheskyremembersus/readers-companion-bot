@@ -7251,42 +7251,42 @@ function selectVoice(v) {
   characterAnswered = 0;
   currentLayer = 0;
 
-  /* =========================
-     CINEMATIC OPENING
-  ========================= */
+ /* =========================
+   CINEMATIC OPENING
+========================= */
 
-  const firstLine =
-    v === "saira"
-      ? "Hi… I'm Saira."
-      : "Hello. I'm Ayaan.";
+const firstLine =
+  v === "saira"
+    ? "Hi… I'm Saira."
+    : "Hello. I'm Ayaan.";
 
-  const secondLine =
-    v === "saira"
-      ? "You don't have to explain why you're here."
-      : "There's no need to rush into words.";
+introDelivered = true;
 
-  showTypingIndicator();
+const secondLine =
+  v === "saira"
+    ? "You don't have to explain why you're here."
+    : "There's no need to rush into words.";
+
+showTypingIndicator();
+
+setTimeout(() => {
+  removeTypingIndicator();
+  addVoiceMessage(firstLine);
 
   setTimeout(() => {
-    removeTypingIndicator();
-    addVoiceMessage(firstLine);
+    showTypingIndicator();
 
     setTimeout(() => {
-      showTypingIndicator();
+      removeTypingIndicator();
+      addVoiceMessage(secondLine);
 
-      setTimeout(() => {
-        removeTypingIndicator();
-        addVoiceMessage(secondLine);
+      showFoundational();
 
-        // Only AFTER greeting → show dock
-        showFoundational();
+    }, 1000);
 
-      }, 1000);
+  }, 800);
 
-    }, 800);
-
-  }, 900);
-}     
+}, 900);   
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
