@@ -2467,20 +2467,46 @@ function runV4Engine(text, originalText) {
   console.log("stageState:", stageState);
 
 
-  /* =========================
-     EMOTIONAL PILLAR DETECTION
-  ========================= */
+/* =========================
+   EMOTIONAL PILLAR DETECTION
+========================= */
 
-  const pillarMatch = detectEmotionalPillar(originalText);
-  let pillar = pillarMatch?.primary || null;
+const pillarMatch = detectEmotionalPillar(originalText);
+
+let pillar = pillarMatch?.primary || null;
+
+
+/* =========================
+   SECONDARY EMOTIONAL INFERENCE
+========================= */
+
+if (!pillar) {
+
+  const textLower = originalText.toLowerCase();
+
+  if (/(why|should|could|if only|sooner|earlier)/.test(textLower)) {
+    pillar = "regret";
+  }
+  else if (/(leave|left|lost|gone|miss)/.test(textLower)) {
+    pillar = "loss";
+  }
+  else if (/(afraid|scared|worried|risk)/.test(textLower)) {
+    pillar = "fear";
+  }
+  else if (/(love|care|meant|important)/.test(textLower)) {
+    pillar = "affection";
+  }
+
+}
+
 
 /* =========================
    PILLAR REPETITION GUARD
 ========================= */
 
-if (pillar && lastDetectedPillar[voice] === pillar) {
+if (pillar && lastDetectedPillar?.[voice] === pillar) {
 
-  const alternate = ["growth","reflection","destiny","loss","fear","regret"];
+  const alternate = ["growth","destiny","loss","fear","regret","affection"];
 
   for (let p of alternate) {
     if (p !== pillar && v4FallbackBank?.[voice]?.[p]) {
@@ -2491,24 +2517,33 @@ if (pillar && lastDetectedPillar[voice] === pillar) {
 
 }
 
+
+/* =========================
+   SAVE LAST PILLAR
+========================= */
+
 lastDetectedPillar[voice] = pillar;
-  if (pillarMatch) {
 
-    const targetStage = pillarToStage?.[pillar] || stage;
 
-    if (targetStage > stageState[voice].currentStage) {
-      stageState[voice].currentStage = targetStage;
-    }
+/* =========================
+   STAGE PROGRESSION
+========================= */
 
-    const anchor = emotionalAnchors?.[voice]?.[pillar];
+if (pillarMatch) {
 
-    if (anchor) {
-      return deliverReply(anchor);
-    }
+  const targetStage = pillarToStage?.[pillar] || stage;
 
+  if (targetStage > stageState[voice].currentStage) {
+    stageState[voice].currentStage = targetStage;
   }
 
+  const anchor = emotionalAnchors?.[voice]?.[pillar];
 
+  if (anchor) {
+    return deliverReply(anchor);
+  }
+
+}
   /* =========================
      STAGE DEPTH MODIFIER
   ========================= */
