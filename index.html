@@ -2441,13 +2441,15 @@ if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
-if (lastUserInput[activeVoice] === normalizedText) {
+const repeatKey = normalizedText.trim();
+
+if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
 } else {
   repetitionCount[activeVoice] = 0;
 }
 
-lastUserInput[activeVoice] = normalizedText;
+lastUserInput[activeVoice] = repeatKey;
 
 if (repetitionCount[activeVoice] >= 2) {
 
@@ -2472,7 +2474,7 @@ if (repetitionCount[activeVoice] >= 2) {
   const pool = repetitionResponses[voice];
   const reply = pool[Math.floor(Math.random() * pool.length)];
 
-  return deliverReply(reply);  
+  return deliverReply(reply);
 }
 /* =========================
    RANDOM NOISE / PATTERN BREAK GUARD
