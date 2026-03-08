@@ -2183,6 +2183,30 @@ if (abuseTracker[activeVoice]?.locked) {
 }
 
 /* ================================
+V4 ROTATION INDEX
+(prevents repetition)
+================================= */
+
+var v4RotationIndex = {
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+  
+/* ================================
    V4 UNLOCK CHECK
 ================================= */
 
@@ -2227,29 +2251,6 @@ if (tollState?.[activeVoice]?.unlocked && typeof runV4Engine === "function") {
   return runV4Engine(userText, originalText);
 }
 
-/* ================================
-V4 ROTATION INDEX
-(prevents repetition)
-================================= */
-
-var v4RotationIndex = {
-  saira: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  },
-  ayaan: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  }
-};
 
 /* ================================
 V4 EMOTIONAL ENGINE
