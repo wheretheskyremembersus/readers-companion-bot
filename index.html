@@ -2106,7 +2106,7 @@ let normalizedText = normalizeInput(originalText);
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
-const repeatKey = normalizeInput(originalText);
+const repeatKey = normalizeInput(originalText).trim();
 
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
