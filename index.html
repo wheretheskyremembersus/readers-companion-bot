@@ -2236,7 +2236,13 @@ V4 EMOTIONAL ENGINE
 
 function runV4Engine(text, originalText) {
 
-  const voice = activeVoice || "saira";
+  const voice =
+  activeVoice === "saira" || activeVoice === "ayaan"
+    ? activeVoice
+    : "saira";
+  if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
   const stage = stageState?.[voice]?.currentStage || 1;
 
   /* =========================
@@ -2410,29 +2416,20 @@ function runV4Engine(text, originalText) {
 SELECT FALLBACK RESPONSE
 ========================= */
 
-/* Ensure objects exist */
-if (!v4RotationIndex) {
-  v4RotationIndex = {};
-}
-
-if (!v4RotationIndex[voice]) {
-  v4RotationIndex[voice] = {};
-}
-
-/* Determine fallback pool */
 let pool = null;
 
-if (
-  typeof v4FallbackBank !== "undefined" &&
-  v4FallbackBank[voice] &&
-  v4FallbackBank[voice][pillar]
-) {
+if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
   pool = v4FallbackBank[voice][pillar];
 } else {
   pool = v4FallbackBank.saira.growth;
 }
 
-/* Initialize pillar rotation */
+/* Ensure rotation structure exists */
+
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
+
 if (v4RotationIndex[voice][pillar] === undefined) {
   v4RotationIndex[voice][pillar] = 0;
 }
@@ -2444,6 +2441,7 @@ const line = pool[index % pool.length];
 v4RotationIndex[voice][pillar]++;
 
 return deliverReply(line);
+}
   
 window.runV4Engine = runV4Engine;
  /* =========================
@@ -4182,7 +4180,13 @@ if (tollState[activeVoice]?.unlocked === true) {
 
 function processV4NeutralMode(userText, originalText) {
 
-  const voice = activeVoice || "saira";
+  const voice =
+  activeVoice === "saira" || activeVoice === "ayaan"
+    ? activeVoice
+    : "saira";
+  if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
 
   const v4NeutralResponses = {
     saira: [
