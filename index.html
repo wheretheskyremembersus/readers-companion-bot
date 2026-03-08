@@ -2381,7 +2381,24 @@ var v4RotationIndex = {
     destiny: 0
   }
 };
+  
+/* ================================
+   V4 UNLOCK CHECK
+================================= */
 
+if (
+  tollState[activeVoice]?.dockCount >= 20 ||
+  tollState[activeVoice]?.freeCount >= 20
+) {
+  tollState[activeVoice].unlocked = true;
+
+  if (!stageState[activeVoice]) {
+    stageState[activeVoice] = { currentStage: 1 };
+  } 
+  else if (stageState[activeVoice].currentStage < 1) {
+    stageState[activeVoice].currentStage = 1;
+  }
+}
 
 /* ================================
 V4 STATE SAFETY
@@ -2400,34 +2417,7 @@ if (!v4RotationIndex) {
     ayaan: {}
   };
 }
-
-/* ================================
-V4 PILLAR MEMORY
-================================= */
-
-var lastDetectedPillar = {
-  saira: null,
-  ayaan: null
-};
-
-/* ================================
-V4 UNLOCK CHECK
-================================= */
-
-if (
-  tollState[activeVoice]?.dockCount >= 20 ||
-  tollState[activeVoice]?.freeCount >= 20
-) {
-  tollState[activeVoice].unlocked = true;
-
-  if (!stageState[activeVoice]) {
-    stageState[activeVoice] = { currentStage: 1 };
-  } else if (stageState[activeVoice].currentStage < 1) {
-    stageState[activeVoice].currentStage = 1;
-  }
-}
-
-
+  
 /* ================================
 ENGINE PARTITION ROUTER
 (STRICT V3 → V4 ISOLATION)
@@ -2449,130 +2439,59 @@ function runV4Engine(text, originalText) {
       ? activeVoice
       : "saira";
 
-  /* =========================
-     SAFE STATE ACCESS
-  ========================= */
+  if (!stageState) {
+    stageState = {};
+  }
 
   if (!stageState[voice]) {
     stageState[voice] = { currentStage: 1 };
   }
-
+  
+if (!v4RotationIndex) v4RotationIndex = {};
   if (!v4RotationIndex[voice]) {
     v4RotationIndex[voice] = {};
   }
 
-  const stage = stageState[voice].currentStage;
-
-  console.log("voice:", voice);
-  console.log("stageState:", stageState);
-
-
-/* =========================
-   EMOTIONAL PILLAR DETECTION
-========================= */
-
-const pillarMatch = detectEmotionalPillar(originalText);
-
-let pillar = pillarMatch?.primary || null;
-
-
-/* =========================
-   SECONDARY EMOTIONAL INFERENCE
-========================= */
-
-if (!pillar) {
-
-  const textLower = originalText.toLowerCase();
-
-  if (/(why|should|could|if only|sooner|earlier)/.test(textLower)) {
-    pillar = "regret";
-  }
-  else if (/(leave|left|lost|gone|miss)/.test(textLower)) {
-    pillar = "loss";
-  }
-  else if (/(afraid|scared|worried|risk)/.test(textLower)) {
-    pillar = "fear";
-  }
-  else if (/(love|care|meant|important)/.test(textLower)) {
-    pillar = "affection";
-  }
-
-}
-
-
-/* =========================
-   PILLAR REPETITION GUARD
-========================= */
-
-if (pillar && lastDetectedPillar?.[voice] === pillar) {
-
-  const alternate = ["growth","destiny","loss","fear","regret","affection"];
-
-  for (let p of alternate) {
-    if (p !== pillar && v4FallbackBank?.[voice]?.[p]) {
-      pillar = p;
-      break;
-    }
-  }
-
-}
-
-
-/* =========================
-   SAVE LAST PILLAR
-========================= */
-
-lastDetectedPillar[voice] = pillar;
-
-
-/* =========================
-   STAGE PROGRESSION
-========================= */
-
-if (pillarMatch) {
-
-  const targetStage = pillarToStage?.[pillar] || stage;
-
-  if (targetStage > stageState[voice].currentStage) {
-    stageState[voice].currentStage = targetStage;
-  }
-
-  const anchor = emotionalAnchors?.[voice]?.[pillar];
-
-  if (anchor) {
-    return deliverReply(anchor);
-  }
-
-}
+  const stage = stageState?.[voice]?.currentStage || 1;
+  
+console.log("voice:", voice);
+console.log("stageState:", stageState);
   /* =========================
-     STAGE DEPTH MODIFIER
+  EMOTIONAL PILLAR DETECTION
   ========================= */
 
-  let stageTone = "";
+  const pillarMatch = detectEmotionalPillar(originalText);
 
-  if (stage <= 2) {
-    stageTone = "guarded";
-  } 
-  else if (stage <= 4) {
-    stageTone = "reflective";
-  } 
-  else if (stage <= 6) {
-    stageTone = "revealing";
-  } 
-  else {
-    stageTone = "intimate";
+  let pillar = pillarMatch?.primary || null;
+
+  if (pillarMatch) {
+
+    const targetStage = pillarToStage?.[pillar] || stage;
+
+    if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
+      if (!stageState) stageState = {};
+if (!stageState[voice]) stageState[voice] = { currentStage: 1 };
+
+stageState[voice].currentStage = targetStage;
+    }
+
+    const anchor = emotionalAnchors?.[voice]?.[pillar];
+
+    if (anchor) {
+      return deliverReply(anchor);
+    }
+
   }
 
-
   /* =========================
-     DEFAULT PILLAR
+  DEFAULT PILLAR (SAFETY)
   ========================= */
 
   if (!pillar) pillar = "growth";
 
-
   /* =========================
-     V4 FALLBACK BANK
+  V4 FALLBACK BANK
+  (PILLAR + CHARACTER VOICE)
   ========================= */
 
   const v4FallbackBank = {
@@ -2707,34 +2626,37 @@ if (pillarMatch) {
 
   };
 
+/* =========================
+SELECT FALLBACK RESPONSE
+========================= */
 
-  /* =========================
-     SELECT FALLBACK RESPONSE
-  ========================= */
+let pool = null;
 
-  let pool = v4FallbackBank?.[voice]?.[pillar] || v4FallbackBank.saira.growth;
-
-  if (v4RotationIndex[voice][pillar] === undefined) {
-    v4RotationIndex[voice][pillar] = 0;
-  }
-
-  const index = v4RotationIndex[voice][pillar];
-
-  let line = pool[index % pool.length];
-
-  if (stageTone === "revealing") {
-    line += " I didn't realise that at the time.";
-  }
-
-  if (stageTone === "intimate") {
-    line += " I carry that more than I admit.";
-  }
-
-  v4RotationIndex[voice][pillar]++;
-
-  return deliverReply(line);
+if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
+  pool = v4FallbackBank[voice][pillar];
+} else {
+  pool = v4FallbackBank.saira.growth;
 }
 
+/* Ensure rotation structure exists */
+
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
+
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
+}
+
+const index = v4RotationIndex[voice][pillar];
+
+const line = pool[index % pool.length];
+
+v4RotationIndex[voice][pillar]++;
+
+return deliverReply(line);
+}
+  
 window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
@@ -4021,31 +3943,6 @@ if (/\b(happy|hurt|regret|fault|over him|over her|guilty)\b/i.test(normalizedTex
     );
   }
 }
-
-function processInput(text, originalText) {
-
-  const normalizedText = normalizeInput(originalText);
-
-  /* ================================
-     HARD PARTITION
-  ================================= */
-
-  if (tollState?.[activeVoice]?.unlocked === true) {
-
-    const normalized = normalizeInput(originalText);
-
-    const isQuestion =
-      /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
-      .test(normalized);
-
-    const detected = detectEmotionalPillar(normalized);
-
-    if (!isQuestion && detected && detected.primaryScore >= 3) {
-      return processEmotionalMode(originalText, originalText);
-    }
-
-    return processV4NeutralMode(originalText, originalText);
-  }
 /* ================================
    RELATIONAL LONGING CAPTURE (V3)
 ================================= */
@@ -7856,7 +7753,6 @@ if (isDirectionalDeviation(originalText)) {
 const text = originalText.toLowerCase();
 processInput(text, originalText);
 }
-}
 </script>
 
 <!-- SUPABASE ANALYTICS -->
@@ -7963,4 +7859,3 @@ trackEvent("quick_button_clicked", {
 
 </body>
 </html>
-
