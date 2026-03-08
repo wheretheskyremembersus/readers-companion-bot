@@ -2242,7 +2242,7 @@ function runV4Engine(text, originalText) {
 
   const voice = activeVoice || "saira";
   const stage = stageState?.[voice]?.currentStage || 1;
-
+window.runV4Engine = runV4Engine;
   /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -7795,4 +7795,4 @@ trackEvent("quick_button_clicked", {
 
 </body>
 </html>
-window.runV4Engine = runV4Engine;
+
