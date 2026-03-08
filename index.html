@@ -3291,26 +3291,29 @@ if (stage <= 2) {
 
 const trimmed = normalizedText.trim();
 
-// Greeting
-if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
+// Mid-conversation greeting
+if (emotionalDepth > 2) {
+  if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
+    skipRelationalPrefix = true;
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Hi."
+        : "Hello."
+    );
+  }
+}
+
+// First greeting only
+if (emotionalDepth <= 2 && /^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
 
   skipRelationalPrefix = true;
 
-  if (!sessionUserName) {
-    return deliverReply(
-      activeVoice === "saira"
-        ? "Hi… I'm Saira."
-        : "Hello. I'm Ayaan."
-    );
-  }
-
   return deliverReply(
     activeVoice === "saira"
-      ? "Hi again."
-      : "Hello again."
+      ? "Hi… I'm Saira."
+      : "Hello. I'm Ayaan."
   );
 }
-
 // How are you
 if (/^how are you\b/i.test(trimmed)) {
   skipRelationalPrefix = true;
