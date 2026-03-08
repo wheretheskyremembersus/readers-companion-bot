@@ -3907,14 +3907,18 @@ if (isLocationQuery(originalText)) {
 if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
+
+  // Prevent emotional engine from firing on simple question forms
+  const isQuestion =
+    /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
+    .test(normalized);
+
   const detected = detectEmotionalPillar(normalized);
 
-  // Emotional pillar detected → V4 emotional engine
-  if (detected && detected.primaryScore >= 3) {
+  if (!isQuestion && detected && detected.primaryScore >= 3) {
     return processEmotionalMode(originalText, originalText);
   }
 
-  // No pillar → V4 neutral mode
   return processV4NeutralMode(originalText, originalText);
 }
 
