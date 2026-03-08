@@ -2145,7 +2145,14 @@ if (
     stageState[activeVoice].currentStage = 1;
   }
 }
-       
+
+/* ================================
+   ENGINE PARTITION ROUTER
+================================= */
+
+if (tollState[activeVoice]?.unlocked) {
+  return runV4Engine(text, originalText);
+}
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
