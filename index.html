@@ -1386,7 +1386,7 @@ function detectEmotionalPillar(text) {
         }
       } else {
         const keywordRoot = normalizeWord(keyword);
-        if (userWords.some(w => w === keywordRoot)) {
+        if (userWords.some(w => w.startsWith(keywordRoot))) {
           score += 1;
         }
       }
