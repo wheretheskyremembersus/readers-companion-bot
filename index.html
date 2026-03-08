@@ -2203,7 +2203,7 @@ ENGINE PARTITION ROUTER
 ================================= */
 
 if (tollState?.[activeVoice]?.unlocked === true && typeof runV4Engine === "function") {
-  return runV4Engine(userText, originalText);
+  runV4Engine(userText, originalText);
 }
 
 /* ================================
