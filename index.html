@@ -2106,7 +2106,7 @@ let normalizedText = normalizeInput(originalText);
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
-const repeatKey = normalizedText;
+const repeatKey = normalizeInput(originalText);
 
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
@@ -2142,8 +2142,6 @@ if (repetitionCount[activeVoice] >= 1) {
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
-
-/* continue with the rest of the engine */
 
 const lower = normalizedText;
 const nameCall = normalizedText;
