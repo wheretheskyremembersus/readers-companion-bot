@@ -2205,8 +2205,9 @@ ENGINE PARTITION ROUTER
 ================================= */
 
 if (tollState?.[activeVoice]?.unlocked === true && typeof runV4Engine === "function") {
-return runV4Engine(text, originalText);
+  return runV4Engine(text, originalText);
 }
+
 
 /* ================================
 V4 ROTATION INDEX
@@ -2214,23 +2215,24 @@ V4 ROTATION INDEX
 ================================= */
 
 let v4RotationIndex = {
-saira: {
-affection: 0,
-fear: 0,
-regret: 0,
-loss: 0,
-growth: 0,
-destiny: 0
-},
-ayaan: {
-affection: 0,
-fear: 0,
-regret: 0,
-loss: 0,
-growth: 0,
-destiny: 0
-}
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
 };
+
 
 /* ================================
 V4 EMOTIONAL ENGINE
@@ -2238,192 +2240,190 @@ V4 EMOTIONAL ENGINE
 
 function runV4Engine(text, originalText) {
 
-const voice = activeVoice || "saira";
-const stage = stageState?.[voice]?.currentStage || 1;
+  const voice = activeVoice || "saira";
+  const stage = stageState?.[voice]?.currentStage || 1;
 
-/* =========================
-EMOTIONAL PILLAR DETECTION
-========================= */
+  /* =========================
+  EMOTIONAL PILLAR DETECTION
+  ========================= */
 
-const pillarMatch = detectEmotionalPillar(originalText);
+  const pillarMatch = detectEmotionalPillar(originalText);
 
-let pillar = pillarMatch?.primary || null;
+  let pillar = pillarMatch?.primary || null;
 
-if (pillarMatch) {
+  if (pillarMatch) {
 
-```
-const targetStage = pillarToStage?.[pillar] || stage;
+    const targetStage = pillarToStage?.[pillar] || stage;
 
-if (targetStage > stageState[voice].currentStage) {
-  stageState[voice].currentStage = targetStage;
-}
+    if (targetStage > stageState[voice].currentStage) {
+      stageState[voice].currentStage = targetStage;
+    }
 
-const anchor = emotionalAnchors?.[voice]?.[pillar];
+    const anchor = emotionalAnchors?.[voice]?.[pillar];
 
-if (anchor) {
-  return deliverReply(anchor);
-}
-```
+    if (anchor) {
+      return deliverReply(anchor);
+    }
 
-}
+  }
 
-/* =========================
-DEFAULT PILLAR (SAFETY)
-========================= */
+  /* =========================
+  DEFAULT PILLAR (SAFETY)
+  ========================= */
 
-if (!pillar) pillar = "growth";
+  if (!pillar) pillar = "growth";
 
-/* =========================
-V4 FALLBACK BANK
-(PILLAR + CHARACTER VOICE)
-========================= */
+  /* =========================
+  V4 FALLBACK BANK
+  (PILLAR + CHARACTER VOICE)
+  ========================= */
 
-const v4FallbackBank = {
+  const v4FallbackBank = {
 
-saira: {
+    saira: {
 
-  affection: [
-    "Caring rarely announces itself in the beginning.",
-    "It took time before I realised how much he mattered.",
-    "Some feelings grow quietly before we recognise them.",
-    "What started lightly slowly became difficult to ignore.",
-    "There was a moment when caring stopped feeling temporary.",
-    "Some connections deepen without either person noticing.",
-    "I didn't recognise the weight of it until later."
-  ],
+      affection: [
+        "Caring rarely announces itself in the beginning.",
+        "It took time before I realised how much he mattered.",
+        "Some feelings grow quietly before we recognise them.",
+        "What started lightly slowly became difficult to ignore.",
+        "There was a moment when caring stopped feeling temporary.",
+        "Some connections deepen without either person noticing.",
+        "I didn't recognise the weight of it until later."
+      ],
 
-  fear: [
-    "Fear doesn't always arrive loudly.",
-    "I was more afraid of losing him than admitting it.",
-    "Sometimes fear hides inside hesitation.",
-    "It took time before I recognised how much fear shaped my choices.",
-    "Fear can feel like caution while it's happening.",
-    "Part of me believed silence would keep things safe.",
-    "Sometimes the quietest fears guide the biggest decisions."
-  ],
+      fear: [
+        "Fear doesn't always arrive loudly.",
+        "I was more afraid of losing him than admitting it.",
+        "Sometimes fear hides inside hesitation.",
+        "It took time before I recognised how much fear shaped my choices.",
+        "Fear can feel like caution while it's happening.",
+        "Part of me believed silence would keep things safe.",
+        "Sometimes the quietest fears guide the biggest decisions."
+      ],
 
-  regret: [
-    "Regret simplifies what was complicated at the time.",
-    "I thought silence was the safer choice.",
-    "Looking back makes decisions appear clearer than they were.",
-    "At the time I believed I was protecting something.",
-    "Regret doesn't appear immediately.",
-    "Sometimes we understand our mistakes only after distance exists.",
-    "It took time before I recognised what I should have said."
-  ],
+      regret: [
+        "Regret simplifies what was complicated at the time.",
+        "I thought silence was the safer choice.",
+        "Looking back makes decisions appear clearer than they were.",
+        "At the time I believed I was protecting something.",
+        "Regret doesn't appear immediately.",
+        "Sometimes we understand our mistakes only after distance exists.",
+        "It took time before I recognised what I should have said."
+      ],
 
-  loss: [
-    "Losing something real changes you quietly.",
-    "Distance doesn't erase what once felt certain.",
-    "Some absences remain present in unexpected ways.",
-    "Loss reshapes how memory holds people.",
-    "Certain moments feel heavier after they pass.",
-    "Some departures never feel fully finished.",
-    "There are absences that never feel ordinary."
-  ],
+      loss: [
+        "Losing something real changes you quietly.",
+        "Distance doesn't erase what once felt certain.",
+        "Some absences remain present in unexpected ways.",
+        "Loss reshapes how memory holds people.",
+        "Certain moments feel heavier after they pass.",
+        "Some departures never feel fully finished.",
+        "There are absences that never feel ordinary."
+      ],
 
-  growth: [
-    "Understanding came slowly after everything settled.",
-    "Some lessons arrive quietly.",
-    "Time reshaped how I saw everything.",
-    "I had to learn parts of myself I didn't expect.",
-    "Change rarely happens in the moment it begins.",
-    "Growth usually begins long before we notice it.",
-    "Some understanding only appears after distance."
-  ],
+      growth: [
+        "Understanding came slowly after everything settled.",
+        "Some lessons arrive quietly.",
+        "Time reshaped how I saw everything.",
+        "I had to learn parts of myself I didn't expect.",
+        "Change rarely happens in the moment it begins.",
+        "Growth usually begins long before we notice it.",
+        "Some understanding only appears after distance."
+      ],
 
-  destiny: [
-    "Some connections resist simple endings.",
-    "Certain stories refuse to disappear completely.",
-    "Not everything unfinished is truly over.",
-    "Sometimes time only pauses a story.",
-    "Some people remain part of your life even when they're gone.",
-    "Certain moments continue shaping the future.",
-    "I don't believe everything meaningful simply disappears."
-  ]
-},
+      destiny: [
+        "Some connections resist simple endings.",
+        "Certain stories refuse to disappear completely.",
+        "Not everything unfinished is truly over.",
+        "Sometimes time only pauses a story.",
+        "Some people remain part of your life even when they're gone.",
+        "Certain moments continue shaping the future.",
+        "I don't believe everything meaningful simply disappears."
+      ]
+
+    },
+
+    ayaan: {
+
+      affection: [
+        "Attachment rarely appears suddenly.",
+        "Meaning often becomes visible only after distance forms.",
+        "What begins quietly can become structurally important.",
+        "Care tends to reveal itself over time.",
+        "Some bonds develop before either person recognises them.",
+        "Recognition often arrives later than the feeling itself.",
+        "What seemed temporary sometimes proves otherwise."
+      ],
+
+      fear: [
+        "Fear doesn't always interrupt decisions immediately.",
+        "Control often felt safer than vulnerability.",
+        "Risk becomes clearer once consequences appear.",
+        "Restraint sometimes grows from uncertainty.",
+        "Some decisions are shaped by fear long before we name it.",
+        "Fear tends to disguise itself as discipline.",
+        "What looks like caution can sometimes be hesitation."
+      ],
+
+      regret: [
+        "Regret tends to appear once decisions settle.",
+        "At the time restraint seemed responsible.",
+        "Perspective changes once distance exists.",
+        "Clarity rarely exists during the moment of choice.",
+        "Looking back alters how decisions appear.",
+        "Regret isn't always immediate.",
+        "Time tends to reorganise how choices are viewed."
+      ],
+
+      loss: [
+        "Loss alters perspective more than people expect.",
+        "Distance reshapes how events are interpreted.",
+        "Absence often reveals structural importance.",
+        "Some outcomes take time before they are understood.",
+        "Loss changes how we measure everything else.",
+        "Certain absences remain quietly influential.",
+        "Perspective rarely stays the same after loss."
+      ],
+
+      growth: [
+        "Understanding usually arrives through reflection.",
+        "Experience reorganises how events are viewed.",
+        "Growth tends to appear after distance.",
+        "Some lessons only appear once events settle.",
+        "Perspective matures through time rather than discussion.",
+        "Reflection often changes the original interpretation.",
+        "Some understanding arrives slowly."
+      ],
+
+      destiny: [
+        "Not all unfinished stories are accidental.",
+        "Certain events retain significance over time.",
+        "Some connections persist beyond circumstance.",
+        "Timing rarely explains everything.",
+        "Certain encounters remain structurally important.",
+        "Some outcomes take longer to reveal their meaning.",
+        "Distance doesn't always conclude a story."
+      ]
+
+    }
+
+  };
 
 
-ayaan: {
+  /* =========================
+  SELECT FALLBACK RESPONSE
+  ========================= */
 
-  affection: [
-    "Attachment rarely appears suddenly.",
-    "Meaning often becomes visible only after distance forms.",
-    "What begins quietly can become structurally important.",
-    "Care tends to reveal itself over time.",
-    "Some bonds develop before either person recognises them.",
-    "Recognition often arrives later than the feeling itself.",
-    "What seemed temporary sometimes proves otherwise."
-  ],
+  const pool = v4FallbackBank?.[voice]?.[pillar] || v4FallbackBank.saira.growth;
 
-  fear: [
-    "Fear doesn't always interrupt decisions immediately.",
-    "Control often felt safer than vulnerability.",
-    "Risk becomes clearer once consequences appear.",
-    "Restraint sometimes grows from uncertainty.",
-    "Some decisions are shaped by fear long before we name it.",
-    "Fear tends to disguise itself as discipline.",
-    "What looks like caution can sometimes be hesitation."
-  ],
+  const index = v4RotationIndex?.[voice]?.[pillar] ?? 0;
 
-  regret: [
-    "Regret tends to appear once decisions settle.",
-    "At the time restraint seemed responsible.",
-    "Perspective changes once distance exists.",
-    "Clarity rarely exists during the moment of choice.",
-    "Looking back alters how decisions appear.",
-    "Regret isn't always immediate.",
-    "Time tends to reorganise how choices are viewed."
-  ],
+  const line = pool[index % pool.length];
 
-  loss: [
-    "Loss alters perspective more than people expect.",
-    "Distance reshapes how events are interpreted.",
-    "Absence often reveals structural importance.",
-    "Some outcomes take time before they are understood.",
-    "Loss changes how we measure everything else.",
-    "Certain absences remain quietly influential.",
-    "Perspective rarely stays the same after loss."
-  ],
+  v4RotationIndex[voice][pillar]++;
 
-  growth: [
-    "Understanding usually arrives through reflection.",
-    "Experience reorganises how events are viewed.",
-    "Growth tends to appear after distance.",
-    "Some lessons only appear once events settle.",
-    "Perspective matures through time rather than discussion.",
-    "Reflection often changes the original interpretation.",
-    "Some understanding arrives slowly."
-  ],
-
-  destiny: [
-    "Not all unfinished stories are accidental.",
-    "Certain events retain significance over time.",
-    "Some connections persist beyond circumstance.",
-    "Timing rarely explains everything.",
-    "Certain encounters remain structurally important.",
-    "Some outcomes take longer to reveal their meaning.",
-    "Distance doesn't always conclude a story."
-  ]
-}
-
-};
-
-/* =========================
-SELECT FALLBACK RESPONSE
-========================= */
-
-const pool =
-v4FallbackBank?.[voice]?.[pillar] ||
-v4FallbackBank?.saira?.growth;
-
-const index = v4RotationIndex?.[voice]?.[pillar] ?? 0;
-
-const line = pool[index % pool.length];
-
-v4RotationIndex[voice][pillar]++;
-
-return deliverReply(line);
+  return deliverReply(line);
 
 }
 
