@@ -2401,6 +2401,14 @@ if (!v4RotationIndex) {
   };
 }
 
+/* ================================
+V4 PILLAR MEMORY
+================================= */
+
+var lastDetectedPillar = {
+  saira: null,
+  ayaan: null
+};
 
 /* ================================
 V4 UNLOCK CHECK
@@ -2466,6 +2474,24 @@ function runV4Engine(text, originalText) {
   const pillarMatch = detectEmotionalPillar(originalText);
   let pillar = pillarMatch?.primary || null;
 
+/* =========================
+   PILLAR REPETITION GUARD
+========================= */
+
+if (pillar && lastDetectedPillar[voice] === pillar) {
+
+  const alternate = ["growth","reflection","destiny","loss","fear","regret"];
+
+  for (let p of alternate) {
+    if (p !== pillar && v4FallbackBank?.[voice]?.[p]) {
+      pillar = p;
+      break;
+    }
+  }
+
+}
+
+lastDetectedPillar[voice] = pillar;
   if (pillarMatch) {
 
     const targetStage = pillarToStage?.[pillar] || stage;
