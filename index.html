@@ -2101,14 +2101,14 @@ function getSelfReferencePrefix(stage) {
 function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
-  const lower = normalizedText;
-  const nameCall = normalizedText;
-  
+const lower = normalizedText;
+const nameCall = normalizedText;
+
 /* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
-const repeatKey = normalizedText.trim();
+const repeatKey = normalizeInput(originalText); // raw normalized input
 
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
