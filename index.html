@@ -2196,16 +2196,15 @@ if (
     stageState[activeVoice].currentStage = 1;
   }
 }
-console.log("ROUTER LOADED");
+}
 /* ================================
 ENGINE PARTITION ROUTER
 (STRICT V3 → V4 ISOLATION)
 ================================= */
 
 if (tollState?.[activeVoice]?.unlocked === true && typeof runV4Engine === "function") {
-  return runV4Engine(text, originalText);
+  return runV4Engine(userText, originalText);
 }
-
 
 /* ================================
 V4 ROTATION INDEX
