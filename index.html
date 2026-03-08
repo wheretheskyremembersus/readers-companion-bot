@@ -2278,10 +2278,6 @@ function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
 
-  /* router */
-  if (tollState?.[activeVoice]?.unlocked === true && typeof runV4Engine === "function") {
-    return runV4Engine(userText, originalText);
-  }
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
