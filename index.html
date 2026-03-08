@@ -1092,25 +1092,22 @@ function deliverReply(replyText, callback) {
   replyText = replyText[Math.floor(Math.random() * replyText.length)];
 }
  
-  /* =========================
+ /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
 
-function deliverReply(replyText, callback) {
+const greetingPattern = /^(hi|hello|hey|hola|ola)\b/i;
 
-const greetingPattern = /^(hi|hello|hey|hola|ola|hiya|yo|sup|hey there|hello again|hey again)\b/i;
-
-if (typeof lastUserInput === "string" && greetingPattern.test(lastUserInput)) {
-  skipRelationalPrefix = true;
-}
-
-if (relationalPrefix && !skipRelationalPrefix) {
+if (
+  !emotionalModeActive &&
+  relationalPrefix &&
+  !skipRelationalPrefix &&
+  !greetingPattern.test(lastUserInput || "")
+) {
   if (!replyText.startsWith(relationalPrefix)) {
     replyText = relationalPrefix + replyText;
   }
 }
-
-skipRelationalPrefix = false;
 
 interactionLocked = true;
 setDockDisabled(true);
