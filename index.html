@@ -2406,20 +2406,30 @@ function runV4Engine(text, originalText) {
 
   };
 
+ /* =========================
+SELECT FALLBACK RESPONSE
+========================= */
 
-  /* =========================
-  SELECT FALLBACK RESPONSE
-  ========================= */
+const pool = v4FallbackBank?.[voice]?.[pillar] || v4FallbackBank.saira.growth;
 
-  const pool = v4FallbackBank?.[voice]?.[pillar] || v4FallbackBank.saira.growth;
+/* Ensure rotation object exists */
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
 
-  const index = v4RotationIndex?.[voice]?.[pillar] ?? 0;
+/* Ensure pillar index exists */
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
+}
 
-  const line = pool[index % pool.length];
+const index = v4RotationIndex[voice][pillar];
 
-  v4RotationIndex[voice][pillar]++;
+const line = pool[index % pool.length];
 
-  return deliverReply(line);
+/* advance rotation */
+v4RotationIndex[voice][pillar]++;
+
+return deliverReply(line);
 
 }
 window.runV4Engine = runV4Engine;
