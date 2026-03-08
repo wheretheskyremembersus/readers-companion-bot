@@ -2103,7 +2103,46 @@ function processInput(userText, originalText) {
   let normalizedText = normalizeInput(originalText);
   const lower = normalizedText;
   const nameCall = normalizedText;
+  
+/* =========================
+   REPETITION / LOOP STRESS GUARD
+========================= */
 
+const repeatKey = normalizedText.trim();
+
+if (lastUserInput[activeVoice] === repeatKey) {
+  repetitionCount[activeVoice]++;
+} else {
+  repetitionCount[activeVoice] = 0;
+}
+
+lastUserInput[activeVoice] = repeatKey;
+
+if (repetitionCount[activeVoice] >= 1) {
+
+  skipRelationalPrefix = true;
+
+  const repetitionResponses = {
+    saira: [
+      "You've asked that already.",
+      "Repeating it won't change the answer.",
+      "I heard you the first time.",
+      "It doesn't need to be pressed further."
+    ],
+    ayaan: [
+      "Repetition won't shift the response.",
+      "I've already addressed that.",
+      "Pressure doesn't alter clarity.",
+      "It remains as stated."
+    ]
+  };
+
+  const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
+  const pool = repetitionResponses[voice];
+  const reply = pool[Math.floor(Math.random() * pool.length)];
+
+  return deliverReply(reply);
+}
 /* ================================
    PRONOUN NORMALIZATION
 ================================= */
@@ -2437,45 +2476,6 @@ if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just
   );
 }
 
-/* =========================
-   REPETITION / LOOP STRESS GUARD
-========================= */
-
-const repeatKey = normalizedText.trim();
-
-if (lastUserInput[activeVoice] === repeatKey) {
-  repetitionCount[activeVoice]++;
-} else {
-  repetitionCount[activeVoice] = 0;
-}
-
-lastUserInput[activeVoice] = repeatKey;
-
-if (repetitionCount[activeVoice] >= 1) {
-
-  skipRelationalPrefix = true;
-
-  const repetitionResponses = {
-    saira: [
-      "You've asked that already.",
-      "Repeating it won't change the answer.",
-      "I heard you the first time.",
-      "It doesn't need to be pressed further."
-    ],
-    ayaan: [
-      "Repetition won't shift the response.",
-      "I've already addressed that.",
-      "Pressure doesn't alter clarity.",
-      "It remains as stated."
-    ]
-  };
-
-  const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
-  const pool = repetitionResponses[voice];
-  const reply = pool[Math.floor(Math.random() * pool.length)];
-
-  return deliverReply(reply);
-}
 /* =========================
    RANDOM NOISE / PATTERN BREAK GUARD
 ========================= */
