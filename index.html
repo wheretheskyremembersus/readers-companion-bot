@@ -1098,21 +1098,19 @@ function deliverReply(replyText, callback) {
 
 function deliverReply(replyText, callback) {
 
-  const greetingPattern = /^(hi|hello|hey|hola|ola|hiya|yo|sup|hey there|hello again|hey again)\b/i;
+const greetingPattern = /^(hi|hello|hey|hola|ola|hiya|yo|sup|hey there|hello again|hey again)\b/i;
 
-  // If the user message was a greeting → force skip
-  if (greetingPattern.test(lastUserInput)) {
-    skipRelationalPrefix = true;
+if (typeof lastUserInput === "string" && greetingPattern.test(lastUserInput)) {
+  skipRelationalPrefix = true;
+}
+
+if (relationalPrefix && !skipRelationalPrefix) {
+  if (!replyText.startsWith(relationalPrefix)) {
+    replyText = relationalPrefix + replyText;
   }
+}
 
-  // Apply prefix only if allowed
-  if (relationalPrefix && !skipRelationalPrefix) {
-    if (!replyText.startsWith(relationalPrefix)) {
-      replyText = relationalPrefix + replyText;
-    }
-  }
-
-  skipRelationalPrefix = false;
+skipRelationalPrefix = false;
 
 interactionLocked = true;
 setDockDisabled(true);
