@@ -2117,12 +2117,12 @@ const repeatKey = normalizedText;
 if (lastUserInput[activeVoice] === repeatKey) {
   repetitionCount[activeVoice]++;
 } else {
-  repetitionCount[activeVoice] = 0;
+  repetitionCount[activeVoice] = 1;
 }
 
 lastUserInput[activeVoice] = repeatKey;
 
-if (repetitionCount[activeVoice] >= 1) {
+if (repetitionCount[activeVoice] >= 2) {
 
   skipRelationalPrefix = true;
 
