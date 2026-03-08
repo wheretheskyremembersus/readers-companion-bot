@@ -707,7 +707,8 @@ let activeVoice = null;
 let interactionLocked = false;
 let sessionUserName = null;
 let lastEntity = null;
-
+let introDelivered = false;
+  
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
 let currentLayer = 0;
@@ -3291,29 +3292,29 @@ if (stage <= 2) {
 
 const trimmed = normalizedText.trim();
 
-// Mid-conversation greeting
-if (emotionalDepth > 2) {
-  if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
-    skipRelationalPrefix = true;
-    return deliverReply(
-      activeVoice === "saira"
-        ? "Hi."
-        : "Hello."
-    );
-  }
-}
-
-// First greeting only
-if (emotionalDepth <= 2 && /^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
+// Greeting
+if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
 
   skipRelationalPrefix = true;
 
+  if (!introDelivered) {
+
+    introDelivered = true;
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Hi… I'm Saira."
+        : "Hello. I'm Ayaan."
+    );
+  }
+
   return deliverReply(
     activeVoice === "saira"
-      ? "Hi… I'm Saira."
-      : "Hello. I'm Ayaan."
+      ? "Hi."
+      : "Hello."
   );
 }
+  
 // How are you
 if (/^how are you\b/i.test(trimmed)) {
   skipRelationalPrefix = true;
