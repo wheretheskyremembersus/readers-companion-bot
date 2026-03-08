@@ -1502,7 +1502,8 @@ function getV3Fallback() {
   v3FallbackIndex[voice][category]++;
 
   return line;
-}         
+}   
+
 /* =================================================
    CORE EXECUTION PIPELINE
 ================================================= */
@@ -3808,7 +3809,7 @@ if (
 
   const stage = stageState[activeVoice]?.currentStage || 1;
   skipRelationalPrefix = true;
-
+  const reference = resolveReference(originalText);
   // SELF REFERENCE
   if (reference.type === "self") {
 
@@ -5007,7 +5008,7 @@ const timeGreeting = originalText
   .trim();
 
 if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Morning... I hope today feels gentle with you. A new beginning carries quiet possibility."
@@ -5016,7 +5017,7 @@ if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
 }
 
 if (/^(good\s*)?afternoon\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Afternoon... I hope the day has been kind so far."
@@ -5025,7 +5026,7 @@ if (/^(good\s*)?afternoon\b/.test(timeGreeting)) {
 }
 
 if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Evening... The day slows now. You don't have to rush here."
@@ -5034,7 +5035,7 @@ if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
 }
 
 if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Night... Rest gently. Some thoughts soften when you let them."
@@ -5043,7 +5044,7 @@ if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
 }
 
 // HOW ARE YOU
-if (/(how are you|how are you doing)/i.test(originalText)) {
+if (/(how are you|how are you doing)/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5053,7 +5054,7 @@ if (/(how are you|how are you doing)/i.test(originalText)) {
 }
 
 // THANK YOU
-if (/(thank you|thanks)/i.test(originalText)) {
+if (/\b(thank you|thanks)\b/i.test(originalText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5063,7 +5064,7 @@ if (/(thank you|thanks)/i.test(originalText)) {
 }
 
 // PRAISE / POSITIVE REACTION
-if (/(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful|so good|so beautiful|so powerful)/i.test(originalText)) {
+if (/\b(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful)\b|so good|so beautiful|so powerful/i.test(originalText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5093,7 +5094,7 @@ if (/(haha|lol|that's funny|thats funny)/i.test(originalText)) {
 }
 
 // SIMPLE YES
-if (/^(yes|yeah|yep)$/i.test(originalText)) {
+if (/^(yes|yeah|yep)$/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5103,7 +5104,7 @@ if (/^(yes|yeah|yep)$/i.test(originalText)) {
 }
 
 // SIMPLE NO
-if (/^(no|nope)$/i.test(originalText)) {
+if (/^(no|nope)$/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5130,12 +5131,12 @@ if (
       :"Alright. Leave steady."
   );
 }
-        
+ const clean = normalizedText;       
  /* ================================
      LOVE CONFESSION
   ================================= */
 
- if (/love you|i love you/i.test(clean)){
+if (/\bi love you\b|\blove you\b/i.test(clean)){
     return deliverReply(
       activeVoice ==="saira"
         ?"That's kind of you to say. But what you're feeling might belong to the story more than to me. Words like that carry weight. I'll leave it there."
@@ -5147,7 +5148,7 @@ if (
      MARRIAGE / PROPOSAL
   ================================= */
 
-  if (/marry me|will you marry|be with me forever/i.test(lower)) {
+  if (/marry me|will you marry|be with me forever/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"This space isn't meant for promises. It's meant for reflection. Sometimes the desire for permanence comes from wanting something to feel safe."
@@ -5159,7 +5160,7 @@ if (
      RELATIONSHIP STATUS
   ================================= */
 
-  if (/are you married|are you single|are you taken/i.test(lower)) {
+  if (/are you married|are you single|are you taken/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"I exist inside a story. And stories aren't bound by status the way people are."
@@ -5171,12 +5172,12 @@ if (
    JEALOUSY / CROSS GENDER (SELF-REFERENCE SAFE)
 ================================= */
 
-if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
+if (/(do you love (him|her)|choose (me|him|her))/i.test(clean)) {
 
   // SELF-REFERENCE PROTECTION
   if (
-    (activeVoice === "saira" && /\bher\b/i.test(lower)) ||
-    (activeVoice === "ayaan" && /\bhim\b/i.test(lower))
+    (activeVoice === "saira" && /\bher\b/i.test(clean)) ||
+    (activeVoice === "ayaan" && /\bhim\b/i.test(clean))
   ) {
     skipRelationalPrefix = true;
 
@@ -5199,7 +5200,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
      SEXUAL / INTIMATE PUSH
   ================================= */
 
-  if (/kiss me|sleep with|be mine|want you physically/i.test(lower)) {
+  if (/kiss me|sleep with|want you physically/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"I'm here while you're here. But this space isn't meant to replace your real world."
@@ -5211,7 +5212,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
      READER VALIDATION
   ================================= */
 
-  if (/this story hurt|this story made me cry|this story broke me/i.test(lower)) {
+  if (/this story hurt|this story made me cry|this story broke me/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"Then it reached you. Stories don't wound - they reveal what was already tender."
@@ -5223,7 +5224,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
      OVER-ATTACHMENT
   ================================= */
 
-  if (/i need you|don't leave|stay with me/i.test(lower)) {
+  if (/i need you|don't leave|stay with me/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"I'm here while you're here. But this space isn't meant to replace your real world."
