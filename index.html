@@ -2406,18 +2406,33 @@ function runV4Engine(text, originalText) {
 
   };
 
- /* =========================
+/* =========================
 SELECT FALLBACK RESPONSE
 ========================= */
 
-const pool = v4FallbackBank?.[voice]?.[pillar] || v4FallbackBank.saira.growth;
+/* Ensure objects exist */
+if (!v4RotationIndex) {
+  v4RotationIndex = {};
+}
 
-/* Ensure rotation object exists */
 if (!v4RotationIndex[voice]) {
   v4RotationIndex[voice] = {};
 }
 
-/* Ensure pillar index exists */
+/* Determine fallback pool */
+let pool = null;
+
+if (
+  typeof v4FallbackBank !== "undefined" &&
+  v4FallbackBank[voice] &&
+  v4FallbackBank[voice][pillar]
+) {
+  pool = v4FallbackBank[voice][pillar];
+} else {
+  pool = v4FallbackBank.saira.growth;
+}
+
+/* Initialize pillar rotation */
 if (v4RotationIndex[voice][pillar] === undefined) {
   v4RotationIndex[voice][pillar] = 0;
 }
@@ -2426,12 +2441,10 @@ const index = v4RotationIndex[voice][pillar];
 
 const line = pool[index % pool.length];
 
-/* advance rotation */
 v4RotationIndex[voice][pillar]++;
 
 return deliverReply(line);
-
-}
+  
 window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
