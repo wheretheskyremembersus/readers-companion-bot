@@ -1271,55 +1271,180 @@ function applyStageAtmosphere(stage) {
   `;
 }
 
-/* =========================
-   EMOTIONAL PILLAR KEYWORDS
-========================= */
+/* =================================================
+   MASTER EMOTIONAL PILLARS (ONE VERSION ONLY)
+================================================= */
 
 const emotionalPillars = {
 
   affection: [
-    "love","care","miss","heart","bond","attach",
-    "connection","close","belong","together",
-    "want","desire","admire","cherish"
-  ],
+  "i love",
+  "i still love",
+  "i care about",
+  "i cared about",
+  "i miss you",
+  "i miss them",
+  "i felt close",
+  "i felt safe with",
+  "i wanted to stay",
+  "i didn't want to lose",
+  "it meant something to me",
+  "it mattered to me",
+  "i was attached",
+  "i got attached",
+  "i fell for",
+  "i held on",
+  "cant stop thinking",
+  "keep thinking about",
+  "thinking about you",
+  "thinking about them",
+  "it meant a lot",
+  "important to me"
+],
 
-  vulnerability: [
-    "open","expose","unguard","fragile","soft",
-    "honest","truth","reveal","admit","confess",
-    "bare","share"
-  ],
+ vulnerability: [
+  "not enough",
+  "not good enough",
+  "i wasn't enough",
+  "i'm not enough",
+  "i am not enough",
+  "i feel like i'm not enough",
+  "i feel replaceable",
+  "replace me",
+  "replaced",
+  "replace",
+  "forget me",
+  "move on",
+  "moving on",
+  "they moved on",
+  "they replaced me",
+  "i was replaced"
+],
 
-  fear: [
-    "fear","afraid","scare","risk","danger",
-    "hesitate","uncertain","doubt","worry",
-    "anxious","nervous"
-  ],
+ fear: [
+
+  "fear",
+  "scared",
+  "afraid",
+  "frightened",
+  "terrified",
+  "anxious",
+  "anxiety",
+  "worried",
+  "worry",
+  "panic",
+  "panicking",
+
+  "lose",
+  "losing",
+  "lost",
+  "leave",
+  "leaving",
+  "left",
+  "abandon",
+  "abandoned",
+  "abandonment",
+
+  "what if",
+  "what happens if",
+  "what happens now",
+  "i don't know what to do",
+  "i dont know what to do",
+  "i don't know what will happen",
+
+  "overthinking",
+  "overthink",
+  "cant sleep",
+  "can't sleep",
+  "restless",
+  "uneasy",
+
+  "i'm scared",
+  "i am scared",
+  "i'm afraid",
+  "i am afraid",
+  "i'm worried",
+  "i am worried"
+], 
 
   regret: [
-    "regret","mistake","sorry","apology",
-    "should have","shouldnt","wish","if only",
-    "guilt"
-  ],
+  "i wish",
+  "i should have",
+  "i shouldn't have",
+  "i could have",
+  "if only",
+  "i replay",
+  "i keep thinking about",
+  "i shouldn't have said",
+  "i shouldn't have left",
+  "i made a mistake",
+  "i messed up",
+  "i ruined it",
+  "shouldve",
+  "should have said",
+  "wish i had",
+  "wish i did",
+  "wish i had said",
+  "wish things were different",
+  "i pushed away",
+  "i let it slip"
+],
 
-  loss: [
-    "loss","lost","losing","gone","leave","left",
-    "goodbye","absence","separate","separation",
-    "ended","break","broken"
-  ],
-
-  growth: [
-    "change","grow","growth","learn","realise",
-    "understand","reflection","reflect",
-    "become","evolve"
-  ],
+loss: [
+  "i miss",
+  "i can't forget",
+  "i cant forget",
+  "it's gone",
+  "not there anymore",
+  "something is missing",
+  "i feel empty",
+  "i feel alone",
+  "i feel lonely",
+  "it ended",
+  "we ended",
+  "it's over",
+  "i lost",
+  "not here anymore",
+  "gone now",
+  "something feels missing",
+  "i lost him",
+  "i lost her"
+],
+  
+growth: [
+  "i changed",
+  "i'm different",
+  "i'm not the same",
+  "it changed me",
+  "i learned",
+  "it taught me",
+  "i understand now",
+  "i see differently",
+  "i see it differently",
+  "i grew",
+  "i became stronger",
+  "i'm stronger now",
+  "i matured",
+  "i had to grow"
+],
 
   destiny: [
-    "fate","destiny","meant","timing",
-    "future","return","again","chance",
-    "coincidence","purpose","path"
-  ]
+  "meant to",
+  "supposed to",
+  "unfinished",
+  "we'll meet again",
+  "maybe someday",
+  "fate",
+  "it was written",
+  "it was meant",
+  "we were meant",
+  "we will cross paths",
+  "not the end",
+  "not finished"
+]
 
 };
+
 /* =========================
    EMOTIONAL ANCHORS
 ========================= */
@@ -6252,179 +6377,6 @@ function evolveStage(state) {
   };
 }
 
-/* =================================================
-   MASTER EMOTIONAL PILLARS (ONE VERSION ONLY)
-================================================= */
-
-const emotionalPillars = {
-
-  affection: [
-  "i love",
-  "i still love",
-  "i care about",
-  "i cared about",
-  "i miss you",
-  "i miss them",
-  "i felt close",
-  "i felt safe with",
-  "i wanted to stay",
-  "i didn't want to lose",
-  "it meant something to me",
-  "it mattered to me",
-  "i was attached",
-  "i got attached",
-  "i fell for",
-  "i held on",
-  "cant stop thinking",
-  "keep thinking about",
-  "thinking about you",
-  "thinking about them",
-  "it meant a lot",
-  "important to me"
-],
-
- vulnerability: [
-  "not enough",
-  "not good enough",
-  "i wasn't enough",
-  "i'm not enough",
-  "i am not enough",
-  "i feel like i'm not enough",
-  "i feel replaceable",
-  "replace me",
-  "replaced",
-  "replace",
-  "forget me",
-  "move on",
-  "moving on",
-  "they moved on",
-  "they replaced me",
-  "i was replaced"
-],
-
- fear: [
-
-  "fear",
-  "scared",
-  "afraid",
-  "frightened",
-  "terrified",
-  "anxious",
-  "anxiety",
-  "worried",
-  "worry",
-  "panic",
-  "panicking",
-
-  "lose",
-  "losing",
-  "lost",
-  "leave",
-  "leaving",
-  "left",
-  "abandon",
-  "abandoned",
-  "abandonment",
-
-  "what if",
-  "what happens if",
-  "what happens now",
-  "i don't know what to do",
-  "i dont know what to do",
-  "i don't know what will happen",
-
-  "overthinking",
-  "overthink",
-  "cant sleep",
-  "can't sleep",
-  "restless",
-  "uneasy",
-
-  "i'm scared",
-  "i am scared",
-  "i'm afraid",
-  "i am afraid",
-  "i'm worried",
-  "i am worried"
-], 
-
-  regret: [
-  "i wish",
-  "i should have",
-  "i shouldn't have",
-  "i could have",
-  "if only",
-  "i replay",
-  "i keep thinking about",
-  "i shouldn't have said",
-  "i shouldn't have left",
-  "i made a mistake",
-  "i messed up",
-  "i ruined it",
-  "shouldve",
-  "should have said",
-  "wish i had",
-  "wish i did",
-  "wish i had said",
-  "wish things were different",
-  "i pushed away",
-  "i let it slip"
-],
-
-loss: [
-  "i miss",
-  "i can't forget",
-  "i cant forget",
-  "it's gone",
-  "not there anymore",
-  "something is missing",
-  "i feel empty",
-  "i feel alone",
-  "i feel lonely",
-  "it ended",
-  "we ended",
-  "it's over",
-  "i lost",
-  "not here anymore",
-  "gone now",
-  "something feels missing",
-  "i lost him",
-  "i lost her"
-],
-  
-growth: [
-  "i changed",
-  "i'm different",
-  "i'm not the same",
-  "it changed me",
-  "i learned",
-  "it taught me",
-  "i understand now",
-  "i see differently",
-  "i see it differently",
-  "i grew",
-  "i became stronger",
-  "i'm stronger now",
-  "i matured",
-  "i had to grow"
-],
-
-  destiny: [
-  "meant to",
-  "supposed to",
-  "unfinished",
-  "we'll meet again",
-  "maybe someday",
-  "fate",
-  "it was written",
-  "it was meant",
-  "we were meant",
-  "we will cross paths",
-  "not the end",
-  "not finished"
-]
-
-};
 
 /* =================================================
    STAGE NATIVE PILLAR MAP
