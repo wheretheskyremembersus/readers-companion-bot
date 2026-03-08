@@ -2151,7 +2151,7 @@ if (
    ENGINE PARTITION ROUTER
 ================================= */
 
-if (tollState[activeVoice]?.unlocked) {
+if (tollState[activeVoice]?.unlocked && typeof runV4Engine === "function") {
   return runV4Engine(text, originalText);
 }
  /* =========================
