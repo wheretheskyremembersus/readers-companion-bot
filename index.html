@@ -1096,17 +1096,18 @@ function deliverReply(replyText, callback) {
    AUTO RELATIONAL PREFIX
 ========================= */
 
+function deliverReply(replyText, callback) {
+
 const greetingPattern = /^(hi|hello|hey|hola|ola)\b/i;
 
 if (
- !emotionalModeActive &&
- relationalPrefix &&
- !skipRelationalPrefix &&
- !greetingPattern.test(originalText)
+  relationalPrefix &&
+  !skipRelationalPrefix &&
+  !greetingPattern.test(lastUserInput)
 ) {
- if (!replyText.startsWith(relationalPrefix)) {
-  replyText = relationalPrefix + replyText;
- }
+  if (!replyText.startsWith(relationalPrefix)) {
+    replyText = relationalPrefix + replyText;
+  }
 }
 
 interactionLocked = true;
