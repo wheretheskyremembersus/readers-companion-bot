@@ -2100,14 +2100,12 @@ function getSelfReferencePrefix(stage) {
 
 function processInput(userText, originalText) {
 
-if (interactionLocked) return;
+  let normalizedText = normalizeInput(originalText);
 
-let normalizedText = normalizeInput(originalText);
-
-/* DEBUG TRACE */
-console.log("INPUT:", normalizedText);
-console.log("LAST:", lastUserInput[activeVoice]);
-console.log("COUNT:", repetitionCount[activeVoice]);
+  /* router */
+  if (tollState?.[activeVoice]?.unlocked === true && typeof runV4Engine === "function") {
+    return runV4Engine(userText, originalText);
+  }
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
