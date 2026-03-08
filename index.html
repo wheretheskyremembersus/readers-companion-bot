@@ -2453,7 +2453,7 @@ if (repetitionCount[activeVoice] >= 2) {
 
   skipRelationalPrefix = true;
 
-  const responses = {
+  const repetitionResponses = {
     saira: [
       "You've asked that already.",
       "Repeating it won't change the answer.",
@@ -2468,13 +2468,12 @@ if (repetitionCount[activeVoice] >= 2) {
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
+  const pool = repetitionResponses[voice];
+  const reply = pool[Math.floor(Math.random() * pool.length)];
 
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
+  return deliverReply(reply);  
 }
-
 /* =========================
    RANDOM NOISE / PATTERN BREAK GUARD
 ========================= */
