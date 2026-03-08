@@ -2201,6 +2201,24 @@ if (
 }
 
 /* ================================
+V4 STATE SAFETY
+================================= */
+
+if (!stageState) {
+  stageState = {
+    saira: { currentStage: 1 },
+    ayaan: { currentStage: 1 }
+  };
+}
+
+if (!v4RotationIndex) {
+  v4RotationIndex = {
+    saira: {},
+    ayaan: {}
+  };
+}
+  
+/* ================================
 ENGINE PARTITION ROUTER
 (STRICT V3 → V4 ISOLATION)
 ================================= */
@@ -2257,7 +2275,9 @@ function runV4Engine(text, originalText) {
   }
 
   const stage = stageState?.[voice]?.currentStage || 1;
-
+  
+console.log("voice:", voice);
+console.log("stageState:", stageState);
   /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
