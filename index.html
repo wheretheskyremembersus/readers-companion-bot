@@ -2182,7 +2182,7 @@ if (abuseTracker[activeVoice]?.locked) {
   );
 }
 
- /* ================================
+/* ================================
    V4 UNLOCK CHECK
 ================================= */
 
@@ -2192,7 +2192,10 @@ if (
 ) {
   tollState[activeVoice].unlocked = true;
 
-  if (stageState[activeVoice].currentStage < 1) {
+  if (!stageState[activeVoice]) {
+    stageState[activeVoice] = { currentStage: 1 };
+  } 
+  else if (stageState[activeVoice].currentStage < 1) {
     stageState[activeVoice].currentStage = 1;
   }
 }
