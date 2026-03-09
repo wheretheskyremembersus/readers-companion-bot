@@ -6925,10 +6925,11 @@ function answerCharacter(item, btn) {
 
   const reply = item.a[activeVoice];
 
- deliverReply(reply, function () {
+deliverReply(reply, function () {
 
   characterAnswered++;
 
+  // Continue character layers
   if (characterAnswered % 5 === 0) {
 
     if (currentLayer < characterLayers.length) {
@@ -6938,6 +6939,7 @@ function answerCharacter(item, btn) {
     }
 
   }
+
 /*================================
  V3 DOCK PROGRESSION + TOLLGATE
 ================================*/
@@ -7008,6 +7010,8 @@ function showAuthorInvitation() {
     }, 1500); // pause before line 2
 
   }, 1400); // typing for line 1
+  
+  });
 }
 
 function declineLayer() {
