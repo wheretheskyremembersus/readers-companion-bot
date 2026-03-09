@@ -6207,7 +6207,11 @@ if (
   return deliverReply(acknowledgment);
 } 
   applyStageAtmosphere(voiceStage.currentStage);
+const detected = detectEmotionalPillar(normalizeInput(originalText));
 
+if (!detected) {
+  return deliverReply(getFallbackResponse());
+}
   let response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
