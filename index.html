@@ -7535,11 +7535,9 @@ if (tollState?.[activeVoice]?.unlocked) {
 
 } else {
 
-  processInput(text, originalText);
-
+processInput(originalText.toLowerCase(), originalText);
 }
 
-}
   
 document.addEventListener("DOMContentLoaded", loadWelcome);
 </script>
