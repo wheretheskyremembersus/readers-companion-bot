@@ -4138,9 +4138,6 @@ if (false) {
   }
 
 }
-
-function processInput(userText, originalText) {
- const normalizedText = userText; 
 /* ================================
    RELATIONAL FINALITY HANDLER
 ================================= */
@@ -6075,7 +6072,7 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalize
       ? "Sometimes those feelings stay with us longer than expected."
       : "Some things linger longer than we anticipate."
   );
-  }
+}
 /* =========================
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
@@ -6120,28 +6117,6 @@ function processEmotionalMode(userText, originalText) {
     return deliverReply(getFallbackResponse());
   }
 
-  const voice = activeVoice;
-  const currentStage = stageState[voice]?.currentStage || 1;
-
-  let response =
-    emotionalResponseBank?.[detected.primary]?.[voice]?.[currentStage];
-
-  if (response) {
-
-    let finalText = response;
-
-    if (typeof applyV4Integration === "function") {
-      finalText = applyV4Integration(
-        finalText,
-        detected.primary
-      );
-    }
-
-    return deliverReply(finalText);
-  }
-
-  return deliverReply(getFallbackResponse());
-}
   /* =========================
      STAGE STATE SAFETY
   ========================= */
@@ -6206,11 +6181,7 @@ if (
   return deliverReply(acknowledgment);
 } 
   applyStageAtmosphere(voiceStage.currentStage);
-const detected = detectEmotionalPillar(normalizeInput(originalText));
 
-if (!detected) {
-  return deliverReply(getFallbackResponse());
-}
   let response =
     emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
 
@@ -6940,9 +6911,9 @@ function showNextLayer() {
 function answerCharacter(item, btn) {
 
   if (interactionLocked) {
-    const msg = activeVoice === "saira"
-      ? "Let me finish this gently... 🌙"
-      : "Give it a moment. I'm still here. 🌿";
+    const msg = activeVoice ==="saira"
+      ?"Let me finish this gently... 🌙"
+      :"Give it a moment. I'm still here. 🌿";
     addVoiceMessage(msg);
     return;
   }
@@ -6954,91 +6925,89 @@ function answerCharacter(item, btn) {
 
   const reply = item.a[activeVoice];
 
-  deliverReply(reply, function () {
+ deliverReply(reply, function () {
 
-    characterAnswered++;
+  characterAnswered++;
 
-    // Continue character layers
-    if (characterAnswered % 5 === 0) {
-      if (currentLayer < characterLayers.length) {
-        unlockNextLayer();
-      } else {
-        showAuthorInvitation();
-      }
+  if (characterAnswered % 5 === 0) {
+
+    if (currentLayer < characterLayers.length) {
+      unlockNextLayer();
+    } else {
+      showAuthorInvitation();
     }
 
-    /*================================
-      V3 DOCK PROGRESSION + TOLLGATE
-    ================================*/
+  }
+/*================================
+ V3 DOCK PROGRESSION + TOLLGATE
+================================*/
 
-    tollState[activeVoice].dockCount++;
+// TOLL: Dock progression
+tollState[activeVoice].dockCount++;
 
-    const dockProgress = tollState[activeVoice].dockCount;
+const dockProgress = tollState[activeVoice].dockCount;
 
-    if (dockProgress >= 20) {
-      tollState[activeVoice].unlocked = true;
-    }
+// Unlock ONLY at 20 dock interactions
+if (dockProgress >= 20) {
+  tollState[activeVoice].unlocked = true;
+}
 
-  });
-
-}         
+});
+}
+         
 /* =========================
    AUTHOR INVITATION
 ========================= */
 
 function showAuthorInvitation() {
-
   clearDock();
+
   interactionLocked = true;
 
   // Line 1
   showTypingIndicator();
 
   setTimeout(() => {
-
     removeTypingIndicator();
     addVoiceMessage("You've stayed with us until the end.");
     autoScroll();
 
     // Line 2
-    showTypingIndicator();
-
     setTimeout(() => {
-
-      removeTypingIndicator();
-
-      addVoiceMessage(
-        "If you'd like to write to the author, you're welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
-      );
-
-      autoScroll();
-
-      // Line 3
       showTypingIndicator();
 
       setTimeout(() => {
-
         removeTypingIndicator();
-
         addVoiceMessage(
-          "Before you leave... may I ask you three quiet reflections?"
+         "If you'd like to write to the author, you're welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
         );
-
         autoScroll();
 
-        interactionLocked = false;
+        // Line 3
+        setTimeout(() => {
+          showTypingIndicator();
 
-        dock.innerHTML = `
-          <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
-          <button class="btn primary" onclick="declineReflection()">No</button>
-        `;
+          setTimeout(() => {
+            removeTypingIndicator();
+            addVoiceMessage("Before you leave... may I ask you three quiet reflections?");
+            autoScroll();
 
-      }, 1600);
+            interactionLocked = false;
 
-    }, 2000);
+            dock.innerHTML = `
+              <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+              <button class="btn primary" onclick="declineReflection()">No</button>
+            `;
 
-  }, 1400);
+          }, 1600); // typing for line 3
 
+        }, 1200); // pause before line 3
+
+      }, 2000); // typing for line 2
+
+    }, 1500); // pause before line 2
+
+  }, 1400); // typing for line 1
 }
 
 function declineLayer() {
@@ -7388,17 +7357,10 @@ setTimeout(() => {
 ================================================= */
 
 function clearDock() {
-  if (dock) dock.innerHTML = "";
+  if (dock) dock.innerHTML ="";
 }
 
 function loadWelcome() {
-
-  dock = document.getElementById("questionDock");
-
-  if (!dock) {
-    console.error("Dock element not found.");
-    return;
-  }
 
   clearDock();
 
@@ -7418,16 +7380,14 @@ function loadWelcome() {
   setDockDisabled(false);
   autoScroll();
 }
-function processEmotionalMode(text, originalText) {
-  processInput(text, originalText);
-}
+
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
   if (!input) return;
 
-  const originalText = input.value.trim();
-  if (!originalText) return;
+ const originalText = input.value.trim();
+if (!originalText) return;
 
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or ayaan first.");
@@ -7436,9 +7396,9 @@ function sendTypedMessage() {
 
   playTone(520, 60, 0.025);
 
-  input.value = "";
+  input.value ="";
 
-  addUserMessage(originalText); 
+  addUserMessage(originalText);  
   
 /* =========================
    REPEAT PROTECTION RESTORE
@@ -7528,6 +7488,7 @@ if (freeProgress >= 20) {
     transitionAcknowledged[activeVoice] = true;
     deliverReply(bridgeLine);
   }
+}
 /* =========================
 META REDIRECT LAYER
 ========================= */
@@ -7540,16 +7501,21 @@ if (isDirectionalDeviation(originalText)) {
 const text = originalText.toLowerCase();
 
 /* =========================
-   ENGINE ROUTER
+   ENGINE ROUTER (V3 → V4)
 ========================= */
 
-processInput(text, originalText);
+if (tollState?.[activeVoice]?.unlocked) {
 
-} 
-  window.addEventListener("load", loadWelcome);
+  processEmotionalMode(text, originalText);
+
+} else {
+
+  processInput(text, originalText);
+
+}
+
+}
 </script>
-
-<div id="dock"></div>
 
 <!-- SUPABASE ANALYTICS -->
 <script>
@@ -7651,7 +7617,6 @@ trackEvent("quick_button_clicked", {
   button_text: text
  });
 });
-
 </script>
 
 </body>
