@@ -7628,6 +7628,31 @@ function sendTypedMessage() {
   const originalText = input.value.trim();
   if (!originalText) return;
 
+  /* =========================
+     REPEAT PROTECTION RESTORE
+  ========================= */
+
+  const normalized = normalizeInput(originalText);
+
+  if (normalized === lastUserInput) {
+    repeatCount++;
+  } else {
+    repeatCount = 1;
+  }
+
+  lastUserInput = normalized;
+
+  if (repeatCount >= repeatLimit) {
+
+    exitStrikeCount++;
+    localStorage.setItem("exitStrikes", exitStrikeCount);
+
+    repeatCount = 0;
+
+    returnToWebsite();
+    return;
+  }
+
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or ayaan first.");
     return;
@@ -7644,30 +7669,6 @@ function sendTypedMessage() {
   } else {
     processInput(originalText, originalText);
   }
-}
-/* =========================
-   REPEAT PROTECTION RESTORE
-========================= */
-
-const normalized = normalizeInput(originalText);
-
-if (normalized === lastUserInput) {
-  repeatCount++;
-} else {
-  repeatCount = 1;
-}
-
-lastUserInput = normalized;
-
-if (repeatCount >= repeatLimit) {
-
-  exitStrikeCount++;
-  localStorage.setItem("exitStrikes", exitStrikeCount);
-
-  repeatCount = 0;
-
-returnToWebsite();
-return;
 }
 /* =========================
    ABUSE PROTECTION GUARD 
