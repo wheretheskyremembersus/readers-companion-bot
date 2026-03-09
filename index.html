@@ -2442,7 +2442,7 @@ if (!v4RotationIndex) v4RotationIndex = {};
   
 console.log("voice:", voice);
 console.log("stageState:", stageState);
- /* =========================
+/* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
 
@@ -2455,13 +2455,33 @@ if (pillarMatch) {
   const targetStage = pillarToStage?.[pillar] || stage;
 
   if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
-    if (!stageState) stageState = {};
-    if (!stageState[voice]) stageState[voice] = { currentStage: 1 };
 
-    stageState[voice].currentStage = Math.min(
-      stageState[voice].currentStage + 1,
-      7
-    );
+    if (!stageState) stageState = {};
+
+    if (!stageState[voice]) {
+      stageState[voice] = {
+        currentStage: 1,
+        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+      };
+    }
+
+    const thresholds = {
+      2:3,
+      3:4,
+      4:5,
+      5:6,
+      6:7,
+      7:8
+    };
+
+    const nextStage = stageState[voice].currentStage + 1;
+
+    stageState[voice].momentum[nextStage]++;
+
+    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      stageState[voice].currentStage = nextStage;
+    }
+
   }
 
   const anchor = emotionalAnchors?.[voice]?.[pillar];
@@ -2471,7 +2491,6 @@ if (pillarMatch) {
   }
 
 }
-
   /* =========================
   DEFAULT PILLAR (SAFETY)
   ========================= */
