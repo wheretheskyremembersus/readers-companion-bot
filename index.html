@@ -6911,9 +6911,9 @@ function showNextLayer() {
 function answerCharacter(item, btn) {
 
   if (interactionLocked) {
-    const msg = activeVoice ==="saira"
-      ?"Let me finish this gently... 🌙"
-      :"Give it a moment. I'm still here. 🌿";
+    const msg = activeVoice === "saira"
+      ? "Let me finish this gently... 🌙"
+      : "Give it a moment. I'm still here. 🌿";
     addVoiceMessage(msg);
     return;
   }
@@ -6925,89 +6925,91 @@ function answerCharacter(item, btn) {
 
   const reply = item.a[activeVoice];
 
- deliverReply(reply, function () {
+  deliverReply(reply, function () {
 
-  characterAnswered++;
+    characterAnswered++;
 
-  if (characterAnswered % 5 === 0) {
-
-    if (currentLayer < characterLayers.length) {
-      unlockNextLayer();
-    } else {
-      showAuthorInvitation();
+    // Continue character layers
+    if (characterAnswered % 5 === 0) {
+      if (currentLayer < characterLayers.length) {
+        unlockNextLayer();
+      } else {
+        showAuthorInvitation();
+      }
     }
 
-  }
-/*================================
- V3 DOCK PROGRESSION + TOLLGATE
-================================*/
+    /*================================
+      V3 DOCK PROGRESSION + TOLLGATE
+    ================================*/
 
-// TOLL: Dock progression
-tollState[activeVoice].dockCount++;
+    tollState[activeVoice].dockCount++;
 
-const dockProgress = tollState[activeVoice].dockCount;
+    const dockProgress = tollState[activeVoice].dockCount;
 
-// Unlock ONLY at 20 dock interactions
-if (dockProgress >= 20) {
-  tollState[activeVoice].unlocked = true;
-}
+    if (dockProgress >= 20) {
+      tollState[activeVoice].unlocked = true;
+    }
 
-});
-}
+  });
+
          
 /* =========================
    AUTHOR INVITATION
 ========================= */
 
 function showAuthorInvitation() {
-  clearDock();
 
+  clearDock();
   interactionLocked = true;
 
   // Line 1
   showTypingIndicator();
 
   setTimeout(() => {
+
     removeTypingIndicator();
     addVoiceMessage("You've stayed with us until the end.");
     autoScroll();
 
     // Line 2
+    showTypingIndicator();
+
     setTimeout(() => {
+
+      removeTypingIndicator();
+
+      addVoiceMessage(
+        "If you'd like to write to the author, you're welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
+      );
+
+      autoScroll();
+
+      // Line 3
       showTypingIndicator();
 
       setTimeout(() => {
+
         removeTypingIndicator();
+
         addVoiceMessage(
-         "If you'd like to write to the author, you're welcome to. He occasionally shares digital copies with readers who reach out thoughtfully.<br><br><strong>wheretheskyremembersus@gmail.com</strong><br><br>Preview pages: <a href='https://drive.google.com/file/d/1fdk-_Zk7L147U-wpeYVOcDmmFcc-HMzQ/view?pli=1' target='_blank' style='color:#000; text-decoration:underline;'>View here</a>"
+          "Before you leave... may I ask you three quiet reflections?"
         );
+
         autoScroll();
 
-        // Line 3
-        setTimeout(() => {
-          showTypingIndicator();
+        interactionLocked = false;
 
-          setTimeout(() => {
-            removeTypingIndicator();
-            addVoiceMessage("Before you leave... may I ask you three quiet reflections?");
-            autoScroll();
+        dock.innerHTML = `
+          <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+          <button class="btn primary" onclick="declineReflection()">No</button>
+        `;
 
-            interactionLocked = false;
+      }, 1600);
 
-            dock.innerHTML = `
-              <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
-              <button class="btn primary" onclick="declineReflection()">No</button>
-            `;
+    }, 2000);
 
-          }, 1600); // typing for line 3
+  }, 1400);
 
-        }, 1200); // pause before line 3
-
-      }, 2000); // typing for line 2
-
-    }, 1500); // pause before line 2
-
-  }, 1400); // typing for line 1
 }
 
 function declineLayer() {
@@ -7618,6 +7620,6 @@ trackEvent("quick_button_clicked", {
  });
 });
 </script>
-
+loadWelcome();
 </body>
 </html>
