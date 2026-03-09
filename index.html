@@ -7519,6 +7519,9 @@ if (tollState?.[activeVoice]?.unlocked) {
 }
 </script>
 
+document.addEventListener("DOMContentLoaded", loadWelcome);
+</script>
+
 <!-- SUPABASE ANALYTICS -->
 <script>
 // Disable right click
@@ -7619,7 +7622,7 @@ trackEvent("quick_button_clicked", {
   button_text: text
  });
 });
-document.addEventListener("DOMContentLoaded", loadWelcome);
+
 </script>
 
 </body>
