@@ -719,7 +719,8 @@ let reflectionStep = 0;
 /* ================================
 V4 SESSION FLAGS
 ================================= */
-window.v4SessionFlags = window.v4SessionFlags || {
+
+let v4SessionFlags = {
   saira: {
     previewOffered: false,
     stage7Count: 0,
@@ -731,7 +732,6 @@ window.v4SessionFlags = window.v4SessionFlags || {
     stage7Acknowledged: false
   }
 };
-  
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -753,6 +753,22 @@ let tollState = {
   }
 };
 
+/* ================================
+V4 SESSION FLAGS
+================================= */
+
+let v4SessionFlags = {
+  saira: {
+    previewOffered: false,
+    stage7Count: 0,
+    stage7Acknowledged: false
+  },
+  ayaan: {
+    previewOffered: false,
+    stage7Count: 0,
+    stage7Acknowledged: false
+  }
+};
 /* =========================
    META DIRECTIONAL CHECK
 ========================= */
@@ -921,7 +937,23 @@ var stageState = {
 
 window.stageState = stageState; 
 
-     
+/* =========================
+   V4 SESSION GATE FLAGS
+========================= */
+
+let v4SessionFlags = {
+  saira: {
+    previewOffered: false,
+    stage7Acknowledged: false,
+    stage7Count: 0
+  },
+  ayaan: {
+    previewOffered: false,
+    stage7Acknowledged: false,
+    stage7Count: 0
+  }
+};
+         
 /* =========================
    PILLAR → STAGE MAP
 ========================= */
@@ -6131,8 +6163,6 @@ function processEmotionalMode(userText, originalText) {
   }
 
   const voiceStage = stageState[activeVoice];
-  const voice = activeVoice;
-const currentStage = voiceStage.currentStage;
   
 /* =========================
    STAGE 6 PREVIEW OFFER
@@ -6220,8 +6250,9 @@ if (
     return deliverReply(finalText);
   }
 
-return deliverReply(getFallbackResponse());
+return getFallbackResponse();
 }
+  
 /* =================================================
    RELATIONAL TRIGGER DETECTION
 ================================================= */
@@ -6750,11 +6781,11 @@ deliverReply(reply, function () {
   }
 
   // Foundational logic remains untouched
-if (foundationalAnswered.size === 5) {
-  unlockNextLayer();
-}
-});   
-}     
+  if (foundationalAnswered.size === 5) {
+    unlockNextLayer();
+  }
+
+});
 /* =========================
    15 CHARACTER QUESTIONS
 ========================= */
@@ -6926,8 +6957,7 @@ function answerCharacter(item, btn) {
   const reply = item.a[activeVoice];
 
   deliverReply(reply, function () {
-
-  characterAnswered++;
+    characterAnswered++;
 
 /*================================
  V3 DOCK PROGRESSION + TOLLGATE
@@ -6941,9 +6971,6 @@ const dockProgress = tollState[activeVoice].dockCount;
 // Unlock ONLY at 20 dock interactions
 if (dockProgress >= 20) {
   tollState[activeVoice].unlocked = true;
-}
-
-});
 }
          
 /* =========================
@@ -7467,8 +7494,7 @@ if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
 const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
 if (freeProgress >= 20) {
-  // free interaction recorded but does NOT unlock V4
-}
+  tollState[activeVoice].unlocked = true;
 
   if (!transitionAcknowledged?.[activeVoice]) {
     const bridgeLine =
@@ -7502,8 +7528,6 @@ if (tollState?.[activeVoice]?.unlocked) {
 } else {
 
   processInput(text, originalText);
-
-}
 
 }
 </script>
