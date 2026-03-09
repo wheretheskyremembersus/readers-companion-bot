@@ -7690,7 +7690,7 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-  runV4Engine(originalText, originalText);
+  processEmotionalMode(originalText, originalText);
 } else {
   processInput(originalText, originalText);
 }
