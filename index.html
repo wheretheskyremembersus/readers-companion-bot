@@ -7467,7 +7467,8 @@ if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
 const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
 if (freeProgress >= 20) {
-  tollState[activeVoice].unlocked = true;
+  // free interaction recorded but does NOT unlock V4
+}
 
   if (!transitionAcknowledged?.[activeVoice]) {
     const bridgeLine =
