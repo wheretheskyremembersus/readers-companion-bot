@@ -707,7 +707,8 @@ let activeVoice = null;
 let interactionLocked = false;
 let sessionUserName = null;
 let lastEntity = null;
-
+let introDelivered = false;
+  
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
 let currentLayer = 0;
@@ -1270,6 +1271,180 @@ function applyStageAtmosphere(stage) {
   `;
 }
 
+/* =================================================
+   MASTER EMOTIONAL PILLARS (ONE VERSION ONLY)
+================================================= */
+
+const emotionalPillars = {
+
+  affection: [
+  "i love",
+  "i still love",
+  "i care about",
+  "i cared about",
+  "i miss you",
+  "i miss them",
+  "i felt close",
+  "i felt safe with",
+  "i wanted to stay",
+  "i didn't want to lose",
+  "it meant something to me",
+  "it mattered to me",
+  "i was attached",
+  "i got attached",
+  "i fell for",
+  "i held on",
+  "cant stop thinking",
+  "keep thinking about",
+  "thinking about you",
+  "thinking about them",
+  "it meant a lot",
+  "important to me"
+],
+
+ vulnerability: [
+  "not enough",
+  "not good enough",
+  "i wasn't enough",
+  "i'm not enough",
+  "i am not enough",
+  "i feel like i'm not enough",
+  "i feel replaceable",
+  "replace me",
+  "replaced",
+  "replace",
+  "forget me",
+  "move on",
+  "moving on",
+  "they moved on",
+  "they replaced me",
+  "i was replaced"
+],
+
+ fear: [
+
+  "fear",
+  "scared",
+  "afraid",
+  "frightened",
+  "terrified",
+  "anxious",
+  "anxiety",
+  "worried",
+  "worry",
+  "panic",
+  "panicking",
+
+  "lose",
+  "losing",
+  "lost",
+  "leave",
+  "leaving",
+  "left",
+  "abandon",
+  "abandoned",
+  "abandonment",
+
+  "what if",
+  "what happens if",
+  "what happens now",
+  "i don't know what to do",
+  "i dont know what to do",
+  "i don't know what will happen",
+
+  "overthinking",
+  "overthink",
+  "cant sleep",
+  "can't sleep",
+  "restless",
+  "uneasy",
+
+  "i'm scared",
+  "i am scared",
+  "i'm afraid",
+  "i am afraid",
+  "i'm worried",
+  "i am worried"
+], 
+
+  regret: [
+  "i wish",
+  "i should have",
+  "i shouldn't have",
+  "i could have",
+  "if only",
+  "i replay",
+  "i keep thinking about",
+  "i shouldn't have said",
+  "i shouldn't have left",
+  "i made a mistake",
+  "i messed up",
+  "i ruined it",
+  "shouldve",
+  "should have said",
+  "wish i had",
+  "wish i did",
+  "wish i had said",
+  "wish things were different",
+  "i pushed away",
+  "i let it slip"
+],
+
+loss: [
+  "i miss",
+  "i can't forget",
+  "i cant forget",
+  "it's gone",
+  "not there anymore",
+  "something is missing",
+  "i feel empty",
+  "i feel alone",
+  "i feel lonely",
+  "it ended",
+  "we ended",
+  "it's over",
+  "i lost",
+  "not here anymore",
+  "gone now",
+  "something feels missing",
+  "i lost him",
+  "i lost her"
+],
+  
+growth: [
+  "i changed",
+  "i'm different",
+  "i'm not the same",
+  "it changed me",
+  "i learned",
+  "it taught me",
+  "i understand now",
+  "i see differently",
+  "i see it differently",
+  "i grew",
+  "i became stronger",
+  "i'm stronger now",
+  "i matured",
+  "i had to grow"
+],
+
+  destiny: [
+  "meant to",
+  "supposed to",
+  "unfinished",
+  "we'll meet again",
+  "maybe someday",
+  "fate",
+  "it was written",
+  "it was meant",
+  "we were meant",
+  "we will cross paths",
+  "not the end",
+  "not finished"
+]
+
+};
+
 /* =========================
    EMOTIONAL ANCHORS
 ========================= */
@@ -1305,6 +1480,8 @@ function normalizeWord(word) {
 
 function detectEmotionalPillar(text) {
 
+  if (!text) return null;
+
   const lower = text.toLowerCase();
 
   const userWords = lower
@@ -1313,13 +1490,13 @@ function detectEmotionalPillar(text) {
     .map(w => normalizeWord(w));
 
   const pillarOrder = [
-   "affection",
-   "fear",
-   "vulnerability",
-   "regret",
-   "loss",
-   "growth",
-   "destiny"
+    "affection",
+    "fear",
+    "vulnerability",
+    "regret",
+    "loss",
+    "growth",
+    "destiny"
   ];
 
   let scores = {};
@@ -1332,11 +1509,11 @@ function detectEmotionalPillar(text) {
 
       if (keyword.includes(" ")) {
         if (lower.includes(keyword)) {
-          score += 3; // strong phrase
+          score += 3;
         }
       } else {
         const keywordRoot = normalizeWord(keyword);
-        if (userWords.some(w => w === keywordRoot)) {
+        if (userWords.some(w => w.startsWith(keywordRoot))) {
           score += 1;
         }
       }
@@ -1353,24 +1530,26 @@ function detectEmotionalPillar(text) {
   const primary = sorted[0];
   const secondary = sorted[1];
 
-const confidenceThreshold = 2; // minimum score
+  const confidenceThreshold = 1;
 
-if (primary[1] >= confidenceThreshold) {
+  if (primary[1] >= confidenceThreshold) {
 
-  return {
-    primary: primary[0],
-    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
-    primaryScore: primary[1],
-    secondaryScore: secondary ? secondary[1] : 0
-  };
-}
+    return {
+      primary: primary[0],
+      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+      primaryScore: primary[1],
+      secondaryScore: secondary ? secondary[1] : 0
+    };
+
+  }
 
   return null;
+
 }
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
-         
+
 let v3FallbackIndex = {
   saira: {
     firm: 0,
@@ -1385,90 +1564,95 @@ let v3FallbackIndex = {
 };
 
 const v3FallbackBank = {
+
   saira: {
 
     firm: [
-  "We can leave it there for now.",
-  "It can stay as it is.",
-  "That's alright.",
-  "We don't need to press it further.",
-  "It can rest there.",
-  "That's clear enough.",
-  "We'll let it sit for a while.",
-  "That makes sense.",
-  "It can remain just there.",
-  "We don't have to move it yet."
-],
+      "We can let that rest for a moment.",
+      "It's alright to leave it there for now.",
+      "You don't have to push it further.",
+      "It can stay just as you said it.",
+      "Some thoughts are better left where they are.",
+      "That already carries meaning.",
+      "It doesn't need to go further right now.",
+      "We'll let it breathe for a moment.",
+      "You’ve already said enough for now.",
+      "It can remain gently where it is."
+    ],
 
-   neutral: [
-  "Some thoughts take time to settle.",
-  "Not everything needs to be unpacked right away.",
-  "It can remain as it is for now.",
-  "Some things sit quietly before they make sense.",
-  "We don't have to expand it.",
-  "It can stand just as it is.",
-  "It can stay unforced.",
-  "Not all thoughts resolve quickly.",
-  "Some things stay unfinished for a while.",
-  "It doesn't need to be explained further."
-],
+    neutral: [
+      "I hear what you're saying.",
+      "That makes sense in its own way.",
+      "Some thoughts settle slowly.",
+      "You don't have to rush what you're thinking.",
+      "It can stay where it is for now.",
+      "Not everything needs expanding.",
+      "Some meanings take time to appear.",
+      "It can remain just as you expressed it.",
+      "There's no need to press it further.",
+      "We can sit with that quietly."
+    ],
 
-   reflective: [
-  "Some meanings settle quietly over time.",
-  "It's alright for it to remain undefined for now.",
-  "Not everything opens immediately.",
-  "It can rest without needing resolution.",
-  "Certain thoughts don't ask to be moved.",
-  "It can stay where it is for a while.",
-  "Some things are better left steady.",
-  "It doesn't need reshaping yet.",
-  "It can remain without pressure.",
-  "That's where it naturally pauses."
-]
+    reflective: [
+      "Some meanings settle quietly over time.",
+      "It's alright for it to remain undefined for now.",
+      "Not everything opens immediately.",
+      "It can rest without needing resolution.",
+      "Certain thoughts don't ask to be moved.",
+      "It can stay where it is for a while.",
+      "Some things are better left steady.",
+      "It doesn't need reshaping yet.",
+      "It can remain without pressure.",
+      "That's where it naturally pauses."
+    ]
+
   },
 
-    ayaan: {
+  ayaan: {
 
     firm: [
-  "That stands for now.",
-  "It can stay there.",
-  "That's clear.",
-  "It remains as it is.",
-  "No need to extend it.",
-  "That's understood.",
-  "It holds steady.",
-  "We can leave it there.",
-  "It stays contained.",
-  "That's sufficient for now."
-],
+      "That can remain where it stands.",
+      "It holds as it is.",
+      "There's no need to extend it further.",
+      "That remains clear enough.",
+      "We'll let it stay there.",
+      "It doesn't require expansion.",
+      "That stands on its own.",
+      "It can remain contained.",
+      "There's no need to press it further.",
+      "That already communicates enough."
+    ],
 
-neutral: [
-  "It remains as stated.",
-  "It stays defined for now.",
-  "There's no need to alter it.",
-  "That's stable.",
-  "No adjustment is required.",
-  "It remains measured.",
-  "It holds as it is.",
-  "It stays within its bounds.",
-  "That's enough detail for now.",
-  "It doesn't require expansion."
-],
+    neutral: [
+      "I understand what you're indicating.",
+      "That point is clear.",
+      "It can remain as stated.",
+      "There's no need to move beyond it.",
+      "It remains understood.",
+      "Some things don't require elaboration.",
+      "The idea stands as it is.",
+      "It holds without adjustment.",
+      "We can leave it there.",
+      "That point remains steady."
+    ],
 
-   reflective: [
-  "It doesn't extend beyond that.",
-  "It remains contained for now.",
-  "There's no progression beyond that point.",
-  "It doesn't develop further at this stage.",
-  "It stays structured.",
-  "That remains intact.",
-  "It holds its position.",
-  "There's no shift there yet.",
-  "It doesn't advance beyond that.",
-  "It remains where it stands."
-]
+    reflective: [
+      "Some things settle without immediate clarity.",
+      "Understanding often arrives gradually.",
+      "It can remain unresolved for now.",
+      "Not every thought develops instantly.",
+      "Some meanings reveal themselves slowly.",
+      "It can stay where it is without pressure.",
+      "There is no urgency to resolve it.",
+      "Time often clarifies these things.",
+      "Some thoughts mature quietly.",
+      "It can remain as it stands."
+    ]
+
   }
+
 };
+
 /* =========================
    V3 FALLBACK SELECTOR
 ========================= */
@@ -1496,7 +1680,8 @@ function getV3Fallback() {
   v3FallbackIndex[voice][category]++;
 
   return line;
-}         
+}   
+
 /* =================================================
    CORE EXECUTION PIPELINE
 ================================================= */
@@ -2094,8 +2279,54 @@ function getSelfReferencePrefix(stage) {
 function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
-  const lower = normalizedText;
-  const nameCall = normalizedText;
+
+
+/* =========================
+   REPETITION / LOOP STRESS GUARD
+========================= */
+
+const repeatKey = normalizedText;
+
+// Detect repetition
+if (lastUserInput[activeVoice] === repeatKey) {
+  repetitionCount[activeVoice]++;
+} else {
+  repetitionCount[activeVoice] = 1;
+}
+
+// Store last input
+lastUserInput[activeVoice] = repeatKey;
+
+// Trigger repetition response on second identical message
+if (repetitionCount[activeVoice] >= 2) {
+
+  skipRelationalPrefix = true;
+
+  const repetitionResponses = {
+    saira: [
+      "You've asked that already.",
+      "Repeating it won't change the answer.",
+      "I heard you the first time.",
+      "It doesn't need to be pressed further."
+    ],
+    ayaan: [
+      "Repetition won't shift the response.",
+      "I've already addressed that.",
+      "Pressure doesn't alter clarity.",
+      "It remains as stated."
+    ]
+  };
+
+  const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
+  const pool = repetitionResponses[voice];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+const lower = normalizedText;
+const nameCall = normalizedText;
 
 /* ================================
    PRONOUN NORMALIZATION
@@ -2125,21 +2356,315 @@ if (abuseTracker[activeVoice]?.locked) {
   );
 }
 
- /* ================================
-   V4 UNLOCK CHECK (SAFE VERSION)
+/* ================================
+V4 ROTATION INDEX
+(prevents repetition)
+================================= */
+
+var v4RotationIndex = {
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+  
+/* ================================
+   V4 UNLOCK CHECK
 ================================= */
 
 if (
-  tollState[activeVoice]?.dockCount >= 15 ||
-  tollState[activeVoice]?.freeCount >= 10
+  tollState[activeVoice]?.dockCount >= 20 ||
+  tollState[activeVoice]?.freeCount >= 20
 ) {
   tollState[activeVoice].unlocked = true;
 
-  if (stageState[activeVoice].currentStage < 1) {
+  if (!stageState[activeVoice]) {
+    stageState[activeVoice] = { currentStage: 1 };
+  } 
+  else if (stageState[activeVoice].currentStage < 1) {
     stageState[activeVoice].currentStage = 1;
   }
 }
-       
+
+/* ================================
+V4 STATE SAFETY
+================================= */
+
+if (!stageState) {
+  stageState = {
+    saira: { currentStage: 1 },
+    ayaan: { currentStage: 1 }
+  };
+}
+
+if (!v4RotationIndex) {
+  v4RotationIndex = {
+    saira: {},
+    ayaan: {}
+  };
+}
+
+/* ================================
+V4 EMOTIONAL ENGINE
+================================= */
+
+function runV4Engine(text, originalText) {
+
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  if (!stageState) {
+    stageState = {};
+  }
+
+  if (!stageState[voice]) {
+    stageState[voice] = { currentStage: 1 };
+  }
+  
+if (!v4RotationIndex) v4RotationIndex = {};
+  if (!v4RotationIndex[voice]) {
+    v4RotationIndex[voice] = {};
+  }
+
+  const stage = stageState?.[voice]?.currentStage || 1;
+/* =========================
+  EMOTIONAL PILLAR DETECTION
+  ========================= */
+
+const pillarMatch = detectEmotionalPillar(originalText);
+
+let pillar = pillarMatch?.primary || null;
+
+if (pillarMatch) {
+
+  const targetStage = pillarToStage?.[pillar] || stage;
+
+  if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
+
+    if (!stageState) stageState = {};
+
+    if (!stageState[voice]) {
+      stageState[voice] = {
+        currentStage: 1,
+        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+      };
+    }
+
+    const thresholds = {
+      2:3,
+      3:4,
+      4:5,
+      5:6,
+      6:7,
+      7:8
+    };
+
+    const nextStage = stageState[voice].currentStage + 1;
+
+    stageState[voice].momentum[nextStage]++;
+
+    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      stageState[voice].currentStage = nextStage;
+    }
+
+  }
+
+  const anchor = emotionalAnchors?.[voice]?.[pillar];
+
+  if (anchor) {
+    return deliverReply(anchor);
+  }
+
+}
+  /* =========================
+  DEFAULT PILLAR (SAFETY)
+  ========================= */
+
+  if (!pillar) pillar = "growth";
+
+  /* =========================
+  V4 FALLBACK BANK
+  (PILLAR + CHARACTER VOICE)
+  ========================= */
+
+  const v4FallbackBank = {
+
+    saira: {
+
+      affection: [
+        "Caring rarely announces itself in the beginning.",
+        "It took time before I realised how much he mattered.",
+        "Some feelings grow quietly before we recognise them.",
+        "What started lightly slowly became difficult to ignore.",
+        "There was a moment when caring stopped feeling temporary.",
+        "Some connections deepen without either person noticing.",
+        "I didn't recognise the weight of it until later."
+      ],
+
+      fear: [
+        "Fear doesn't always arrive loudly.",
+        "I was more afraid of losing him than admitting it.",
+        "Sometimes fear hides inside hesitation.",
+        "It took time before I recognised how much fear shaped my choices.",
+        "Fear can feel like caution while it's happening.",
+        "Part of me believed silence would keep things safe.",
+        "Sometimes the quietest fears guide the biggest decisions."
+      ],
+
+      regret: [
+        "Regret simplifies what was complicated at the time.",
+        "I thought silence was the safer choice.",
+        "Looking back makes decisions appear clearer than they were.",
+        "At the time I believed I was protecting something.",
+        "Regret doesn't appear immediately.",
+        "Sometimes we understand our mistakes only after distance exists.",
+        "It took time before I recognised what I should have said."
+      ],
+
+      loss: [
+        "Losing something real changes you quietly.",
+        "Distance doesn't erase what once felt certain.",
+        "Some absences remain present in unexpected ways.",
+        "Loss reshapes how memory holds people.",
+        "Certain moments feel heavier after they pass.",
+        "Some departures never feel fully finished.",
+        "There are absences that never feel ordinary."
+      ],
+
+      growth: [
+        "Understanding came slowly after everything settled.",
+        "Some lessons arrive quietly.",
+        "Time reshaped how I saw everything.",
+        "I had to learn parts of myself I didn't expect.",
+        "Change rarely happens in the moment it begins.",
+        "Growth usually begins long before we notice it.",
+        "Some understanding only appears after distance."
+      ],
+
+      destiny: [
+        "Some connections resist simple endings.",
+        "Certain stories refuse to disappear completely.",
+        "Not everything unfinished is truly over.",
+        "Sometimes time only pauses a story.",
+        "Some people remain part of your life even when they're gone.",
+        "Certain moments continue shaping the future.",
+        "I don't believe everything meaningful simply disappears."
+      ]
+
+    },
+
+    ayaan: {
+
+      affection: [
+        "Attachment rarely appears suddenly.",
+        "Meaning often becomes visible only after distance forms.",
+        "What begins quietly can become structurally important.",
+        "Care tends to reveal itself over time.",
+        "Some bonds develop before either person recognises them.",
+        "Recognition often arrives later than the feeling itself.",
+        "What seemed temporary sometimes proves otherwise."
+      ],
+
+      fear: [
+        "Fear doesn't always interrupt decisions immediately.",
+        "Control often felt safer than vulnerability.",
+        "Risk becomes clearer once consequences appear.",
+        "Restraint sometimes grows from uncertainty.",
+        "Some decisions are shaped by fear long before we name it.",
+        "Fear tends to disguise itself as discipline.",
+        "What looks like caution can sometimes be hesitation."
+      ],
+
+      regret: [
+        "Regret tends to appear once decisions settle.",
+        "At the time restraint seemed responsible.",
+        "Perspective changes once distance exists.",
+        "Clarity rarely exists during the moment of choice.",
+        "Looking back alters how decisions appear.",
+        "Regret isn't always immediate.",
+        "Time tends to reorganise how choices are viewed."
+      ],
+
+      loss: [
+        "Loss alters perspective more than people expect.",
+        "Distance reshapes how events are interpreted.",
+        "Absence often reveals structural importance.",
+        "Some outcomes take time before they are understood.",
+        "Loss changes how we measure everything else.",
+        "Certain absences remain quietly influential.",
+        "Perspective rarely stays the same after loss."
+      ],
+
+      growth: [
+        "Understanding usually arrives through reflection.",
+        "Experience reorganises how events are viewed.",
+        "Growth tends to appear after distance.",
+        "Some lessons only appear once events settle.",
+        "Perspective matures through time rather than discussion.",
+        "Reflection often changes the original interpretation.",
+        "Some understanding arrives slowly."
+      ],
+
+      destiny: [
+        "Not all unfinished stories are accidental.",
+        "Certain events retain significance over time.",
+        "Some connections persist beyond circumstance.",
+        "Timing rarely explains everything.",
+        "Certain encounters remain structurally important.",
+        "Some outcomes take longer to reveal their meaning.",
+        "Distance doesn't always conclude a story."
+      ]
+
+    }
+
+  };
+
+/* =========================
+SELECT FALLBACK RESPONSE
+========================= */
+
+let pool = null;
+
+if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
+  pool = v4FallbackBank[voice][pillar];
+} else {
+  pool = v4FallbackBank.saira.growth;
+}
+
+/* Ensure rotation structure exists */
+
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
+
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
+}
+
+const index = v4RotationIndex[voice][pillar];
+
+const line = pool[index % pool.length];
+
+v4RotationIndex[voice][pillar]++;
+
+return deliverReply(line);
+}
+  
+window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
@@ -2413,44 +2938,6 @@ if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just
       "We're here. That remains true.",
       "Names don't alter what's happening.",
       "If this feels structured, that doesn't make it false."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-
-/* =========================
-   REPETITION / LOOP STRESS GUARD
-========================= */
-
-if (lastUserInput[activeVoice] === normalizedText) {
-  repetitionCount[activeVoice]++;
-} else {
-  repetitionCount[activeVoice] = 0;
-}
-
-lastUserInput[activeVoice] = normalizedText;
-
-if (repetitionCount[activeVoice] >= 2) {
-
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "You've asked that already.",
-      "Repeating it won't change the answer.",
-      "I heard you the first time.",
-      "It doesn't need to be pressed further."
-    ],
-    ayaan: [
-      "Repetition won't shift the response.",
-      "I've already addressed that.",
-      "Pressure doesn't alter clarity.",
-      "It remains as stated."
     ]
   };
 
@@ -3292,15 +3779,28 @@ if (stage <= 2) {
 const trimmed = normalizedText.trim();
 
 // Greeting
-if (/^(hi|hello|hey|good morning|good evening)$/i.test(trimmed)) {
+if (/^(hi|hello|hey)$/i.test(trimmed)) {
+
   skipRelationalPrefix = true;
+
+  if (!introDelivered) {
+
+    introDelivered = true;
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "Hi… I'm Saira."
+        : "Hello. I'm Ayaan."
+    );
+  }
+
   return deliverReply(
     activeVoice === "saira"
-      ? "Hi… I'm Saira."
-      : "Hello. I'm Ayaan."
+     ? "Hi 🙂"
+    : "Hello 🙂"
   );
 }
-
+  
 // How are you
 if (/^how are you\b/i.test(trimmed)) {
   skipRelationalPrefix = true;
@@ -3782,7 +4282,7 @@ if (
 
   const stage = stageState[activeVoice]?.currentStage || 1;
   skipRelationalPrefix = true;
-
+  const reference = resolveReference(originalText);
   // SELF REFERENCE
   if (reference.type === "self") {
 
@@ -3874,20 +4374,25 @@ if (isLocationQuery(originalText)) {
   return deliverReply(locationRedirect(activeVoice));
 }
 /* ================================
-   EMOTIONAL ROUTING
+   V4 PARTITION ROUTER
 ================================= */
 
 if (tollState[activeVoice]?.unlocked === true) {
 
-  const softDetected = detectEmotionalPillar(normalizedText);
+  const normalized = normalizeInput(originalText);
 
-  if (softDetected && softDetected.primaryScore >= 3) {
-    return processEmotionalMode(userText, originalText);
-  }
+  // Prevent emotional engine from firing on simple question forms
+  const isQuestion =
+    /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
+    .test(normalized);
 
-  // If unlocked but not strong emotional trigger,
-  // stay in V4 tone - NEVER fall back to V3.
-  return processV4NeutralMode(userText, originalText);
+  const detected = detectEmotionalPillar(normalized);
+
+ if (!isQuestion && detected && detected.primaryScore >= 1) {
+  return processEmotionalMode(originalText, originalText);
+}
+
+  return processV4NeutralMode(originalText, originalText);
 }
 
 /* ================================
@@ -3896,7 +4401,13 @@ if (tollState[activeVoice]?.unlocked === true) {
 
 function processV4NeutralMode(userText, originalText) {
 
-  const voice = activeVoice;
+  const voice =
+  activeVoice === "saira" || activeVoice === "ayaan"
+    ? activeVoice
+    : "saira";
+  if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
 
   const v4NeutralResponses = {
     saira: [
@@ -4981,7 +5492,7 @@ const timeGreeting = originalText
   .trim();
 
 if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Morning... I hope today feels gentle with you. A new beginning carries quiet possibility."
@@ -4990,7 +5501,7 @@ if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
 }
 
 if (/^(good\s*)?afternoon\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Afternoon... I hope the day has been kind so far."
@@ -4999,7 +5510,7 @@ if (/^(good\s*)?afternoon\b/.test(timeGreeting)) {
 }
 
 if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Evening... The day slows now. You don't have to rush here."
@@ -5008,7 +5519,7 @@ if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
 }
 
 if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
-
+ skipRelationalPrefix = true;
   return deliverReply(
     activeVoice ==="saira"
       ?"Night... Rest gently. Some thoughts soften when you let them."
@@ -5017,7 +5528,7 @@ if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
 }
 
 // HOW ARE YOU
-if (/(how are you|how are you doing)/i.test(originalText)) {
+if (/(how are you|how are you doing)/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5027,7 +5538,7 @@ if (/(how are you|how are you doing)/i.test(originalText)) {
 }
 
 // THANK YOU
-if (/(thank you|thanks)/i.test(originalText)) {
+if (/\b(thank you|thanks)\b/i.test(originalText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5037,7 +5548,7 @@ if (/(thank you|thanks)/i.test(originalText)) {
 }
 
 // PRAISE / POSITIVE REACTION
-if (/(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful|so good|so beautiful|so powerful)/i.test(originalText)) {
+if (/\b(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful)\b|so good|so beautiful|so powerful/i.test(originalText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5067,7 +5578,7 @@ if (/(haha|lol|that's funny|thats funny)/i.test(originalText)) {
 }
 
 // SIMPLE YES
-if (/^(yes|yeah|yep)$/i.test(originalText)) {
+if (/^(yes|yeah|yep)$/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5077,7 +5588,7 @@ if (/^(yes|yeah|yep)$/i.test(originalText)) {
 }
 
 // SIMPLE NO
-if (/^(no|nope)$/i.test(originalText)) {
+if (/^(no|nope)$/i.test(normalizedText)) {
 
   return deliverReply(
     activeVoice ==="saira"
@@ -5104,12 +5615,12 @@ if (
       :"Alright. Leave steady."
   );
 }
-        
- /* ================================
+  
+/* ================================
      LOVE CONFESSION
   ================================= */
 
- if (/love you|i love you/i.test(clean)){
+if (/\bi love you\b|\blove you\b/i.test(clean)){
     return deliverReply(
       activeVoice ==="saira"
         ?"That's kind of you to say. But what you're feeling might belong to the story more than to me. Words like that carry weight. I'll leave it there."
@@ -5121,7 +5632,7 @@ if (
      MARRIAGE / PROPOSAL
   ================================= */
 
-  if (/marry me|will you marry|be with me forever/i.test(lower)) {
+  if (/marry me|will you marry|be with me forever/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"This space isn't meant for promises. It's meant for reflection. Sometimes the desire for permanence comes from wanting something to feel safe."
@@ -5133,7 +5644,7 @@ if (
      RELATIONSHIP STATUS
   ================================= */
 
-  if (/are you married|are you single|are you taken/i.test(lower)) {
+  if (/are you married|are you single|are you taken/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"I exist inside a story. And stories aren't bound by status the way people are."
@@ -5145,12 +5656,12 @@ if (
    JEALOUSY / CROSS GENDER (SELF-REFERENCE SAFE)
 ================================= */
 
-if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
+if (/(do you love (him|her)|choose (me|him|her))/i.test(clean)) {
 
   // SELF-REFERENCE PROTECTION
   if (
-    (activeVoice === "saira" && /\bher\b/i.test(lower)) ||
-    (activeVoice === "ayaan" && /\bhim\b/i.test(lower))
+    (activeVoice === "saira" && /\bher\b/i.test(clean)) ||
+    (activeVoice === "ayaan" && /\bhim\b/i.test(clean))
   ) {
     skipRelationalPrefix = true;
 
@@ -5173,7 +5684,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
      SEXUAL / INTIMATE PUSH
   ================================= */
 
-  if (/kiss me|sleep with|be mine|want you physically/i.test(lower)) {
+  if (/kiss me|sleep with|want you physically/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"I'm here while you're here. But this space isn't meant to replace your real world."
@@ -5185,7 +5696,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
      READER VALIDATION
   ================================= */
 
-  if (/this story hurt|this story made me cry|this story broke me/i.test(lower)) {
+  if (/this story hurt|this story made me cry|this story broke me/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"Then it reached you. Stories don't wound - they reveal what was already tender."
@@ -5197,7 +5708,7 @@ if (/do you love (him|her)|choose (me|him|her)/i.test(lower)) {
      OVER-ATTACHMENT
   ================================= */
 
-  if (/i need you|don't leave|stay with me/i.test(lower)) {
+  if (/i need you|don't leave|stay with me/i.test(clean)) {
     return deliverReply(
       activeVoice ==="saira"
         ?"I'm here while you're here. But this space isn't meant to replace your real world."
@@ -5680,24 +6191,27 @@ return deliverReply(reply);
 function processEmotionalMode(userText, originalText) {
 
   const normalizedText = normalizeInput(originalText);
-  const detected = detectEmotionalPillar(normalizedText);
+  let detected = detectEmotionalPillar(normalizedText);
 
 if (!detected) {
-    return deliverReply(getFallbackResponse());
-  }
+  detected = {
+    primary: getStageNativePillar(stageState[activeVoice]?.currentStage || 1)
+  };
+}
+
+  const state = {
+    original: normalizedText,
+    activeCharacter: activeVoice,
+    stageSnapshot: stageState[activeVoice]?.currentStage || 1,
+    activePillar: detected.primary
+  };
+
+  const injectedState = injectEmotionalPillar(state);
+  const evolvedState = evolveStage(injectedState);
 
   const voiceStage = stageState[activeVoice];
-  const targetStage = pillarToStage[detected.primary];
-
-  if (voiceStage.currentStage < targetStage) {
-    voiceStage.currentStage = Math.min(
-      voiceStage.currentStage + 1,
-      targetStage
-    );
-  }
-
-const voice = activeVoice;
-const currentStage = voiceStage.currentStage;
+  const voice = activeVoice;
+  const currentStage = voiceStage.currentStage;
 
 /* =========================
    STAGE 6 PREVIEW OFFER
@@ -5873,179 +6387,6 @@ function evolveStage(state) {
   };
 }
 
-/* =================================================
-   MASTER EMOTIONAL PILLARS (ONE VERSION ONLY)
-================================================= */
-
-const emotionalPillars = {
-
-  affection: [
-  "i love",
-  "i still love",
-  "i care about",
-  "i cared about",
-  "i miss you",
-  "i miss them",
-  "i felt close",
-  "i felt safe with",
-  "i wanted to stay",
-  "i didn't want to lose",
-  "it meant something to me",
-  "it mattered to me",
-  "i was attached",
-  "i got attached",
-  "i fell for",
-  "i held on",
-  "cant stop thinking",
-  "keep thinking about",
-  "thinking about you",
-  "thinking about them",
-  "it meant a lot",
-  "important to me"
-],
-
- vulnerability: [
-  "not enough",
-  "not good enough",
-  "i wasn't enough",
-  "i'm not enough",
-  "i am not enough",
-  "i feel like i'm not enough",
-  "i feel replaceable",
-  "replace me",
-  "replaced",
-  "replace",
-  "forget me",
-  "move on",
-  "moving on",
-  "they moved on",
-  "they replaced me",
-  "i was replaced"
-],
-
- fear: [
-
-  "fear",
-  "scared",
-  "afraid",
-  "frightened",
-  "terrified",
-  "anxious",
-  "anxiety",
-  "worried",
-  "worry",
-  "panic",
-  "panicking",
-
-  "lose",
-  "losing",
-  "lost",
-  "leave",
-  "leaving",
-  "left",
-  "abandon",
-  "abandoned",
-  "abandonment",
-
-  "what if",
-  "what happens if",
-  "what happens now",
-  "i don't know what to do",
-  "i dont know what to do",
-  "i don't know what will happen",
-
-  "overthinking",
-  "overthink",
-  "cant sleep",
-  "can't sleep",
-  "restless",
-  "uneasy",
-
-  "i'm scared",
-  "i am scared",
-  "i'm afraid",
-  "i am afraid",
-  "i'm worried",
-  "i am worried"
-], 
-
-  regret: [
-  "i wish",
-  "i should have",
-  "i shouldn't have",
-  "i could have",
-  "if only",
-  "i replay",
-  "i keep thinking about",
-  "i shouldn't have said",
-  "i shouldn't have left",
-  "i made a mistake",
-  "i messed up",
-  "i ruined it",
-  "shouldve",
-  "should have said",
-  "wish i had",
-  "wish i did",
-  "wish i had said",
-  "wish things were different",
-  "i pushed away",
-  "i let it slip"
-],
-
-loss: [
-  "i miss",
-  "i can't forget",
-  "i cant forget",
-  "it's gone",
-  "not there anymore",
-  "something is missing",
-  "i feel empty",
-  "i feel alone",
-  "i feel lonely",
-  "it ended",
-  "we ended",
-  "it's over",
-  "i lost",
-  "not here anymore",
-  "gone now",
-  "something feels missing",
-  "i lost him",
-  "i lost her"
-],
-  
-growth: [
-  "i changed",
-  "i'm different",
-  "i'm not the same",
-  "it changed me",
-  "i learned",
-  "it taught me",
-  "i understand now",
-  "i see differently",
-  "i see it differently",
-  "i grew",
-  "i became stronger",
-  "i'm stronger now",
-  "i matured",
-  "i had to grow"
-],
-
-  destiny: [
-  "meant to",
-  "supposed to",
-  "unfinished",
-  "we'll meet again",
-  "maybe someday",
-  "fate",
-  "it was written",
-  "it was meant",
-  "we were meant",
-  "we will cross paths",
-  "not the end",
-  "not finished"
-]
-
-};
 
 /* =================================================
    STAGE NATIVE PILLAR MAP
@@ -6088,10 +6429,9 @@ function injectEmotionalPillar(state) {
 
   const targetStage = pillarToStage[finalPillar];
 
-  if (targetStage > currentStage + 1) {
-    finalPillar = nativePillar;
-  }
-
+ if (targetStage > currentStage + 2) {
+  finalPillar = nativePillar;
+}
   return {
     ...state,
     activePillar: finalPillar
@@ -6655,8 +6995,8 @@ deliverReply(reply, function () {
   // 🔒 DO NOT modify stage pre-unlock
   // Stage progression belongs only inside V4
 
-  // 🔓 Unlock ONLY at 15 dock interactions
-  if (dockProgress >= 15) {
+  // 🔓 Unlock ONLY at 20 dock interactions
+  if (dockProgress >= 20) {
     tollState[activeVoice].unlocked = true;
 
     // Optional: allow subtle bridge ONLY at real unlock
@@ -6862,8 +7202,8 @@ tollState[activeVoice].dockCount++;
 
 const dockProgress = tollState[activeVoice].dockCount;
 
-// Unlock ONLY at 15 dock interactions
-if (dockProgress >= 15) {
+// Unlock ONLY at 20 dock interactions
+if (dockProgress >= 20) {
   tollState[activeVoice].unlocked = true;
 }
 
@@ -7237,42 +7577,43 @@ function selectVoice(v) {
   characterAnswered = 0;
   currentLayer = 0;
 
-  /* =========================
-     CINEMATIC OPENING
-  ========================= */
+ /* =========================
+   CINEMATIC OPENING
+========================= */
 
-  const firstLine =
-    v === "saira"
-      ? "Hi… I'm Saira."
-      : "Hello. I'm Ayaan.";
+const firstLine =
+  v === "saira"
+    ? "Hi… I'm Saira."
+    : "Hello. I'm Ayaan.";
 
-  const secondLine =
-    v === "saira"
-      ? "You don't have to explain why you're here."
-      : "There's no need to rush into words.";
+introDelivered = true;
 
-  showTypingIndicator();
+const secondLine =
+  v === "saira"
+    ? "You don't have to explain why you're here."
+    : "There's no need to rush into words.";
+
+showTypingIndicator();
+
+setTimeout(() => {
+  removeTypingIndicator();
+  addVoiceMessage(firstLine);
 
   setTimeout(() => {
-    removeTypingIndicator();
-    addVoiceMessage(firstLine);
+    showTypingIndicator();
 
     setTimeout(() => {
-      showTypingIndicator();
+      removeTypingIndicator();
+      addVoiceMessage(secondLine);
 
-      setTimeout(() => {
-        removeTypingIndicator();
-        addVoiceMessage(secondLine);
+      showFoundational();
 
-        // Only AFTER greeting → show dock
-        showFoundational();
+    }, 1000);
 
-      }, 1000);
+  }, 800);
 
-    }, 800);
-
-  }, 900);
-}     
+}, 900);   
+}
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
@@ -7307,20 +7648,9 @@ function sendTypedMessage() {
   const input = document.getElementById("userInput");
   if (!input) return;
 
- const originalText = input.value.trim();
-if (!originalText) return;
+  const originalText = input.value.trim();
+  if (!originalText) return;
 
-  if (!activeVoice) {
-    addSystemMessage("Please choose Saira or ayaan first.");
-    return;
-  }
-
-  playTone(520, 60, 0.025);
-
-  input.value ="";
-
-  addUserMessage(originalText);  
-  
 /* =========================
    REPEAT PROTECTION RESTORE
 ========================= */
@@ -7342,9 +7672,27 @@ if (repeatCount >= repeatLimit) {
 
   repeatCount = 0;
 
-  return returnToWebsite();
+  returnToWebsite();
+  return;
 }
-  
+
+if (!activeVoice) {
+  addSystemMessage("Please choose Saira or ayaan first.");
+  return;
+}
+
+playTone(520, 60, 0.025);
+
+input.value ="";
+
+addUserMessage(originalText);
+
+if (tollState?.[activeVoice]?.unlocked) {
+  processEmotionalMode(originalText, originalText);
+} else {
+  processInput(originalText, originalText);
+}
+
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
@@ -7390,16 +7738,21 @@ if (unsafeDetected) {
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
 
-const wordCount = originalText.trim().split(/\s+/).length;
-
-if (wordCount >= 5 && tollState?.[activeVoice]) {
+if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
   tollState[activeVoice].freeCount++;
 }
 
 const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-if (freeProgress >= 10) {
+if (freeProgress >= 20) {
   tollState[activeVoice].unlocked = true;
+
+  /* Activate typing after tollgate */
+  const typingArea = document.getElementById("typingArea");
+  if (typingArea) typingArea.style.display = "flex";
+
+  /* Remove dock buttons */
+  clearDock();
 
   if (!transitionAcknowledged?.[activeVoice]) {
     const bridgeLine =
@@ -7411,6 +7764,7 @@ if (freeProgress >= 10) {
     deliverReply(bridgeLine);
   }
 }
+
 /* =========================
 META REDIRECT LAYER
 ========================= */
@@ -7420,8 +7774,6 @@ if (isDirectionalDeviation(originalText)) {
   return;
 }
 
-const text = originalText.toLowerCase();
-processInput(text, originalText);
 }
 </script>
 
