@@ -6925,7 +6925,8 @@ function answerCharacter(item, btn) {
   const reply = item.a[activeVoice];
 
   deliverReply(reply, function () {
-    characterAnswered++;
+
+  characterAnswered++;
 
 /*================================
  V3 DOCK PROGRESSION + TOLLGATE
@@ -6939,6 +6940,9 @@ const dockProgress = tollState[activeVoice].dockCount;
 // Unlock ONLY at 20 dock interactions
 if (dockProgress >= 20) {
   tollState[activeVoice].unlocked = true;
+}
+
+});
 }
          
 /* =========================
