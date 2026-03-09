@@ -7392,149 +7392,135 @@ setTimeout(() => {
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
-
-function clearDock() {
-  if (dock) dock.innerHTML = "";
-}
-
-function loadWelcome() {
-
-  dock = document.getElementById("questionDock");
-
-  if (!dock) {
-    console.error("Dock element not found.");
-    return;
-  }
-
-  clearDock();
-
-  interactionLocked = false;
-
-  addSystemMessage("Hello.");
-  addSystemMessage("This is a quiet space.");
-  addSystemMessage("You can listen to our story through Saira or Ayaan.");
-  addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below... or speak freely in your own words.</span>");
-  addSystemMessage("When you're ready, you can choose a voice.");
-
-  dock.innerHTML = `
-    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
-    <button class="btn ayaan" onclick="selectVoice('ayaan')">Ayaan</button>
-  `;
-
-  setDockDisabled(false);
-  autoScroll();
-}
-
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
-  
+  if (!input) return;
+
+  const originalText = input.value.trim();
+  if (!originalText) return;
+
+  if (!activeVoice) {
+    addSystemMessage("Please choose Saira or Ayaan first.");
+    return;
+  }
+
+  playTone(520, 60, 0.025);
+
+  input.value = "";
+
+  addUserMessage(originalText);
+
 /* =========================
    REPEAT PROTECTION RESTORE
 ========================= */
 
-const normalized = normalizeInput(originalText);
+  const normalized = normalizeInput(originalText);
 
-if (normalized === lastUserInput) {
-  repeatCount++;
-} else {
-  repeatCount = 1;
-}
+  if (normalized === lastUserInput) {
+    repeatCount++;
+  } else {
+    repeatCount = 1;
+  }
 
-lastUserInput = normalized;
+  lastUserInput = normalized;
 
-if (repeatCount >= repeatLimit) {
+  if (repeatCount >= repeatLimit) {
 
-  exitStrikeCount++;
-  localStorage.setItem("exitStrikes", exitStrikeCount);
+    exitStrikeCount++;
+    localStorage.setItem("exitStrikes", exitStrikeCount);
 
-  repeatCount = 0;
+    repeatCount = 0;
 
-returnToWebsite();
-return;
-}
+    returnToWebsite();
+    return;
+  }
+
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
 
-const safetyWords = [
-  "fuck","shit","bitch","asshole","slut","whore","bastard",
-  "idiot","stupid","moron","dumb","retard",
-  "kill yourself","kys","suicide",
-  "self harm","harm myself","rape",
-  "nude","nudes","send nudes",
-  "what are you wearing","describe your body","talk dirty"
-];
+  const safetyWords = [
+    "fuck","shit","bitch","asshole","slut","whore","bastard",
+    "idiot","stupid","moron","dumb","retard",
+    "kill yourself","kys","suicide",
+    "self harm","harm myself","rape",
+    "nude","nudes","send nudes",
+    "what are you wearing","describe your body","talk dirty"
+  ];
 
-const lowerInput = originalText.toLowerCase();
+  const lowerInput = originalText.toLowerCase();
 
-const unsafeDetected = safetyWords.some(word =>
-  lowerInput.includes(word)
-);
+  const unsafeDetected = safetyWords.some(word =>
+    lowerInput.includes(word)
+  );
 
-if (unsafeDetected) {
+  if (unsafeDetected) {
 
-  abuseCount++;
+    abuseCount++;
 
-  if (abuseCount >= abuseLimit) {
+    if (abuseCount >= abuseLimit) {
 
-    const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+      const blockTime = Date.now() + (24 * 60 * 60 * 1000);
 
-    localStorage.setItem("blockUntil", blockTime);
-    localStorage.setItem("exitStrikes", exitStrikeCount + 1);
+      localStorage.setItem("blockUntil", blockTime);
+      localStorage.setItem("exitStrikes", exitStrikeCount + 1);
 
-    location.reload();
-    return;
+      location.reload();
+      return;
+    }
+
+    return deliverReply(
+      activeVoice === "saira"
+        ? "I won't engage in that. If you'd like to continue, speak differently."
+        : "That direction isn't supported here. Adjust the tone."
+    );
   }
 
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I won't engage in that. If you'd like to continue, speak differently."
-      : "That direction isn't supported here. Adjust the tone."
-  );
-}
-
 /* =========================
-V3 FREEHAND PROGRESSION + TOLLGATE
+   V3 FREEHAND PROGRESSION
 ========================= */
 
-if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
-  tollState[activeVoice].freeCount++;
-}
+  if (originalText.length > 0 && tollState?.[activeVoice]) {
+    tollState[activeVoice].freeCount++;
+  }
 
-const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
+  const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-if (freeProgress >= 20) {
-  // free interaction recorded but does NOT unlock V4
-}
+  if (freeProgress >= 20) {
+    // recorded but does NOT unlock V4
+  }
 
   if (!transitionAcknowledged?.[activeVoice]) {
+
     const bridgeLine =
       activeVoice === "saira"
         ? "You didn't just pass through that."
         : "You stayed with it.";
 
     transitionAcknowledged[activeVoice] = true;
+
     deliverReply(bridgeLine);
   }
+
 /* =========================
 META REDIRECT LAYER
 ========================= */
 
-if (isDirectionalDeviation(originalText)) {
-  deliverReply(relationalRedirect(activeVoice));
-  return;
-}
+  if (isDirectionalDeviation(originalText)) {
+    deliverReply(relationalRedirect(activeVoice));
+    return;
+  }
 
-const text = originalText.toLowerCase();
+  const text = originalText.toLowerCase();
 
 /* =========================
    ENGINE ROUTER
 ========================= */
 
-processInput(text, originalText);
+  processInput(text, originalText);
 
-} 
+}
   window.addEventListener("load", loadWelcome);
 </script>
 
