@@ -7392,24 +7392,33 @@ setTimeout(() => {
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
-function sendTypedMessage() {
+function loadWelcome() {
 
-  const input = document.getElementById("userInput");
-  if (!input) return;
+  dock = document.getElementById("questionDock");
 
-  const originalText = input.value.trim();
-  if (!originalText) return;
-
-  if (!activeVoice) {
-    addSystemMessage("Please choose Saira or Ayaan first.");
+  if (!dock) {
+    console.error("Dock element not found.");
     return;
   }
 
-  playTone(520, 60, 0.025);
+  clearDock();
 
-  input.value = "";
+  interactionLocked = false;
 
-  addUserMessage(originalText);
+  addSystemMessage("Hello.");
+  addSystemMessage("This is a quiet space.");
+  addSystemMessage("You can listen to our story through Saira or Ayaan.");
+  addSystemMessage("<span style='color:#b34747; font-style:italic;'>You may choose a question below... or speak freely in your own words.</span>");
+  addSystemMessage("When you're ready, you can choose a voice.");
+
+  dock.innerHTML = `
+    <button class="btn saira" onclick="selectVoice('saira')">Saira</button>
+    <button class="btn ayaan" onclick="selectVoice('ayaan')">Ayaan</button>
+  `;
+
+  setDockDisabled(false);
+  autoScroll();
+}
 
 /* =========================
    REPEAT PROTECTION RESTORE
