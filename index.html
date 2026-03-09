@@ -6925,10 +6925,19 @@ function answerCharacter(item, btn) {
 
   const reply = item.a[activeVoice];
 
-  deliverReply(reply, function () {
+ deliverReply(reply, function () {
 
   characterAnswered++;
 
+  if (characterAnswered % 5 === 0) {
+
+    if (currentLayer < characterLayers.length) {
+      unlockNextLayer();
+    } else {
+      showAuthorInvitation();
+    }
+
+  }
 /*================================
  V3 DOCK PROGRESSION + TOLLGATE
 ================================*/
