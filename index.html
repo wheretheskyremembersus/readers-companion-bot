@@ -716,22 +716,6 @@ let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
 
-/* ================================
-V4 SESSION FLAGS
-================================= */
-
-let v4SessionFlags = {
-  saira: {
-    previewOffered: false,
-    stage7Count: 0,
-    stage7Acknowledged: false
-  },
-  ayaan: {
-    previewOffered: false,
-    stage7Count: 0,
-    stage7Acknowledged: false
-  }
-};
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -753,22 +737,6 @@ let tollState = {
   }
 };
 
-/* ================================
-V4 SESSION FLAGS
-================================= */
-
-let v4SessionFlags = {
-  saira: {
-    previewOffered: false,
-    stage7Count: 0,
-    stage7Acknowledged: false
-  },
-  ayaan: {
-    previewOffered: false,
-    stage7Count: 0,
-    stage7Acknowledged: false
-  }
-};
 /* =========================
    META DIRECTIONAL CHECK
 ========================= */
@@ -2385,6 +2353,30 @@ if (abuseTracker[activeVoice]?.locked) {
       : "This exchange will remain respectful."
   );
 }
+
+/* ================================
+V4 ROTATION INDEX
+(prevents repetition)
+================================= */
+
+var v4RotationIndex = {
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
   
 /* ================================
    V4 UNLOCK CHECK
@@ -2394,16 +2386,14 @@ if (
   tollState[activeVoice]?.dockCount >= 20 ||
   tollState[activeVoice]?.freeCount >= 20
 ) {
-
   tollState[activeVoice].unlocked = true;
 
   if (!stageState[activeVoice]) {
-    stageState[activeVoice] = {
-      currentStage: 1,
-      momentum: {1:0,2:0,3:0,4:0,5:0,6:0,7:0}
-    };
+    stageState[activeVoice] = { currentStage: 1 };
+  } 
+  else if (stageState[activeVoice].currentStage < 1) {
+    stageState[activeVoice].currentStage = 1;
   }
-
 }
 
 /* ================================
@@ -2412,210 +2402,258 @@ V4 STATE SAFETY
 
 if (!stageState) {
   stageState = {
-    saira: {
-      currentStage: 1,
-      momentum: {1:0,2:0,3:0,4:0,5:0,6:0,7:0}
-    },
-    ayaan: {
-      currentStage: 1,
-      momentum: {1:0,2:0,3:0,4:0,5:0,6:0,7:0}
-    }
+    saira: { currentStage: 1 },
+    ayaan: { currentStage: 1 }
   };
 }
 
-if (!stageState.saira.momentum) {
-  stageState.saira.momentum = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+if (!v4RotationIndex) {
+  v4RotationIndex = {
+    saira: {},
+    ayaan: {}
+  };
+}
+  
+/* ================================
+ENGINE PARTITION ROUTER
+(STRICT V3 → V4 ISOLATION)
+================================= */
+
+if (tollState?.[activeVoice]?.unlocked && typeof runV4Engine === "function") {
+  return runV4Engine(userText, originalText);
 }
 
-if (!stageState.ayaan.momentum) {
-  stageState.ayaan.momentum = {1:0,2:0,3:0,4:0,5:0,6:0,7:0};
+
+/* ================================
+V4 EMOTIONAL ENGINE
+================================= */
+
+function runV4Engine(text, originalText) {
+
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  if (!stageState) {
+    stageState = {};
+  }
+
+  if (!stageState[voice]) {
+    stageState[voice] = { currentStage: 1 };
+  }
+  
+if (!v4RotationIndex) v4RotationIndex = {};
+  if (!v4RotationIndex[voice]) {
+    v4RotationIndex[voice] = {};
+  }
+
+  const stage = stageState?.[voice]?.currentStage || 1;
+  
+console.log("voice:", voice);
+console.log("stageState:", stageState);
+  /* =========================
+  EMOTIONAL PILLAR DETECTION
+  ========================= */
+
+  const pillarMatch = detectEmotionalPillar(originalText);
+
+  let pillar = pillarMatch?.primary || null;
+
+  if (pillarMatch) {
+
+    const targetStage = pillarToStage?.[pillar] || stage;
+
+    if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
+      if (!stageState) stageState = {};
+if (!stageState[voice]) stageState[voice] = { currentStage: 1 };
+
+stageState[voice].currentStage = targetStage;
+    }
+
+    const anchor = emotionalAnchors?.[voice]?.[pillar];
+
+    if (anchor) {
+      return deliverReply(anchor);
+    }
+
+  }
+
+  /* =========================
+  DEFAULT PILLAR (SAFETY)
+  ========================= */
+
+  if (!pillar) pillar = "growth";
+
+  /* =========================
+  V4 FALLBACK BANK
+  (PILLAR + CHARACTER VOICE)
+  ========================= */
+
+  const v4FallbackBank = {
+
+    saira: {
+
+      affection: [
+        "Caring rarely announces itself in the beginning.",
+        "It took time before I realised how much he mattered.",
+        "Some feelings grow quietly before we recognise them.",
+        "What started lightly slowly became difficult to ignore.",
+        "There was a moment when caring stopped feeling temporary.",
+        "Some connections deepen without either person noticing.",
+        "I didn't recognise the weight of it until later."
+      ],
+
+      fear: [
+        "Fear doesn't always arrive loudly.",
+        "I was more afraid of losing him than admitting it.",
+        "Sometimes fear hides inside hesitation.",
+        "It took time before I recognised how much fear shaped my choices.",
+        "Fear can feel like caution while it's happening.",
+        "Part of me believed silence would keep things safe.",
+        "Sometimes the quietest fears guide the biggest decisions."
+      ],
+
+      regret: [
+        "Regret simplifies what was complicated at the time.",
+        "I thought silence was the safer choice.",
+        "Looking back makes decisions appear clearer than they were.",
+        "At the time I believed I was protecting something.",
+        "Regret doesn't appear immediately.",
+        "Sometimes we understand our mistakes only after distance exists.",
+        "It took time before I recognised what I should have said."
+      ],
+
+      loss: [
+        "Losing something real changes you quietly.",
+        "Distance doesn't erase what once felt certain.",
+        "Some absences remain present in unexpected ways.",
+        "Loss reshapes how memory holds people.",
+        "Certain moments feel heavier after they pass.",
+        "Some departures never feel fully finished.",
+        "There are absences that never feel ordinary."
+      ],
+
+      growth: [
+        "Understanding came slowly after everything settled.",
+        "Some lessons arrive quietly.",
+        "Time reshaped how I saw everything.",
+        "I had to learn parts of myself I didn't expect.",
+        "Change rarely happens in the moment it begins.",
+        "Growth usually begins long before we notice it.",
+        "Some understanding only appears after distance."
+      ],
+
+      destiny: [
+        "Some connections resist simple endings.",
+        "Certain stories refuse to disappear completely.",
+        "Not everything unfinished is truly over.",
+        "Sometimes time only pauses a story.",
+        "Some people remain part of your life even when they're gone.",
+        "Certain moments continue shaping the future.",
+        "I don't believe everything meaningful simply disappears."
+      ]
+
+    },
+
+    ayaan: {
+
+      affection: [
+        "Attachment rarely appears suddenly.",
+        "Meaning often becomes visible only after distance forms.",
+        "What begins quietly can become structurally important.",
+        "Care tends to reveal itself over time.",
+        "Some bonds develop before either person recognises them.",
+        "Recognition often arrives later than the feeling itself.",
+        "What seemed temporary sometimes proves otherwise."
+      ],
+
+      fear: [
+        "Fear doesn't always interrupt decisions immediately.",
+        "Control often felt safer than vulnerability.",
+        "Risk becomes clearer once consequences appear.",
+        "Restraint sometimes grows from uncertainty.",
+        "Some decisions are shaped by fear long before we name it.",
+        "Fear tends to disguise itself as discipline.",
+        "What looks like caution can sometimes be hesitation."
+      ],
+
+      regret: [
+        "Regret tends to appear once decisions settle.",
+        "At the time restraint seemed responsible.",
+        "Perspective changes once distance exists.",
+        "Clarity rarely exists during the moment of choice.",
+        "Looking back alters how decisions appear.",
+        "Regret isn't always immediate.",
+        "Time tends to reorganise how choices are viewed."
+      ],
+
+      loss: [
+        "Loss alters perspective more than people expect.",
+        "Distance reshapes how events are interpreted.",
+        "Absence often reveals structural importance.",
+        "Some outcomes take time before they are understood.",
+        "Loss changes how we measure everything else.",
+        "Certain absences remain quietly influential.",
+        "Perspective rarely stays the same after loss."
+      ],
+
+      growth: [
+        "Understanding usually arrives through reflection.",
+        "Experience reorganises how events are viewed.",
+        "Growth tends to appear after distance.",
+        "Some lessons only appear once events settle.",
+        "Perspective matures through time rather than discussion.",
+        "Reflection often changes the original interpretation.",
+        "Some understanding arrives slowly."
+      ],
+
+      destiny: [
+        "Not all unfinished stories are accidental.",
+        "Certain events retain significance over time.",
+        "Some connections persist beyond circumstance.",
+        "Timing rarely explains everything.",
+        "Certain encounters remain structurally important.",
+        "Some outcomes take longer to reveal their meaning.",
+        "Distance doesn't always conclude a story."
+      ]
+
+    }
+
+  };
+
+/* =========================
+SELECT FALLBACK RESPONSE
+========================= */
+
+let pool = null;
+
+if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
+  pool = v4FallbackBank[voice][pillar];
+} else {
+  pool = v4FallbackBank.saira.growth;
 }
 
-/* =================================================
-   V4 INTEGRATION LAYER (POST PARTITION ONLY)
-================================================= */
+/* Ensure rotation structure exists */
 
-let v4IntegrationIndex = {
-  saira: {
-    affection: 0,
-    vulnerability: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0,
-    transcendence: 0
-  },
-  ayaan: {
-    affection: 0,
-    vulnerability: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0,
-    transcendence: 0
-  }
-};
-
-const v4IntegrationLayer = {
-
-  saira: {
-
-    affection: [
-     "And sometimes the gentlest attachments reshape us the most.",
-     "Care doesn't announce itself loudly - it settles.",
-     "There's strength in allowing yourself to feel that.",
-     "Affection isn't weakness. It's awareness.",
-     "What stays quietly often matters most."
-    ],
-
-    vulnerability: [
-     "Being open doesn't diminish you.",
-     "Softness is not collapse.",
-     "Letting yourself be seen takes courage.",
-     "There is steadiness even in exposure.",
-     "You're allowed to exist without armour."
-    ],
-
-    fear: [
-     "Fear tries to protect you - but not always wisely.",
-     "Caution isn't the same as safety.",
-     "Sometimes fear masks longing.",
-     "It's alright to acknowledge it without surrendering to it.",
-     "Fear speaks loudly. Truth speaks quietly."
-    ],
-
-    regret: [
-     "Regret teaches, if you let it.",
-     "You're not the same person who made that choice.",
-     "Hindsight can refine you rather than punish you.",
-     "There is room to grow beyond that moment.",
-     "Reflection is not failure."
-    ],
-
-    loss: [
-     "Absence reshapes you, but it doesn't erase you.",
-     "What's lost can still influence who you become.",
-     "Grief is evidence that something mattered.",
-     "You're allowed to carry it without being defined by it.",
-     "Loss doesn't mean weakness."
-    ],
-
-    growth: [
-     "Change rarely announces itself gently.",
-     "You've moved further than you realise.",
-     "Growth often begins in discomfort.",
-     "You're not where you used to be.",
-     "There's quiet strength in that evolution."
-    ],
-
-    destiny: [
-     "Some things return when we're ready.",
-     "Timing matters - but so does readiness.",
-     "What's meant for you won't demand fear.",
-     "Not all pauses are endings.",
-     "There is more ahead than behind."
-    ],
-
-    transcendence: [
-     "There is always another layer beneath this.",
-     "What you're exploring isn't accidental.",
-     "Meaning unfolds gradually.",
-     "You're closer to understanding than you think.",
-     "Stillness reveals more than force."
-    ]
-  },
-
-  ayaan: {
-
-    affection: [
-     "Attachment changes structure.",
-     "When something matters, it recalibrates you.",
-     "Recognition precedes admission.",
-     "Value reveals itself over time.",
-     "Significance alters behaviour."
-    ],
-
-    vulnerability: [
-     "Exposure is not disorder.",
-     "Control and openness can coexist.",
-     "There is precision even in honesty.",
-     "Strength doesn't reject softness.",
-     "Composure allows space."
-    ],
-
-    fear: [
-     "Fear preserves - but it also restricts.",
-     "Restraint isn't always wisdom.",
-     "Caution can conceal desire.",
-     "Protection has limits.",
-     "Risk defines expansion."
-    ],
-
-    regret: [
-     "Regret refines future judgment.",
-     "Past decisions don't imprison you.",
-     "Correction is possible.",
-     "Clarity often arrives late.",
-     "Revision begins internally."
-    ],
-
-    loss: [
-     "Absence reorganises structure.",
-     "Loss modifies perspective.",
-     "Impact remains measurable.",
-     "Integration follows separation.",
-     "Continuity is possible."
-    ],
-
-    growth: [
-     "Evolution requires evaluation.",
-     "Discipline matures into awareness.",
-     "Improvement demands confrontation.",
-     "Structure adapts.",
-     "Stability can expand."
-    ],
-
-    destiny: [
-     "Preparedness influences outcome.",
-     "Timing interacts with readiness.",
-     "Return is conditional.",
-     "Alignment requires strength.",
-     "Possibility remains open."
-    ],
-
-    transcendence: [
-     "There is further depth here.",
-     "This extends beyond surface interpretation.",
-     "Meaning compounds over time.",
-     "Understanding sharpens with clarity.",
-     "Reflection alters trajectory."
-    ]
-  }
-
-};
-
-function applyV4Integration(baseText, pillar) {
-
-  if (!tollState[activeVoice]?.unlocked) {
-    return baseText;
-  }
-
-  const layer = v4IntegrationLayer?.[activeVoice]?.[pillar];
-
-  if (!layer || !layer.length) {
-    return baseText;
-  }
-
-  const index = v4IntegrationIndex[activeVoice][pillar] % layer.length;
-
-  const addition = layer[index];
-
-  v4IntegrationIndex[activeVoice][pillar]++;
-
-  return baseText + " " + addition;
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
 }
+
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
+}
+
+const index = v4RotationIndex[voice][pillar];
+
+const line = pool[index % pool.length];
+
+v4RotationIndex[voice][pillar]++;
+
+return deliverReply(line);
+}
+  
+window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
@@ -5424,8 +5462,8 @@ if (
 
 }
 /* =========================
-   HARD PARTITION
-========================= */
+     HARD PARTITION
+  ========================= */
 
 const unlocked = tollState[activeVoice]?.unlocked;
 
@@ -6109,25 +6147,24 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalize
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
 
-let category = "neutral";
+let category ="neutral";
 
 if (wordCount <= 2) {
-  category = "firm";
+  category ="firm";
 }
 else if (wordCount >= 8) {
-  category = "reflective";
+  category ="reflective";
 }
 
-if (lastUserInput[activeVoice] === originalText) {
-  category = "firm";
+if (originalText === lastUserInput) {
+  category ="firm";
 }
 
-lastUserInput[activeVoice] = originalText;
+lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
-const index =
-  v3FallbackIndex[activeVoice][category] % bank.length;
+const index = v3FallbackIndex[activeVoice][category] % bank.length;
 
 const reply = bank[index];
 
@@ -6145,25 +6182,23 @@ function processEmotionalMode(userText, originalText) {
   const normalizedText = normalizeInput(originalText);
   const detected = detectEmotionalPillar(normalizedText);
 
-  if (!detected) {
+if (!detected) {
     return deliverReply(getFallbackResponse());
   }
 
-  /* =========================
-     STAGE STATE SAFETY
-  ========================= */
+  const voiceStage = stageState[activeVoice];
+  const targetStage = pillarToStage[detected.primary];
 
-  if (!stageState[activeVoice]) {
-    stageState[activeVoice] = {
-      currentStage: 1,
-      momentum: {
-        1:0,2:0,3:0,4:0,5:0,6:0,7:0
-      }
-    };
+  if (voiceStage.currentStage < targetStage) {
+    voiceStage.currentStage = Math.min(
+      voiceStage.currentStage + 1,
+      targetStage
+    );
   }
 
-  const voiceStage = stageState[activeVoice];
-  
+const voice = activeVoice;
+const currentStage = voiceStage.currentStage;
+
 /* =========================
    STAGE 6 PREVIEW OFFER
 ========================= */
@@ -6388,6 +6423,192 @@ function injectEmotionalPillar(state) {
     ...state,
     activePillar: finalPillar
   };
+}
+
+/* =================================================
+   V4 INTEGRATION LAYER (POST PARTITION ONLY)
+================================================= */
+
+let v4IntegrationIndex = {
+  saira: {
+    affection: 0,
+    vulnerability: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0,
+    transcendence: 0
+  },
+  ayaan: {
+    affection: 0,
+    vulnerability: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0,
+    transcendence: 0
+  }
+};
+
+const v4IntegrationLayer = {
+
+  saira: {
+
+    affection: [
+     "And sometimes the gentlest attachments reshape us the most.",
+     "Care doesn't announce itself loudly - it settles.",
+     "There's strength in allowing yourself to feel that.",
+     "Affection isn't weakness. It's awareness.",
+     "What stays quietly often matters most."
+    ],
+
+    vulnerability: [
+     "Being open doesn't diminish you.",
+     "Softness is not collapse.",
+     "Letting yourself be seen takes courage.",
+     "There is steadiness even in exposure.",
+     "You're allowed to exist without armour."
+    ],
+
+    fear: [
+     "Fear tries to protect you - but not always wisely.",
+     "Caution isn't the same as safety.",
+     "Sometimes fear masks longing.",
+     "It's alright to acknowledge it without surrendering to it.",
+     "Fear speaks loudly. Truth speaks quietly."
+    ],
+
+    regret: [
+     "Regret teaches, if you let it.",
+     "You're not the same person who made that choice.",
+     "Hindsight can refine you rather than punish you.",
+     "There is room to grow beyond that moment.",
+     "Reflection is not failure."
+    ],
+
+    loss: [
+     "Absence reshapes you, but it doesn't erase you.",
+     "What's lost can still influence who you become.",
+     "Grief is evidence that something mattered.",
+     "You're allowed to carry it without being defined by it.",
+     "Loss doesn't mean weakness."
+    ],
+
+    growth: [
+     "Change rarely announces itself gently.",
+     "You've moved further than you realise.",
+     "Growth often begins in discomfort.",
+     "You're not where you used to be.",
+     "There's quiet strength in that evolution."
+    ],
+
+    destiny: [
+     "Some things return when we're ready.",
+     "Timing matters - but so does readiness.",
+     "What's meant for you won't demand fear.",
+     "Not all pauses are endings.",
+     "There is more ahead than behind."
+    ],
+
+    transcendence: [
+     "There is always another layer beneath this.",
+     "What you're exploring isn't accidental.",
+     "Meaning unfolds gradually.",
+     "You're closer to understanding than you think.",
+     "Stillness reveals more than force."
+    ]
+  },
+
+  ayaan: {
+
+    affection: [
+     "Attachment changes structure.",
+     "When something matters, it recalibrates you.",
+     "Recognition precedes admission.",
+     "Value reveals itself over time.",
+     "Significance alters behaviour."
+    ],
+
+    vulnerability: [
+     "Exposure is not disorder.",
+     "Control and openness can coexist.",
+     "There is precision even in honesty.",
+     "Strength doesn't reject softness.",
+     "Composure allows space."
+    ],
+
+    fear: [
+     "Fear preserves - but it also restricts.",
+     "Restraint isn't always wisdom.",
+     "Caution can conceal desire.",
+     "Protection has limits.",
+     "Risk defines expansion."
+    ],
+
+    regret: [
+     "Regret refines future judgment.",
+     "Past decisions don't imprison you.",
+     "Correction is possible.",
+     "Clarity often arrives late.",
+     "Revision begins internally."
+    ],
+
+    loss: [
+     "Absence reorganises structure.",
+     "Loss modifies perspective.",
+     "Impact remains measurable.",
+     "Integration follows separation.",
+     "Continuity is possible."
+    ],
+
+    growth: [
+     "Evolution requires evaluation.",
+     "Discipline matures into awareness.",
+     "Improvement demands confrontation.",
+     "Structure adapts.",
+     "Stability can expand."
+    ],
+
+    destiny: [
+     "Preparedness influences outcome.",
+     "Timing interacts with readiness.",
+     "Return is conditional.",
+     "Alignment requires strength.",
+     "Possibility remains open."
+    ],
+
+    transcendence: [
+     "There is further depth here.",
+     "This extends beyond surface interpretation.",
+     "Meaning compounds over time.",
+     "Understanding sharpens with clarity.",
+     "Reflection alters trajectory."
+    ]
+  }
+
+};
+
+function applyV4Integration(baseText, pillar) {
+
+  if (!tollState[activeVoice]?.unlocked) {
+    return baseText;
+  }
+
+  const layer = v4IntegrationLayer?.[activeVoice]?.[pillar];
+
+  if (!layer || !layer.length) {
+    return baseText;
+  }
+
+  const index = v4IntegrationIndex[activeVoice][pillar] % layer.length;
+
+  const addition = layer[index];
+
+  v4IntegrationIndex[activeVoice][pillar]++;
+
+  return baseText + " " + addition;
 }
          
 /* =================================================
@@ -6749,7 +6970,7 @@ function answerFoundational(q, btn) {
 /* =========================
 V3 DOCK PROGRESSION + TOLLGATE
 ========================= */
-const reply = replies[activeVoice][q.key];
+  const reply = replies[activeVoice][q.key];
 
 deliverReply(reply, function () {
 
@@ -6761,11 +6982,11 @@ deliverReply(reply, function () {
   // 🔒 DO NOT modify stage pre-unlock
   // Stage progression belongs only inside V4
 
-  // 🔓 Unlock ONLY at 20 dock interactions
-  if (dockProgress >= 20) {
-
+  // 🔓 Unlock ONLY at 15 dock interactions
+  if (dockProgress >= 15) {
     tollState[activeVoice].unlocked = true;
 
+    // Optional: allow subtle bridge ONLY at real unlock
     if (!transitionAcknowledged[activeVoice]) {
 
       const bridgeLine =
@@ -6777,7 +6998,6 @@ deliverReply(reply, function () {
 
       deliverReply(bridgeLine);
     }
-
   }
 
   // Foundational logic remains untouched
@@ -6786,6 +7006,7 @@ deliverReply(reply, function () {
   }
 
 });
+}
 /* =========================
    15 CHARACTER QUESTIONS
 ========================= */
@@ -6968,9 +7189,19 @@ tollState[activeVoice].dockCount++;
 
 const dockProgress = tollState[activeVoice].dockCount;
 
-// Unlock ONLY at 20 dock interactions
-if (dockProgress >= 20) {
+// Unlock ONLY at 15 dock interactions
+if (dockProgress >= 15) {
   tollState[activeVoice].unlocked = true;
+}
+
+    if (characterAnswered % 5 === 0 && characterAnswered < 15) {
+      unlockNextLayer();
+    }
+
+    if (characterAnswered === 15) {
+      showAuthorInvitation();
+    }
+  });
 }
          
 /* =========================
@@ -7516,19 +7747,7 @@ if (isDirectionalDeviation(originalText)) {
 }
 
 const text = originalText.toLowerCase();
-
-/* =========================
-   ENGINE ROUTER (V3 → V4)
-========================= */
-
-if (tollState?.[activeVoice]?.unlocked) {
-
-  processEmotionalMode(text, originalText);
-
-} else {
-
-  processInput(text, originalText);
-
+processInput(text, originalText);
 }
 </script>
 
