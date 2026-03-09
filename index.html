@@ -6140,9 +6140,8 @@ function processEmotionalMode(userText, originalText) {
     return deliverReply(finalText);
   }
 
-  return getFallbackResponse();
+  return deliverReply(getFallbackResponse());
 }
-
   /* =========================
      STAGE STATE SAFETY
   ========================= */
