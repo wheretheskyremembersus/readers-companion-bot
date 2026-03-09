@@ -6117,6 +6117,23 @@ function processEmotionalMode(userText, originalText) {
     return deliverReply(getFallbackResponse());
   }
 
+  if (response) {
+
+    let finalText = response;
+
+    if (typeof applyV4Integration === "function") {
+      finalText = applyV4Integration(
+        finalText,
+        detected.primary
+      );
+    }
+
+    return deliverReply(finalText);
+  }
+
+  return getFallbackResponse();
+}
+
   /* =========================
      STAGE STATE SAFETY
   ========================= */
@@ -7517,6 +7534,7 @@ if (tollState?.[activeVoice]?.unlocked) {
 }
 
 }
+  
 document.addEventListener("DOMContentLoaded", loadWelcome);
 </script>
 
