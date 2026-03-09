@@ -4140,7 +4140,7 @@ if (false) {
 }
 
 function processInput(userText, originalText) {
-
+ const normalizedText = userText; 
 /* ================================
    RELATIONAL FINALITY HANDLER
 ================================= */
@@ -7385,10 +7385,18 @@ setTimeout(() => {
 ================================================= */
 
 function clearDock() {
-  if (dock) dock.innerHTML ="";
+  if (dock) dock.innerHTML = "";
 }
 
 function loadWelcome() {
+
+  // Ensure dock element exists
+  dock = document.getElementById("dock");
+
+  if (!dock) {
+    console.error("Dock element not found.");
+    return;
+  }
 
   clearDock();
 
@@ -7414,8 +7422,8 @@ function sendTypedMessage() {
   const input = document.getElementById("userInput");
   if (!input) return;
 
- const originalText = input.value.trim();
-if (!originalText) return;
+  const originalText = input.value.trim();
+  if (!originalText) return;
 
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or ayaan first.");
@@ -7424,9 +7432,9 @@ if (!originalText) return;
 
   playTone(520, 60, 0.025);
 
-  input.value ="";
+  input.value = "";
 
-  addUserMessage(originalText);  
+  addUserMessage(originalText); 
   
 /* =========================
    REPEAT PROTECTION RESTORE
