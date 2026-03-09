@@ -7392,6 +7392,13 @@ setTimeout(() => {
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
+
+let dock = null;
+
+function clearDock() {
+  if (dock) dock.innerHTML = "";
+}
+
 function loadWelcome() {
 
   dock = document.getElementById("questionDock");
@@ -7419,6 +7426,7 @@ function loadWelcome() {
   setDockDisabled(false);
   autoScroll();
 }
+
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
@@ -7436,9 +7444,10 @@ function sendTypedMessage() {
 
   input.value = "";
   addUserMessage(originalText);
-/* =========================
-   REPEAT PROTECTION RESTORE
-========================= */
+
+  /* =========================
+     REPEAT PROTECTION
+  ========================= */
 
   const normalized = normalizeInput(originalText);
 
@@ -7461,9 +7470,9 @@ function sendTypedMessage() {
     return;
   }
 
-/* =========================
-   ABUSE PROTECTION GUARD 
-========================= */
+  /* =========================
+     ABUSE PROTECTION
+  ========================= */
 
   const safetyWords = [
     "fuck","shit","bitch","asshole","slut","whore","bastard",
@@ -7502,9 +7511,9 @@ function sendTypedMessage() {
     );
   }
 
-/* =========================
-   V3 FREEHAND PROGRESSION
-========================= */
+  /* =========================
+     V3 FREEHAND PROGRESSION
+  ========================= */
 
   if (originalText.length > 0 && tollState?.[activeVoice]) {
     tollState[activeVoice].freeCount++;
@@ -7528,9 +7537,9 @@ function sendTypedMessage() {
     deliverReply(bridgeLine);
   }
 
-/* =========================
-META REDIRECT LAYER
-========================= */
+  /* =========================
+     META REDIRECT
+  ========================= */
 
   if (isDirectionalDeviation(originalText)) {
     deliverReply(relationalRedirect(activeVoice));
@@ -7539,12 +7548,11 @@ META REDIRECT LAYER
 
   const text = originalText.toLowerCase();
 
-/* =========================
-   ENGINE ROUTER
-========================= */
+  /* =========================
+     ENGINE ROUTER
+  ========================= */
 
   processInput(text, originalText);
-
 }
   window.addEventListener("load", loadWelcome);
 </script>
