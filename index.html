@@ -6117,6 +6117,12 @@ function processEmotionalMode(userText, originalText) {
     return deliverReply(getFallbackResponse());
   }
 
+  const voice = activeVoice;
+  const currentStage = stageState[voice]?.currentStage || 1;
+
+  let response =
+    emotionalResponseBank?.[detected.primary]?.[voice]?.[currentStage];
+
   if (response) {
 
     let finalText = response;
