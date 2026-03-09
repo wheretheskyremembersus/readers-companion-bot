@@ -6121,16 +6121,7 @@ function processEmotionalMode(userText, originalText) {
   }
 
   const voice = activeVoice;
-
-  /* STAGE EVOLUTION */
-  const state = {
-    original: originalText,
-    activePillar: detected.primary
-  };
-
-  const evolved = evolveStage(state);
-
-  const currentStage = evolved.newStage || 1;
+  const currentStage = stageState[voice]?.currentStage || 1;
 
   let response =
     emotionalResponseBank?.[detected.primary]?.[voice]?.[currentStage];
@@ -6140,7 +6131,10 @@ function processEmotionalMode(userText, originalText) {
     let finalText = response;
 
     if (typeof applyV4Integration === "function") {
-      finalText = applyV4Integration(finalText, detected.primary);
+      finalText = applyV4Integration(
+        finalText,
+        detected.primary
+      );
     }
 
     return deliverReply(finalText);
@@ -6148,7 +6142,115 @@ function processEmotionalMode(userText, originalText) {
 
   return deliverReply(getFallbackResponse());
 }
+  /* =========================
+     STAGE STATE SAFETY
+  ========================= */
 
+  if (!stageState[activeVoice]) {
+    stageState[activeVoice] = {
+      currentStage: 1,
+      momentum: {
+        1:0,2:0,3:0,4:0,5:0,6:0,7:0
+      }
+    };
+  }
+
+  const voiceStage = stageState[activeVoice];
+  const voice = activeVoice;
+const currentStage = voiceStage.currentStage;
+  
+/* =========================
+   STAGE 6 PREVIEW OFFER
+========================= */
+
+if (
+  currentStage === 6 &&
+  !v4SessionFlags[voice].previewOffered
+) {
+
+  v4SessionFlags[voice].previewOffered = true;
+
+  const previewMessage =
+    voice === "saira"
+      ? "You've stayed through layers most people don't reach. If you ever feel curious about how this journey truly began, there's a preview with the first ten chapters available. Only if you want to see where it all started. We can continue here too."
+      : "You've moved beyond surface conversation. If you're ever curious about the origin of this story, the first ten chapters are available as a preview. No expectation. We can remain here.";
+
+  return deliverReply(previewMessage);
+}
+
+/* =========================
+   STAGE 7 TRACKING
+========================= */
+
+if (currentStage === 7) {
+  v4SessionFlags[voice].stage7Count++;
+}
+
+/* =========================
+   STAGE 7 ACKNOWLEDGMENT
+========================= */
+
+if (
+  currentStage === 7 &&
+  v4SessionFlags[voice].stage7Count >= 2 &&
+  !v4SessionFlags[voice].stage7Acknowledged
+) {
+
+  v4SessionFlags[voice].stage7Acknowledged = true;
+
+  const acknowledgment =
+    voice === "saira"
+      ? "You stayed through something not everyone does. That means more than you think. If you ever feel drawn to know more, the author can be reached directly - he sometimes shares a digital copy with readers who connect this way. And whether you do or not… I'm here. You can return anytime."
+      : "Depth like this isn't casual. You gave it your attention. If you're ever curious about the full arc, the author can be contacted directly - he occasionally shares access with readers who resonate. There's no obligation. We remain.";
+
+  return deliverReply(acknowledgment);
+} 
+  applyStageAtmosphere(voiceStage.currentStage);
+const detected = detectEmotionalPillar(normalizeInput(originalText));
+
+if (!detected) {
+  return deliverReply(getFallbackResponse());
+}
+  let response =
+    emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+
+  // ROTATION
+  if (Array.isArray(response)) {
+
+    const pillar = detected.primary;
+    const stage = voiceStage.currentStage;
+    const voice = activeVoice;
+
+    emotionalRotationTracker[voice][pillar] =
+      emotionalRotationTracker[voice][pillar] || {};
+
+    emotionalRotationTracker[voice][pillar][stage] =
+      emotionalRotationTracker[voice][pillar][stage] ?? 0;
+
+    const index = emotionalRotationTracker[voice][pillar][stage];
+
+    response = response[index];
+
+    emotionalRotationTracker[voice][pillar][stage] =
+      (index + 1) % emotionalResponseBank[pillar][voice][stage].length;
+  }
+         
+  if (response) {
+
+    let finalText = response;
+
+    if (typeof applyV4Integration === "function") {
+  finalText = applyV4Integration(
+    finalText,
+    detected.primary
+  );
+}
+
+    return deliverReply(finalText);
+  }
+
+return deliverReply(getFallbackResponse());
+}
 /* =================================================
    RELATIONAL TRIGGER DETECTION
 ================================================= */
@@ -7316,7 +7418,9 @@ function loadWelcome() {
   setDockDisabled(false);
   autoScroll();
 }
-
+function processEmotionalMode(text, originalText) {
+  processInput(text, originalText);
+}
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
@@ -7326,126 +7430,123 @@ function sendTypedMessage() {
   if (!originalText) return;
 
   if (!activeVoice) {
-    addSystemMessage("Please choose Saira or Ayaan first.");
+    addSystemMessage("Please choose Saira or ayaan first.");
     return;
   }
 
   playTone(520, 60, 0.025);
 
   input.value = "";
-  addUserMessage(originalText);
 
+  addUserMessage(originalText); 
+  
 /* =========================
-   REPEAT PROTECTION
+   REPEAT PROTECTION RESTORE
 ========================= */
 
-  const normalized = normalizeInput(originalText);
+const normalized = normalizeInput(originalText);
 
-  if (normalized === lastUserInput) {
-    repeatCount++;
-  } else {
-    repeatCount = 1;
-  }
+if (normalized === lastUserInput) {
+  repeatCount++;
+} else {
+  repeatCount = 1;
+}
 
-  lastUserInput = normalized;
+lastUserInput = normalized;
 
-  if (repeatCount >= repeatLimit) {
+if (repeatCount >= repeatLimit) {
 
-    exitStrikeCount++;
-    localStorage.setItem("exitStrikes", exitStrikeCount);
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
 
-    repeatCount = 0;
+  repeatCount = 0;
 
-    returnToWebsite();
+returnToWebsite();
+return;
+}
+/* =========================
+   ABUSE PROTECTION GUARD 
+========================= */
+
+const safetyWords = [
+  "fuck","shit","bitch","asshole","slut","whore","bastard",
+  "idiot","stupid","moron","dumb","retard",
+  "kill yourself","kys","suicide",
+  "self harm","harm myself","rape",
+  "nude","nudes","send nudes",
+  "what are you wearing","describe your body","talk dirty"
+];
+
+const lowerInput = originalText.toLowerCase();
+
+const unsafeDetected = safetyWords.some(word =>
+  lowerInput.includes(word)
+);
+
+if (unsafeDetected) {
+
+  abuseCount++;
+
+  if (abuseCount >= abuseLimit) {
+
+    const blockTime = Date.now() + (24 * 60 * 60 * 1000);
+
+    localStorage.setItem("blockUntil", blockTime);
+    localStorage.setItem("exitStrikes", exitStrikeCount + 1);
+
+    location.reload();
     return;
   }
 
-/* =========================
-   ABUSE PROTECTION
-========================= */
-
-  const safetyWords = [
-    "fuck","shit","bitch","asshole","slut","whore","bastard",
-    "idiot","stupid","moron","dumb","retard",
-    "kill yourself","kys","suicide",
-    "self harm","harm myself","rape",
-    "nude","nudes","send nudes",
-    "what are you wearing","describe your body","talk dirty"
-  ];
-
-  const lowerInput = originalText.toLowerCase();
-
-  const unsafeDetected = safetyWords.some(word =>
-    lowerInput.includes(word)
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I won't engage in that. If you'd like to continue, speak differently."
+      : "That direction isn't supported here. Adjust the tone."
   );
-
-  if (unsafeDetected) {
-
-    abuseCount++;
-
-    if (abuseCount >= abuseLimit) {
-
-      const blockTime = Date.now() + (24 * 60 * 60 * 1000);
-
-      localStorage.setItem("blockUntil", blockTime);
-      localStorage.setItem("exitStrikes", exitStrikeCount + 1);
-
-      location.reload();
-      return;
-    }
-
-    return deliverReply(
-      activeVoice === "saira"
-        ? "I won't engage in that. If you'd like to continue, speak differently."
-        : "That direction isn't supported here. Adjust the tone."
-    );
-  }
+}
 
 /* =========================
-   V3 FREEHAND PROGRESSION
+V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
 
-  if (originalText.length > 0 && tollState?.[activeVoice]) {
-    tollState[activeVoice].freeCount++;
-  }
+if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
+  tollState[activeVoice].freeCount++;
+}
 
-  const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
+const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-  if (freeProgress >= 20) {
-    // recorded but does NOT unlock V4
-  }
+if (freeProgress >= 20) {
+  // free interaction recorded but does NOT unlock V4
+}
 
   if (!transitionAcknowledged?.[activeVoice]) {
-
     const bridgeLine =
       activeVoice === "saira"
         ? "You didn't just pass through that."
         : "You stayed with it.";
 
     transitionAcknowledged[activeVoice] = true;
-
     deliverReply(bridgeLine);
   }
-
 /* =========================
 META REDIRECT LAYER
 ========================= */
 
-  if (isDirectionalDeviation(originalText)) {
-    deliverReply(relationalRedirect(activeVoice));
-    return;
-  }
+if (isDirectionalDeviation(originalText)) {
+  deliverReply(relationalRedirect(activeVoice));
+  return;
+}
 
-  const text = originalText.toLowerCase();
+const text = originalText.toLowerCase();
 
 /* =========================
    ENGINE ROUTER
 ========================= */
 
-  processInput(text, originalText);
-}
+processInput(text, originalText);
 
-window.addEventListener("load", loadWelcome);
+} 
+  window.addEventListener("load", loadWelcome);
 </script>
 
 <div id="dock"></div>
