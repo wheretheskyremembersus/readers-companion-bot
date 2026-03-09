@@ -7424,27 +7424,10 @@ function loadWelcome() {
   setDockDisabled(false);
   autoScroll();
 }
-function processEmotionalMode(text, originalText) {
-  processInput(text, originalText);
-}
+
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
-  if (!input) return;
-
-  const originalText = input.value.trim();
-  if (!originalText) return;
-
-  if (!activeVoice) {
-    addSystemMessage("Please choose Saira or ayaan first.");
-    return;
-  }
-
-  playTone(520, 60, 0.025);
-
-  input.value = "";
-
-  addUserMessage(originalText); 
   
 /* =========================
    REPEAT PROTECTION RESTORE
