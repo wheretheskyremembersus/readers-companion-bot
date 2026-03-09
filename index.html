@@ -7625,8 +7625,8 @@ function sendTypedMessage() {
   const input = document.getElementById("userInput");
   if (!input) return;
 
- const originalText = input.value.trim();
-if (!originalText) return;
+  const originalText = input.value.trim();
+  if (!originalText) return;
 
   if (!activeVoice) {
     addSystemMessage("Please choose Saira or ayaan first.");
@@ -7637,8 +7637,14 @@ if (!originalText) return;
 
   input.value ="";
 
-  addUserMessage(originalText);  
-  
+  addUserMessage(originalText);
+
+  if (tollState?.[activeVoice]?.unlocked) {
+    runV4Engine(originalText, originalText);
+  } else {
+    processInput(originalText, originalText);
+  }
+}
 /* =========================
    REPEAT PROTECTION RESTORE
 ========================= */
