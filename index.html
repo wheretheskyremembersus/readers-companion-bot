@@ -6194,11 +6194,13 @@ return deliverReply(reply);
 function processEmotionalMode(userText, originalText) {
 
   const normalizedText = normalizeInput(originalText);
-  const detected = detectEmotionalPillar(normalizedText);
+  let detected = detectEmotionalPillar(normalizedText);
 
-  if (!detected) {
-    return deliverReply(getFallbackResponse());
-  }
+if (!detected) {
+  detected = {
+    primary: getStageNativePillar(stageState[activeVoice]?.currentStage || 1)
+  };
+}
 
   const state = {
     original: normalizedText,
