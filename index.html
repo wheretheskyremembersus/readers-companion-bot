@@ -7652,7 +7652,7 @@ function sendTypedMessage() {
   const originalText = input.value.trim();
   if (!originalText) return;
 
- /* =========================
+/* =========================
    REPEAT PROTECTION RESTORE
 ========================= */
 
@@ -7688,7 +7688,11 @@ input.value ="";
 
 addUserMessage(originalText);
 
-processInput(originalText, originalText);
+if (tollState?.[activeVoice]?.unlocked) {
+  runV4Engine(originalText, originalText);
+} else {
+  processInput(originalText, originalText);
+}
 
 /* =========================
    ABUSE PROTECTION GUARD 
