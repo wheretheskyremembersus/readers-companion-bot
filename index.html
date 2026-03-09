@@ -7393,10 +7393,9 @@ setTimeout(() => {
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
 
-let dock = null;
-
 function clearDock() {
-  if (dock) dock.innerHTML = "";
+  const d = document.getElementById("questionDock");
+  if (d) d.innerHTML = "";
 }
 
 function loadWelcome() {
@@ -7521,10 +7520,6 @@ function sendTypedMessage() {
 
   const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
-  if (freeProgress >= 20) {
-    // recorded but does NOT unlock V4
-  }
-
   if (!transitionAcknowledged?.[activeVoice]) {
 
     const bridgeLine =
@@ -7554,7 +7549,8 @@ function sendTypedMessage() {
 
   processInput(text, originalText);
 }
-  window.addEventListener("load", loadWelcome);
+
+window.addEventListener("load", loadWelcome);
 </script>
 
 <div id="dock"></div>
