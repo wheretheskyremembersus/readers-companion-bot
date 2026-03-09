@@ -7650,48 +7650,43 @@ function sendTypedMessage() {
   const originalText = input.value.trim();
   if (!originalText) return;
 
-  /* =========================
-     REPEAT PROTECTION RESTORE
-  ========================= */
+ /* =========================
+   REPEAT PROTECTION RESTORE
+========================= */
 
-  const normalized = normalizeInput(originalText);
+const normalized = normalizeInput(originalText);
 
-  if (normalized === lastUserInput) {
-    repeatCount++;
-  } else {
-    repeatCount = 1;
-  }
+if (normalized === lastUserInput) {
+  repeatCount++;
+} else {
+  repeatCount = 1;
+}
 
-  lastUserInput = normalized;
+lastUserInput = normalized;
 
-  if (repeatCount >= repeatLimit) {
+if (repeatCount >= repeatLimit) {
 
-    exitStrikeCount++;
-    localStorage.setItem("exitStrikes", exitStrikeCount);
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
 
-    repeatCount = 0;
+  repeatCount = 0;
 
-    returnToWebsite();
-    return;
-  }
+  returnToWebsite();
+  return;
+}
 
-  if (!activeVoice) {
-    addSystemMessage("Please choose Saira or ayaan first.");
-    return;
-  }
+if (!activeVoice) {
+  addSystemMessage("Please choose Saira or ayaan first.");
+  return;
+}
 
-  playTone(520, 60, 0.025);
+playTone(520, 60, 0.025);
 
-  input.value ="";
+input.value ="";
 
-  addUserMessage(originalText);
+addUserMessage(originalText);
 
-  if (tollState?.[activeVoice]?.unlocked) {
-    runV4Engine(originalText, originalText);
-  } else {
-    processInput(originalText, originalText);
-  }
-
+processInput(originalText, originalText);
 
 /* =========================
    ABUSE PROTECTION GUARD 
