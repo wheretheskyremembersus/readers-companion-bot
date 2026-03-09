@@ -2413,16 +2413,6 @@ if (!v4RotationIndex) {
     ayaan: {}
   };
 }
-  
-/* ================================
-ENGINE PARTITION ROUTER
-(STRICT V3 → V4 ISOLATION)
-================================= */
-
-if (tollState?.[activeVoice]?.unlocked && typeof runV4Engine === "function") {
-  return runV4Engine(userText, originalText);
-}
-
 
 /* ================================
 V4 EMOTIONAL ENGINE
