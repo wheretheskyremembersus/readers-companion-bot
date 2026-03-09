@@ -7415,7 +7415,9 @@ function loadWelcome() {
   setDockDisabled(false);
   autoScroll();
 }
-
+function processEmotionalMode(text, originalText) {
+  processInput(text, originalText);
+}
 function sendTypedMessage() {
 
   const input = document.getElementById("userInput");
