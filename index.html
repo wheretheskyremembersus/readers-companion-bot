@@ -6911,9 +6911,9 @@ function showNextLayer() {
 function answerCharacter(item, btn) {
 
   if (interactionLocked) {
-    const msg = activeVoice ==="saira"
-      ?"Let me finish this gently... 🌙"
-      :"Give it a moment. I'm still here. 🌿";
+    const msg = activeVoice === "saira"
+      ? "Let me finish this gently... 🌙"
+      : "Give it a moment. I'm still here. 🌿";
     addVoiceMessage(msg);
     return;
   }
@@ -6925,36 +6925,34 @@ function answerCharacter(item, btn) {
 
   const reply = item.a[activeVoice];
 
-deliverReply(reply, function () {
+  deliverReply(reply, function () {
 
-  characterAnswered++;
+    characterAnswered++;
 
-  // Continue character layers
-  if (characterAnswered % 5 === 0) {
-
-    if (currentLayer < characterLayers.length) {
-      unlockNextLayer();
-    } else {
-      showAuthorInvitation();
+    // Continue character layers
+    if (characterAnswered % 5 === 0) {
+      if (currentLayer < characterLayers.length) {
+        unlockNextLayer();
+      } else {
+        showAuthorInvitation();
+      }
     }
 
-  }
+    /*================================
+      V3 DOCK PROGRESSION + TOLLGATE
+    ================================*/
 
-/*================================
- V3 DOCK PROGRESSION + TOLLGATE
-================================*/
+    tollState[activeVoice].dockCount++;
 
-// TOLL: Dock progression
-tollState[activeVoice].dockCount++;
+    const dockProgress = tollState[activeVoice].dockCount;
 
-const dockProgress = tollState[activeVoice].dockCount;
+    if (dockProgress >= 20) {
+      tollState[activeVoice].unlocked = true;
+    }
 
-// Unlock ONLY at 20 dock interactions
-if (dockProgress >= 20) {
-  tollState[activeVoice].unlocked = true;
+  });
+
 }
-
-});
          
 /* =========================
    AUTHOR INVITATION
