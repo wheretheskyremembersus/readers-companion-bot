@@ -1480,6 +1480,8 @@ function normalizeWord(word) {
 
 function detectEmotionalPillar(text) {
 
+  if (!text) return null;
+
   const lower = text.toLowerCase();
 
   const userWords = lower
