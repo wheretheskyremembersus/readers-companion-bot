@@ -719,8 +719,7 @@ let reflectionStep = 0;
 /* ================================
 V4 SESSION FLAGS
 ================================= */
-
-let v4SessionFlags = {
+window.v4SessionFlags = window.v4SessionFlags || {
   saira: {
     previewOffered: false,
     stage7Count: 0,
@@ -732,6 +731,7 @@ let v4SessionFlags = {
     stage7Acknowledged: false
   }
 };
+  
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
