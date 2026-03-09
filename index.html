@@ -6432,10 +6432,9 @@ function injectEmotionalPillar(state) {
 
   const targetStage = pillarToStage[finalPillar];
 
-  if (targetStage > currentStage + 1) {
-    finalPillar = nativePillar;
-  }
-
+ if (targetStage > currentStage + 2) {
+  finalPillar = nativePillar;
+}
   return {
     ...state,
     activePillar: finalPillar
