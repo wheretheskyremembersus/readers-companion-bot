@@ -6196,22 +6196,23 @@ function processEmotionalMode(userText, originalText) {
   const normalizedText = normalizeInput(originalText);
   const detected = detectEmotionalPillar(normalizedText);
 
-if (!detected) {
+  if (!detected) {
     return deliverReply(getFallbackResponse());
   }
 
+  const state = {
+    original: normalizedText,
+    activeCharacter: activeVoice,
+    stageSnapshot: stageState[activeVoice]?.currentStage || 1,
+    activePillar: detected.primary
+  };
+
+  const injectedState = injectEmotionalPillar(state);
+  const evolvedState = evolveStage(injectedState);
+
   const voiceStage = stageState[activeVoice];
-  const targetStage = pillarToStage[detected.primary];
-
-  if (voiceStage.currentStage < targetStage) {
-    voiceStage.currentStage = Math.min(
-      voiceStage.currentStage + 1,
-      targetStage
-    );
-  }
-
-const voice = activeVoice;
-const currentStage = voiceStage.currentStage;
+  const voice = activeVoice;
+  const currentStage = voiceStage.currentStage;
 
 /* =========================
    STAGE 6 PREVIEW OFFER
