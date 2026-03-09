@@ -7619,7 +7619,9 @@ trackEvent("quick_button_clicked", {
   button_text: text
  });
 });
-loadWelcome();
+window.addEventListener("DOMContentLoaded", function () {
+  loadWelcome();
+});
 </script>
 
 </body>
