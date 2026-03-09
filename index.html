@@ -6128,9 +6128,9 @@ function processEmotionalMode(userText, originalText) {
     activePillar: detected.primary
   };
 
-  evolveStage(state);
+  const evolved = evolveStage(state);
 
-  const currentStage = stageState[voice]?.currentStage || 1;
+  const currentStage = evolved.newStage || 1;
 
   let response =
     emotionalResponseBank?.[detected.primary]?.[voice]?.[currentStage];
