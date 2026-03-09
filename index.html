@@ -7535,17 +7535,11 @@ if (isDirectionalDeviation(originalText)) {
 const text = originalText.toLowerCase();
 
 /* =========================
-   ENGINE ROUTER (V3 → V4)
+   ENGINE ROUTER
 ========================= */
 
-if (tollState?.[activeVoice]?.unlocked) {
+processInput(text, originalText);
 
-  processEmotionalMode(text, originalText);
-
-} else {
-
-processInput(originalText.toLowerCase(), originalText);
-}
 } 
   window.addEventListener("load", loadWelcome);
 </script>
