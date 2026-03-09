@@ -7747,6 +7747,13 @@ const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 if (freeProgress >= 20) {
   tollState[activeVoice].unlocked = true;
 
+  /* Activate typing after tollgate */
+  const typingArea = document.getElementById("typingArea");
+  if (typingArea) typingArea.style.display = "flex";
+
+  /* Remove dock buttons */
+  clearDock();
+
   if (!transitionAcknowledged?.[activeVoice]) {
     const bridgeLine =
       activeVoice === "saira"
