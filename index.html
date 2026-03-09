@@ -7394,8 +7394,7 @@ setTimeout(() => {
 ================================================= */
 
 function clearDock() {
-  const d = document.getElementById("questionDock");
-  if (d) d.innerHTML = "";
+  if (dock) dock.innerHTML = "";
 }
 
 function loadWelcome() {
@@ -7444,9 +7443,9 @@ function sendTypedMessage() {
   input.value = "";
   addUserMessage(originalText);
 
-  /* =========================
-     REPEAT PROTECTION
-  ========================= */
+/* =========================
+   REPEAT PROTECTION
+========================= */
 
   const normalized = normalizeInput(originalText);
 
@@ -7469,9 +7468,9 @@ function sendTypedMessage() {
     return;
   }
 
-  /* =========================
-     ABUSE PROTECTION
-  ========================= */
+/* =========================
+   ABUSE PROTECTION
+========================= */
 
   const safetyWords = [
     "fuck","shit","bitch","asshole","slut","whore","bastard",
@@ -7510,15 +7509,19 @@ function sendTypedMessage() {
     );
   }
 
-  /* =========================
-     V3 FREEHAND PROGRESSION
-  ========================= */
+/* =========================
+   V3 FREEHAND PROGRESSION
+========================= */
 
   if (originalText.length > 0 && tollState?.[activeVoice]) {
     tollState[activeVoice].freeCount++;
   }
 
   const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
+
+  if (freeProgress >= 20) {
+    // recorded but does NOT unlock V4
+  }
 
   if (!transitionAcknowledged?.[activeVoice]) {
 
@@ -7532,9 +7535,9 @@ function sendTypedMessage() {
     deliverReply(bridgeLine);
   }
 
-  /* =========================
-     META REDIRECT
-  ========================= */
+/* =========================
+META REDIRECT LAYER
+========================= */
 
   if (isDirectionalDeviation(originalText)) {
     deliverReply(relationalRedirect(activeVoice));
@@ -7543,9 +7546,9 @@ function sendTypedMessage() {
 
   const text = originalText.toLowerCase();
 
-  /* =========================
-     ENGINE ROUTER
-  ========================= */
+/* =========================
+   ENGINE ROUTER
+========================= */
 
   processInput(text, originalText);
 }
