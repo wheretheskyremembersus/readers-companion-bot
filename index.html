@@ -6121,6 +6121,15 @@ function processEmotionalMode(userText, originalText) {
   }
 
   const voice = activeVoice;
+
+  /* STAGE EVOLUTION */
+  const state = {
+    original: originalText,
+    activePillar: detected.primary
+  };
+
+  evolveStage(state);
+
   const currentStage = stageState[voice]?.currentStage || 1;
 
   let response =
@@ -6131,10 +6140,7 @@ function processEmotionalMode(userText, originalText) {
     let finalText = response;
 
     if (typeof applyV4Integration === "function") {
-      finalText = applyV4Integration(
-        finalText,
-        detected.primary
-      );
+      finalText = applyV4Integration(finalText, detected.primary);
     }
 
     return deliverReply(finalText);
