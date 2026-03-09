@@ -4367,7 +4367,7 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const detected = detectEmotionalPillar(normalized);
 
-  if (!isQuestion && detected && detected.primaryScore >= 3) {
+  if (!isQuestion && detected && detected.primaryScore >= 1) {
     return processEmotionalMode(originalText, originalText);
   }
 
@@ -6972,8 +6972,8 @@ deliverReply(reply, function () {
   // 🔒 DO NOT modify stage pre-unlock
   // Stage progression belongs only inside V4
 
-  // 🔓 Unlock ONLY at 15 dock interactions
-  if (dockProgress >= 15) {
+  // 🔓 Unlock ONLY at 20 dock interactions
+  if (dockProgress >= 20) {
     tollState[activeVoice].unlocked = true;
 
     // Optional: allow subtle bridge ONLY at real unlock
@@ -7179,8 +7179,8 @@ tollState[activeVoice].dockCount++;
 
 const dockProgress = tollState[activeVoice].dockCount;
 
-// Unlock ONLY at 15 dock interactions
-if (dockProgress >= 15) {
+// Unlock ONLY at 20 dock interactions
+if (dockProgress >= 20) {
   tollState[activeVoice].unlocked = true;
 }
 
