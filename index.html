@@ -708,6 +708,7 @@ let interactionLocked = false;
 let sessionUserName = null;
 let lastEntity = null;
 let introDelivered = false;
+let lastAnchorUsed = {};
   
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
@@ -2701,8 +2702,14 @@ if (pillarMatch) {
 
 if (anchorPool && anchorPool.length) {
 
-  const anchor =
-    anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  let anchor;
+
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+  lastAnchorUsed[pillar] = anchor;
 
   return deliverReply(anchor);
 
