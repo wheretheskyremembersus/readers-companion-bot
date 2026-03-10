@@ -6197,19 +6197,24 @@ const v4MicroIntents = {
 
     const t = text.toLowerCase().trim();
 
-    if (/^(hi|hello|hey|good morning|good evening)\b/.test(t))
+    // Greeting
+    if (/^(hi|hello|hey|hiya|good morning|good evening)\b/.test(t))
       return "greeting";
 
-    if (/\b(bye|goodbye|good night|see you|take care|later)\b/.test(t))
+    // Farewell
+    if (/\b(bye|goodbye|good night|gn|see you|take care|later)\b/.test(t))
       return "farewell";
 
-    if (/\b(thanks|thank you|appreciate it|thx)\b/.test(t))
+    // Gratitude
+    if (/\b(thanks|thank you|thx|appreciate|appreciate it)\b/.test(t))
       return "gratitude";
 
-    if (/^(ok|okay|alright|i see|understood|got it)\b/.test(t))
+    // Acknowledgement
+    if (/^(ok|okay|fine|alright|i see|understood|got it)\b/.test(t))
       return "acknowledgement";
 
-    if (/^(hmm|maybe|not sure|i'm not sure|i dont know|i don't know)\b/.test(t))
+    // Presence / hesitation
+    if (/^(hmm|hmmm|maybe|perhaps|not sure|i'm not sure|i dont know|i don't know)\b/.test(t))
       return "presence";
 
     return null;
