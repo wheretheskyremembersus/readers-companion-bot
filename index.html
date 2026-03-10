@@ -6408,28 +6408,43 @@ const v4MicroIntents = {
 function processEmotionalMode(userText, originalText) {
 
   const normalizedText = normalizeInput(originalText);
+  const voice = activeVoice;
+
+  // V4 micro-intent detection
+  const intent = v4MicroIntents.detect(normalizedText);
+
+  if (intent) {
+
+    const stage = stageState[voice]?.currentStage || 1;
+
+    const bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+
+    if (bank && bank.length) {
+      return deliverReply(randomItem(bank));
+    }
+
+  }
+
   let detected = detectEmotionalPillar(normalizedText);
 
-if (!detected) {
-  detected = {
-    primary: getStageNativePillar(stageState[activeVoice]?.currentStage || 1)
-  };
-}
+  if (!detected) {
+    detected = {
+      primary: getStageNativePillar(stageState[voice]?.currentStage || 1)
+    };
+  }
 
   const state = {
     original: normalizedText,
-    activeCharacter: activeVoice,
-    stageSnapshot: stageState[activeVoice]?.currentStage || 1,
+    activeCharacter: voice,
+    stageSnapshot: stageState[voice]?.currentStage || 1,
     activePillar: detected.primary
   };
 
   const injectedState = injectEmotionalPillar(state);
   const evolvedState = evolveStage(injectedState);
 
-  const voiceStage = stageState[activeVoice];
-  const voice = activeVoice;
+  const voiceStage = stageState[voice];
   const currentStage = voiceStage.currentStage;
-
 /* =========================
    STAGE 6 PREVIEW OFFER
 ========================= */
