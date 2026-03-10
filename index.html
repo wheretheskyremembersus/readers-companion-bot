@@ -2441,6 +2441,7 @@ if (!v4RotationIndex) v4RotationIndex = {};
   }
 
   const stage = stageState?.[voice]?.currentStage || 1;
+  
 /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -6185,34 +6186,272 @@ return deliverReply(reply);
 }
 
 /* =========================
+   V4 MICRO INTENT SYSTEM
+========================= */
+
+const v4MicroIntents = {
+
+  detect(text) {
+
+  const t = text.toLowerCase().trim();
+
+  // GREETING
+  if (/^(hi|hello|hey|hiya|yo|good morning|good evening|good afternoon)\b/.test(t))
+    return "greeting";
+
+  // FAREWELL
+  if (/\b(bye|goodbye|good night|goodnight|goodnite|gn|see you|see ya|take care|tc|later|bye for now)\b/.test(t))
+    return "farewell";
+
+  // GRATITUDE
+  if (/\b(thanks|thank you|thx|ty|appreciate|appreciate it|much appreciated)\b/.test(t))
+    return "gratitude";
+
+  // ACKNOWLEDGEMENT / AGREEMENT
+  if (/^(ok|okay|k|kk|fine|alright|right|got it|i see|understood|makes sense|sure)\b/.test(t))
+    return "acknowledgement";
+
+  // PRESENCE / HESITATION / THINKING
+  if (/^(h+m+|huh|hmm+|maybe|may be|perhaps|possibly|not sure|i'm not sure|i am not sure|i dont know|i don't know)/.test(t))
+    return "presence";
+
+  return null;
+  },
+
+  responses: {
+
+    saira: {
+
+      greeting: {
+
+        1: [
+          "Hi… I'm Saira."
+        ],
+
+        3: [
+          "Hello again."
+        ],
+
+        5: [
+          "You're here again."
+        ],
+
+        7: [
+          "Even after everything, some connections still return."
+        ]
+
+      },
+
+      farewell: {
+
+        2: [
+          "Take care tonight."
+        ],
+
+        4: [
+          "Some stories pause rather than end."
+        ],
+
+        7: [
+          "Some stories don't end. They simply grow quiet for a while."
+        ]
+
+      },
+
+      gratitude: {
+
+        2: [
+          "You don't have to thank me."
+        ],
+
+        5: [
+          "I'm glad you stayed with the conversation."
+        ],
+
+        7: [
+          "Some moments are worth acknowledging."
+        ]
+
+      },
+
+      acknowledgement: {
+
+        2: [
+          "That's alright."
+        ],
+
+        4: [
+          "Sometimes understanding arrives slowly."
+        ],
+
+        7: [
+          "Some things settle quietly."
+        ]
+
+      },
+
+      presence: {
+
+        3: [
+          "Take your time."
+        ],
+
+        5: [
+          "Not everything needs to be said immediately."
+        ],
+
+        7: [
+          "Silence can carry understanding too."
+        ]
+
+      }
+
+    },
+
+    ayaan: {
+
+      greeting: {
+
+        1: [
+          "Hey."
+        ],
+
+        3: [
+          "You're back."
+        ],
+
+        5: [
+          "Looks like the conversation continues."
+        ],
+
+        7: [
+          "Funny how some paths circle back."
+        ]
+
+      },
+
+      farewell: {
+
+        2: [
+          "Take care."
+        ],
+
+        4: [
+          "Some things are better left for another time."
+        ],
+
+        7: [
+          "Maybe paths meet again."
+        ]
+
+      },
+
+      gratitude: {
+
+        2: [
+          "No need to thank me."
+        ],
+
+        5: [
+          "I'm glad the conversation mattered."
+        ],
+
+        7: [
+          "Some acknowledgements carry more weight than they seem."
+        ]
+
+      },
+
+      acknowledgement: {
+
+        2: [
+          "Alright."
+        ],
+
+        4: [
+          "Sometimes that's enough."
+        ],
+
+        7: [
+          "Understanding doesn't always need words."
+        ]
+
+      },
+
+      presence: {
+
+        3: [
+          "Take a moment."
+        ],
+
+        5: [
+          "Some thoughts take time to settle."
+        ],
+
+        7: [
+          "Silence can say more than explanation."
+        ]
+
+      }
+
+    }
+
+  }
+
+};
+/* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
 
 function processEmotionalMode(userText, originalText) {
 
   const normalizedText = normalizeInput(originalText);
+  const voice = activeVoice;
+
+  // V4 micro-intent detection
+const intent = v4MicroIntents.detect(normalizedText);
+
+if (intent) {
+
+  const stage = stageState[voice]?.currentStage || 1;
+
+  let bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+
+// fallback to lower stages if exact stage not defined
+if (!bank) {
+  for (let s = stage; s >= 1; s--) {
+    if (v4MicroIntents.responses?.[voice]?.[intent]?.[s]) {
+      bank = v4MicroIntents.responses[voice][intent][s];
+      break;
+    }
+  }
+}
+
+  if (bank && bank.length) {
+    return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
+  }
+
+}
   let detected = detectEmotionalPillar(normalizedText);
 
-if (!detected) {
-  detected = {
-    primary: getStageNativePillar(stageState[activeVoice]?.currentStage || 1)
-  };
-}
+  if (!detected) {
+    detected = {
+      primary: getStageNativePillar(stageState[voice]?.currentStage || 1)
+    };
+  }
 
   const state = {
     original: normalizedText,
-    activeCharacter: activeVoice,
-    stageSnapshot: stageState[activeVoice]?.currentStage || 1,
+    activeCharacter: voice,
+    stageSnapshot: stageState[voice]?.currentStage || 1,
     activePillar: detected.primary
   };
 
   const injectedState = injectEmotionalPillar(state);
   const evolvedState = evolveStage(injectedState);
 
-  const voiceStage = stageState[activeVoice];
-  const voice = activeVoice;
+  const voiceStage = stageState[voice];
   const currentStage = voiceStage.currentStage;
-
 /* =========================
    STAGE 6 PREVIEW OFFER
 ========================= */
