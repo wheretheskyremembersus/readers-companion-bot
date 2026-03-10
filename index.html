@@ -6410,27 +6410,36 @@ function processEmotionalMode(userText, originalText) {
   const normalizedText = normalizeInput(originalText);
   const voice = activeVoice;
 
-  // V4 micro-intent detection
+ // V4 micro-intent detection
 const intent = v4MicroIntents.detect(normalizedText);
 
 if (intent) {
 
   const stage = stageState[voice]?.currentStage || 1;
 
-  let bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+  // prevent trivial intents during deep stages
+  const trivialIntents = ["acknowledgement", "gratitude"];
 
-// fallback to lower stages if exact stage not defined
-if (!bank) {
-  for (let s = stage; s >= 1; s--) {
-    if (v4MicroIntents.responses?.[voice]?.[intent]?.[s]) {
-      bank = v4MicroIntents.responses[voice][intent][s];
-      break;
+  if (stage >= 5 && trivialIntents.includes(intent)) {
+    // ignore trivial micro-intents in deep stages
+  } else {
+
+    let bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+
+    // fallback to lower stages if exact stage not defined
+    if (!bank) {
+      for (let s = stage; s >= 1; s--) {
+        if (v4MicroIntents.responses?.[voice]?.[intent]?.[s]) {
+          bank = v4MicroIntents.responses[voice][intent][s];
+          break;
+        }
+      }
     }
-  }
-}
 
-  if (bank && bank.length) {
-    return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
+    if (bank && bank.length) {
+      return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
+    }
+
   }
 
 }
