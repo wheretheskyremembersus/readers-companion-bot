@@ -1555,7 +1555,7 @@ growth: [
    EMOTIONAL ANCHORS
 ========================= */
 
- const emotionalAnchors = {
+const emotionalAnchors = {
   saira: {
     affection:"There was a time I didn't realise how much I cared.",
     vulnerability:"I wasn't as steady as I seemed.",
@@ -1590,7 +1590,19 @@ function detectEmotionalPillar(text) {
 
   const lower = text.toLowerCase();
 
-  const userWords = lower
+  /* =========================
+     NARRATIVE EMOTION PROXY
+     (improves story question detection)
+  ========================= */
+
+  const narrativeProxy = lower
+    .replace(/hesitat(e|ed|ion)/g,"fear")
+    .replace(/pull(ed)? away/g,"fear")
+    .replace(/hold(ing)? back/g,"fear")
+    .replace(/drift(ed)? apart/g,"loss")
+    .replace(/distance(d)?/g,"loss");
+
+  const userWords = narrativeProxy
     .replace(/[^\w\s]/g,"")
     .split(" ")
     .map(w => normalizeWord(w));
@@ -1614,7 +1626,7 @@ function detectEmotionalPillar(text) {
     emotionalPillars[pillar].forEach(keyword => {
 
       if (keyword.includes(" ")) {
-        if (lower.includes(keyword)) {
+        if (narrativeProxy.includes(keyword)) {
           score += 3;
         }
       } else {
