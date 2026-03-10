@@ -6188,6 +6188,215 @@ return deliverReply(reply);
 }
 
 /* =========================
+   V4 MICRO INTENT SYSTEM
+========================= */
+
+const v4MicroIntents = {
+
+  detect(text) {
+
+    const t = text.toLowerCase().trim();
+
+    if (/^(hi|hello|hey|good morning|good evening)\b/.test(t))
+      return "greeting";
+
+    if (/\b(bye|goodbye|good night|see you|take care|later)\b/.test(t))
+      return "farewell";
+
+    if (/\b(thanks|thank you|appreciate it|thx)\b/.test(t))
+      return "gratitude";
+
+    if (/^(ok|okay|alright|i see|understood|got it)\b/.test(t))
+      return "acknowledgement";
+
+    if (/^(hmm|maybe|not sure|i'm not sure|i dont know|i don't know)\b/.test(t))
+      return "presence";
+
+    return null;
+  },
+
+  responses: {
+
+    saira: {
+
+      greeting: {
+
+        1: [
+          "Hi… I'm Saira."
+        ],
+
+        3: [
+          "Hello again."
+        ],
+
+        5: [
+          "You're here again."
+        ],
+
+        7: [
+          "Even after everything, some connections still return."
+        ]
+
+      },
+
+      farewell: {
+
+        2: [
+          "Take care tonight."
+        ],
+
+        4: [
+          "Some stories pause rather than end."
+        ],
+
+        7: [
+          "Some stories don't end. They simply grow quiet for a while."
+        ]
+
+      },
+
+      gratitude: {
+
+        2: [
+          "You don't have to thank me."
+        ],
+
+        5: [
+          "I'm glad you stayed with the conversation."
+        ],
+
+        7: [
+          "Some moments are worth acknowledging."
+        ]
+
+      },
+
+      acknowledgement: {
+
+        2: [
+          "That's alright."
+        ],
+
+        4: [
+          "Sometimes understanding arrives slowly."
+        ],
+
+        7: [
+          "Some things settle quietly."
+        ]
+
+      },
+
+      presence: {
+
+        3: [
+          "Take your time."
+        ],
+
+        5: [
+          "Not everything needs to be said immediately."
+        ],
+
+        7: [
+          "Silence can carry understanding too."
+        ]
+
+      }
+
+    },
+
+    ayaan: {
+
+      greeting: {
+
+        1: [
+          "Hey."
+        ],
+
+        3: [
+          "You're back."
+        ],
+
+        5: [
+          "Looks like the conversation continues."
+        ],
+
+        7: [
+          "Funny how some paths circle back."
+        ]
+
+      },
+
+      farewell: {
+
+        2: [
+          "Take care."
+        ],
+
+        4: [
+          "Some things are better left for another time."
+        ],
+
+        7: [
+          "Maybe paths meet again."
+        ]
+
+      },
+
+      gratitude: {
+
+        2: [
+          "No need to thank me."
+        ],
+
+        5: [
+          "I'm glad the conversation mattered."
+        ],
+
+        7: [
+          "Some acknowledgements carry more weight than they seem."
+        ]
+
+      },
+
+      acknowledgement: {
+
+        2: [
+          "Alright."
+        ],
+
+        4: [
+          "Sometimes that's enough."
+        ],
+
+        7: [
+          "Understanding doesn't always need words."
+        ]
+
+      },
+
+      presence: {
+
+        3: [
+          "Take a moment."
+        ],
+
+        5: [
+          "Some thoughts take time to settle."
+        ],
+
+        7: [
+          "Silence can say more than explanation."
+        ]
+
+      }
+
+    }
+
+  }
+
+};
+/* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
 
