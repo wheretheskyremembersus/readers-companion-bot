@@ -3637,23 +3637,10 @@ if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
 
 if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
   skipRelationalPrefix = true;
-  const protagonistLines = {
-  saira: [
-    "She feels deeply. She hesitates. She hopes anyway.",
-    "Her strength often appears in quiet moments.",
-    "She carries more feeling than she shows."
-  ],
-  ayaan: [
-    "She tries to be steady. Even when she is not.",
-    "Her composure hides how much she feels.",
-    "She appears calm, but she carries weight inside."
-  ]
-};
-
-return deliverReply(
-  protagonistLines[activeVoice][
-    Math.floor(Math.random() * protagonistLines[activeVoice].length)
-  ]
+  return deliverReply(
+  activeVoice === "saira"
+    ? "She feels deeply. She hesitates. She hopes anyway."
+    : "She tries to be steady. Even when she is not."
 );
 
 if (/\bantagonist|villain\b/i.test(t)) {
