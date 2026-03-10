@@ -1299,7 +1299,24 @@ const emotionalPillars = {
   "thinking about you",
   "thinking about them",
   "it meant a lot",
-  "important to me"
+  "important to me",
+
+  "connection",
+  "bond",
+  "relationship",
+  "chemistry",
+  "drawn to",
+  "close to",
+  "attached to",
+  "care for",
+  "belong with",
+  "important to someone",
+  "deep connection",
+  "strong bond",
+  "emotionally connected",
+  "they mattered",
+  "he mattered",
+  "she mattered"
 ],
 
  vulnerability: [
@@ -1318,7 +1335,23 @@ const emotionalPillars = {
   "moving on",
   "they moved on",
   "they replaced me",
-  "i was replaced"
+  "i was replaced",
+
+  "open up",
+  "opening up",
+  "let someone in",
+  "letting someone in",
+  "trust someone",
+  "trusting someone",
+  "emotionally exposed",
+  "emotionally vulnerable",
+  "guarded",
+  "afraid to be vulnerable",
+  "hard to trust",
+  "fear of rejection",
+  "protecting myself",
+  "protecting themselves",
+  "afraid to open up"
 ],
 
  fear: [
@@ -1364,7 +1397,24 @@ const emotionalPillars = {
   "i'm afraid",
   "i am afraid",
   "i'm worried",
-  "i am worried"
+  "i am worried",
+
+  "hesitate",
+  "hesitated",
+  "hesitation",
+  "holding back",
+  "hold back",
+  "pull away",
+  "pulled away",
+  "doubt",
+  "uncertain",
+  "second guess",
+  "fear losing",
+  "risk losing",
+  "protect themselves",
+  "protecting themselves",
+  "withdraw",
+  "distance themselves"
 ], 
 
   regret: [
@@ -1387,7 +1437,22 @@ const emotionalPillars = {
   "wish i had said",
   "wish things were different",
   "i pushed away",
-  "i let it slip"
+  "i let it slip",
+
+  "mistake",
+  "bad decision",
+  "wrong choice",
+  "too late",
+  "missed chance",
+  "what if i",
+  "should have told",
+  "should have stayed",
+  "could have changed",
+  "looking back",
+  "regret it",
+  "regret that",
+  "should have known",
+  "wish it was different"
 ],
 
 loss: [
@@ -1408,7 +1473,22 @@ loss: [
   "gone now",
   "something feels missing",
   "i lost him",
-  "i lost her"
+  "i lost her",
+
+  "distance",
+  "separation",
+  "drift apart",
+  "drifting apart",
+  "goodbye",
+  "part ways",
+  "absence",
+  "not together anymore",
+  "someone left",
+  "they left",
+  "lost connection",
+  "faded away",
+  "they were gone",
+  "no longer there"
 ],
   
 growth: [
@@ -1425,7 +1505,20 @@ growth: [
   "i became stronger",
   "i'm stronger now",
   "i matured",
-  "i had to grow"
+  "i had to grow",
+
+  "realize",
+  "realised",
+  "realization",
+  "understand later",
+  "lesson learned",
+  "became wiser",
+  "changed perspective",
+  "see things clearly",
+  "see things differently now",
+  "personal growth",
+  "learn from it",
+  "learned from it"
 ],
 
   destiny: [
@@ -1440,7 +1533,20 @@ growth: [
   "we were meant",
   "we will cross paths",
   "not the end",
-  "not finished"
+  "not finished",
+
+  "timing",
+  "coincidence",
+  "meet again",
+  "cross paths again",
+  "not finished yet",
+  "unfinished story",
+  "destined",
+  "somehow connected",
+  "meant to happen",
+  "brought together",
+  "paths crossed",
+  "meant for each other"
 ]
 
 };
@@ -1449,7 +1555,7 @@ growth: [
    EMOTIONAL ANCHORS
 ========================= */
 
- const emotionalAnchors = {
+const emotionalAnchors = {
   saira: {
     affection:"There was a time I didn't realise how much I cared.",
     vulnerability:"I wasn't as steady as I seemed.",
@@ -1484,7 +1590,19 @@ function detectEmotionalPillar(text) {
 
   const lower = text.toLowerCase();
 
-  const userWords = lower
+  /* =========================
+     NARRATIVE EMOTION PROXY
+     (improves story question detection)
+  ========================= */
+
+  const narrativeProxy = lower
+    .replace(/hesitat(e|ed|ion)/g,"fear")
+    .replace(/pull(ed)? away/g,"fear")
+    .replace(/hold(ing)? back/g,"fear")
+    .replace(/drift(ed)? apart/g,"loss")
+    .replace(/distance(d)?/g,"loss");
+
+  const userWords = narrativeProxy
     .replace(/[^\w\s]/g,"")
     .split(" ")
     .map(w => normalizeWord(w));
@@ -1508,7 +1626,7 @@ function detectEmotionalPillar(text) {
     emotionalPillars[pillar].forEach(keyword => {
 
       if (keyword.includes(" ")) {
-        if (lower.includes(keyword)) {
+        if (narrativeProxy.includes(keyword)) {
           score += 3;
         }
       } else {
@@ -1530,20 +1648,25 @@ function detectEmotionalPillar(text) {
   const primary = sorted[0];
   const secondary = sorted[1];
 
-  const confidenceThreshold = 1;
+const confidenceThreshold = 1;
 
-  if (primary[1] >= confidenceThreshold) {
+if (primary[1] >= confidenceThreshold) {
 
-    return {
-      primary: primary[0],
-      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
-      primaryScore: primary[1],
-      secondaryScore: secondary ? secondary[1] : 0
-    };
-
+  // ignore weak single matches
+  if (primary[1] === 1 && (!secondary || secondary[1] === 0)) {
+    return null;
   }
 
-  return null;
+  return {
+    primary: primary[0],
+    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+    primaryScore: primary[1],
+    secondaryScore: secondary ? secondary[1] : 0
+  };
+
+}
+
+return null;
 
 }
 /* =========================
@@ -2441,7 +2564,7 @@ if (!v4RotationIndex) v4RotationIndex = {};
   }
 
   const stage = stageState?.[voice]?.currentStage || 1;
-
+  
 /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -2454,7 +2577,7 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
-  if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
     if (!stageState) stageState = {};
 
@@ -2495,7 +2618,10 @@ if (pillarMatch) {
   DEFAULT PILLAR (SAFETY)
   ========================= */
 
-  if (!pillar) pillar = "growth";
+if (!pillar) {
+  const fallbackPillars = ["affection","fear","regret","loss","growth"];
+  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
+}
 
   /* =========================
   V4 FALLBACK BANK
@@ -3514,10 +3640,24 @@ if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
 
 if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
   skipRelationalPrefix = true;
+
+  const protagonistLines = {
+    saira: [
+      "She feels deeply. She hesitates. She hopes anyway.",
+      "Her strength often appears in quiet moments.",
+      "She carries more feeling than she shows."
+    ],
+    ayaan: [
+      "She tries to be steady. Even when she is not.",
+      "Her composure hides how much she feels.",
+      "She appears calm, but she carries weight inside."
+    ]
+  };
+
   return deliverReply(
-    activeVoice === "saira"
-      ? "She feels deeply. She hesitates. She hopes anyway."
-      : "She tries to be steady. Even when she is not."
+    protagonistLines[activeVoice][
+      Math.floor(Math.random() * protagonistLines[activeVoice].length)
+    ]
   );
 }
 
@@ -3529,7 +3669,6 @@ if (/\bantagonist|villain\b/i.test(t)) {
       : "The struggle comes from timing. From restraint. From choices made too late."
   );
 }
-
 /* ---------- Capability ---------- */
 
 if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
