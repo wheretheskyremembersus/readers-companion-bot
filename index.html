@@ -6195,29 +6195,29 @@ const v4MicroIntents = {
 
   detect(text) {
 
-    const t = text.toLowerCase().trim();
+  const t = text.toLowerCase().trim();
 
-    // Greeting
-    if (/^(hi|hello|hey|hiya|good morning|good evening)\b/.test(t))
-      return "greeting";
+  // GREETING
+  if (/^(hi|hello|hey|hiya|yo|good morning|good evening|good afternoon)\b/.test(t))
+    return "greeting";
 
-    // Farewell
-    if (/\b(bye|goodbye|good night|gn|see you|take care|later)\b/.test(t))
-      return "farewell";
+  // FAREWELL
+  if (/\b(bye|goodbye|good night|goodnight|goodnite|gn|see you|see ya|take care|tc|later|bye for now)\b/.test(t))
+    return "farewell";
 
-    // Gratitude
-    if (/\b(thanks|thank you|thx|appreciate|appreciate it)\b/.test(t))
-      return "gratitude";
+  // GRATITUDE
+  if (/\b(thanks|thank you|thx|ty|appreciate|appreciate it|much appreciated)\b/.test(t))
+    return "gratitude";
 
-    // Acknowledgement
-    if (/^(ok|okay|fine|alright|i see|understood|got it)\b/.test(t))
-      return "acknowledgement";
+  // ACKNOWLEDGEMENT / AGREEMENT
+  if (/^(ok|okay|k|kk|fine|alright|right|got it|i see|understood|makes sense|sure)\b/.test(t))
+    return "acknowledgement";
 
-    // Presence / hesitation
-    if (/^(hmm|hmmm|maybe|perhaps|not sure|i'm not sure|i dont know|i don't know)\b/.test(t))
-      return "presence";
+  // PRESENCE / HESITATION / THINKING
+  if (/^(h+m+|huh|hmm+|maybe|may be|perhaps|possibly|not sure|i'm not sure|i am not sure|i dont know|i don't know)/.test(t))
+    return "presence";
 
-    return null;
+  return null;
   },
 
   responses: {
