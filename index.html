@@ -708,6 +708,7 @@ let interactionLocked = false;
 let sessionUserName = null;
 let lastEntity = null;
 let introDelivered = false;
+let lastAnchorUsed = {};
   
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
@@ -1556,24 +1557,99 @@ growth: [
 ========================= */
 
 const emotionalAnchors = {
+
   saira: {
-    affection:"There was a time I didn't realise how much I cared.",
-    vulnerability:"I wasn't as steady as I seemed.",
-    fear:"I don't like admitting this, but fear was part of it.",
-    regret:"I thought I was being careful.",
-    loss:"Losing something real changes you quietly.",
-    growth:"I had to learn the hard way.",
-    destiny:"Some things don't disappear just because we hesitate."
+
+    affection: [
+      "There was a time I didn't realise how much I cared.",
+      "What I felt then was quieter, but it mattered.",
+      "Some connections don't announce themselves immediately."
+    ],
+
+    vulnerability: [
+      "I wasn't as steady as I seemed.",
+      "There were moments when doubt spoke louder than I did.",
+      "It's easier to look composed than to admit uncertainty."
+    ],
+
+    fear: [
+      "I don't like admitting this, but fear was part of it.",
+      "Fear doesn't always look dramatic. Sometimes it's hesitation.",
+      "What frightened me most was what might change."
+    ],
+
+    regret: [
+      "I thought I was being careful.",
+      "At the time it felt like the safest choice.",
+      "Looking back, I see more than I did then."
+    ],
+
+    loss: [
+      "Losing something real changes you quietly.",
+      "Absence has a way of reshaping what remains.",
+      "What leaves rarely disappears completely."
+    ],
+
+    growth: [
+      "I had to learn the hard way.",
+      "Understanding came slowly.",
+      "Some lessons only arrive after everything shifts."
+    ],
+
+    destiny: [
+      "Some things don't disappear just because we hesitate.",
+      "What feels unfinished often finds its way back.",
+      "Certain threads stay connected longer than we expect."
+    ]
+
   },
+
   ayaan: {
-    affection:"I don't attach easily. When I do, it matters.",
-    vulnerability:"Control felt safer than exposure.",
-    fear:"Fear doesn't show on me easily. But it was there.",
-    regret:"I believed restraint was maturity.",
-    loss:"Distance reshapes more than we expect.",
-    growth:"Discipline taught me more than comfort did.",
-    destiny:"Not all unfinished things are over."
+
+    affection: [
+      "I don't attach easily. When I do, it matters.",
+      "Connection isn't something I offer lightly.",
+      "If I stay, it's because it means something."
+    ],
+
+    vulnerability: [
+      "Control felt safer than exposure.",
+      "Showing uncertainty never came naturally to me.",
+      "It's easier to appear composed than to reveal doubt."
+    ],
+
+    fear: [
+      "Fear doesn't show on me easily. But it was there.",
+      "Some concerns stay quiet rather than visible.",
+      "I prefer caution to regret."
+    ],
+
+    regret: [
+      "I believed restraint was maturity.",
+      "At the time it felt like discipline.",
+      "Looking back, I understand the cost of that decision."
+    ],
+
+    loss: [
+      "Distance reshapes more than we expect.",
+      "Absence has a way of clarifying what mattered.",
+      "What disappears often leaves a trace."
+    ],
+
+    growth: [
+      "Discipline taught me more than comfort did.",
+      "Clarity rarely arrives without friction.",
+      "Experience tends to refine rather than reassure."
+    ],
+
+    destiny: [
+      "Not all unfinished things are over.",
+      "Some paths cross again in unexpected ways.",
+      "Certain outcomes take longer to reveal themselves."
+    ]
+
   }
+
 };
                     
 function normalizeWord(word) {
@@ -1590,63 +1666,77 @@ function detectEmotionalPillar(text) {
 
   const lower = text.toLowerCase();
 
-  /* =========================
-     NARRATIVE EMOTION PROXY
-     (improves story question detection)
-  ========================= */
+/* =========================
+   NARRATIVE EMOTION PROXY
+   (improves story question detection)
+========================= */
 
-  const narrativeProxy = lower
-    .replace(/hesitat(e|ed|ion)/g,"fear")
-    .replace(/pull(ed)? away/g,"fear")
-    .replace(/hold(ing)? back/g,"fear")
-    .replace(/drift(ed)? apart/g,"loss")
-    .replace(/distance(d)?/g,"loss");
+const narrativeProxy = lower
+  .replace(/hesitat(e|ed|ion)/g,"fear")
+  .replace(/pull(ed)? away/g,"fear")
+  .replace(/hold(ing)? back/g,"fear")
+  .replace(/drift(ed)? apart/g,"loss")
+  .replace(/distance(d)?/g,"loss");
 
-  const userWords = narrativeProxy
-    .replace(/[^\w\s]/g,"")
-    .split(" ")
-    .map(w => normalizeWord(w));
+const userWords = narrativeProxy
+  .replace(/[^\w\s]/g,"")
+  .split(" ")
+  .map(w => normalizeWord(w));
 
-  const pillarOrder = [
-    "affection",
-    "fear",
-    "vulnerability",
-    "regret",
-    "loss",
-    "growth",
-    "destiny"
-  ];
+const pillarOrder = [
+  "affection",
+  "fear",
+  "vulnerability",
+  "regret",
+  "loss",
+  "growth",
+  "destiny"
+];
 
-  let scores = {};
+let scores = {};
 
-  pillarOrder.forEach(pillar => {
+pillarOrder.forEach(pillar => {
 
-    let score = 0;
+  let score = 0;
 
-    emotionalPillars[pillar].forEach(keyword => {
+  emotionalPillars[pillar].forEach(keyword => {
 
-      if (keyword.includes(" ")) {
-        if (narrativeProxy.includes(keyword)) {
-          score += 3;
-        }
-      } else {
-        const keywordRoot = normalizeWord(keyword);
-        if (userWords.some(w => w.startsWith(keywordRoot))) {
-          score += 1;
-        }
+    if (keyword.includes(" ")) {
+
+      if (narrativeProxy.includes(keyword)) {
+        score += 3;
       }
 
-    });
+    } else {
 
-    scores[pillar] = score;
+      const keywordRoot = normalizeWord(keyword);
+
+      if (userWords.some(w => w.startsWith(keywordRoot))) {
+        score += 1;
+      }
+
+    }
 
   });
 
-  const sorted = Object.entries(scores)
-    .sort((a, b) => b[1] - a[1]);
+  scores[pillar] = score;
 
-  const primary = sorted[0];
-  const secondary = sorted[1];
+});
+
+const sorted = Object.entries(scores)
+  .sort((a, b) => b[1] - a[1]);
+
+let primary = sorted[0];
+let secondary = sorted[1];
+
+/* =========================
+   BALANCE CLOSE PILLAR SCORES
+========================= */
+
+if (secondary && primary[1] - secondary[1] <= 1) {
+  const candidates = [primary, secondary];
+  primary = candidates[Math.floor(Math.random() * candidates.length)];
+}
 
 const confidenceThreshold = 1;
 
@@ -1667,8 +1757,7 @@ if (primary[1] >= confidenceThreshold) {
 }
 
 return null;
-
-}
+}  
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
@@ -2607,11 +2696,22 @@ if (pillarMatch) {
 
   }
 
-  const anchor = emotionalAnchors?.[voice]?.[pillar];
+  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
 
-  if (anchor) {
-    return deliverReply(anchor);
-  }
+if (anchorPool && anchorPool.length) {
+
+  let anchor;
+
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+  lastAnchorUsed[pillar] = anchor;
+
+  return deliverReply(anchor);
+
+}
 
 }
   /* =========================
