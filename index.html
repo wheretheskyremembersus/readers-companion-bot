@@ -2697,11 +2697,16 @@ if (pillarMatch) {
 
   }
 
-  const anchor = emotionalAnchors?.[voice]?.[pillar];
+  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
 
-  if (anchor) {
-    return deliverReply(anchor);
-  }
+if (anchorPool && anchorPool.length) {
+
+  const anchor =
+    anchorPool[Math.floor(Math.random() * anchorPool.length)];
+
+  return deliverReply(anchor);
+
+}
 
 }
   /* =========================
