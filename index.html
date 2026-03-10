@@ -1590,63 +1590,77 @@ function detectEmotionalPillar(text) {
 
   const lower = text.toLowerCase();
 
-  /* =========================
-     NARRATIVE EMOTION PROXY
-     (improves story question detection)
-  ========================= */
+/* =========================
+   NARRATIVE EMOTION PROXY
+   (improves story question detection)
+========================= */
 
-  const narrativeProxy = lower
-    .replace(/hesitat(e|ed|ion)/g,"fear")
-    .replace(/pull(ed)? away/g,"fear")
-    .replace(/hold(ing)? back/g,"fear")
-    .replace(/drift(ed)? apart/g,"loss")
-    .replace(/distance(d)?/g,"loss");
+const narrativeProxy = lower
+  .replace(/hesitat(e|ed|ion)/g,"fear")
+  .replace(/pull(ed)? away/g,"fear")
+  .replace(/hold(ing)? back/g,"fear")
+  .replace(/drift(ed)? apart/g,"loss")
+  .replace(/distance(d)?/g,"loss");
 
-  const userWords = narrativeProxy
-    .replace(/[^\w\s]/g,"")
-    .split(" ")
-    .map(w => normalizeWord(w));
+const userWords = narrativeProxy
+  .replace(/[^\w\s]/g,"")
+  .split(" ")
+  .map(w => normalizeWord(w));
 
-  const pillarOrder = [
-    "affection",
-    "fear",
-    "vulnerability",
-    "regret",
-    "loss",
-    "growth",
-    "destiny"
-  ];
+const pillarOrder = [
+  "affection",
+  "fear",
+  "vulnerability",
+  "regret",
+  "loss",
+  "growth",
+  "destiny"
+];
 
-  let scores = {};
+let scores = {};
 
-  pillarOrder.forEach(pillar => {
+pillarOrder.forEach(pillar => {
 
-    let score = 0;
+  let score = 0;
 
-    emotionalPillars[pillar].forEach(keyword => {
+  emotionalPillars[pillar].forEach(keyword => {
 
-      if (keyword.includes(" ")) {
-        if (narrativeProxy.includes(keyword)) {
-          score += 3;
-        }
-      } else {
-        const keywordRoot = normalizeWord(keyword);
-        if (userWords.some(w => w.startsWith(keywordRoot))) {
-          score += 1;
-        }
+    if (keyword.includes(" ")) {
+
+      if (narrativeProxy.includes(keyword)) {
+        score += 3;
       }
 
-    });
+    } else {
 
-    scores[pillar] = score;
+      const keywordRoot = normalizeWord(keyword);
+
+      if (userWords.some(w => w.startsWith(keywordRoot))) {
+        score += 1;
+      }
+
+    }
 
   });
 
-  const sorted = Object.entries(scores)
-    .sort((a, b) => b[1] - a[1]);
+  scores[pillar] = score;
 
-  const primary = sorted[0];
-  const secondary = sorted[1];
+});
+
+const sorted = Object.entries(scores)
+  .sort((a, b) => b[1] - a[1]);
+
+let primary = sorted[0];
+let secondary = sorted[1];
+
+/* =========================
+   BALANCE CLOSE PILLAR SCORES
+========================= */
+
+if (secondary && primary[1] - secondary[1] <= 1) {
+  const candidates = [primary, secondary];
+  primary = candidates[Math.floor(Math.random() * candidates.length)];
+}
 
 const confidenceThreshold = 1;
 
@@ -1667,8 +1681,7 @@ if (primary[1] >= confidenceThreshold) {
 }
 
 return null;
-
-}
+}  
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
