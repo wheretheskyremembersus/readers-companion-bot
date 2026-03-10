@@ -1649,8 +1649,12 @@ function detectEmotionalPillar(text) {
   const secondary = sorted[1];
 
   const confidenceThreshold = 1;
-  // ignore weak single matches
-if (primary[1] === 1 && (!secondary || secondary[1] === 0)) {
+// ignore weak single matches
+if (
+  primary &&
+  primary[1] === 1 &&
+  (!secondary || secondary[1] === 0)
+) {
   return null;
 }
 
