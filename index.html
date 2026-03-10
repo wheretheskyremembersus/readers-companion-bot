@@ -6411,20 +6411,19 @@ function processEmotionalMode(userText, originalText) {
   const voice = activeVoice;
 
   // V4 micro-intent detection
-  const intent = v4MicroIntents.detect(normalizedText);
+const intent = v4MicroIntents.detect(normalizedText);
 
-  if (intent) {
+if (intent) {
 
-    const stage = stageState[voice]?.currentStage || 1;
+  const stage = stageState[voice]?.currentStage || 1;
 
-    const bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+  const bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
 
-    if (bank && bank.length) {
-      return deliverReply(randomItem(bank));
-    }
-
+  if (bank && bank.length) {
+    return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
   }
 
+}
   let detected = detectEmotionalPillar(normalizedText);
 
   if (!detected) {
