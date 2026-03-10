@@ -2615,7 +2615,10 @@ if (pillarMatch) {
   DEFAULT PILLAR (SAFETY)
   ========================= */
 
-  if (!pillar) pillar = "growth";
+if (!pillar) {
+  const fallbackPillars = ["affection","fear","regret","loss","growth"];
+  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
+}
 
   /* =========================
   V4 FALLBACK BANK
