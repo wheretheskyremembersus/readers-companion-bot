@@ -6417,7 +6417,17 @@ if (intent) {
 
   const stage = stageState[voice]?.currentStage || 1;
 
-  const bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+  let bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+
+// fallback to lower stages if exact stage not defined
+if (!bank) {
+  for (let s = stage; s >= 1; s--) {
+    if (v4MicroIntents.responses?.[voice]?.[intent]?.[s]) {
+      bank = v4MicroIntents.responses[voice][intent][s];
+      break;
+    }
+  }
+}
 
   if (bank && bank.length) {
     return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
