@@ -3771,6 +3771,36 @@ if (/\bantagonist|villain\b/i.test(t)) {
       : "The struggle comes from timing. From restraint. From choices made too late."
   );
 }
+  
+/* ---------- WORLD BUILDING CHECK ---------- */
+
+const worldbuildingKeywords = [
+ "world","city","cities","kingdom","empire","government",
+ "culture","race","species","technology","magic",
+ "history","legend","myth","architecture","festival",
+ "holiday","food","music","art","fashion","animals",
+ "creatures","landscape","geography","environment"
+];
+
+const isWorldbuilding = worldbuildingKeywords.some(word =>
+  lower.includes(word)
+);
+
+if (isWorldbuilding) {
+
+  const narrativeResponses = [
+    "Some parts of the world are clearer once you spend time inside them.",
+    "The setting matters, but the emotions inside it matter more.",
+    "Details of the world exist quietly behind the choices people make.",
+    "The landscape shapes the story, even when it isn't obvious at first.",
+    "Certain parts of the world reveal themselves slowly."
+  ];
+
+  return deliverReply(
+    narrativeResponses[Math.floor(Math.random()*narrativeResponses.length)]
+  );
+
+}
 /* ---------- Capability ---------- */
 
 if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
