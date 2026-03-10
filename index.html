@@ -2579,7 +2579,7 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
-  if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
     if (!stageState) stageState = {};
 
