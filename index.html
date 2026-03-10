@@ -1648,28 +1648,25 @@ function detectEmotionalPillar(text) {
   const primary = sorted[0];
   const secondary = sorted[1];
 
-  const confidenceThreshold = 1;
-// ignore weak single matches
-if (
-  primary &&
-  primary[1] === 1 &&
-  (!secondary || secondary[1] === 0)
-) {
-   primary = null;
-}
+const confidenceThreshold = 1;
 
-  if (primary[1] >= confidenceThreshold) {
+if (primary[1] >= confidenceThreshold) {
 
-    return {
-      primary: primary[0],
-      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
-      primaryScore: primary[1],
-      secondaryScore: secondary ? secondary[1] : 0
-    };
-
+  // ignore weak single matches
+  if (primary[1] === 1 && (!secondary || secondary[1] === 0)) {
+    return null;
   }
 
-  return null;
+  return {
+    primary: primary[0],
+    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+    primaryScore: primary[1],
+    secondaryScore: secondary ? secondary[1] : 0
+  };
+
+}
+
+return null;
 
 }
 /* =========================
