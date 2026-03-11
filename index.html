@@ -4410,69 +4410,6 @@ const intentState = handleIntelligence(normalizedText, normalizedText);
 const reference = resolveReference(normalizedText);
 
 /* =========================
-   STORY HISTORY DETECTOR
-   (Fixes C & D failures)
-========================= */
-
-function isStoryHistoryQuestion(text){
-
-const t = normalizeInput(text);
-
-const questionStructure =
-/\b(how did|what was|did you|were there|where did|how were)\b/.test(t);
-
-const storyContext =
-/\b(meet|met|first|impression|conversation|conversations|talk|memory|memories|together|friendship|travel|evening|place|time|begin|began|spent)\b/.test(t);
-
-return questionStructure && storyContext;
-
-}
-/* =========================
-   STORY HISTORY REPLY
-========================= */
-
-function storyHistoryReply(){
-
-const sairaReplies = [
-
-"We met quietly. It didn't feel extraordinary at first.",
-"Our conversations began slowly. Neither of us expected them to matter so much.",
-"At first it felt ordinary. Only later did it begin to feel different.",
-"There wasn't a dramatic beginning. Just two people talking a little longer each time.",
-"It unfolded gradually. That was part of what made it real."
-
-];
-
-const ayaanReplies = [
-
-"It began without intention. Just conversation that continued longer than expected.",
-"At first it seemed incidental. Only later did its weight become clear.",
-"Our first conversations were careful. Neither of us pushed too quickly.",
-"It wasn't a single moment. It developed through repetition.",
-"What mattered grew slowly rather than suddenly."
-
-];
-
-const pool = activeVoice === "ayaan" ? ayaanReplies : sairaReplies;
-
-return pool[Math.floor(Math.random() * pool.length)];
-
-}
-
-/* =========================
-   STORY HISTORY ROUTER
-========================= */
-
-if (isStoryHistoryQuestion(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    storyHistoryReply()
-  );
-
-}
-/* =========================
    RELATIONSHIP DYNAMICS ROUTER
 ========================= */
 
