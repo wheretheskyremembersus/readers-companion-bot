@@ -4146,19 +4146,103 @@ if (
 
   return deliverReply(
     activeVoice === "saira"
-      ? "It's about me and ayaan - about love that felt certain."
+      ? "It's about me and Ayaan - about love that felt certain."
       : "It's about hesitation, timing, and the cost of silence."
   );
 }
 
-  // Reset relational state per message
-  relationalPrefix = "";
-  skipRelationalPrefix = false;
+/* =========================
+   RESET RELATIONAL STATE
+========================= */
 
-  // Intelligence & reference systems (existing)
-  const intentState = handleIntelligence(normalizedText, normalizedText);
-  const reference = resolveReference(normalizedText);
-         
+relationalPrefix = "";
+skipRelationalPrefix = false;
+
+/* =========================
+   INTELLIGENCE + REFERENCE
+========================= */
+
+const intentState = handleIntelligence(normalizedText, normalizedText);
+const reference = resolveReference(normalizedText);
+
+/* =========================
+   STORY HISTORY DETECTOR
+   (Fixes C & D failures)
+========================= */
+
+function isStoryHistoryQuestion(text){
+
+const patterns = [
+
+/first meet/i,
+/how.*meet/i,
+/first impression/i,
+/travel/i,
+/spend.*time/i,
+/friendship begin/i,
+/how did.*begin/i,
+/conversations/i,
+/memories/i,
+/atmosphere/i,
+/where.*together/i,
+/evenings together/i
+
+];
+
+return patterns.some(p => p.test(text));
+
+}
+
+/* =========================
+   STORY HISTORY REPLY
+========================= */
+
+function storyHistoryReply(){
+
+const sairaReplies = [
+
+"We met quietly. It didn't feel extraordinary at first.",
+"Our conversations began slowly. Neither of us expected them to matter so much.",
+"At first it felt ordinary. Only later did it begin to feel different.",
+"There wasn't a dramatic beginning. Just two people talking a little longer each time.",
+"It unfolded gradually. That was part of what made it real."
+
+];
+
+const ayaanReplies = [
+
+"It began without intention. Just conversation that continued longer than expected.",
+"At first it seemed incidental. Only later did its weight become clear.",
+"Our first conversations were careful. Neither of us pushed too quickly.",
+"It wasn't a single moment. It developed through repetition.",
+"What mattered grew slowly rather than suddenly."
+
+];
+
+const pool = activeVoice === "ayaan" ? ayaanReplies : sairaReplies;
+
+return pool[Math.floor(Math.random() * pool.length)];
+
+}
+
+/* =========================
+   STORY HISTORY ROUTER
+========================= */
+
+if (isStoryHistoryQuestion(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    storyHistoryReply()
+  );
+
+}
+
+/* =========================
+   ENTITY MEMORY
+========================= */
+
 if (reference.target === "ayaan") lastEntity = "ayaan";
 if (reference.target === "saira") lastEntity = "saira";
 
@@ -4167,6 +4251,10 @@ let selfPrefix = "";
 if (reference.type === "self") {
   selfPrefix = getSelfReferencePrefix(stage);
 }
+
+/* =========================
+   STAGE VARIANT HELPER
+========================= */
 
 function pickStageVariant(map) {
   if (stage >= 7) return map[7];
