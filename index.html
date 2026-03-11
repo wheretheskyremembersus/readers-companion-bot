@@ -4140,8 +4140,11 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
 
 function runV4GeneralQueryLayer(text) {
 
-  const t = text.toLowerCase();
-
+  const t = text
+  .toLowerCase()
+  .replace(/[?!.]/g,"")
+  .replace(/\s+/g," ")
+  .trim();
   if (isV4StoryHistory(t)) {
     return v4StoryHistoryReply();
   }
