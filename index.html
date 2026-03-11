@@ -4134,6 +4134,16 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
       : "Understood."
   );
 }
+/* ================================
+   V4 EXECUTION GUARD
+================================ */
+
+const v4Response = runV4GeneralQueryLayer(trimmed);
+
+if (v4Response) {
+  skipRelationalPrefix = true;
+  return deliverReply(v4Response);
+}
 /* =========================================================
    V4 GENERAL QUERY LAYER (MICRO INTENT GUARDS)
 ========================================================= */
