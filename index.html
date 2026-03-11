@@ -4189,9 +4189,7 @@ function runV4GeneralQueryLayer(text) {
 function isV4StoryHistory(t){
 
 const question = /^(how|where|when|did|was|were|what)/;
-
-const keywords =
-/\b(meet|meeting|first|impression|friendship|together|travel|conversation|place|begin|memory|memories|moment|moments|future|silence|habit|habits|atmosphere|evening|time|experience|communication|distance|misunderstanding|misunderstandings|turning|change)\b/;
+const keywords = /\b(meet|meeting|first|impression|friendship|together|travel|conversation|place|begin|memory|memories|moment|moments|future|silence|habit|habits|atmosphere|evening|time|experience|communication|distance|misunderstanding|misunderstandings|turning|change)\b/;
 return question.test(t) && keywords.test(t);
 
 }
