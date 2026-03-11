@@ -2323,13 +2323,14 @@ const patterns = [
 
 /complement/i,
 /similar/i,
-/hesitate/i,
-/step back/i,
+/hesitat/i,
+/step.*back/i,
 /communication/i,
-/relationship change/i,
+/relationship.*change/i,
 /notice.*connection/i,
 /protect.*connection/i,
-/uncertain/i
+/uncertain/i,
+/react.*challenge/i
 
 ];
 
@@ -4220,18 +4221,17 @@ function isStoryHistoryQuestion(text){
 
 const patterns = [
 
-/first meet/i,
+/first.*meet/i,
 /how.*meet/i,
-/first impression/i,
+/first.*impression/i,
+/conversations?/i,
+/memories?/i,
 /travel/i,
 /spend.*time/i,
-/friendship begin/i,
-/how did.*begin/i,
-/conversations/i,
-/memories/i,
-/atmosphere/i,
+/friendship.*begin/i,
 /where.*together/i,
-/evenings together/i
+/atmosphere/i,
+/evenings?/i
 
 ];
 
