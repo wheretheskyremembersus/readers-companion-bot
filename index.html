@@ -2317,6 +2317,52 @@ function roleplayRedirect(activeVoice) {
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
+function isRelationshipDynamicsQuestion(text){
+
+const patterns = [
+
+/complement/i,
+/similar/i,
+/hesitate/i,
+/step back/i,
+/communication/i,
+/relationship change/i,
+/notice.*connection/i,
+/protect.*connection/i,
+/uncertain/i
+
+];
+
+return patterns.some(p => p.test(text));
+
+}
+  function relationshipDynamicsReply(){
+
+const sairaReplies = [
+
+"We were different in ways that mattered. That was part of the connection.",
+"Sometimes two people understand each other without being identical.",
+"There were moments of hesitation. Care often appears quietly like that.",
+"The relationship changed slowly rather than suddenly.",
+"Neither of us rushed what we felt."
+
+];
+
+const ayaanReplies = [
+
+"Our differences created balance rather than distance.",
+"Similarity isn't what forms connection. Awareness does.",
+"Hesitation existed on both sides.",
+"The dynamic evolved gradually.",
+"Neither of us forced clarity too early."
+
+];
+
+const pool = activeVoice === "ayaan" ? ayaanReplies : sairaReplies;
+
+return pool[Math.floor(Math.random()*pool.length)];
+
+}
 /* =========================
    OPINION / COMPARISON DETECTION
 ========================= */
@@ -4238,7 +4284,19 @@ if (isStoryHistoryQuestion(normalizedText)) {
   );
 
 }
+/* =========================
+   RELATIONSHIP DYNAMICS ROUTER
+========================= */
 
+if (isRelationshipDynamicsQuestion(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    relationshipDynamicsReply()
+  );
+
+}
 /* =========================
    ENTITY MEMORY
 ========================= */
