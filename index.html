@@ -2326,7 +2326,7 @@ const questionStructure =
 /\b(did|were|was|how did|how were|why did)\b/.test(t);
 
 const relationshipContext =
-/\b(complement|similar|hesitate|step back|communication|change|connection|protect|uncertain|influence|challenge)\b/.test(t);
+/\b(complement|similar|hesitate|hesitation|step back|communication|communicate|change|changed|connection|protect|uncertain|influence|challenge|challenges|react)\b/.test(t);
 
 return questionStructure && relationshipContext;
 
@@ -4219,12 +4219,11 @@ const questionStructure =
 /\b(how did|what was|did you|were there|where did|how were)\b/.test(t);
 
 const storyContext =
-/\b(meet|first|impression|conversation|memory|together|friendship|travel|evening|place|time)\b/.test(t);
+/\b(meet|met|first|impression|conversation|conversations|talk|memory|memories|together|friendship|travel|evening|place|time|begin|began|spent)\b/.test(t);
 
 return questionStructure && storyContext;
 
 }
-
 /* =========================
    STORY HISTORY REPLY
 ========================= */
