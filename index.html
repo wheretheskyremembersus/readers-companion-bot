@@ -2317,25 +2317,20 @@ function roleplayRedirect(activeVoice) {
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
+
 function isRelationshipDynamicsQuestion(text){
 
-const patterns = [
+const t = normalizeInput(text);
 
-/complement/i,
-/similar/i,
-/hesitat/i,
-/step.*back/i,
-/communication/i,
-/relationship.*change/i,
-/notice.*connection/i,
-/protect.*connection/i,
-/uncertain/i,
-/react.*challenge/i
+const questionStructure =
+/\b(did|were|was|how did|how were|why did)\b/.test(t);
 
-];
+const relationshipContext =
+/\b(complement|similar|hesitate|step back|communication|change|connection|protect|uncertain|influence|challenge)\b/.test(t);
 
-return patterns.some(p => p.test(text));
+return questionStructure && relationshipContext;
 
+}
 }
   function relationshipDynamicsReply(){
 
@@ -4219,23 +4214,15 @@ const reference = resolveReference(normalizedText);
 
 function isStoryHistoryQuestion(text){
 
-const patterns = [
+const t = normalizeInput(text);
 
-/first.*meet/i,
-/how.*meet/i,
-/first.*impression/i,
-/conversations?/i,
-/memories?/i,
-/travel/i,
-/spend.*time/i,
-/friendship.*begin/i,
-/where.*together/i,
-/atmosphere/i,
-/evenings?/i
+const questionStructure =
+/\b(how did|what was|did you|were there|where did|how were)\b/.test(t);
 
-];
+const storyContext =
+/\b(meet|first|impression|conversation|memory|together|friendship|travel|evening|place|time)\b/.test(t);
 
-return patterns.some(p => p.test(text));
+return questionStructure && storyContext;
 
 }
 
