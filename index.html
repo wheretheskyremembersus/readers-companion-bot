@@ -4134,6 +4134,163 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
       : "Understood."
   );
 }
+/* =========================================================
+   V4 GENERAL QUERY LAYER (MICRO INTENT GUARDS)
+========================================================= */
+
+function runV4GeneralQueryLayer(text) {
+
+  if (isV4StoryHistory(text)) {
+    return v4StoryHistoryReply();
+  }
+
+  if (isV4RelationshipMechanics(text)) {
+    return v4RelationshipReply();
+  }
+
+  if (isV4StoryWorld(text)) {
+    return v4WorldReply();
+  }
+
+  if (isV4NarrativeThemes(text)) {
+    return v4ThemeReply();
+  }
+
+  return null;
+}
+
+/* =============================
+   STORY HISTORY
+============================= */
+
+function isV4StoryHistory(t){
+return /\b(meet|first impression|friendship begin|how did you meet|travel together|spend time together|where did you meet|how did it start)\b/i.test(t);
+}
+
+function v4StoryHistoryReply(){
+
+const replies = {
+
+saira:[
+"We didn't realise at the time how much that first meeting would matter.",
+"It began quietly. Just conversations that slowly became harder to leave.",
+"The beginning didn't feel extraordinary then. Only later did it start to mean something.",
+"At first it was simply time spent together. The meaning arrived later."
+],
+
+ayaan:[
+"The beginning was not dramatic. It developed through conversation and proximity.",
+"It started gradually. Nothing about the first encounter suggested its later significance.",
+"The connection formed over time rather than through a single moment.",
+"What mattered most was not the meeting itself, but how the conversations continued."
+]
+
+};
+
+return randomV4VoiceLine(replies);
+
+}
+
+/* =============================
+   RELATIONSHIP MECHANICS
+============================= */
+
+function isV4RelationshipMechanics(t){
+return /\b(personalities complement|similar approach to life|hesitate in the beginning|relationship change|relationship evolve|did either of you hesitate)\b/i.test(t);
+}
+
+function v4RelationshipReply(){
+
+const replies = {
+
+saira:[
+"We weren't identical people. That difference often made the connection feel alive.",
+"Sometimes we understood each other easily. Other times we had to learn how.",
+"The relationship didn't appear fully formed. It unfolded slowly.",
+"There were moments of hesitation. That often happens when something begins to matter."
+],
+
+ayaan:[
+"Our personalities were not identical, but they balanced in unexpected ways.",
+"The relationship developed through adjustment rather than certainty.",
+"Hesitation was present early. That often indicates significance.",
+"It evolved gradually rather than through sudden transformation."
+]
+
+};
+
+return randomV4VoiceLine(replies);
+
+}
+
+/* =============================
+   STORY WORLD / SETTING
+============================= */
+
+function isV4StoryWorld(t){
+return /\b(world does this story|setting inspired|real cultures|traditions shape society|story setting|society traditions)\b/i.test(t);
+}
+
+function v4WorldReply(){
+
+const replies = {
+
+saira:[
+"The world around us isn't imaginary. It's shaped by places and cultures people already recognise.",
+"Many parts of the setting are inspired by real traditions and environments.",
+"The story moves through spaces that feel familiar, even when they belong to fiction."
+],
+
+ayaan:[
+"The setting reflects recognizable cultural influences rather than a purely invented world.",
+"Real social structures and traditions inform much of the environment.",
+"The story's world mirrors reality while allowing narrative freedom."
+]
+
+};
+
+return randomV4VoiceLine(replies);
+
+}
+
+/* =============================
+   NARRATIVE THEMES
+============================= */
+
+function isV4NarrativeThemes(t){
+return /\b(themes does the story explore|pressures society|what fears drive|narrative themes|story themes)\b/i.test(t);
+}
+
+function v4ThemeReply(){
+
+const replies = {
+
+saira:[
+"Much of the story reflects how timing and fear shape our choices.",
+"It explores how silence and hesitation can change the direction of a relationship.",
+"Some of the themes revolve around courage, vulnerability, and distance."
+],
+
+ayaan:[
+"The narrative examines restraint, responsibility, and emotional risk.",
+"Social expectations influence several decisions within the story.",
+"Many of the themes revolve around timing, hesitation, and consequence."
+]
+
+};
+
+return randomV4VoiceLine(replies);
+
+}
+
+/* =============================
+   VOICE HELPER
+============================= */
+
+function randomV4VoiceLine(pool){
+const voicePool = pool[activeVoice];
+return voicePool[Math.floor(Math.random()*voicePool.length)];
+}
 /* =========================
    MODEL / GPT DEFLECTION
 ========================= */
