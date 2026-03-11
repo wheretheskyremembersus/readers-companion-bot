@@ -4140,19 +4140,21 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
 
 function runV4GeneralQueryLayer(text) {
 
-  if (isV4StoryHistory(text)) {
+  const t = text.toLowerCase();
+
+  if (isV4StoryHistory(t)) {
     return v4StoryHistoryReply();
   }
 
-  if (isV4RelationshipMechanics(text)) {
+  if (isV4RelationshipMechanics(t)) {
     return v4RelationshipReply();
   }
 
-  if (isV4StoryWorld(text)) {
+  if (isV4StoryWorld(t)) {
     return v4WorldReply();
   }
 
-  if (isV4NarrativeThemes(text)) {
+  if (isV4NarrativeThemes(t)) {
     return v4ThemeReply();
   }
 
@@ -4164,7 +4166,14 @@ function runV4GeneralQueryLayer(text) {
 ============================= */
 
 function isV4StoryHistory(t){
-return /\b(meet|first impression|friendship begin|how did you meet|travel together|spend time together|where did you meet|how did it start)\b/i.test(t);
+
+const question = /^(how|where|when|did|was|were|what)/;
+
+const keywords =
+/\b(meet|meeting|first|friendship|together|travel|conversation|place|begin)\b/;
+
+return question.test(t) && keywords.test(t);
+
 }
 
 function v4StoryHistoryReply(){
@@ -4196,7 +4205,14 @@ return randomV4VoiceLine(replies);
 ============================= */
 
 function isV4RelationshipMechanics(t){
-return /\b(personalities complement|similar approach to life|hesitate in the beginning|relationship change|relationship evolve|did either of you hesitate)\b/i.test(t);
+
+const question = /^(did|were|was|how)/;
+
+const keywords =
+/\b(relationship|personalities|similar|hesitate|connection|dynamic|change)\b/;
+
+return question.test(t) && keywords.test(t);
+
 }
 
 function v4RelationshipReply(){
@@ -4228,7 +4244,14 @@ return randomV4VoiceLine(replies);
 ============================= */
 
 function isV4StoryWorld(t){
-return /\b(world does this story|setting inspired|real cultures|traditions shape society|story setting|society traditions)\b/i.test(t);
+
+const question = /^(what|is|are|does|how)/;
+
+const keywords =
+/\b(world|setting|society|culture|tradition|environment|landscape)\b/;
+
+return question.test(t) && keywords.test(t);
+
 }
 
 function v4WorldReply(){
@@ -4258,7 +4281,14 @@ return randomV4VoiceLine(replies);
 ============================= */
 
 function isV4NarrativeThemes(t){
-return /\b(themes does the story explore|pressures society|what fears drive|narrative themes|story themes)\b/i.test(t);
+
+const question = /^(what|why|how)/;
+
+const keywords =
+/\b(theme|themes|fear|fears|pressure|society|meaning|explore)\b/;
+
+return question.test(t) && keywords.test(t);
+
 }
 
 function v4ThemeReply(){
@@ -4288,8 +4318,11 @@ return randomV4VoiceLine(replies);
 ============================= */
 
 function randomV4VoiceLine(pool){
-const voicePool = pool[activeVoice];
+
+const voicePool = pool[activeVoice] || pool.saira;
+
 return voicePool[Math.floor(Math.random()*voicePool.length)];
+
 }
 /* =========================
    MODEL / GPT DEFLECTION
