@@ -2679,7 +2679,10 @@ function runV4Engine(text, originalText) {
     activeVoice === "saira" || activeVoice === "ayaan"
       ? activeVoice
       : "saira";
-
+  
+if (!tollState[voice]?.unlocked) {
+    return null;
+  }
   if (!stageState) {
     stageState = {};
   }
