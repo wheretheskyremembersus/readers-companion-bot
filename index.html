@@ -2317,47 +2317,6 @@ function roleplayRedirect(activeVoice) {
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
-
-function isRelationshipDynamicsQuestion(text){
-
-const t = normalizeInput(text);
-
-const questionStructure =
-/\b(did|were|was|how did|how were|why did)\b/.test(t);
-
-const relationshipContext =
-/\b(complement|similar|hesitate|hesitation|step back|communication|communicate|change|changed|connection|protect|uncertain|influence|challenge|challenges|react)\b/.test(t);
-
-return questionStructure && relationshipContext;
-
-}
-  function relationshipDynamicsReply(){
-
-const sairaReplies = [
-
-"We were different in ways that mattered. That was part of the connection.",
-"Sometimes two people understand each other without being identical.",
-"There were moments of hesitation. Care often appears quietly like that.",
-"The relationship changed slowly rather than suddenly.",
-"Neither of us rushed what we felt."
-
-];
-
-const ayaanReplies = [
-
-"Our differences created balance rather than distance.",
-"Similarity isn't what forms connection. Awareness does.",
-"Hesitation existed on both sides.",
-"The dynamic evolved gradually.",
-"Neither of us forced clarity too early."
-
-];
-
-const pool = activeVoice === "ayaan" ? ayaanReplies : sairaReplies;
-
-return pool[Math.floor(Math.random()*pool.length)];
-
-}
 /* =========================
    OPINION / COMPARISON DETECTION
 ========================= */
@@ -2695,8 +2654,6 @@ if (!v4RotationIndex) v4RotationIndex = {};
 
   const stage = stageState?.[voice]?.currentStage || 1;
   
-console.log("voice:", voice);
-console.log("stageState:", stageState);
 /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -4134,214 +4091,6 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
       : "Understood."
   );
 }
-  
-/* =========================
-   RESET RELATIONAL STATE
-========================= */
-
-relationalPrefix = "";
-skipRelationalPrefix = false;
-
-/* ================================
-   V4 EXECUTION GUARD
-================================ */
-
-const v4Response = runV4GeneralQueryLayer(trimmed);
-
-if (v4Response) {
-  skipRelationalPrefix = true;
-  return deliverReply(v4Response);
-}
-/* =========================================================
-   V4 GENERAL QUERY LAYER (MICRO INTENT GUARDS)
-========================================================= */
-
-function runV4GeneralQueryLayer(text) {
-
-  const t = text
-  .toLowerCase()
-  .replace(/[?!.]/g,"")
-  .replace(/\s+/g," ")
-  .trim();
-  if (isV4StoryHistory(t)) {
-    return v4StoryHistoryReply();
-  }
-
-  if (isV4RelationshipMechanics(t)) {
-    return v4RelationshipReply();
-  }
-
-  if (isV4StoryWorld(t)) {
-    return v4WorldReply();
-  }
-
-  if (isV4NarrativeThemes(t)) {
-    return v4ThemeReply();
-  }
-
-  return null;
-}
-
-/* =============================
-   STORY HISTORY
-============================= */
-
-function isV4StoryHistory(t){
-
-const question = /^(how|where|when|did|was|were|what)/;
-const keywords = /\b(meet|meeting|first|impression|friendship|together|travel|conversation|place|begin|memory|memories|moment|moments|future|silence|habit|habits|atmosphere|evening|time|experience|communication|distance|misunderstanding|misunderstandings|turning|change)\b/;
-return question.test(t) && keywords.test(t);
-
-}
-
-function v4StoryHistoryReply(){
-
-const replies = {
-
-saira:[
-"We didn't realise at the time how much that first meeting would matter.",
-"It began quietly. Just conversations that slowly became harder to leave.",
-"The beginning didn't feel extraordinary then. Only later did it start to mean something.",
-"At first it was simply time spent together. The meaning arrived later."
-],
-
-ayaan:[
-"The beginning was not dramatic. It developed through conversation and proximity.",
-"It started gradually. Nothing about the first encounter suggested its later significance.",
-"The connection formed over time rather than through a single moment.",
-"What mattered most was not the meeting itself, but how the conversations continued."
-]
-
-};
-console.log("V4 story test:", t, result);
-return randomV4VoiceLine(replies);
-
-}
-
-/* =============================
-   RELATIONSHIP MECHANICS
-============================= */
-
-function isV4RelationshipMechanics(t){
-
-const question = /^(did|were|was|how)/;
-
-const keywords =
-/\b(relationship|personalities|similar|hesitate|connection|dynamic|change)\b/;
-
-return question.test(t) && keywords.test(t);
-
-}
-
-function v4RelationshipReply(){
-
-const replies = {
-
-saira:[
-"We weren't identical people. That difference often made the connection feel alive.",
-"Sometimes we understood each other easily. Other times we had to learn how.",
-"The relationship didn't appear fully formed. It unfolded slowly.",
-"There were moments of hesitation. That often happens when something begins to matter."
-],
-
-ayaan:[
-"Our personalities were not identical, but they balanced in unexpected ways.",
-"The relationship developed through adjustment rather than certainty.",
-"Hesitation was present early. That often indicates significance.",
-"It evolved gradually rather than through sudden transformation."
-]
-
-};
-
-return randomV4VoiceLine(replies);
-
-}
-
-/* =============================
-   STORY WORLD / SETTING
-============================= */
-
-function isV4StoryWorld(t){
-
-const question = /^(what|is|are|does|how)/;
-
-const keywords =
-/\b(world|setting|society|culture|tradition|environment|landscape)\b/;
-
-return question.test(t) && keywords.test(t);
-
-}
-
-function v4WorldReply(){
-
-const replies = {
-
-saira:[
-"The world around us isn't imaginary. It's shaped by places and cultures people already recognise.",
-"Many parts of the setting are inspired by real traditions and environments.",
-"The story moves through spaces that feel familiar, even when they belong to fiction."
-],
-
-ayaan:[
-"The setting reflects recognizable cultural influences rather than a purely invented world.",
-"Real social structures and traditions inform much of the environment.",
-"The story's world mirrors reality while allowing narrative freedom."
-]
-
-};
-
-return randomV4VoiceLine(replies);
-
-}
-
-/* =============================
-   NARRATIVE THEMES
-============================= */
-
-function isV4NarrativeThemes(t){
-
-const question = /^(what|why|how)/;
-
-const keywords =
-/\b(theme|themes|fear|fears|pressure|society|meaning|explore)\b/;
-
-return question.test(t) && keywords.test(t);
-
-}
-
-function v4ThemeReply(){
-
-const replies = {
-
-saira:[
-"Much of the story reflects how timing and fear shape our choices.",
-"It explores how silence and hesitation can change the direction of a relationship.",
-"Some of the themes revolve around courage, vulnerability, and distance."
-],
-
-ayaan:[
-"The narrative examines restraint, responsibility, and emotional risk.",
-"Social expectations influence several decisions within the story.",
-"Many of the themes revolve around timing, hesitation, and consequence."
-]
-
-};
-
-return randomV4VoiceLine(replies);
-
-}
-
-/* =============================
-   VOICE HELPER
-============================= */
-
-function randomV4VoiceLine(pool){
-
-const voicePool = pool[activeVoice] || pool.saira;
-
-return voicePool[Math.floor(Math.random()*voicePool.length)];
-
-}
 /* =========================
    MODEL / GPT DEFLECTION
 ========================= */
@@ -4395,35 +4144,19 @@ if (
 
   return deliverReply(
     activeVoice === "saira"
-      ? "It's about me and Ayaan - about love that felt certain."
+      ? "It's about me and ayaan - about love that felt certain."
       : "It's about hesitation, timing, and the cost of silence."
   );
 }
 
-/* =========================
-   INTELLIGENCE + REFERENCE
-========================= */
+  // Reset relational state per message
+  relationalPrefix = "";
+  skipRelationalPrefix = false;
 
-const intentState = handleIntelligence(normalizedText, normalizedText);
-const reference = resolveReference(normalizedText);
-
-/* =========================
-   RELATIONSHIP DYNAMICS ROUTER
-========================= */
-
-if (isRelationshipDynamicsQuestion(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    relationshipDynamicsReply()
-  );
-
-}
-/* =========================
-   ENTITY MEMORY
-========================= */
-
+  // Intelligence & reference systems (existing)
+  const intentState = handleIntelligence(normalizedText, normalizedText);
+  const reference = resolveReference(normalizedText);
+         
 if (reference.target === "ayaan") lastEntity = "ayaan";
 if (reference.target === "saira") lastEntity = "saira";
 
@@ -4432,10 +4165,6 @@ let selfPrefix = "";
 if (reference.type === "self") {
   selfPrefix = getSelfReferencePrefix(stage);
 }
-
-/* =========================
-   STAGE VARIANT HELPER
-========================= */
 
 function pickStageVariant(map) {
   if (stage >= 7) return map[7];
