@@ -3294,8 +3294,7 @@ function runV4Engine(text, originalText) {
 V4 NARRATIVE LAYER (FIRST)
 ========================= */
 
-const narrativeResult = detectNarrativeIntent(originalText);
-
+const narrativeResult = detectNarrativeIntent(text);
 if (narrativeResult) {
 
   const layer = narrativeResult[0];
