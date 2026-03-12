@@ -717,24 +717,6 @@ let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
 
-let v3DetectedIntent = false;
-  
-let v3FallbackUsed = {
-  saira: {
-    firm: new Set(),
-    neutral: new Set(),
-    reflective: new Set()
-  },
-  ayaan: {
-    firm: new Set(),
-    neutral: new Set(),
-    reflective: new Set()
-  }
-};
-let v4FallbackUsed = {
-  saira: {},
-  ayaan: {}
-};
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -1106,14 +1088,12 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
 
-  if (typeof probeOnly !== "undefined" && probeOnly) return true;
-
   if (!replyText) return;
 
-  if (Array.isArray(replyText)) {
-    replyText = replyText[Math.floor(Math.random() * replyText.length)];
-  }
-  
+ if (Array.isArray(replyText)) {
+  replyText = replyText[Math.floor(Math.random() * replyText.length)];
+}
+ 
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
@@ -1904,23 +1884,15 @@ function getV3Fallback() {
     category = "reflective";
   }
 
+  const index = v3FallbackIndex[voice][category];
   const bank = v3FallbackBank[voice][category];
-  const used = v3FallbackUsed[voice][category];
 
-  const available = bank.filter(line => !used.has(line));
+  const line = bank[index % bank.length];
 
-  let line;
-
-  if (available.length > 0) {
-    line = available[Math.floor(Math.random() * available.length)];
-    used.add(line);
-  } else {
-    // all lines used → allow reuse
-    line = bank[Math.floor(Math.random() * bank.length)];
-  }
+  v3FallbackIndex[voice][category]++;
 
   return line;
-}
+}   
 
 /* =================================================
    CORE EXECUTION PIPELINE
@@ -2516,7 +2488,8 @@ function getSelfReferencePrefix(stage) {
    RELATIONAL AWARENESS (V3)
 ========================= */
 
-function processInput(userText, originalText, probeOnly = false) {
+function processInput(userText, originalText) {
+
   let normalizedText = normalizeInput(originalText);
 
 
@@ -2682,65 +2655,63 @@ if (!v4RotationIndex) v4RotationIndex = {};
   const stage = stageState?.[voice]?.currentStage || 1;
   
 /* =========================
-EMOTIONAL PILLAR DETECTION
-========================= */
+  EMOTIONAL PILLAR DETECTION
+  ========================= */
 
-if (tollState[activeVoice]?.unlocked) {
+const pillarMatch = detectEmotionalPillar(originalText);
 
-  const pillarMatch = detectEmotionalPillar(originalText);
+let pillar = pillarMatch?.primary || null;
 
-  let pillar = pillarMatch?.primary || null;
+if (pillarMatch) {
 
-  if (pillarMatch) {
+  const targetStage = pillarToStage?.[pillar] || stage;
 
-    const targetStage = pillarToStage?.[pillar] || stage;
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
-    if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+    if (!stageState) stageState = {};
 
-      if (!stageState) stageState = {};
-
-      if (!stageState[voice]) {
-        stageState[voice] = {
-          currentStage: 1,
-          momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
-        };
-      }
-
-      const thresholds = {
-        2:3,
-        3:4,
-        4:5,
-        5:6,
-        6:7,
-        7:8
+    if (!stageState[voice]) {
+      stageState[voice] = {
+        currentStage: 1,
+        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
       };
-
-      const nextStage = stageState[voice].currentStage + 1;
-
-      stageState[voice].momentum[nextStage]++;
-
-      if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
-        stageState[voice].currentStage = nextStage;
-      }
-
     }
 
-    const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+    const thresholds = {
+      2:3,
+      3:4,
+      4:5,
+      5:6,
+      6:7,
+      7:8
+    };
 
-    if (anchorPool && anchorPool.length) {
+    const nextStage = stageState[voice].currentStage + 1;
 
-      let anchor;
+    stageState[voice].momentum[nextStage]++;
 
-      do {
-        anchor =
-          anchorPool[Math.floor(Math.random() * anchorPool.length)];
-      } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
-
-      lastAnchorUsed[pillar] = anchor;
-
-      return deliverReply(anchor);
+    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      stageState[voice].currentStage = nextStage;
     }
+
   }
+
+  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+
+if (anchorPool && anchorPool.length) {
+
+  let anchor;
+
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+  lastAnchorUsed[pillar] = anchor;
+
+  return deliverReply(anchor);
+
+}
 
 }
   /* =========================
@@ -2901,33 +2872,23 @@ if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
   pool = v4FallbackBank.saira.growth;
 }
 
-/* Ensure memory structure exists */
+/* Ensure rotation structure exists */
 
-if (!v4FallbackUsed[voice]) {
-  v4FallbackUsed[voice] = {};
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
 }
 
-if (!v4FallbackUsed[voice][pillar]) {
-  v4FallbackUsed[voice][pillar] = new Set();
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
 }
 
-const used = v4FallbackUsed[voice][pillar];
+const index = v4RotationIndex[voice][pillar];
 
-/* Select unused lines first */
+const line = pool[index % pool.length];
 
-const available = pool.filter(line => !used.has(line));
+v4RotationIndex[voice][pillar]++;
 
-let reply;
-
-if (available.length > 0) {
-  reply = available[Math.floor(Math.random() * available.length)];
-  used.add(reply);
-} else {
-  /* If all lines used, allow reuse */
-  reply = pool[Math.floor(Math.random() * pool.length)];
-}
-
-return deliverReply(reply);
+return deliverReply(line);
 }
   
 window.runV4Engine = runV4Engine;
@@ -6467,45 +6428,32 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalize
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
 
-let category = "neutral";
+let category ="neutral";
 
 if (wordCount <= 2) {
-  category = "firm";
+  category ="firm";
 }
 else if (wordCount >= 8) {
-  category = "reflective";
+  category ="reflective";
 }
 
 if (originalText === lastUserInput) {
-  category = "firm";
+  category ="firm";
 }
 
 lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
-/* Safety guard */
-if (!v3FallbackUsed[activeVoice]) {
-  v3FallbackUsed[activeVoice] = { firm:new Set(), neutral:new Set(), reflective:new Set() };
-}
+const index = v3FallbackIndex[activeVoice][category] % bank.length;
 
-const used = v3FallbackUsed[activeVoice][category];
+const reply = bank[index];
 
-const available = bank.filter(line => !used.has(line));
-
-let reply;
-
-if (available.length > 0) {
-  reply = available[Math.floor(Math.random() * available.length)];
-  used.add(reply);
-} else {
-  reply = bank[Math.floor(Math.random() * bank.length)];
-}
-
-if (probeOnly) return false;
+v3FallbackIndex[activeVoice][category]++;
 
 return deliverReply(reply);
 }
+
 /* =========================
    V4 MICRO INTENT SYSTEM
 ========================= */
@@ -8257,20 +8205,11 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-
-  v3DetectedIntent = false;
-
-  processInput(originalText, originalText, true);
-
-  if (!v3DetectedIntent) {
-    processEmotionalMode(originalText, originalText);
-  }
-
+  processEmotionalMode(originalText, originalText);
 } else {
-
   processInput(originalText, originalText);
-
 }
+
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
