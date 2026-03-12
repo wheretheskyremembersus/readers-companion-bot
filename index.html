@@ -5142,7 +5142,15 @@ if (isLocationQuery(originalText)) {
 ================================= */
 
 if (tollState[activeVoice]?.unlocked === true) {
-
+// ============================================
+  // TEMPORARY DEBUG - REMOVE AFTER TESTING
+  // ============================================
+  if (originalText.toLowerCase() === "debug unlock") {
+    tollState[activeVoice].unlocked = true;
+    tollState[activeVoice].dockCount = 20;
+    tollState[activeVoice].freeCount = 20;
+    return deliverReply("🔓 V4 mode manually unlocked for testing.");
+  }
   const normalized = normalizeInput(originalText);
   const voice = activeVoice;
   const stage = stageState[voice]?.currentStage || 1;
