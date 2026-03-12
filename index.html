@@ -2679,10 +2679,7 @@ function runV4Engine(text, originalText) {
     activeVoice === "saira" || activeVoice === "ayaan"
       ? activeVoice
       : "saira";
-  
-if (!tollState[voice]?.unlocked) {
-    return null;
-  }
+
   if (!stageState) {
     stageState = {};
   }
@@ -2702,7 +2699,7 @@ console.log("voice:", voice);
 console.log("stageState:", stageState);
 /* =========================
   EMOTIONAL PILLAR DETECTION
-========================= */
+  ========================= */
 
 const pillarMatch = detectEmotionalPillar(originalText);
 
@@ -2712,7 +2709,7 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
-  if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
     if (!stageState) stageState = {};
 
@@ -2744,32 +2741,20 @@ if (pillarMatch) {
 
   const anchorPool = emotionalAnchors?.[voice]?.[pillar];
 
-  /* =========================
-     ANCHOR SAFETY GUARD
-  ========================= */
+if (anchorPool && anchorPool.length) {
 
-  if (!anchorPool || !anchorPool.length) {
-    pillar = pillar || "growth";
-  }
+  let anchor;
 
-  /* =========================
-     EMOTIONAL ANCHOR REPLY
-  ========================= */
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
 
-  if (anchorPool && anchorPool.length) {
+  lastAnchorUsed[pillar] = anchor;
 
-    let anchor;
+  return deliverReply(anchor);
 
-    do {
-      anchor =
-        anchorPool[Math.floor(Math.random() * anchorPool.length)];
-    } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
-
-    lastAnchorUsed[pillar] = anchor;
-
-    return deliverReply(anchor);
-
-  }
+}
 
 }
   /* =========================
