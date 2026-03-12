@@ -8209,12 +8209,12 @@ addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
 
-  v3DetectedIntent = false;
+  const detected = detectEmotionalPillar(originalText);
 
-  processInput(originalText, originalText, true);
-
-  if (!v3DetectedIntent) {
+  if (detected && detected.primaryScore >= 1) {
     processEmotionalMode(originalText, originalText);
+  } else {
+    processInput(originalText, originalText);
   }
 
 } else {
