@@ -731,7 +731,6 @@ let v3FallbackUsed = {
     reflective: new Set()
   }
 };
-
 let v4FallbackUsed = {
   saira: {},
   ayaan: {}
@@ -1107,14 +1106,12 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
 
-  if (typeof probeOnly !== "undefined" && probeOnly) return true;
-
   if (!replyText) return;
 
-  if (Array.isArray(replyText)) {
-    replyText = replyText[Math.floor(Math.random() * replyText.length)];
-  }
-  
+ if (Array.isArray(replyText)) {
+  replyText = replyText[Math.floor(Math.random() * replyText.length)];
+}
+ 
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
@@ -2509,7 +2506,8 @@ function getSelfReferencePrefix(stage) {
    RELATIONAL AWARENESS (V3)
 ========================= */
 
-function processInput(userText, originalText, probeOnly = false) {
+function processInput(userText, originalText) {
+
   let normalizedText = normalizeInput(originalText);
 
 
@@ -8248,20 +8246,11 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-
-  v3DetectedIntent = false;
-
-  processInput(originalText, originalText, true);
-
-  if (!v3DetectedIntent) {
-    processEmotionalMode(originalText, originalText);
-  }
-
+  processEmotionalMode(originalText, originalText);
 } else {
-
   processInput(originalText, originalText);
-
 }
+
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
