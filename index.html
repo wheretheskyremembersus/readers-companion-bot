@@ -4660,7 +4660,7 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const detected = detectEmotionalPillar(normalized);
 
- if (!isQuestion && detected && detected.primaryScore >= 1) {
+ if (detected && detected.primaryScore >= 1) {
   return processEmotionalMode(originalText, originalText);
 }
 
