@@ -2488,8 +2488,7 @@ function getSelfReferencePrefix(stage) {
    RELATIONAL AWARENESS (V3)
 ========================= */
 
-function processInput(userText, originalText) {
-
+function processInput(userText, originalText, probeOnly = false) {
   let normalizedText = normalizeInput(originalText);
 
 
@@ -6451,9 +6450,10 @@ const reply = bank[index];
 
 v3FallbackIndex[activeVoice][category]++;
 
+if (probeOnly) return false;
+
 return deliverReply(reply);
 }
-
 /* =========================
    V4 MICRO INTENT SYSTEM
 ========================= */
@@ -8205,9 +8205,17 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-  processEmotionalMode(originalText, originalText);
+
+  const handled = processInput(originalText, originalText, true);
+
+  if (!handled) {
+    processEmotionalMode(originalText, originalText);
+  }
+
 } else {
+
   processInput(originalText, originalText);
+
 }
 
 /* =========================
