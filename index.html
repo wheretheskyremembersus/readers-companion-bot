@@ -8209,7 +8209,15 @@ addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
 
-  v3DetectedIntent = false;
+  const detected = detectEmotionalPillar(originalText);
+
+  if (detected && detected.primaryScore >= 1) {
+    processEmotionalMode(originalText, originalText);
+  } else {
+    processInput(originalText, originalText);
+  }
+
+} else {
 
   processInput(originalText, originalText);
 
