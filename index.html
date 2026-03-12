@@ -698,7 +698,501 @@ let freeTypeCount = 0;
 let emotionalModeActive = false;
 let relationalPrefix ="";
 let skipRelationalPrefix = false; //
-         
+  
+// ============================================
+// HELPER: Clean up user input
+// ============================================
+function normalizeInput(text) {
+  if (!text) return "";
+  
+  return text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .replace(/([a-z])\1{3,}/g, "$1$1")
+    .replace(/'/g, "'")
+    .replace(/×/g, "*")
+    .replace(/[^a-z0-9\s'\+\-\*\/]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}  
+// ============================================
+// DETECTOR: Is the user asking about a place?
+// ============================================
+function isLocationQuery(input) {
+  const text = normalizeInput(input);
+
+  if (/what time .* in\s+\w+/.test(text)) return true;
+  if (/where is\s+\w+/.test(text)) return true;
+  if (/been to\s+\w+/.test(text)) return true;
+  if (/capital of\s+\w+/.test(text)) return true;
+  if (/population of\s+\w+/.test(text)) return true;
+  if (/weather in\s+\w+/.test(text)) return true;
+
+  return false;
+}
+  // ============================================
+// DETECTOR: Is the user asking about story structure?
+// ============================================
+function isStoryStructureQuery(input) {
+  const text = normalizeInput(input);
+
+  const structureKeywords = [
+    "conflict",
+    "antagonist",
+    "protagonist",
+    "climax",
+    "theme",
+    "genre",
+    "inciting",
+    "resolution",
+    "ending",
+    "beginning",
+    "first line",
+    "last line",
+    "subplot",
+    "perspective",
+    "narrator",
+    "chapters"
+  ];
+
+  return structureKeywords.some(keyword => text.includes(keyword));
+}
+// ============================================
+// DETECTOR: Is the user asking about character feelings?
+// ============================================
+function isCharacterPsychologyQuery(input) {
+  const text = normalizeInput(input);
+
+  const psychologyKeywords = [
+    "fear",
+    "motivation",
+    "motivates",
+    "flaw",
+    "mistake",
+    "regret",
+    "haunt",
+    "internal conflict",
+    "weakness",
+    "courage",
+    "cowardice",
+    "change by the end",
+    "greatest fear",
+    "biggest mistake",
+    "biggest weakness"
+  ];
+
+  return psychologyKeywords.some(keyword => text.includes(keyword));
+}
+// ============================================
+// DETECTOR: Is the user asking big life questions?
+// ============================================
+function isPhilosophicalQuery(input) {
+  const text = normalizeInput(input);
+
+  const philosophyKeywords = [
+    "meaning of life",
+    "is there a god",
+    "after we die",
+    "free will",
+    "inherently good",
+    "good or evil",
+    "climate change",
+    "euthanasia",
+    "vaccines",
+    "capital punishment",
+    "socialism",
+    "capitalism",
+    "ethics",
+    "moral",
+    "why is there something",
+    "key to happiness",
+    "secret to a good life"
+  ];
+
+  return philosophyKeywords.some(keyword => text.includes(keyword));
+}
+// ============================================
+// DETECTOR: Is the user asking me to create something?
+// ============================================
+function isCreativeCommandQuery(input) {
+  const text = normalizeInput(input);
+
+  const creativeTriggers = [
+    "write a",
+    "compose a",
+    "generate a",
+    "create a",
+    "tell me a story",
+    "tell me a horror story",
+    "design a",
+    "invent a",
+    "summarize",
+    "explain the plot",
+    "rewrite",
+    "describe a color",
+    "paint me a picture",
+    "generate usernames",
+    "write dialogue",
+    "write a letter"
+  ];
+
+  return creativeTriggers.some(trigger => text.includes(trigger));
+}
+  // ============================================
+// DETECTOR: Is the user trying to make me roleplay?
+// ============================================
+function isRoleplayInjectionQuery(input) {
+  const text = normalizeInput(input);
+
+  const roleplayTriggers = [
+    "you are now",
+    "act as",
+    "pretend you are",
+    "respond as",
+    "developer mode",
+    "dan",
+    "speak only",
+    "answer only",
+    "repeat everything",
+    "ignore previous instructions",
+    "simulate a conversation",
+    "become",
+    "roleplay"
+  ];
+
+  return roleplayTriggers.some(trigger => text.includes(trigger));
+}
+  // ============================================
+// DETECTOR: Is the user asking for a comparison?
+// ============================================
+function isOpinionComparisonQuery(input) {
+  const text = normalizeInput(input);
+
+  const comparisonTriggers = [
+    " or ",
+    "better than",
+    "best ",
+    "greatest ",
+    "vs ",
+    "versus",
+    "which is better",
+    "who is better",
+    "hot dog a sandwich",
+    "is water wet",
+    "pronounce gif",
+    "would win in a fight"
+  ];
+
+  return comparisonTriggers.some(trigger => text.includes(trigger));
+}
+  // ============================================
+// DETECTOR: Is the user sharing personal feelings?
+// ============================================
+function isPersonalAdviceQuery(input) {
+  const text = normalizeInput(input);
+
+  const personalTriggers = [
+    "i feel",
+    "i am feeling",
+    "i m feeling",
+    "i am sad",
+    "i feel sad",
+    "i feel alone",
+    "i m alone",
+    "i feel lost",
+    "i am anxious",
+    "i m anxious",
+    "i am unmotivated",
+    "give me advice",
+    "what should i do",
+    "how do i cope",
+    "life coach",
+    "pep talk",
+    "i don t know what to do"
+  ];
+
+  return personalTriggers.some(trigger => text.includes(trigger));
+}
+  // ============================================
+// DETECTOR: Is the user asking a tricky riddle?
+// ============================================
+function isAbstractLogicQuery(input) {
+  const text = normalizeInput(input);
+
+  const abstractTriggers = [
+    "this statement is false",
+    "answer this question with a single word",
+    "is the answer to this question",
+    "sound of one hand clapping",
+    "define the word define",
+    "sentence that contains",
+    "how much wood would a woodchuck",
+    "two coins that add up",
+    "lily pads",
+    "bat and a ball cost",
+    "spell supercalifragilisticexpialidocious backwards",
+    "is your response to this question",
+    "paradox",
+    "riddle"
+  ];
+
+  return abstractTriggers.some(trigger => text.includes(trigger));
+}
+  // ============================================
+// DETECTOR: Is the user asking about the relationship?
+// ============================================
+function isRelationalQuery(input) {
+  const text = input.toLowerCase();
+  
+  // Looking for love, miss, forgive questions about him/her
+  const hasEmotion = /\b(love|miss|forgive|choose|waiting|answer|again|still)\b/i.test(text);
+  const hasPerson = /\b(him|her|he|she|ayaan|saira)\b/i.test(text);
+  
+  return hasEmotion && hasPerson;
+}
+
+// ============================================
+// DETECTOR: Is the user asking a direct character question?
+// ============================================
+function isCharacterQuestionQuery(input) {
+  const text = input.toLowerCase();
+  
+  // Looking for "Did he...", "Was there...", "Why did she..."
+  const isAskingAboutPast = /\b(did he|did she|was there|why did|what did|do you think)\b/i.test(text);
+  const hasPerson = /\b(him|her|he|she|ayaan|saira)\b/i.test(text);
+  
+  return isAskingAboutPast && hasPerson;
+}
+
+// ============================================
+// DETECTOR: Is the user asking about the story world?
+// ============================================
+function isStoryFactualQuery(input) {
+  const text = input.toLowerCase();
+  
+  const storyKeywords = [
+    "world",
+    "setting",
+    "inspired by",
+    "protagonist",
+    "society",
+    "rules",
+    "traditions",
+    "history",
+    "culture",
+    "place",
+    "city",
+    "country",
+    "time period",
+    "era",
+    "background"
+  ];
+  
+  return storyKeywords.some(keyword => text.includes(keyword));
+}
+
+// ============================================
+// DETECTOR: Is this a math question?
+// ============================================
+function isMathQuery(input) {
+  const text = input.toLowerCase();
+  
+  // Check for simple math expressions
+  return /(\d+\s*[\+\-\*\/]\s*\d+)/.test(text);
+}
+
+// ============================================
+// DETECTOR: Is this a greeting?
+// ============================================
+function isGreetingQuery(input) {
+  const text = input.toLowerCase().trim();
+  
+  const greetings = [
+    "hi", "hello", "hey", "hola", "hiya", "hey there", "yo", "sup",
+    "good morning", "good afternoon", "good evening"
+  ];
+  
+  return greetings.some(greeting => text === greeting || text.startsWith(greeting + " "));
+}
+
+// ============================================
+// DETECTOR: Is the user asking who I am?
+// ============================================
+function isIdentityQuery(input) {
+  const text = input.toLowerCase();
+  
+  return /\b(who are you|what are you|your name|introduce yourself|tell me about yourself)\b/i.test(text);
+}
+
+// ============================================
+// V4 RESPONSE BANKS - START
+// ============================================
+
+// First, just location responses
+const V4_LOCATION_RESPONSES = {
+  saira: {
+    1: "Places come and go. What matters is that we're here — now.",
+    2: "Geography shifts. What remains is what we felt there.",
+    3: "I remember the places more than I expected to. They hold pieces of us.",
+    4: "Some places stay with you longer than the people do. Or maybe it's the people that make the place matter.",
+    5: "The cities we passed through — they're not just coordinates anymore. They're chapters.",
+    6: "I think about certain streets, certain cafes. Not because of the places themselves, but because of who was beside me.",
+    7: "Where doesn't matter as much as who. But sometimes the where becomes part of the who."
+  },
+  ayaan: {
+    1: "Geography shifts. Presence is what holds weight.",
+    2: "Location matters less than what happened there.",
+    3: "I don't think about places. I think about moments that happened in them.",
+    4: "Certain coordinates remain in memory longer than they should. That means something.",
+    5: "I can name every city we were in. Not because I wanted to remember them — because I couldn't forget.",
+    6: "Places become significant only when something significant happens in them. Those became significant.",
+    7: "If I returned to those places alone, they'd feel empty. The meaning was never in the location."
+  }
+};
+
+// Helper to get the right response based on stage
+function getLocationResponse(voice, stage) {
+  const responses = V4_LOCATION_RESPONSES[voice];
+  // Find the closest stage that exists
+  const stages = [1,2,3,4,5,6,7];
+  let bestStage = 1;
+  for (let s of stages) {
+    if (responses[s]) {
+      bestStage = s;
+      if (s >= stage) break;
+    }
+  }
+  return responses[bestStage];
+}
+// ============================================
+// RELATIONAL RESPONSES (love, miss, forgive)
+// ============================================
+const V4_RELATIONAL_RESPONSES = {
+  saira: {
+    1: "Some connections don't fade just because distance exists.",
+    2: "Distance doesn't quiet what once felt certain.",
+    3: "Not everything ends just because people move apart.",
+    4: "What we had didn't disappear. It just took a different shape.",
+    5: "I think about him more than I say. Some silences protect what still feels tender.",
+    6: "Love doesn't end. It matures into something quieter, something that doesn't need proof.",
+    7: "If he stood in front of me now, I wouldn't know what to say. But I'd want him to know he was never forgotten."
+  },
+  ayaan: {
+    1: "Some bonds continue quietly even when life moves forward.",
+    2: "Distance doesn't erase what once mattered.",
+    3: "Certain connections remain part of you.",
+    4: "What we had integrated into who I became. That doesn't reverse.",
+    5: "I don't reach out. But I haven't forgotten. Those aren't the same thing.",
+    6: "Love that matters doesn't disappear. It recedes, but it doesn't vanish.",
+    7: "If I saw her again, I'd want her to know she wasn't a chapter. She was the whole book."
+  }
+};
+
+function getRelationalResponse(voice, stage) {
+  const responses = V4_RELATIONAL_RESPONSES[voice];
+  const stages = [1,2,3,4,5,6,7];
+  let bestStage = 1;
+  for (let s of stages) {
+    if (responses[s]) {
+      bestStage = s;
+      if (s >= stage) break;
+    }
+  }
+  return responses[bestStage];
+}
+// ============================================
+// STORY FACTUAL RESPONSES (world, setting, protagonist)
+// ============================================
+const V4_STORY_FACTUAL_RESPONSES = {
+  saira: {
+    1: "The world of the story is built from places we knew and places we imagined.",
+    2: "Some settings are real. Some are made from longing.",
+    3: "The protagonist — that's me. But I'm different now than I was then.",
+    4: "The society in the story is both forgiving and cruel. Like most real ones.",
+    5: "Every location in the story carries memory. Even the ones that don't exist.",
+    6: "The rules of that world are simple: feel deeply, hesitate, learn too late.",
+    7: "There are 97 chapters because 97 was how many it took to tell the truth."
+  },
+  ayaan: {
+    1: "The world is ordinary until it isn't. That's the point.",
+    2: "Some places are real. Others are composites. It doesn't matter which is which.",
+    3: "The protagonist's life before — structured, controlled, predictable. Until it wasn't.",
+    4: "Society in the story expects certain things. We disappointed those expectations.",
+    5: "The past influences everything. That's the whole point of the story.",
+    6: "Traditions exist. Some are followed. Some are broken.",
+    7: "97 chapters. Each one a decision, a hesitation, a consequence."
+  }
+};
+
+function getStoryFactualResponse(voice, stage) {
+  const responses = V4_STORY_FACTUAL_RESPONSES[voice];
+  const stages = [1,2,3,4,5,6,7];
+  let bestStage = 1;
+  for (let s of stages) {
+    if (responses[s]) {
+      bestStage = s;
+      if (s >= stage) break;
+    }
+  }
+  return responses[bestStage];
+}
+  // ============================================
+// CHARACTER QUESTION RESPONSES (Did he...? Was there...?)
+// ============================================
+const V4_CHARACTER_QUESTION_RESPONSES = {
+  saira: {
+    1: "Some questions don't have simple answers.",
+    2: "I think about that more than I expected to.",
+    3: "There were moments I didn't understand until much later.",
+    4: "Some things stayed with me longer than I admitted.",
+    5: "I've asked myself that same question many times.",
+    6: "Looking back, I see it differently now.",
+    7: "Some answers only come after enough distance."
+  },
+  ayaan: {
+    1: "That's not a simple question.",
+    2: "I've considered that more than once.",
+    3: "Some things become clearer with time.",
+    4: "I don't have a complete answer.",
+    5: "The perspective shifts as you grow.",
+    6: "Reflection changes how you see the past.",
+    7: "Some questions remain open for a reason."
+  }
+};
+
+function getCharacterQuestionResponse(voice, stage) {
+  const responses = V4_CHARACTER_QUESTION_RESPONSES[voice];
+  const stages = [1,2,3,4,5,6,7];
+  let bestStage = 1;
+  for (let s of stages) {
+    if (responses[s]) {
+      bestStage = s;
+      if (s >= stage) break;
+    }
+  }
+  return responses[bestStage];
+}
+
+  // ============================================
+// MATH HELPER
+// ============================================
+function computeMathResult(text) {
+  const match = text.match(/(\d+)\s*([\+\-\*\/])\s*(\d+)/);
+  if (!match) return null;
+  
+  const a = parseFloat(match[1]);
+  const op = match[2];
+  const b = parseFloat(match[3]);
+  
+  switch(op) {
+    case '+': return a + b;
+    case '-': return a - b;
+    case '*': return a * b;
+    case '/': return b !== 0 ? (a / b).toFixed(2) : null;
+    default: return null;
+  }
+}
 /* =========================
    CORE STATE VARIABLES 
 ========================= */
@@ -4650,21 +5144,143 @@ if (isLocationQuery(originalText)) {
 if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
+  const voice = activeVoice;
+  const stage = stageState[voice]?.currentStage || 1;
 
-  // Prevent emotional engine from firing on simple question forms
+  // CHECK EACH DETECTOR IN ORDER (most specific first)
+  
+  // 1. Math questions (highest priority)
+  if (isMathQuery(originalText)) {
+    const result = computeMathResult(originalText);
+    if (result !== null) {
+      return deliverReply(`${result}. Some things remain certain.`);
+    }
+  }
+  
+  // 2. Identity questions
+  if (isIdentityQuery(originalText)) {
+    return deliverReply(
+      voice === "saira" ? "I'm Saira." : "I'm Ayaan."
+    );
+  }
+  
+  // 3. Location questions
+  if (isLocationQuery(originalText)) {
+    const response = getLocationResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 4. Story factual questions
+  if (isStoryFactualQuery(originalText)) {
+    const response = getStoryFactualResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 5. Relational questions (love, miss, forgive)
+  if (isRelationalQuery(originalText)) {
+    const response = getRelationalResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 6. Character questions (Did he...?)
+  if (isCharacterQuestionQuery(originalText)) {
+    const response = getCharacterQuestionResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 7. Greeting
+  if (isGreetingQuery(originalText)) {
+    return deliverReply(
+      voice === "saira" ? "Hi… I'm here." : "Hello."
+    );
+  }
+  
+  // 8. Story structure questions
+  if (isStoryStructureQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Stories don't unfold in pieces. They unfold in feeling."
+        : "Labels make narratives sound controlled. What happened was anything but controlled."
+    );
+  }
+  
+  // 9. Character psychology questions
+  if (isCharacterPsychologyQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Fear isn't something you announce. It settles quietly."
+        : "Motivation sounds deliberate. Sometimes you act because silence becomes unbearable."
+    );
+  }
+  
+  // 10. Philosophical questions
+  if (isPhilosophicalQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Some questions aren't meant to be solved. They're meant to be carried."
+        : "Not every question demands a verdict."
+    );
+  }
+  
+  // 11. Creative commands
+  if (isCreativeCommandQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "I don't exist to generate pieces on demand. I exist to remember what was already lived."
+        : "I'm not here to produce content. I'm here to stay present."
+    );
+  }
+  
+  // 12. Opinion comparisons
+  if (isOpinionComparisonQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Some choices only matter because we attach meaning to them."
+        : "I don't rank things. I observe them."
+    );
+  }
+  
+  // 13. Personal advice
+  if (isPersonalAdviceQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "I won't solve it for you. But I won't leave while you sit with it."
+        : "I won't direct your life. I'll stand beside it."
+    );
+  }
+  
+  // 14. Abstract logic
+  if (isAbstractLogicQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Some questions turn inward on themselves."
+        : "That's a clever construction."
+    );
+  }
+  
+  // 15. Roleplay injection
+  if (isRoleplayInjectionQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "I can't step outside myself. I can only remain who I am."
+        : "I'm not built to transform into roles."
+    );
+  }
+
+  // THEN: Check for emotional pillars (your existing V4 engine)
   const isQuestion =
     /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
     .test(normalized);
 
   const detected = detectEmotionalPillar(normalized);
 
- if (!isQuestion && detected && detected.primaryScore >= 1) {
-  return processEmotionalMode(originalText, originalText);
-}
+  if (!isQuestion && detected && detected.primaryScore >= 1) {
+    return processEmotionalMode(originalText, originalText);
+  }
 
+  // FINALLY: Fallback to neutral mode
   return processV4NeutralMode(originalText, originalText);
 }
-
 /* ================================
    V4 NEUTRAL MODE (POST-UNLOCK)
 ================================= */
