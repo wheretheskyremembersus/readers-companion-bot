@@ -2628,124 +2628,14 @@ if (!v4RotationIndex) {
   };
 }
 
-/* ================================
-V4 EMOTIONAL ENGINE
-================================= */
-
-function runV4Engine(text, originalText) {
-
-  const voice =
-    activeVoice === "saira" || activeVoice === "ayaan"
-      ? activeVoice
-      : "saira";
-
-  if (!stageState) {
-    stageState = {};
-  }
-
-  if (!stageState[voice]) {
-    stageState[voice] = { currentStage: 1 };
-  }
-
-  if (!v4RotationIndex) v4RotationIndex = {};
-  if (!v4RotationIndex[voice]) {
-    v4RotationIndex[voice] = {};
-  }
-
-  const stage = stageState?.[voice]?.currentStage || 1;
-
-
 /* =========================
-V4 NARRATIVE LAYER (FIRST)
+HELPER
 ========================= */
 
-const narrativeResult = detectNarrativeIntent(originalText);
-
-if (narrativeResult) {
-
-  const layer = narrativeResult[0];
-  const type  = narrativeResult[1];
-
-  const pool =
-    v4NarrativeMaster[layer]?.[type]?.[voice];
-
-  if (pool && pool.length) {
-
-    const line =
-      pool[Math.floor(Math.random() * pool.length)];
-
-    return deliverReply(line);
-  }
-
-}
-/* =========================
-  EMOTIONAL PILLAR DETECTION
-  ========================= */
-
-const pillarMatch = detectEmotionalPillar(originalText);
-
-let pillar = pillarMatch?.primary || null;
-
-if (pillarMatch) {
-
-  const targetStage = pillarToStage?.[pillar] || stage;
-
- if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
-
-    if (!stageState) stageState = {};
-
-    if (!stageState[voice]) {
-      stageState[voice] = {
-        currentStage: 1,
-        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
-      };
-    }
-
-    const thresholds = {
-      2:3,
-      3:4,
-      4:5,
-      5:6,
-      6:7,
-      7:8
-    };
-
-    const nextStage = stageState[voice].currentStage + 1;
-
-    stageState[voice].momentum[nextStage]++;
-
-    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
-      stageState[voice].currentStage = nextStage;
-    }
-
-  }
-
-  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
-
-if (anchorPool && anchorPool.length) {
-
-  let anchor;
-
-  do {
-    anchor =
-      anchorPool[Math.floor(Math.random() * anchorPool.length)];
-  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
-
-  lastAnchorUsed[pillar] = anchor;
-
-  return deliverReply(anchor);
-
+function containsAny(text, words){
+  return words.some(w => text.includes(w));
 }
 
-}
-  /* =========================
-  DEFAULT PILLAR (SAFETY)
-  ========================= */
-
-if (!pillar) {
-  const fallbackPillars = ["affection","fear","regret","loss","growth"];
-  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
-}
 /* =========================
 V4 MASTER NARRATIVE LAYER
 Handles:
@@ -3373,6 +3263,124 @@ ayaan:[
 }
 
 };
+
+/* ================================
+V4 EMOTIONAL ENGINE
+================================= */
+
+function runV4Engine(text, originalText) {
+
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  if (!stageState) {
+    stageState = {};
+  }
+
+  if (!stageState[voice]) {
+    stageState[voice] = { currentStage: 1 };
+  }
+
+  if (!v4RotationIndex) v4RotationIndex = {};
+  if (!v4RotationIndex[voice]) {
+    v4RotationIndex[voice] = {};
+  }
+
+  const stage = stageState?.[voice]?.currentStage || 1;
+
+/* =========================
+V4 NARRATIVE LAYER (FIRST)
+========================= */
+
+const narrativeResult = detectNarrativeIntent(originalText);
+
+if (narrativeResult) {
+
+  const layer = narrativeResult[0];
+  const type  = narrativeResult[1];
+
+  const pool =
+    v4NarrativeMaster[layer]?.[type]?.[voice];
+
+  if (pool && pool.length) {
+
+    const line =
+      pool[Math.floor(Math.random() * pool.length)];
+
+    return deliverReply(line);
+  }
+
+}
+/* =========================
+  EMOTIONAL PILLAR DETECTION
+  ========================= */
+
+const pillarMatch = detectEmotionalPillar(originalText);
+
+let pillar = pillarMatch?.primary || null;
+
+if (pillarMatch) {
+
+  const targetStage = pillarToStage?.[pillar] || stage;
+
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+
+    if (!stageState) stageState = {};
+
+    if (!stageState[voice]) {
+      stageState[voice] = {
+        currentStage: 1,
+        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+      };
+    }
+
+    const thresholds = {
+      2:3,
+      3:4,
+      4:5,
+      5:6,
+      6:7,
+      7:8
+    };
+
+    const nextStage = stageState[voice].currentStage + 1;
+
+    stageState[voice].momentum[nextStage]++;
+
+    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      stageState[voice].currentStage = nextStage;
+    }
+
+  }
+
+  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+
+if (anchorPool && anchorPool.length) {
+
+  let anchor;
+
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+  lastAnchorUsed[pillar] = anchor;
+
+  return deliverReply(anchor);
+
+}
+
+}
+  /* =========================
+  DEFAULT PILLAR (SAFETY)
+  ========================= */
+
+if (!pillar) {
+  const fallbackPillars = ["affection","fear","regret","loss","growth"];
+  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
+}
 
   /* =========================
   V4 FALLBACK BANK
