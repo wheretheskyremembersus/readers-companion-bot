@@ -1088,12 +1088,13 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
 
+  if (typeof probeOnly !== "undefined" && probeOnly) return true;
+
   if (!replyText) return;
 
- if (Array.isArray(replyText)) {
-  replyText = replyText[Math.floor(Math.random() * replyText.length)];
-}
- 
+  if (Array.isArray(replyText)) {
+    replyText = replyText[Math.floor(Math.random() * replyText.length)];
+  }
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
