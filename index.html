@@ -924,6 +924,32 @@ var stageState = {
 
 window.stageState = stageState; 
 
+/* ================================
+V4 EMOTIONAL ENGINE
+================================= */
+
+function runV4Engine(text, originalText) {
+
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  if (!stageState) {
+    stageState = {};
+  }
+
+  if (!stageState[voice]) {
+    stageState[voice] = { currentStage: 1 };
+  }
+  
+if (!v4RotationIndex) v4RotationIndex = {};
+  if (!v4RotationIndex[voice]) {
+    v4RotationIndex[voice] = {};
+  }
+
+  const stage = stageState?.[voice]?.currentStage || 1;
+  
 /* =========================
    V4 SESSION GATE FLAGS
 ========================= */
@@ -2587,30 +2613,6 @@ if (abuseTracker[activeVoice]?.locked) {
 }
 
 /* ================================
-V4 ROTATION INDEX
-(prevents repetition)
-================================= */
-
-var v4RotationIndex = {
-  saira: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  },
-  ayaan: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  }
-};
-  
-/* ================================
    V4 UNLOCK CHECK
 ================================= */
 
@@ -2646,32 +2648,7 @@ if (!v4RotationIndex) {
   };
 }
 
-/* ================================
-V4 EMOTIONAL ENGINE
-================================= */
 
-function runV4Engine(text, originalText) {
-
-  const voice =
-    activeVoice === "saira" || activeVoice === "ayaan"
-      ? activeVoice
-      : "saira";
-
-  if (!stageState) {
-    stageState = {};
-  }
-
-  if (!stageState[voice]) {
-    stageState[voice] = { currentStage: 1 };
-  }
-  
-if (!v4RotationIndex) v4RotationIndex = {};
-  if (!v4RotationIndex[voice]) {
-    v4RotationIndex[voice] = {};
-  }
-
-  const stage = stageState?.[voice]?.currentStage || 1;
-  
 /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -2684,7 +2661,7 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
- if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+if (targetStage >= (stageState?.[activeVoice]?.currentStage ?? 1)) {
 
     if (!stageState) stageState = {};
 
