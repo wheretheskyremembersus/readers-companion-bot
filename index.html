@@ -4134,14 +4134,6 @@ if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
       : "Understood."
   );
 }
-  
-/* =========================
-   RESET RELATIONAL STATE
-========================= */
-
-relationalPrefix = "";
-skipRelationalPrefix = false;
-
 /* ================================
    V4 EXECUTION GUARD
 ================================ */
@@ -4189,7 +4181,10 @@ function runV4GeneralQueryLayer(text) {
 function isV4StoryHistory(t){
 
 const question = /^(how|where|when|did|was|were|what)/;
-const keywords = /\b(meet|meeting|first|impression|friendship|together|travel|conversation|place|begin|memory|memories|moment|moments|future|silence|habit|habits|atmosphere|evening|time|experience|communication|distance|misunderstanding|misunderstandings|turning|change)\b/;
+
+const keywords =
+/\b(meet|meeting|first|friendship|together|travel|conversation|place|begin)\b/;
+
 return question.test(t) && keywords.test(t);
 
 }
@@ -4213,7 +4208,7 @@ ayaan:[
 ]
 
 };
-console.log("V4 story test:", t, result);
+
 return randomV4VoiceLine(replies);
 
 }
@@ -4399,6 +4394,13 @@ if (
       : "It's about hesitation, timing, and the cost of silence."
   );
 }
+
+/* =========================
+   RESET RELATIONAL STATE
+========================= */
+
+relationalPrefix = "";
+skipRelationalPrefix = false;
 
 /* =========================
    INTELLIGENCE + REFERENCE
