@@ -4653,7 +4653,6 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
 
-  // Prevent emotional engine from firing on simple question forms
   const isQuestion =
     /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
     .test(normalized);
@@ -4661,10 +4660,12 @@ if (tollState[activeVoice]?.unlocked === true) {
   const detected = detectEmotionalPillar(normalized);
 
  if (detected && detected.primaryScore >= 1) {
-  return processEmotionalMode(originalText, originalText);
-}
+processEmotionalMode(originalText, originalText);
+return;
+ }
 
-  return processV4NeutralMode(originalText, originalText);
+ processV4NeutralMode(originalText, originalText);
+return;
 }
 
 /* ================================
