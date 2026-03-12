@@ -2659,11 +2659,11 @@ function runV4Engine(text, originalText) {
 V4 NARRATIVE LAYER (FIRST)
 ========================= */
 
-const intent = detectNarrativeIntent(originalText);
+const narrativeIntent = detectNarrativeIntent(originalText);
 
-if (intent) {
+if (narrativeIntent) {
 
-  const [layer, type] = intent;
+  const [layer, type] = narrativeIntent;
 
   const pool =
     v4NarrativeMaster[layer]?.[type]?.[voice];
@@ -2677,7 +2677,6 @@ if (intent) {
   }
 
 }
-
   
 /* =========================
   EMOTIONAL PILLAR DETECTION
