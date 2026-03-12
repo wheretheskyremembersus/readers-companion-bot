@@ -8207,19 +8207,15 @@ input.value ="";
 
 addUserMessage(originalText);
 
+processInput(originalText, originalText);
+
 if (tollState?.[activeVoice]?.unlocked) {
 
   const detected = detectEmotionalPillar(originalText);
 
   if (detected && detected.primaryScore >= 1) {
     processEmotionalMode(originalText, originalText);
-  } else {
-    processInput(originalText, originalText);
   }
-
-} else {
-
-  processInput(originalText, originalText);
 
 }
 /* =========================
