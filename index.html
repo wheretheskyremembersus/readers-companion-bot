@@ -8210,10 +8210,10 @@ if (tollState?.[activeVoice]?.unlocked) {
 
   const detected = detectEmotionalPillar(originalText);
 
+  processInput(originalText, originalText);
+
   if (detected && detected.primaryScore >= 1) {
-    processInput(originalText, originalText);  
-  } else {
-    processInput(originalText, originalText);
+    runV4Engine(originalText, originalText);
   }
 
 } else {
