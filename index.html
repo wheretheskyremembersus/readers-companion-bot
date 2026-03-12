@@ -2766,60 +2766,63 @@ const lower = text.toLowerCase();
 
 /* STORY META */
 
-if(/who wrote|author|written by/.test(lower))
+if(/who wrote|who is the author|author|written by/.test(lower))
 return ["meta","author"];
 
-if(/book|novel|story called/.test(lower))
+if(/novel|book|story called|name of the book|what is the novel called/.test(lower))
 return ["meta","book"];
 
-if(/protagonist|main character|lead character/.test(lower))
+if(/protagonist|main character|lead character|who is the main character/.test(lower))
 return ["meta","protagonist"];
 
 if(/antagonist|villain/.test(lower))
 return ["meta","antagonist"];
 
-if(/genre|type of story/.test(lower))
+if(/genre|type of story|what kind of story/.test(lower))
 return ["meta","genre"];
 
 /* STORY WORLD */
 
-if(/relationship|between you|did you love/.test(lower))
+if(/relationship|between you|did you love|you and ayaan/.test(lower))
 return ["story","relationship"];
 
-if(/what happened|why did|why didnt/.test(lower))
+if(/what happened|why did|why didnt|why didn't/.test(lower))
 return ["story","events"];
 
-if(/remember|back then/.test(lower))
+if(/remember|back then|do you remember/.test(lower))
 return ["story","memory"];
 
-if(/what does it mean|meaning/.test(lower))
+if(/meaning|what does it mean|what did it mean/.test(lower))
 return ["story","meaning"];
 
 /* CHARACTER */
 
-if(/who are you|your name/.test(lower))
+if(/who are you|your name|who is saira/.test(lower))
 return ["character","identity"];
+
+if(/who is ayaan/.test(lower))
+return ["story","relationship"];
 
 /* PREFERENCES */
 
-if(/favorite food|favourite food|food/.test(lower))
+if(/favorite food|favourite food|what food/.test(lower))
 return ["character","food"];
 
-if(/favorite place|favourite place|place/.test(lower))
+if(/favorite place|favourite place|what place/.test(lower))
 return ["character","place"];
 
 if(/favorite animal|pet|animal/.test(lower))
 return ["character","animal"];
 
-if(/favorite color|colour|color/.test(lower))
+if(/favorite color|colour|favorite colour/.test(lower))
 return ["character","color"];
 
-if(/favorite music|music/.test(lower))
+if(/favorite music|music|what music/.test(lower))
 return ["character","music"];
 
 return null;
-}
 
+}
 
 /* =========================
 MASTER NARRATIVE RESPONSES
