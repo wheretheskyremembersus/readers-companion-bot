@@ -8829,7 +8829,13 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-  processEmotionalMode(originalText, originalText);
+  // Use our NEW intelligent V4 router
+  if (typeof processV4WithIntelligence === 'function') {
+    processV4WithIntelligence(originalText, originalText);
+  } else {
+    // Fallback to old emotional mode if new function doesn't exist
+    processEmotionalMode(originalText, originalText);
+  }
 } else {
   processInput(originalText, originalText);
 }
