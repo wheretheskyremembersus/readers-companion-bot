@@ -2682,66 +2682,64 @@ if (!v4RotationIndex) v4RotationIndex = {};
   const stage = stageState?.[voice]?.currentStage || 1;
   
 /* =========================
-  EMOTIONAL PILLAR DETECTION
+EMOTIONAL PILLAR DETECTION
 ========================= */
 
-let pillarMatch = null;
-
 if (tollState[activeVoice]?.unlocked) {
-  pillarMatch = detectEmotionalPillar(originalText);
-}
 
-let pillar = pillarMatch?.primary || null;
+  const pillarMatch = detectEmotionalPillar(originalText);
 
-if (pillarMatch) {
+  let pillar = pillarMatch?.primary || null;
 
-  const targetStage = pillarToStage?.[pillar] || stage;
+  if (pillarMatch) {
 
-  if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+    const targetStage = pillarToStage?.[pillar] || stage;
 
-    if (!stageState) stageState = {};
+    if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
-    if (!stageState[voice]) {
-      stageState[voice] = {
-        currentStage: 1,
-        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+      if (!stageState) stageState = {};
+
+      if (!stageState[voice]) {
+        stageState[voice] = {
+          currentStage: 1,
+          momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+        };
+      }
+
+      const thresholds = {
+        2:3,
+        3:4,
+        4:5,
+        5:6,
+        6:7,
+        7:8
       };
+
+      const nextStage = stageState[voice].currentStage + 1;
+
+      stageState[voice].momentum[nextStage]++;
+
+      if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+        stageState[voice].currentStage = nextStage;
+      }
+
     }
 
-    const thresholds = {
-      2:3,
-      3:4,
-      4:5,
-      5:6,
-      6:7,
-      7:8
-    };
+    const anchorPool = emotionalAnchors?.[voice]?.[pillar];
 
-    const nextStage = stageState[voice].currentStage + 1;
+    if (anchorPool && anchorPool.length) {
 
-    stageState[voice].momentum[nextStage]++;
+      let anchor;
 
-    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
-      stageState[voice].currentStage = nextStage;
+      do {
+        anchor =
+          anchorPool[Math.floor(Math.random() * anchorPool.length)];
+      } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+      lastAnchorUsed[pillar] = anchor;
+
+      return deliverReply(anchor);
     }
-
-  }
-
-  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
-
-  if (anchorPool && anchorPool.length) {
-
-    let anchor;
-
-    do {
-      anchor =
-        anchorPool[Math.floor(Math.random() * anchorPool.length)];
-    } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
-
-    lastAnchorUsed[pillar] = anchor;
-
-    return deliverReply(anchor);
-
   }
 
 }
