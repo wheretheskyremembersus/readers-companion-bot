@@ -4145,7 +4145,7 @@ skipRelationalPrefix = false;
 /* ================================
    V4 EXECUTION GUARD
 ================================ */
-console.log("V4 CHECK:", trimmed);
+
 const v4Response = runV4GeneralQueryLayer(trimmed);
 
 if (v4Response) {
@@ -4157,7 +4157,7 @@ if (v4Response) {
 ========================================================= */
 
 function runV4GeneralQueryLayer(text) {
- console.log("V4 ENTERED");
+
   const t = text
   .toLowerCase()
   .replace(/[?!.]/g,"")
