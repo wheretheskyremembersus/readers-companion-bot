@@ -731,10 +731,6 @@ let v3FallbackUsed = {
     reflective: new Set()
   }
 };
-let v4FallbackUsed = {
-  saira: {},
-  ayaan: {}
-};
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -924,32 +920,6 @@ var stageState = {
 
 window.stageState = stageState; 
 
-/* ================================
-V4 EMOTIONAL ENGINE
-================================= */
-
-function runV4Engine(text, originalText) {
-
-  const voice =
-    activeVoice === "saira" || activeVoice === "ayaan"
-      ? activeVoice
-      : "saira";
-
-  if (!stageState) {
-    stageState = {};
-  }
-
-  if (!stageState[voice]) {
-    stageState[voice] = { currentStage: 1 };
-  }
-  
-if (!v4RotationIndex) v4RotationIndex = {};
-  if (!v4RotationIndex[voice]) {
-    v4RotationIndex[voice] = {};
-  }
-
-  const stage = stageState?.[voice]?.currentStage || 1;
-  
 /* =========================
    V4 SESSION GATE FLAGS
 ========================= */
@@ -1132,12 +1102,14 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
 
+  if (typeof probeOnly !== "undefined" && probeOnly) return true;
+
   if (!replyText) return;
 
- if (Array.isArray(replyText)) {
-  replyText = replyText[Math.floor(Math.random() * replyText.length)];
-}
- 
+  if (Array.isArray(replyText)) {
+    replyText = replyText[Math.floor(Math.random() * replyText.length)];
+  }
+  
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
@@ -2532,8 +2504,7 @@ function getSelfReferencePrefix(stage) {
    RELATIONAL AWARENESS (V3)
 ========================= */
 
-function processInput(userText, originalText) {
-
+function processInput(userText, originalText, probeOnly = false) {
   let normalizedText = normalizeInput(originalText);
 
 
@@ -2613,6 +2584,30 @@ if (abuseTracker[activeVoice]?.locked) {
 }
 
 /* ================================
+V4 ROTATION INDEX
+(prevents repetition)
+================================= */
+
+var v4RotationIndex = {
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+  
+/* ================================
    V4 UNLOCK CHECK
 ================================= */
 
@@ -2648,7 +2643,32 @@ if (!v4RotationIndex) {
   };
 }
 
+/* ================================
+V4 EMOTIONAL ENGINE
+================================= */
 
+function runV4Engine(text, originalText) {
+
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  if (!stageState) {
+    stageState = {};
+  }
+
+  if (!stageState[voice]) {
+    stageState[voice] = { currentStage: 1 };
+  }
+  
+if (!v4RotationIndex) v4RotationIndex = {};
+  if (!v4RotationIndex[voice]) {
+    v4RotationIndex[voice] = {};
+  }
+
+  const stage = stageState?.[voice]?.currentStage || 1;
+  
 /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -2661,7 +2681,7 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
-if (targetStage >= (stageState?.[activeVoice]?.currentStage ?? 1)) {
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
     if (!stageState) stageState = {};
 
@@ -2856,7 +2876,7 @@ if (!pillar) {
   };
 
 /* =========================
-V4 FALLBACK RESPONSE
+SELECT FALLBACK RESPONSE
 ========================= */
 
 let pool = null;
@@ -2867,35 +2887,25 @@ if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
   pool = v4FallbackBank.saira.growth;
 }
 
-/* Ensure V4 memory structure exists */
+/* Ensure rotation structure exists */
 
-if (!v4FallbackUsed[voice]) {
-  v4FallbackUsed[voice] = {};
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
 }
 
-if (!v4FallbackUsed[voice][pillar]) {
-  v4FallbackUsed[voice][pillar] = new Set();
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
 }
 
-const used = v4FallbackUsed[voice][pillar];
+const index = v4RotationIndex[voice][pillar];
 
-/* Select unused responses first */
+const line = pool[index % pool.length];
 
-const available = pool.filter(line => !used.has(line));
+v4RotationIndex[voice][pillar]++;
 
-let reply;
-
-if (available.length > 0) {
-  reply = available[Math.floor(Math.random() * available.length)];
-  used.add(reply);
-} else {
-  /* if all lines used, allow reuse */
-  reply = pool[Math.floor(Math.random() * pool.length)];
+return deliverReply(line);
 }
-
-return deliverReply(reply);
-}
-
+  
 window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
@@ -8223,11 +8233,20 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-  processEmotionalMode(originalText, originalText);
-} else {
-  processInput(originalText, originalText);
-}
 
+  v3DetectedIntent = false;
+
+  processInput(originalText, originalText, true);
+
+  if (!v3DetectedIntent) {
+    processEmotionalMode(originalText, originalText);
+  }
+
+} else {
+
+  processInput(originalText, originalText);
+
+}
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
