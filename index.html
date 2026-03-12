@@ -4660,11 +4660,11 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const detected = detectEmotionalPillar(normalized);
 
- if (!isQuestion && detected && detected.primaryScore >= 1) {
-  return processEmotionalMode(originalText, originalText);
+if (!isQuestion && detected && detected.primaryScore >= 1) {
+  processEmotionalMode(originalText, originalText); 
 }
 
-  return processV4NeutralMode(originalText, originalText);
+processV4NeutralMode(originalText, originalText);
 }
 
 /* ================================
@@ -8212,7 +8212,7 @@ if (tollState?.[activeVoice]?.unlocked) {
   const detected = detectEmotionalPillar(originalText);
 
   if (detected && detected.primaryScore >= 1) {
-    processEmotionalMode(originalText, originalText);
+    processInput(originalText, originalText);  
   } else {
     processInput(originalText, originalText);
   }
