@@ -731,6 +731,10 @@ let v3FallbackUsed = {
     reflective: new Set()
   }
 };
+let v4FallbackUsed = {
+  saira: {},
+  ayaan: {}
+};
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -1900,15 +1904,23 @@ function getV3Fallback() {
     category = "reflective";
   }
 
-  const index = v3FallbackIndex[voice][category];
   const bank = v3FallbackBank[voice][category];
+  const used = v3FallbackUsed[voice][category];
 
-  const line = bank[index % bank.length];
+  const available = bank.filter(line => !used.has(line));
 
-  v3FallbackIndex[voice][category]++;
+  let line;
+
+  if (available.length > 0) {
+    line = available[Math.floor(Math.random() * available.length)];
+    used.add(line);
+  } else {
+    // all lines used → allow reuse
+    line = bank[Math.floor(Math.random() * bank.length)];
+  }
 
   return line;
-}   
+}
 
 /* =================================================
    CORE EXECUTION PIPELINE
@@ -2887,23 +2899,33 @@ if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
   pool = v4FallbackBank.saira.growth;
 }
 
-/* Ensure rotation structure exists */
+/* Ensure memory structure exists */
 
-if (!v4RotationIndex[voice]) {
-  v4RotationIndex[voice] = {};
+if (!v4FallbackUsed[voice]) {
+  v4FallbackUsed[voice] = {};
 }
 
-if (v4RotationIndex[voice][pillar] === undefined) {
-  v4RotationIndex[voice][pillar] = 0;
+if (!v4FallbackUsed[voice][pillar]) {
+  v4FallbackUsed[voice][pillar] = new Set();
 }
 
-const index = v4RotationIndex[voice][pillar];
+const used = v4FallbackUsed[voice][pillar];
 
-const line = pool[index % pool.length];
+/* Select unused lines first */
 
-v4RotationIndex[voice][pillar]++;
+const available = pool.filter(line => !used.has(line));
 
-return deliverReply(line);
+let reply;
+
+if (available.length > 0) {
+  reply = available[Math.floor(Math.random() * available.length)];
+  used.add(reply);
+} else {
+  /* If all lines used, allow reuse */
+  reply = pool[Math.floor(Math.random() * pool.length)];
+}
+
+return deliverReply(reply);
 }
   
 window.runV4Engine = runV4Engine;
