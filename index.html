@@ -2683,9 +2683,13 @@ if (!v4RotationIndex) v4RotationIndex = {};
   
 /* =========================
   EMOTIONAL PILLAR DETECTION
-  ========================= */
+========================= */
 
-const pillarMatch = detectEmotionalPillar(originalText);
+let pillarMatch = null;
+
+if (tollState[activeVoice]?.unlocked) {
+  pillarMatch = detectEmotionalPillar(originalText);
+}
 
 let pillar = pillarMatch?.primary || null;
 
@@ -2693,7 +2697,7 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
- if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+  if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
     if (!stageState) stageState = {};
 
@@ -2725,20 +2729,20 @@ if (pillarMatch) {
 
   const anchorPool = emotionalAnchors?.[voice]?.[pillar];
 
-if (anchorPool && anchorPool.length) {
+  if (anchorPool && anchorPool.length) {
 
-  let anchor;
+    let anchor;
 
-  do {
-    anchor =
-      anchorPool[Math.floor(Math.random() * anchorPool.length)];
-  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+    do {
+      anchor =
+        anchorPool[Math.floor(Math.random() * anchorPool.length)];
+    } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
 
-  lastAnchorUsed[pillar] = anchor;
+    lastAnchorUsed[pillar] = anchor;
 
-  return deliverReply(anchor);
+    return deliverReply(anchor);
 
-}
+  }
 
 }
   /* =========================
