@@ -8476,7 +8476,18 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
+
+  const trimmed = normalizeInput(originalText);
+
+  const v4Response = runV4GeneralQueryLayer(trimmed);
+
+  if (v4Response) {
+    skipRelationalPrefix = true;
+    return deliverReply(v4Response);
+  }
+
   processEmotionalMode(originalText, originalText);
+
 } else {
   processInput(originalText, originalText);
 }
