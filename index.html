@@ -8207,8 +8207,8 @@ addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
 
-  const handled = processInput(originalText, originalText, true);
-
+const handled = processInput(originalText, originalText, true) === true;
+  
   if (!handled) {
     processEmotionalMode(originalText, originalText);
   }
