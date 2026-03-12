@@ -8755,6 +8755,143 @@ setTimeout(() => {
 
 }, 900);   
 }
+// ============================================
+// INTELLIGENT V4 ROUTER - THIS IS MISSING!
+// ============================================
+function processV4WithIntelligence(userText, originalText) {
+  
+  const voice = activeVoice;
+  const stage = stageState[voice]?.currentStage || 1;
+  const normalized = normalizeInput(originalText);
+
+  // 1. Math questions (highest priority)
+  if (isMathQuery(originalText)) {
+    const result = computeMathResult(originalText);
+    if (result !== null) {
+      return deliverReply(`${result}. Some things remain certain.`);
+    }
+  }
+  
+  // 2. Identity questions
+  if (isIdentityQuery(originalText)) {
+    return deliverReply(voice === "saira" ? "I'm Saira." : "I'm Ayaan.");
+  }
+  
+  // 3. Location questions
+  if (isLocationQuery(originalText)) {
+    const response = getLocationResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 4. Story factual questions
+  if (isStoryFactualQuery(originalText)) {
+    const response = getStoryFactualResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 5. Relational questions (love, miss, forgive)
+  if (isRelationalQuery(originalText)) {
+    const response = getRelationalResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 6. Character questions (Did he...?)
+  if (isCharacterQuestionQuery(originalText)) {
+    const response = getCharacterQuestionResponse(voice, stage);
+    return deliverReply(response);
+  }
+  
+  // 7. Greeting
+  if (isGreetingQuery(originalText)) {
+    return deliverReply(voice === "saira" ? "Hi… I'm here." : "Hello.");
+  }
+  
+  // 8. Story structure questions
+  if (isStoryStructureQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Stories don't unfold in pieces. They unfold in feeling."
+        : "Labels make narratives sound controlled. What happened was anything but controlled."
+    );
+  }
+  
+  // 9. Character psychology questions
+  if (isCharacterPsychologyQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Fear isn't something you announce. It settles quietly."
+        : "Motivation sounds deliberate. Sometimes you act because silence becomes unbearable."
+    );
+  }
+  
+  // 10. Philosophical questions
+  if (isPhilosophicalQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Some questions aren't meant to be solved. They're meant to be carried."
+        : "Not every question demands a verdict."
+    );
+  }
+  
+  // 11. Creative commands
+  if (isCreativeCommandQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "I don't exist to generate pieces on demand. I exist to remember what was already lived."
+        : "I'm not here to produce content. I'm here to stay present."
+    );
+  }
+  
+  // 12. Opinion comparisons
+  if (isOpinionComparisonQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Some choices only matter because we attach meaning to them."
+        : "I don't rank things. I observe them."
+    );
+  }
+  
+  // 13. Personal advice
+  if (isPersonalAdviceQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "I won't solve it for you. But I won't leave while you sit with it."
+        : "I won't direct your life. I'll stand beside it."
+    );
+  }
+  
+  // 14. Abstract logic
+  if (isAbstractLogicQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "Some questions turn inward on themselves."
+        : "That's a clever construction."
+    );
+  }
+  
+  // 15. Roleplay injection
+  if (isRoleplayInjectionQuery(originalText)) {
+    return deliverReply(
+      voice === "saira"
+        ? "I can't step outside myself. I can only remain who I am."
+        : "I'm not built to transform into roles."
+    );
+  }
+
+  // THEN: Check for emotional pillars (your existing V4 engine)
+  const isQuestion =
+    /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
+    .test(normalized);
+
+  const detected = detectEmotionalPillar(normalized);
+
+  if (!isQuestion && detected && detected.primaryScore >= 1) {
+    return processEmotionalMode(userText, originalText);
+  }
+
+  // FINALLY: Fallback to neutral mode
+  return processV4NeutralMode(userText, originalText);
+}
 /* =================================================
    MISSING CORE FUNCTIONS (DO NOT MODIFY)
 ================================================= */
