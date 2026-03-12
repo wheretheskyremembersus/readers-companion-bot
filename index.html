@@ -6985,11 +6985,9 @@ if (intent) {
 }
   let detected = detectEmotionalPillar(normalizedText);
 
-  if (!detected) {
-    detected = {
-      primary: getStageNativePillar(stageState[voice]?.currentStage || 1)
-    };
-  }
+if (!detected) {
+  return null;
+}
 
   const state = {
     original: normalizedText,
