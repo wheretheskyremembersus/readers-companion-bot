@@ -2764,61 +2764,246 @@ function detectNarrativeIntent(text){
 
 const lower = text.toLowerCase();
 
-/* STORY META */
+/* =========================
+AUTHOR
+========================= */
 
-if(/who wrote|who is the author|author|written by/.test(lower))
+if(
+containsAny(lower,[
+"who wrote",
+"author",
+"written by",
+"who created",
+"who made this story",
+"who created this story"
+])
+){
 return ["meta","author"];
+}
 
-if(/novel|book|story called|name of the book|what is the novel called/.test(lower))
+/* =========================
+BOOK / NOVEL
+========================= */
+
+if(
+containsAny(lower,[
+"novel",
+"book",
+"story called",
+"name of the book",
+"name of the novel",
+"what book",
+"what novel",
+"which novel",
+"title of the book",
+"title of the story"
+])
+){
 return ["meta","book"];
+}
 
-if(/protagonist|main character|lead character|who is the main character/.test(lower))
+/* =========================
+PROTAGONIST
+========================= */
+
+if(
+containsAny(lower,[
+"protagonist",
+"main character",
+"lead character",
+"who is the main character"
+])
+){
 return ["meta","protagonist"];
+}
 
-if(/antagonist|villain/.test(lower))
+/* =========================
+ANTAGONIST
+========================= */
+
+if(
+containsAny(lower,[
+"antagonist",
+"villain",
+"enemy in the story"
+])
+){
 return ["meta","antagonist"];
+}
 
-if(/genre|type of story|what kind of story/.test(lower))
+/* =========================
+GENRE
+========================= */
+
+if(
+containsAny(lower,[
+"genre",
+"type of story",
+"what kind of story",
+"what genre"
+])
+){
 return ["meta","genre"];
+}
 
-/* STORY WORLD */
+/* =========================
+CHARACTER IDENTITY
+========================= */
 
-if(/relationship|between you|did you love|you and ayaan/.test(lower))
-return ["story","relationship"];
-
-if(/what happened|why did|why didnt|why didn't/.test(lower))
-return ["story","events"];
-
-if(/remember|back then|do you remember/.test(lower))
-return ["story","memory"];
-
-if(/meaning|what does it mean|what did it mean/.test(lower))
-return ["story","meaning"];
-
-/* CHARACTER */
-
-if(/who are you|your name|who is saira/.test(lower))
+if(
+containsAny(lower,[
+"who are you",
+"your name",
+"who is saira",
+"tell me about saira"
+])
+){
 return ["character","identity"];
+}
 
-if(/who is ayaan/.test(lower))
+if(
+containsAny(lower,[
+"who is ayaan",
+"tell me about ayaan"
+])
+){
 return ["story","relationship"];
+}
 
-/* PREFERENCES */
+/* =========================
+RELATIONSHIP
+========================= */
 
-if(/favorite food|favourite food|what food/.test(lower))
+if(
+containsAny(lower,[
+"relationship",
+"between you",
+"you and ayaan",
+"did you love",
+"did you care about him",
+"were you in love"
+])
+){
+return ["story","relationship"];
+}
+
+/* =========================
+STORY EVENTS
+========================= */
+
+if(
+containsAny(lower,[
+"what happened",
+"why did",
+"why didnt",
+"why didn't",
+"how did it happen"
+])
+){
+return ["story","events"];
+}
+
+/* =========================
+MEMORY
+========================= */
+
+if(
+containsAny(lower,[
+"remember",
+"do you remember",
+"back then",
+"do you still remember"
+])
+){
+return ["story","memory"];
+}
+
+/* =========================
+MEANING
+========================= */
+
+if(
+containsAny(lower,[
+"meaning",
+"what does it mean",
+"what did it mean",
+"what does the story mean"
+])
+){
+return ["story","meaning"];
+}
+
+/* =========================
+FOOD
+========================= */
+
+if(
+containsAny(lower,[
+"favorite food",
+"favourite food",
+"what food do you like"
+])
+){
 return ["character","food"];
+}
 
-if(/favorite place|favourite place|what place/.test(lower))
+/* =========================
+PLACE
+========================= */
+
+if(
+containsAny(lower,[
+"favorite place",
+"favourite place",
+"what place do you like"
+])
+){
 return ["character","place"];
+}
 
-if(/favorite animal|pet|animal/.test(lower))
+/* =========================
+ANIMAL / PET
+========================= */
+
+if(
+containsAny(lower,[
+"favorite animal",
+"favourite animal",
+"pet",
+"animal you like"
+])
+){
 return ["character","animal"];
+}
 
-if(/favorite color|colour|favorite colour/.test(lower))
+/* =========================
+COLOR
+========================= */
+
+if(
+containsAny(lower,[
+"favorite color",
+"favourite colour",
+"favorite colour",
+"what color do you like"
+])
+){
 return ["character","color"];
+}
 
-if(/favorite music|music|what music/.test(lower))
+/* =========================
+MUSIC
+========================= */
+
+if(
+containsAny(lower,[
+"favorite music",
+"favourite music",
+"what music do you like"
+])
+){
 return ["character","music"];
+}
 
 return null;
 
