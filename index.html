@@ -4144,7 +4144,6 @@ if (v4Response) {
   skipRelationalPrefix = true;
   return deliverReply(v4Response);
 }
-
 /* =========================================================
    V4 GENERAL QUERY LAYER (MICRO INTENT GUARDS)
 ========================================================= */
@@ -4172,7 +4171,7 @@ function runV4GeneralQueryLayer(text) {
     return v4ThemeReply();
   }
 
- return runV4Engine(text, text);
+  return null;
 }
 
 /* =============================
