@@ -1089,8 +1089,6 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
 
-  v3DetectedIntent = true;
-
   if (typeof probeOnly !== "undefined" && probeOnly) return true;
 
   if (!replyText) return;
