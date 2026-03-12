@@ -717,6 +717,7 @@ let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
 
+let v3DetectedIntent = false;
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -1088,6 +1089,8 @@ function removeTypingIndicator() {
 
 function deliverReply(replyText, callback) {
 
+  v3DetectedIntent = true;
+
   if (typeof probeOnly !== "undefined" && probeOnly) return true;
 
   if (!replyText) return;
@@ -1095,6 +1098,7 @@ function deliverReply(replyText, callback) {
   if (Array.isArray(replyText)) {
     replyText = replyText[Math.floor(Math.random() * replyText.length)];
   }
+  
   /* =========================
    AUTO RELATIONAL PREFIX
 ========================= */
@@ -8207,9 +8211,11 @@ addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
 
-const handled = processInput(originalText, originalText, true) === true;
-  
-  if (!handled) {
+  v3DetectedIntent = false;
+
+  processInput(originalText, originalText, true);
+
+  if (!v3DetectedIntent) {
     processEmotionalMode(originalText, originalText);
   }
 
@@ -8218,7 +8224,6 @@ const handled = processInput(originalText, originalText, true) === true;
   processInput(originalText, originalText);
 
 }
-
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
