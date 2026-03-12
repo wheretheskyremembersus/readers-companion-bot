@@ -718,6 +718,19 @@ let reflections = [];
 let reflectionStep = 0;
 
 let v3DetectedIntent = false;
+  
+let v3FallbackUsed = {
+  saira: {
+    firm: new Set(),
+    neutral: new Set(),
+    reflective: new Set()
+  },
+  ayaan: {
+    firm: new Set(),
+    neutral: new Set(),
+    reflective: new Set()
+  }
+};
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -6430,28 +6443,40 @@ if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalize
    V3 CLASSIFIED FALLBACK EXECUTION
 ========================= */
 
-let category ="neutral";
+let category = "neutral";
 
 if (wordCount <= 2) {
-  category ="firm";
+  category = "firm";
 }
 else if (wordCount >= 8) {
-  category ="reflective";
+  category = "reflective";
 }
 
 if (originalText === lastUserInput) {
-  category ="firm";
+  category = "firm";
 }
 
 lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
-const index = v3FallbackIndex[activeVoice][category] % bank.length;
+/* Safety guard */
+if (!v3FallbackUsed[activeVoice]) {
+  v3FallbackUsed[activeVoice] = { firm:new Set(), neutral:new Set(), reflective:new Set() };
+}
 
-const reply = bank[index];
+const used = v3FallbackUsed[activeVoice][category];
 
-v3FallbackIndex[activeVoice][category]++;
+const available = bank.filter(line => !used.has(line));
+
+let reply;
+
+if (available.length > 0) {
+  reply = available[Math.floor(Math.random() * available.length)];
+  used.add(reply);
+} else {
+  reply = bank[Math.floor(Math.random() * bank.length)];
+}
 
 if (probeOnly) return false;
 
