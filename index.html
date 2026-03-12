@@ -2659,11 +2659,12 @@ function runV4Engine(text, originalText) {
 V4 NARRATIVE LAYER (FIRST)
 ========================= */
 
-const narrativeIntent = detectNarrativeIntent(originalText);
+const narrativeResult = detectNarrativeIntent(originalText);
 
-if (narrativeIntent) {
+if (narrativeResult) {
 
-  const [layer, type] = narrativeIntent;
+  const layer = narrativeResult[0];
+  const type  = narrativeResult[1];
 
   const pool =
     v4NarrativeMaster[layer]?.[type]?.[voice];
@@ -2677,7 +2678,6 @@ if (narrativeIntent) {
   }
 
 }
-  
 /* =========================
   EMOTIONAL PILLAR DETECTION
   ========================= */
@@ -3186,29 +3186,6 @@ ayaan:[
 
 };
 
-/* =========================
-EXECUTE NARRATIVE LAYER
-========================= */
-
-const intent = detectNarrativeIntent(originalText);
-
-if(intent){
-
-const [layer,type] = intent;
-
-const pool =
-v4NarrativeMaster[layer]?.[type]?.[voice];
-
-if(pool && pool.length){
-
-const line =
-pool[Math.floor(Math.random()*pool.length)];
-
-return deliverReply(line);
-
-}
-
-}
   /* =========================
   V4 FALLBACK BANK
   (PILLAR + CHARACTER VOICE)
