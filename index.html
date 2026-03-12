@@ -4144,6 +4144,12 @@ if (v4Response) {
   skipRelationalPrefix = true;
   return deliverReply(v4Response);
 }
+
+/* ================================
+   V4 SAFETY FALLBACK
+================================ */
+
+return runV4Engine(normalizedText, originalText);
 /* =========================================================
    V4 GENERAL QUERY LAYER (MICRO INTENT GUARDS)
 ========================================================= */
