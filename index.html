@@ -2492,6 +2492,7 @@ function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
 
+
 /* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
@@ -8853,15 +8854,6 @@ playTone(520, 60, 0.025);
 input.value ="";
 
 addUserMessage(originalText);
-
-/* =========================
-   V4 NARRATIVE ENTRY
-========================= */
-
-if (typeof runV4Engine === "function") {
-  runV4Engine(originalText, originalText);
-  return;
-}
 
 if (tollState?.[activeVoice]?.unlocked) {
   processEmotionalMode(originalText, originalText);
