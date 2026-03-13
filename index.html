@@ -5578,13 +5578,17 @@ if (isLocationQuery(originalText)) {
 /* ================================
    V4 PARTITION ROUTER
 ================================= */
+
 console.log("V4 ROUTER REACHED");
 
 if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
 
-  // NARRATIVE LAYER — checked FIRST, before question guard
+  /* -------------------------------
+     1. NARRATIVE LAYER
+  -------------------------------- */
+
   const narrativeResult = detectNarrativeIntent(originalText);
 
   if (narrativeResult) {
@@ -5592,7 +5596,7 @@ if (tollState[activeVoice]?.unlocked === true) {
     const layer = narrativeResult[0];
     const type  = narrativeResult[1];
 
-    const pool = v4NarrativeMaster[layer]?.[type]?.[activeVoice];
+    const pool = v4NarrativeMaster?.[layer]?.[type]?.[activeVoice];
 
     if (pool && pool.length) {
       return deliverReply(
@@ -5601,19 +5605,29 @@ if (tollState[activeVoice]?.unlocked === true) {
     }
   }
 
-  // Prevent emotional engine from firing on simple question forms
-  const isQuestion =
-    /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
-    .test(normalized);
+  /* -------------------------------
+     2. EMOTIONAL DETECTION
+  -------------------------------- */
 
   const detected = detectEmotionalPillar(normalized);
 
-  if (!isQuestion && detected && detected.primaryScore >= 1) {
+  if (detected && detected.primaryScore >= 1) {
     return processEmotionalMode(originalText, originalText);
   }
 
+  /* -------------------------------
+     3. V4 NEUTRAL FALLBACK
+  -------------------------------- */
+
   return processV4NeutralMode(originalText, originalText);
 }
+
+/* -------------------------------
+   4. IF TOLLGATE NOT OPEN
+   FALL BACK TO V3
+-------------------------------- */
+
+return runV3Engine(originalText, originalText);
 /* ================================
    V4 NEUTRAL MODE (POST-UNLOCK)
 ================================= */
