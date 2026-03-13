@@ -2492,6 +2492,14 @@ function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
 
+/* =========================
+   V4 NARRATIVE ENTRY
+========================= */
+
+ if (typeof runV4Engine === "function") {
+    runV4Engine(userText, originalText);
+    return;
+  }
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
