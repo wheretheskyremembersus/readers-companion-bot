@@ -7403,8 +7403,7 @@ return deliverReply(reply);
 
 const v4MicroIntents = {
 
-  detect(text) {
-
+detect: function(text) {
   const t = text.toLowerCase().trim();
 
   // GREETING
