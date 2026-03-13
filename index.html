@@ -2493,23 +2493,6 @@ function processInput(userText, originalText) {
   let normalizedText = normalizeInput(originalText);
 
 /* =========================
-   V4 NARRATIVE ENTRY
-========================= */
-
-if (typeof runV4Engine === "function") {
-
-  const beforeCount = chatBody ? chatBody.children.length : 0;
-
-  runV4Engine(userText, originalText);
-
-  const afterCount = chatBody ? chatBody.children.length : 0;
-
-  if (afterCount > beforeCount) {
-    return;
-  }
-
-}
-/* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
 
@@ -8870,6 +8853,15 @@ playTone(520, 60, 0.025);
 input.value ="";
 
 addUserMessage(originalText);
+
+/* =========================
+   V4 NARRATIVE ENTRY
+========================= */
+
+if (typeof runV4Engine === "function") {
+  runV4Engine(originalText, originalText);
+  return;
+}
 
 if (tollState?.[activeVoice]?.unlocked) {
   processEmotionalMode(originalText, originalText);
