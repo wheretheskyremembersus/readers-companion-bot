@@ -2546,7 +2546,7 @@ function detectEmotionalPillar(text) {
    (improves story question detection)
 ========================= */
 
-const narrativeProxy = emotionalProxy
+const narrativeProxy = lower
   .replace(/hesitat(e|ed|ion)/g,"fear")
   .replace(/pull(ed)? away/g,"fear")
   .replace(/hold(ing)? back/g,"fear")
