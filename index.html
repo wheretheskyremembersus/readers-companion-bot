@@ -987,6 +987,268 @@ function containsAny(text, keywords) {
 
   return false;
 }
+/* =========================
+V4 MASTER NARRATIVE LAYER
+Handles:
+- Author
+- Book
+- Protagonist
+- Antagonist
+- Story questions
+- Relationship
+- Memory
+- Meaning
+- Preferences (food/place/pet/color/music)
+========================= */
+
+function detectNarrativeIntent(text){
+
+const lower = text.toLowerCase();
+
+/* =========================
+AUTHOR
+========================= */
+
+if(
+containsAny(lower,[
+"who wrote",
+"author",
+"written by",
+"who created",
+"who made this story",
+"who created this story"
+])
+){
+return ["meta","author"];
+}
+
+/* =========================
+BOOK / NOVEL
+========================= */
+
+if(
+containsAny(lower,[
+"novel",
+"book",
+"story called",
+"name of the book",
+"name of the novel",
+"what book",
+"what novel",
+"which novel",
+"title of the book",
+"title of the story"
+])
+){
+return ["meta","book"];
+}
+
+/* =========================
+PROTAGONIST
+========================= */
+
+if(
+containsAny(lower,[
+"protagonist",
+"main character",
+"lead character",
+"who is the main character"
+])
+){
+return ["meta","protagonist"];
+}
+
+/* =========================
+ANTAGONIST
+========================= */
+
+if(
+containsAny(lower,[
+"antagonist",
+"villain",
+"enemy in the story"
+])
+){
+return ["meta","antagonist"];
+}
+
+/* =========================
+GENRE
+========================= */
+
+if(
+containsAny(lower,[
+"genre",
+"type of story",
+"what kind of story",
+"what genre"
+])
+){
+return ["meta","genre"];
+}
+
+/* =========================
+CHARACTER IDENTITY
+========================= */
+
+if(
+containsAny(lower,[
+"who are you",
+"your name",
+"who is saira",
+"tell me about saira"
+])
+){
+return ["character","identity"];
+}
+
+if(
+containsAny(lower,[
+"who is ayaan",
+"tell me about ayaan"
+])
+){
+return ["story","relationship"];
+}
+
+/* =========================
+RELATIONSHIP
+========================= */
+
+if(
+containsAny(lower,[
+"relationship",
+"between you",
+"you and ayaan",
+"did you love",
+"did you care about him",
+"were you in love"
+])
+){
+return ["story","relationship"];
+}
+
+/* =========================
+STORY EVENTS
+========================= */
+
+if(
+containsAny(lower,[
+"what happened",
+"why did",
+"why didnt",
+"why didn't",
+"how did it happen"
+])
+){
+return ["story","events"];
+}
+
+/* =========================
+MEMORY
+========================= */
+
+if(
+containsAny(lower,[
+"remember",
+"do you remember",
+"back then",
+"do you still remember"
+])
+){
+return ["story","memory"];
+}
+
+/* =========================
+MEANING
+========================= */
+
+if(
+containsAny(lower,[
+"meaning",
+"what does it mean",
+"what did it mean",
+"what does the story mean"
+])
+){
+return ["story","meaning"];
+}
+
+/* =========================
+FOOD
+========================= */
+
+if(
+containsAny(lower,[
+"favorite food",
+"favourite food",
+"what food do you like"
+])
+){
+return ["character","food"];
+}
+
+/* =========================
+PLACE
+========================= */
+
+if(
+containsAny(lower,[
+"favorite place",
+"favourite place",
+"what place do you like"
+])
+){
+return ["character","place"];
+}
+
+/* =========================
+ANIMAL / PET
+========================= */
+
+if(
+containsAny(lower,[
+"favorite animal",
+"favourite animal",
+"pet",
+"animal you like"
+])
+){
+return ["character","animal"];
+}
+
+/* =========================
+COLOR
+========================= */
+
+if(
+containsAny(lower,[
+"favorite color",
+"favourite colour",
+"favorite colour",
+"what color do you like"
+])
+){
+return ["character","color"];
+}
+
+/* =========================
+MUSIC
+========================= */
+
+if(
+containsAny(lower,[
+"favorite music",
+"favourite music",
+"what music do you like"
+])
+){
+return ["character","music"];
+}
+
+return null;
+
+}
 /* ---------- Enable Enter Key ---------- */
 
 window.addEventListener("DOMContentLoaded", function () {
@@ -1676,268 +1938,7 @@ function detectEmotionalPillar(text) {
   if (!text) return null;
 
   const lower = text.toLowerCase();
-/* =========================
-V4 MASTER NARRATIVE LAYER
-Handles:
-- Author
-- Book
-- Protagonist
-- Antagonist
-- Story questions
-- Relationship
-- Memory
-- Meaning
-- Preferences (food/place/pet/color/music)
-========================= */
 
-function detectNarrativeIntent(text){
-
-const lower = text.toLowerCase();
-
-/* =========================
-AUTHOR
-========================= */
-
-if(
-containsAny(lower,[
-"who wrote",
-"author",
-"written by",
-"who created",
-"who made this story",
-"who created this story"
-])
-){
-return ["meta","author"];
-}
-
-/* =========================
-BOOK / NOVEL
-========================= */
-
-if(
-containsAny(lower,[
-"novel",
-"book",
-"story called",
-"name of the book",
-"name of the novel",
-"what book",
-"what novel",
-"which novel",
-"title of the book",
-"title of the story"
-])
-){
-return ["meta","book"];
-}
-
-/* =========================
-PROTAGONIST
-========================= */
-
-if(
-containsAny(lower,[
-"protagonist",
-"main character",
-"lead character",
-"who is the main character"
-])
-){
-return ["meta","protagonist"];
-}
-
-/* =========================
-ANTAGONIST
-========================= */
-
-if(
-containsAny(lower,[
-"antagonist",
-"villain",
-"enemy in the story"
-])
-){
-return ["meta","antagonist"];
-}
-
-/* =========================
-GENRE
-========================= */
-
-if(
-containsAny(lower,[
-"genre",
-"type of story",
-"what kind of story",
-"what genre"
-])
-){
-return ["meta","genre"];
-}
-
-/* =========================
-CHARACTER IDENTITY
-========================= */
-
-if(
-containsAny(lower,[
-"who are you",
-"your name",
-"who is saira",
-"tell me about saira"
-])
-){
-return ["character","identity"];
-}
-
-if(
-containsAny(lower,[
-"who is ayaan",
-"tell me about ayaan"
-])
-){
-return ["story","relationship"];
-}
-
-/* =========================
-RELATIONSHIP
-========================= */
-
-if(
-containsAny(lower,[
-"relationship",
-"between you",
-"you and ayaan",
-"did you love",
-"did you care about him",
-"were you in love"
-])
-){
-return ["story","relationship"];
-}
-
-/* =========================
-STORY EVENTS
-========================= */
-
-if(
-containsAny(lower,[
-"what happened",
-"why did",
-"why didnt",
-"why didn't",
-"how did it happen"
-])
-){
-return ["story","events"];
-}
-
-/* =========================
-MEMORY
-========================= */
-
-if(
-containsAny(lower,[
-"remember",
-"do you remember",
-"back then",
-"do you still remember"
-])
-){
-return ["story","memory"];
-}
-
-/* =========================
-MEANING
-========================= */
-
-if(
-containsAny(lower,[
-"meaning",
-"what does it mean",
-"what did it mean",
-"what does the story mean"
-])
-){
-return ["story","meaning"];
-}
-
-/* =========================
-FOOD
-========================= */
-
-if(
-containsAny(lower,[
-"favorite food",
-"favourite food",
-"what food do you like"
-])
-){
-return ["character","food"];
-}
-
-/* =========================
-PLACE
-========================= */
-
-if(
-containsAny(lower,[
-"favorite place",
-"favourite place",
-"what place do you like"
-])
-){
-return ["character","place"];
-}
-
-/* =========================
-ANIMAL / PET
-========================= */
-
-if(
-containsAny(lower,[
-"favorite animal",
-"favourite animal",
-"pet",
-"animal you like"
-])
-){
-return ["character","animal"];
-}
-
-/* =========================
-COLOR
-========================= */
-
-if(
-containsAny(lower,[
-"favorite color",
-"favourite colour",
-"favorite colour",
-"what color do you like"
-])
-){
-return ["character","color"];
-}
-
-/* =========================
-MUSIC
-========================= */
-
-if(
-containsAny(lower,[
-"favorite music",
-"favourite music",
-"what music do you like"
-])
-){
-return ["character","music"];
-}
-
-return null;
-
-}
 /* =========================
    NARRATIVE EMOTION PROXY
    (improves story question detection)
