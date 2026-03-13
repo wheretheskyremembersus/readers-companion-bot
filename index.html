@@ -975,7 +975,18 @@ function playTone(startFreq = 750, duration = 40, volume = 0.14) {
 /* =========================
    HELPERS
 ========================= */
+function containsAny(text, keywords) {
 
+  if (!text) return false;
+
+  for (let i = 0; i < keywords.length; i++) {
+    if (text.includes(keywords[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
 /* ---------- Enable Enter Key ---------- */
 
 window.addEventListener("DOMContentLoaded", function () {
