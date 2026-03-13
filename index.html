@@ -3364,7 +3364,12 @@ function getSelfReferencePrefix(stage) {
 ========================= */
 
 function processInput(userText, originalText) {
-const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
+
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
   let normalizedText = normalizeInput(originalText);
 /* =========================
    HARD AUTHOR ROUTING
