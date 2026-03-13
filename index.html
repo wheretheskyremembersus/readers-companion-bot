@@ -8846,13 +8846,7 @@ playTone(520, 60, 0.025);
 input.value ="";
 
 addUserMessage(originalText);
-
-if (tollState?.[activeVoice]?.unlocked) {
-  processEmotionalMode(originalText, originalText);
-} else {
-  processInput(originalText, originalText);
-}
-
+processInput(originalText, originalText);
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
