@@ -5278,7 +5278,7 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
 
-  // NARRATIVE LAYER — checked FIRST, before question guard
+  // NARRATIVE LAYER — checked FIRST
   const narrativeResult = detectNarrativeIntent(originalText);
 
   if (narrativeResult) {
@@ -5303,10 +5303,10 @@ if (tollState[activeVoice]?.unlocked === true) {
   const detected = detectEmotionalPillar(normalized);
 
   if (!isQuestion && detected && detected.primaryScore >= 1) {
-    return processEmotionalMode(originalText, originalText);
+    return runV4Engine(originalText, originalText);
   }
 
-  return processV4NeutralMode(originalText, originalText);
+  return runV4Engine(originalText, originalText);
 }
 /* ================================
    V4 NEUTRAL MODE (POST-UNLOCK)
