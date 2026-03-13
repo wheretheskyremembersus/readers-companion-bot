@@ -2931,8 +2931,8 @@ function runV4Engine(text, originalText) {
   EMOTIONAL PILLAR DETECTION
   ========================= */
 
-const pillarMatch = detectEmotionalPillar(originalText);
-
+const pillarMatch = detectEmotionalPillar(normalizeInput(originalText));
+  
 let pillar = pillarMatch?.primary || null;
 
 if (pillarMatch) {
