@@ -5295,17 +5295,14 @@ if (tollState[activeVoice]?.unlocked === true) {
     }
   }
 
-  // Prevent emotional engine from firing on simple question forms
-  const isQuestion =
-    /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
-    .test(normalized);
-
+  // EMOTIONAL DETECTION
   const detected = detectEmotionalPillar(normalized);
 
-  if (!isQuestion && detected && detected.primaryScore >= 1) {
+  if (detected && detected.primaryScore >= 1) {
     return runV4Engine(originalText, originalText);
   }
 
+  // DEFAULT V4 RESPONSE
   return runV4Engine(originalText, originalText);
 }
 /* ================================
