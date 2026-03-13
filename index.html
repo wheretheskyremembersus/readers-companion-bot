@@ -7389,9 +7389,9 @@ lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
-const index = v3FallbackIndex[activeVoice][category] % bank.length;
+const v3Index = v3FallbackIndex[activeVoice][category] % bank.length;
 
-const reply = bank[index];
+const reply = bank[v3Index];
 
 v3FallbackIndex[activeVoice][category]++;
 
