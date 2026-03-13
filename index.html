@@ -2488,8 +2488,36 @@ function getSelfReferencePrefix(stage) {
    RELATIONAL AWARENESS (V3)
 ========================= */
 
-function processInput(userText, originalText) {
+function containsAny(text, phrases) {
+  return phrases.some(phrase => text.includes(phrase));
+}
 
+function deliverV4NarrativeReply(originalText) {
+  const voice =
+    activeVoice === "saira" || activeVoice === "ayaan"
+      ? activeVoice
+      : "saira";
+
+  const normalized = normalizeInput(originalText);
+  const match = detectNarrativeIntent(normalized);
+
+  if (!match) return false;
+
+  const [layer, type] = match;
+  const pool = v4NarrativeMaster?.[layer]?.[type]?.[voice];
+
+  if (!Array.isArray(pool) || pool.length === 0) {
+    return false;
+  }
+
+  skipRelationalPrefix = true;
+
+  const line = pool[Math.floor(Math.random() * pool.length)];
+  deliverReply(line);
+  return true;
+}
+
+function processInput(userText, originalText) {
   let normalizedText = normalizeInput(originalText);
 
 
@@ -8856,10 +8884,15 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
+  if (deliverV4NarrativeReply(originalText)) {
+    return;
+  }
+
   processEmotionalMode(originalText, originalText);
 } else {
   processInput(originalText, originalText);
 }
+
 
 /* =========================
    ABUSE PROTECTION GUARD 
