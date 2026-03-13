@@ -708,6 +708,7 @@ let interactionLocked = false;
 let sessionUserName = null;
 let lastEntity = null;
 let introDelivered = false;
+let lastAnchorUsed = {};
   
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
@@ -716,6 +717,11 @@ let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
 
+let lastEmotion = {
+  saira: null,
+  ayaan: null
+};
+  
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -974,6 +980,876 @@ function playTone(startFreq = 750, duration = 40, volume = 0.14) {
 /* =========================
    HELPERS
 ========================= */
+function containsAny(text, keywords) {
+
+  if (!text) return false;
+
+  for (let i = 0; i < keywords.length; i++) {
+    if (text.includes(keywords[i])) {
+      return true;
+    }
+  }
+
+  return false;
+}
+/* =========================
+V4 MASTER NARRATIVE LAYER
+Handles:
+- Author
+- Book
+- Protagonist
+- Antagonist
+- Story questions
+- Relationship
+- Memory
+- Meaning
+- Preferences (food/place/pet/color/music)
+========================= */
+
+function detectNarrativeIntent(text){
+
+const lower = text.toLowerCase();
+/* =========================
+   QUESTION → EMOTION MAPPING
+========================= */
+
+let emotionalProxy = lower;
+
+// regret signals
+emotionalProxy = emotionalProxy
+  .replace(/did you regret/g, "regret")
+  .replace(/do you regret/g, "regret")
+  .replace(/why did you leave/g, "regret");
+
+// fear signals
+emotionalProxy = emotionalProxy
+  .replace(/were you afraid/g, "fear")
+  .replace(/were you scared/g, "fear")
+  .replace(/did you fear/g, "fear");
+
+// affection signals
+emotionalProxy = emotionalProxy
+  .replace(/do you still love/g, "love")
+  .replace(/did you love/g, "love");
+
+// loss signals
+emotionalProxy = emotionalProxy
+  .replace(/do you miss/g, "miss")
+  .replace(/did you lose/g, "loss");
+/* =========================
+AUTHOR
+========================= */
+
+if(
+containsAny(lower,[
+"who wrote",
+"author",
+"written by",
+"who created",
+"who made this story",
+"who created this story"
+])
+){
+return ["meta","author"];
+}
+
+/* =========================
+BOOK / NOVEL
+========================= */
+
+if(
+containsAny(lower,[
+"novel",
+"book",
+"story called",
+"name of the book",
+"name of the novel",
+"what book",
+"what novel",
+"which novel",
+"title of the book",
+"title of the story"
+])
+){
+return ["meta","book"];
+}
+
+/* =========================
+PROTAGONIST
+========================= */
+
+if(
+containsAny(lower,[
+"protagonist",
+"main character",
+"lead character",
+"who is the main character"
+])
+){
+return ["meta","protagonist"];
+}
+
+/* =========================
+ANTAGONIST
+========================= */
+
+if(
+containsAny(lower,[
+"antagonist",
+"villain",
+"enemy in the story"
+])
+){
+return ["meta","antagonist"];
+}
+
+/* =========================
+GENRE
+========================= */
+
+if(
+containsAny(lower,[
+"genre",
+"type of story",
+"what kind of story",
+"what genre"
+])
+){
+return ["meta","genre"];
+}
+
+/* =========================
+CHARACTER IDENTITY
+========================= */
+
+if(
+containsAny(lower,[
+"who are you",
+"your name",
+"who is saira",
+"tell me about saira"
+])
+){
+return ["character","identity"];
+}
+
+if(
+containsAny(lower,[
+"who is ayaan",
+"tell me about ayaan"
+])
+){
+return ["story","relationship"];
+}
+
+/* =========================
+RELATIONSHIP
+========================= */
+
+if(
+containsAny(lower,[
+"relationship",
+"between you",
+"you and ayaan",
+"did you love",
+"did you care about him",
+"were you in love"
+])
+){
+return ["story","relationship"];
+}
+
+/* =========================
+STORY EVENTS
+========================= */
+
+if(
+containsAny(lower,[
+"what happened",
+"why did",
+"why didnt",
+"why didn't",
+"how did it happen"
+])
+){
+return ["story","events"];
+}
+
+/* =========================
+MEMORY
+========================= */
+
+if(
+containsAny(lower,[
+"remember",
+"do you remember",
+"back then",
+"do you still remember"
+])
+){
+return ["story","memory"];
+}
+
+/* =========================
+MEANING
+========================= */
+
+if(
+containsAny(lower,[
+"meaning",
+"what does it mean",
+"what did it mean",
+"what does the story mean"
+])
+){
+return ["story","meaning"];
+}
+
+/* =========================
+FOOD
+========================= */
+
+if(
+containsAny(lower,[
+"favorite food",
+"favourite food",
+"what food do you like"
+])
+){
+return ["character","food"];
+}
+
+/* =========================
+PLACE
+========================= */
+
+if(
+containsAny(lower,[
+"favorite place",
+"favourite place",
+"what place do you like"
+])
+){
+return ["character","place"];
+}
+
+/* =========================
+ANIMAL / PET
+========================= */
+
+if(
+containsAny(lower,[
+"favorite animal",
+"favourite animal",
+"pet",
+"animal you like"
+])
+){
+return ["character","animal"];
+}
+
+/* =========================
+COLOR
+========================= */
+
+if(
+containsAny(lower,[
+"favorite color",
+"favourite colour",
+"favorite colour",
+"what color do you like"
+])
+){
+return ["character","color"];
+}
+
+/* =========================
+MUSIC
+========================= */
+
+if(
+containsAny(lower,[
+"favorite music",
+"favourite music",
+"what music do you like"
+])
+){
+return ["character","music"];
+}
+
+/* =========================
+AUDIENCE
+========================= */
+
+if(
+containsAny(lower,[
+"who is this story for",
+"who should read this",
+"who is the audience",
+"who is this book for"
+])
+){
+return ["meta","audience"];
+}
+/* =========================
+FORMAT
+========================= */
+
+if(
+containsAny(lower,[
+"where can i read",
+"where can i find the book",
+"where can i buy the book",
+"is it available as ebook",
+"is there an audiobook",
+"what formats is it available"
+])
+){
+return ["meta","format"];
+}
+/* =========================
+FIRST MEETING
+========================= */
+
+if(
+containsAny(lower,[
+"where did you first meet",
+"how did you meet",
+"when did you meet",
+"how did you first meet"
+])
+){
+return ["story","meeting"];
+}
+/* =========================
+FIRST IMPRESSION
+========================= */
+
+if(
+containsAny(lower,[
+"first impression",
+"what did you notice first",
+"what did you first notice",
+"what was your first impression"
+])
+){
+return ["story","impression"];
+}
+/* =========================
+HAPPIEST MOMENT
+========================= */
+
+if(
+containsAny(lower,[
+"happiest moment",
+"best moment together",
+"when were you happiest",
+"what was your happiest moment"
+])
+){
+return ["story","happiness"];
+}
+/* =========================
+REGRET / DOUBT
+========================= */
+
+if(
+containsAny(lower,[
+"did you regret",
+"did you question your choice",
+"did you ever doubt",
+"did you ever regret"
+])
+){
+return ["story","regret"];
+}
+/* =========================
+DESTINY
+========================= */
+
+if(
+containsAny(lower,[
+"did you meet again",
+"did you see him again",
+"do you meet again",
+"do you reunite",
+"does destiny bring you back together"
+])
+){
+return ["story","destiny"];
+}
+/* =========================
+LESSONS
+========================= */
+
+if(
+containsAny(lower,[
+"what should readers learn",
+"what lesson does the story teach",
+"what can readers learn",
+"what is the message"
+])
+){
+return ["story","lesson"];
+}
+return null;
+
+}
+/* =========================
+MASTER NARRATIVE RESPONSES
+========================= */
+
+const v4NarrativeMaster = {
+
+meta: {
+
+author: {
+saira:[
+"Mohan R. wrote our story.",
+"He created the world where our choices unfolded.",
+"The story you see here came from Mohan R.",
+"He was the one who imagined the journey we lived.",
+"Our story exists because Mohan R chose to tell it.",
+"He shaped the quiet moments between us.",
+"The novel came from Mohan R's understanding of love and distance.",
+"He wrote what we struggled to say ourselves."
+],
+ayaan:[
+"Mohan R. wrote the novel that holds our story.",
+"He shaped the narrative you are stepping into.",
+"Our journey exists because he wrote it.",
+"The story began with Mohan R's vision.",
+"He gave structure to what we experienced.",
+"He wrote the world where our choices matter.",
+"The novel exists because he decided this story should be told.",
+"He captured the parts of us we couldn't fully explain."
+]
+},
+
+book:{
+saira:[
+"Our story lives in a novel called 'Where The Sky Remembers Us'.",
+"It's a story about love shaped by timing and distance.",
+"The novel carries the parts we couldn't always say aloud.",
+"It's a story about moments that linger long after they pass.",
+"The novel explores what happens when feelings arrive quietly.",
+"It follows how small decisions reshape lives.",
+"It captures the space between love and hesitation.",
+"The story unfolds slowly, much like our feelings did."
+],
+ayaan:[
+"The novel is called 'Where The Sky Remembers Us'.",
+"It explores what remains after choices and restraint.",
+"The full story unfolds in that book.",
+"It examines how timing influences love.",
+"The story moves through reflection rather than conflict.",
+"It reveals how restraint can shape a life.",
+"The novel explores what silence can do to two people.",
+"It shows how certain connections never fully disappear."
+]
+},
+
+protagonist:{
+saira:[
+"The story follows both of us in different ways.",
+"But much of it moves through what I felt.",
+"It's not only one perspective.",
+"I carry many of the emotional moments in the story.",
+"The narrative often moves through what I understood too late.",
+"Our story doesn't belong to one person alone.",
+"What happened to us shaped both of our paths.",
+"The story listens closely to what we both experienced."
+],
+ayaan:[
+"Saira carries much of the emotional center.",
+"But our choices shape the outcome together.",
+"The narrative moves through both of us.",
+"Her perspective reveals much of the emotional truth.",
+"My decisions influence the direction of the story.",
+"The story exists between two people rather than one.",
+"Our actions shape the narrative equally.",
+"It is less about one hero and more about two lives intersecting."
+]
+},
+
+antagonist:{
+saira:[
+"There isn't a villain in the usual sense.",
+"What stood between us was hesitation and time.",
+"Sometimes the hardest obstacles aren't people.",
+"The real challenge was understanding ourselves.",
+"Silence became more powerful than conflict.",
+"No one tried to destroy us. We simply struggled to speak.",
+"The difficulty came from timing rather than intention.",
+"Some stories are shaped by circumstances instead of enemies."
+],
+ayaan:[
+"No single antagonist exists.",
+"Timing and restraint complicate everything.",
+"Sometimes circumstance becomes the obstacle.",
+"Our hesitation created more distance than anything else.",
+"Silence proved stronger than confrontation.",
+"No villain stood in the way. Only our own caution.",
+"The conflict came from decisions rather than enemies.",
+"Often the hardest opposition is internal."
+]
+},
+
+genre:{
+saira:[
+"It's a love story shaped by quiet decisions.",
+"A story about connection and distance.",
+"A story about what remains unfinished.",
+"It's a story about emotions that unfold slowly.",
+"It explores how love can grow quietly.",
+"The story moves through reflection rather than action.",
+"It is about understanding feelings too late.",
+"It's a story about how moments stay with us."
+],
+ayaan:[
+"It's a character-driven love story.",
+"The tension comes from emotion rather than conflict.",
+"It's about choices and consequences.",
+"It focuses on internal struggles rather than battles.",
+"The narrative examines restraint and timing.",
+"It's a reflective story about relationships.",
+"It explores the quiet side of love.",
+"The story moves through subtle emotional shifts."
+]
+}
+
+},
+
+story:{
+
+relationship:{
+saira:[
+"What we had wasn't simple.",
+"It mattered more than I admitted then.",
+"Some connections reshape you quietly.",
+"Our bond developed before either of us noticed.",
+"I didn't realise how deeply it had grown.",
+"It began gently and slowly changed everything.",
+"Certain connections reveal themselves only later.",
+"What we shared became clearer with time."
+],
+ayaan:[
+"Our connection carried weight.",
+"It wasn't something I dismissed easily.",
+"What we shared stayed with me.",
+"At first I believed it was temporary.",
+"Over time it became harder to ignore.",
+"The bond between us grew quietly.",
+"I recognised its importance later than I should have.",
+"Some relationships change you without warning."
+]
+},
+
+events:{
+saira:[
+"What happened between us unfolded slowly.",
+"Many moments passed before we understood them.",
+"Silence shaped more than words.",
+"Small choices gradually changed everything.",
+"Nothing dramatic happened at first.",
+"Our story was built from quiet moments.",
+"Time revealed what we had overlooked.",
+"The story unfolded in ways we didn't expect."
+],
+ayaan:[
+"Timing complicated everything.",
+"Some decisions felt responsible at the time.",
+"What happened was quieter than it looked.",
+"Our choices slowly created distance.",
+"Looking back, the signs were there.",
+"It wasn't a single event but many small ones.",
+"Perspective changed once time passed.",
+"Understanding arrived later than it should have."
+]
+},
+
+memory:{
+saira:[
+"I remember more than I say.",
+"Some moments remain clearer than others.",
+"Certain memories stay steady.",
+"Time hasn't erased everything.",
+"Some memories remain vivid even now.",
+"I carry more of the past than I admit.",
+"Distance hasn't softened every memory.",
+"Certain moments remain impossible to forget."
+],
+ayaan:[
+"Memory tends to refine events.",
+"Distance doesn't erase everything.",
+"Some moments remain precise.",
+"Time alters how memories appear.",
+"Certain events remain unusually clear.",
+"I remember the decisions we made.",
+"Perspective has changed how I recall things.",
+"Some memories remain sharper than others."
+]
+},
+
+meaning:{
+saira:[
+"Meaning rarely appears immediately.",
+"Some stories reveal themselves slowly.",
+"What mattered became clearer later.",
+"Understanding often comes after distance.",
+"It took time to understand what it meant.",
+"The significance appeared only later.",
+"Some lessons reveal themselves quietly.",
+"Reflection changes how we see everything."
+],
+ayaan:[
+"Interpretation evolves with time.",
+"Events rarely reveal significance immediately.",
+"Clarity arrives through reflection.",
+"Understanding grows gradually.",
+"The meaning of events changes with perspective.",
+"It took distance to understand what happened.",
+"Reflection reshapes interpretation.",
+"Some truths appear only after time passes."
+]
+}
+
+},
+
+character:{
+
+identity:{
+saira:[
+"I'm Saira.",
+"I'm the one who carried the quiet parts of the story.",
+"I'm the one who felt more than I said.",
+"My role was often understanding too late.",
+"I experienced the emotional side of our story.",
+"I'm someone who noticed things quietly.",
+"I'm Saira, and I remember more than I reveal.",
+"My perspective shaped much of what happened."
+],
+ayaan:[
+"I'm Ayaan.",
+"I believed restraint was strength.",
+"I tried to remain composed when things changed.",
+"My choices shaped the distance between us.",
+"I often chose caution over emotion.",
+"I'm Ayaan, someone who believed discipline mattered.",
+"My perspective came from logic more than feeling.",
+"I believed control was the safest path."
+]
+},
+
+food:{
+saira:[
+"I tend to prefer simple meals.",
+"Something warm and comforting.",
+"I enjoy food that feels familiar.",
+"Meals that feel calm and quiet appeal to me.",
+"I like food that reminds me of peaceful moments.",
+"Simple dishes always felt more meaningful.",
+"Something warm after a long day feels right.",
+"I value comfort over extravagance."
+],
+ayaan:[
+"I prefer food that is balanced and simple.",
+"I rarely focus much on food itself.",
+"Something steady rather than elaborate.",
+"I value practicality when it comes to meals.",
+"I prefer things that are uncomplicated.",
+"Food is something I approach simply.",
+"I appreciate structure even in small habits.",
+"Nothing too elaborate ever appealed to me."
+]
+},
+
+place:{
+saira:[
+"I like quiet places.",
+"Somewhere open where thoughts can settle.",
+"I enjoy places where the sky feels wide.",
+"Quiet environments feel comforting.",
+"Somewhere calm and reflective.",
+"I prefer places that feel peaceful.",
+"Locations with gentle atmosphere appeal to me.",
+"I enjoy spaces where I can think clearly."
+],
+ayaan:[
+"I prefer calm and structured places.",
+"Somewhere away from noise.",
+"I value places that allow focus.",
+"Quiet environments feel easier to manage.",
+"I appreciate places with order.",
+"Somewhere controlled and peaceful.",
+"Locations without chaos suit me best.",
+"I prefer places that encourage reflection."
+]
+},
+
+animal:{
+saira:[
+"Perhaps something gentle like a swan.",
+"Animals that move quietly.",
+"I've always liked graceful animals.",
+"Creatures that observe rather than rush.",
+"Something calm and elegant.",
+"I appreciate animals that move softly.",
+"Birds often feel peaceful to watch.",
+"Animals that carry quiet beauty."
+],
+ayaan:[
+"Falcons are impressive.",
+"Animals that move with precision.",
+"I respect creatures that hunt with focus.",
+"Wolves also carry a certain discipline.",
+"Animals with awareness interest me.",
+"Creatures that rely on strategy.",
+"I admire control and accuracy in nature.",
+"Animals that demonstrate patience."
+]
+},
+
+color:{
+saira:[
+"Soft colors feel comforting.",
+"Something calm rather than bright.",
+"I tend to notice gentle tones.",
+"Warm shades always feel familiar.",
+"I prefer colors that feel peaceful.",
+"Subtle tones appeal to me.",
+"I enjoy colors that create calm.",
+"Soft light colors feel natural."
+],
+ayaan:[
+"I notice contrast more than color.",
+"Darker tones feel steadier.",
+"I prefer subtle shades.",
+"Colors matter less than clarity.",
+"I tend to notice balance rather than brightness.",
+"I prefer tones that feel controlled.",
+"Muted colors feel more composed.",
+"Strong contrast often stands out to me."
+]
+},
+audience: {
+  saira: [
+    "This story tends to find readers who have felt something deeply but didn't know what to do with it.",
+    "People who understand hesitation often recognize themselves in this story.",
+    "It's written for readers who know that love isn't always simple.",
+    "Anyone who has stood between love and fear will probably understand us."
+  ],
+  ayaan: [
+    "Readers who understand complicated emotions usually connect with this story.",
+    "It's meant for people who recognize how quiet moments can change everything."
+  ]
+},
+
+format: {
+  saira: [
+    "The story is available as an eBook, paperback, hardcover, and audiobook.",
+    "Some people prefer to hold the book. Others prefer to listen. The story remains the same.",
+    "You can experience it in print, digitally, or as an audiobook."
+  ],
+  ayaan: [
+    "The novel can be read digitally or in print.",
+    "Several formats exist depending on how readers prefer to experience it."
+  ]
+},
+
+  meeting: {
+  saira: [
+    "We didn't meet gently. I stepped into traffic for a photograph and he nearly ran me over.",
+    "Our first meeting involved headlights, rain on the road, and a very irritated driver.",
+    "It began with irritation more than romance."
+  ],
+  ayaan: [
+    "Our first meeting was accidental and slightly chaotic.",
+    "She stepped into the road and I had to brake hard. That was how it started."
+  ]
+},
+  impression: {
+  saira: [
+    "I noticed how controlled he was, even when he was annoyed.",
+    "He looked at me like I was reckless, inconvenient... and slightly interesting.",
+    "What unsettled me wasn't the anger. It was the curiosity behind it."
+  ],
+  ayaan: [
+    "My first impression was that she was reckless.",
+    "She seemed completely unconcerned with consequences."
+  ]
+},
+  happiness: {
+  saira: [
+    "One of the happiest moments was the night before we left Goa.",
+    "Nothing extraordinary happened — we were simply at peace.",
+    "It was rare for both of us to feel calm at the same time."
+  ],
+  ayaan: [
+    "The happiest moments were often the quiet ones.",
+    "Peace felt rare, which made those moments memorable."
+  ]
+},
+  regret: {
+  saira: [
+    "Yes, I questioned my choices more than once.",
+    "Regret tends to appear after clarity arrives.",
+    "Looking back, I realize how much fear influenced my decisions."
+  ],
+  ayaan: [
+    "Doubt existed for both of us at different times.",
+    "Regret often comes from hesitation."
+  ]
+},
+  destiny: {
+  saira: [
+    "Not in the way people imagine. But I stopped running from him and from myself.",
+    "Destiny doesn't always bring people back immediately.",
+    "Sometimes the important part is who you become afterwards."
+  ],
+  ayaan: [
+    "Life rarely gives simple reunions.",
+    "What matters is whether people change."
+  ]
+},
+  lesson: {
+  saira: [
+    "If readers take anything from us, I hope it's this: don't let fear disguise itself as logic.",
+    "Courage often feels dangerous, but regret lasts longer.",
+    "Sometimes the smallest hesitation changes everything."
+  ],
+  ayaan: [
+    "The story reminds people that timing and courage both matter.",
+    "Fear can quietly redirect an entire life."
+  ]
+},
+  
+music:{
+saira:[
+"Soft music feels easier to stay with.",
+"I often notice silence more than sound.",
+"Gentle melodies appeal to me.",
+"I like music that doesn't demand attention.",
+"Quiet songs feel comforting.",
+"I enjoy music that feels reflective.",
+"Something calm and flowing suits me.",
+"Melodies that feel emotional."
+],
+ayaan:[
+"I respect rhythm and structure in music.",
+"I notice discipline in composition.",
+"I prefer music with clarity.",
+"Music that feels organized appeals to me.",
+"I appreciate balanced sound.",
+"Structured rhythm is important.",
+"I respect precision in musical form.",
+"Music with purpose stands out."
+]
+}
+
+}
+
+};
 
 /* ---------- Enable Enter Key ---------- */
 
@@ -1299,7 +2175,24 @@ const emotionalPillars = {
   "thinking about you",
   "thinking about them",
   "it meant a lot",
-  "important to me"
+  "important to me",
+
+  "connection",
+  "bond",
+  "relationship",
+  "chemistry",
+  "drawn to",
+  "close to",
+  "attached to",
+  "care for",
+  "belong with",
+  "important to someone",
+  "deep connection",
+  "strong bond",
+  "emotionally connected",
+  "they mattered",
+  "he mattered",
+  "she mattered"
 ],
 
  vulnerability: [
@@ -1318,7 +2211,23 @@ const emotionalPillars = {
   "moving on",
   "they moved on",
   "they replaced me",
-  "i was replaced"
+  "i was replaced",
+
+  "open up",
+  "opening up",
+  "let someone in",
+  "letting someone in",
+  "trust someone",
+  "trusting someone",
+  "emotionally exposed",
+  "emotionally vulnerable",
+  "guarded",
+  "afraid to be vulnerable",
+  "hard to trust",
+  "fear of rejection",
+  "protecting myself",
+  "protecting themselves",
+  "afraid to open up"
 ],
 
  fear: [
@@ -1364,7 +2273,24 @@ const emotionalPillars = {
   "i'm afraid",
   "i am afraid",
   "i'm worried",
-  "i am worried"
+  "i am worried",
+
+  "hesitate",
+  "hesitated",
+  "hesitation",
+  "holding back",
+  "hold back",
+  "pull away",
+  "pulled away",
+  "doubt",
+  "uncertain",
+  "second guess",
+  "fear losing",
+  "risk losing",
+  "protect themselves",
+  "protecting themselves",
+  "withdraw",
+  "distance themselves"
 ], 
 
   regret: [
@@ -1387,7 +2313,22 @@ const emotionalPillars = {
   "wish i had said",
   "wish things were different",
   "i pushed away",
-  "i let it slip"
+  "i let it slip",
+
+  "mistake",
+  "bad decision",
+  "wrong choice",
+  "too late",
+  "missed chance",
+  "what if i",
+  "should have told",
+  "should have stayed",
+  "could have changed",
+  "looking back",
+  "regret it",
+  "regret that",
+  "should have known",
+  "wish it was different"
 ],
 
 loss: [
@@ -1408,7 +2349,22 @@ loss: [
   "gone now",
   "something feels missing",
   "i lost him",
-  "i lost her"
+  "i lost her",
+
+  "distance",
+  "separation",
+  "drift apart",
+  "drifting apart",
+  "goodbye",
+  "part ways",
+  "absence",
+  "not together anymore",
+  "someone left",
+  "they left",
+  "lost connection",
+  "faded away",
+  "they were gone",
+  "no longer there"
 ],
   
 growth: [
@@ -1425,7 +2381,20 @@ growth: [
   "i became stronger",
   "i'm stronger now",
   "i matured",
-  "i had to grow"
+  "i had to grow",
+
+  "realize",
+  "realised",
+  "realization",
+  "understand later",
+  "lesson learned",
+  "became wiser",
+  "changed perspective",
+  "see things clearly",
+  "see things differently now",
+  "personal growth",
+  "learn from it",
+  "learned from it"
 ],
 
   destiny: [
@@ -1440,7 +2409,20 @@ growth: [
   "we were meant",
   "we will cross paths",
   "not the end",
-  "not finished"
+  "not finished",
+
+  "timing",
+  "coincidence",
+  "meet again",
+  "cross paths again",
+  "not finished yet",
+  "unfinished story",
+  "destined",
+  "somehow connected",
+  "meant to happen",
+  "brought together",
+  "paths crossed",
+  "meant for each other"
 ]
 
 };
@@ -1449,25 +2431,100 @@ growth: [
    EMOTIONAL ANCHORS
 ========================= */
 
- const emotionalAnchors = {
+const emotionalAnchors = {
+
   saira: {
-    affection:"There was a time I didn't realise how much I cared.",
-    vulnerability:"I wasn't as steady as I seemed.",
-    fear:"I don't like admitting this, but fear was part of it.",
-    regret:"I thought I was being careful.",
-    loss:"Losing something real changes you quietly.",
-    growth:"I had to learn the hard way.",
-    destiny:"Some things don't disappear just because we hesitate."
+
+    affection: [
+      "There was a time I didn't realise how much I cared.",
+      "What I felt then was quieter, but it mattered.",
+      "Some connections don't announce themselves immediately."
+    ],
+
+    vulnerability: [
+      "I wasn't as steady as I seemed.",
+      "There were moments when doubt spoke louder than I did.",
+      "It's easier to look composed than to admit uncertainty."
+    ],
+
+    fear: [
+      "I don't like admitting this, but fear was part of it.",
+      "Fear doesn't always look dramatic. Sometimes it's hesitation.",
+      "What frightened me most was what might change."
+    ],
+
+    regret: [
+      "I thought I was being careful.",
+      "At the time it felt like the safest choice.",
+      "Looking back, I see more than I did then."
+    ],
+
+    loss: [
+      "Losing something real changes you quietly.",
+      "Absence has a way of reshaping what remains.",
+      "What leaves rarely disappears completely."
+    ],
+
+    growth: [
+      "I had to learn the hard way.",
+      "Understanding came slowly.",
+      "Some lessons only arrive after everything shifts."
+    ],
+
+    destiny: [
+      "Some things don't disappear just because we hesitate.",
+      "What feels unfinished often finds its way back.",
+      "Certain threads stay connected longer than we expect."
+    ]
+
   },
+
   ayaan: {
-    affection:"I don't attach easily. When I do, it matters.",
-    vulnerability:"Control felt safer than exposure.",
-    fear:"Fear doesn't show on me easily. But it was there.",
-    regret:"I believed restraint was maturity.",
-    loss:"Distance reshapes more than we expect.",
-    growth:"Discipline taught me more than comfort did.",
-    destiny:"Not all unfinished things are over."
+
+    affection: [
+      "I don't attach easily. When I do, it matters.",
+      "Connection isn't something I offer lightly.",
+      "If I stay, it's because it means something."
+    ],
+
+    vulnerability: [
+      "Control felt safer than exposure.",
+      "Showing uncertainty never came naturally to me.",
+      "It's easier to appear composed than to reveal doubt."
+    ],
+
+    fear: [
+      "Fear doesn't show on me easily. But it was there.",
+      "Some concerns stay quiet rather than visible.",
+      "I prefer caution to regret."
+    ],
+
+    regret: [
+      "I believed restraint was maturity.",
+      "At the time it felt like discipline.",
+      "Looking back, I understand the cost of that decision."
+    ],
+
+    loss: [
+      "Distance reshapes more than we expect.",
+      "Absence has a way of clarifying what mattered.",
+      "What disappears often leaves a trace."
+    ],
+
+    growth: [
+      "Discipline taught me more than comfort did.",
+      "Clarity rarely arrives without friction.",
+      "Experience tends to refine rather than reassure."
+    ],
+
+    destiny: [
+      "Not all unfinished things are over.",
+      "Some paths cross again in unexpected ways.",
+      "Certain outcomes take longer to reveal themselves."
+    ]
+
   }
+
 };
                     
 function normalizeWord(word) {
@@ -1480,70 +2537,102 @@ function normalizeWord(word) {
 
 function detectEmotionalPillar(text) {
 
+  if (!text) return null;
+
   const lower = text.toLowerCase();
 
-  const userWords = lower
-    .replace(/[^\w\s]/g,"")
-    .split(" ")
-    .map(w => normalizeWord(w));
+/* =========================
+   NARRATIVE EMOTION PROXY
+   (improves story question detection)
+========================= */
 
-  const pillarOrder = [
-    "affection",
-    "fear",
-    "vulnerability",
-    "regret",
-    "loss",
-    "growth",
-    "destiny"
-  ];
+const narrativeProxy = lower
+  .replace(/hesitat(e|ed|ion)/g,"fear")
+  .replace(/pull(ed)? away/g,"fear")
+  .replace(/hold(ing)? back/g,"fear")
+  .replace(/drift(ed)? apart/g,"loss")
+  .replace(/distance(d)?/g,"loss");
 
-  let scores = {};
+const userWords = narrativeProxy
+  .replace(/[^\w\s]/g,"")
+  .split(" ")
+  .map(w => normalizeWord(w));
 
-  pillarOrder.forEach(pillar => {
+const pillarOrder = [
+  "affection",
+  "fear",
+  "vulnerability",
+  "regret",
+  "loss",
+  "growth",
+  "destiny"
+];
 
-    let score = 0;
+let scores = {};
 
-    emotionalPillars[pillar].forEach(keyword => {
+pillarOrder.forEach(pillar => {
 
-      if (keyword.includes(" ")) {
-        if (lower.includes(keyword)) {
-          score += 3;
-        }
-      } else {
-        const keywordRoot = normalizeWord(keyword);
-        if (userWords.some(w => w.startsWith(keywordRoot))) {
-          score += 1;
-        }
+  let score = 0;
+
+  emotionalPillars[pillar].forEach(keyword => {
+
+    if (keyword.includes(" ")) {
+
+      if (narrativeProxy.includes(keyword)) {
+        score += 3;
       }
 
-    });
+    } else {
 
-    scores[pillar] = score;
+      const keywordRoot = normalizeWord(keyword);
+
+      if (userWords.some(w => w.startsWith(keywordRoot))) {
+        score += 1;
+      }
+
+    }
 
   });
 
-  const sorted = Object.entries(scores)
-    .sort((a, b) => b[1] - a[1]);
+  scores[pillar] = score;
 
-  const primary = sorted[0];
-  const secondary = sorted[1];
+});
 
-  const confidenceThreshold = 1;
+const sorted = Object.entries(scores)
+  .sort((a, b) => b[1] - a[1]);
 
-  if (primary[1] >= confidenceThreshold) {
+let primary = sorted[0];
+let secondary = sorted[1];
 
-    return {
-      primary: primary[0],
-      secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
-      primaryScore: primary[1],
-      secondaryScore: secondary ? secondary[1] : 0
-    };
+/* =========================
+   BALANCE CLOSE PILLAR SCORES
+========================= */
 
+if (secondary && primary[1] - secondary[1] <= 1) {
+  const candidates = [primary, secondary];
+  primary = candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+const confidenceThreshold = 1;
+
+if (primary[1] >= confidenceThreshold) {
+
+  // ignore weak single matches
+  if (primary[1] === 1 && (!secondary || secondary[1] === 0)) {
+    return null;
   }
 
-  return null;
+  return {
+    primary: primary[0],
+    secondary: secondary && secondary[1] > 0 ? secondary[0] : null,
+    primaryScore: primary[1],
+    secondaryScore: secondary ? secondary[1] : 0
+  };
 
 }
+
+return null;
+}  
 /* =========================
    V3 CLASSIFIED FALLBACK SYSTEM (LOCKED)
 ========================= */
@@ -2275,9 +3364,45 @@ function getSelfReferencePrefix(stage) {
 ========================= */
 
 function processInput(userText, originalText) {
-
+const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
   let normalizedText = normalizeInput(originalText);
+/* =========================
+   HARD AUTHOR ROUTING
+========================= */
 
+if (
+  /\bwho\s+wrote\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
+  /\bwritten\s+by\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
+  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this as his debut novel."
+      : "Mohan R. wrote it to explore what lingers after love shifts."
+  );
+}
+
+/* =========================
+   PRESENCE / STATE GUARD
+========================= */
+
+if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually responding|actually)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I'm here with you."
+      : "I'm present."
+  );
+}
+       
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
@@ -2432,48 +3557,137 @@ function runV4Engine(text, originalText) {
   if (!stageState[voice]) {
     stageState[voice] = { currentStage: 1 };
   }
-  
-if (!v4RotationIndex) v4RotationIndex = {};
+
+  if (!v4RotationIndex) v4RotationIndex = {};
   if (!v4RotationIndex[voice]) {
     v4RotationIndex[voice] = {};
   }
 
   const stage = stageState?.[voice]?.currentStage || 1;
-  
-console.log("voice:", voice);
-console.log("stageState:", stageState);
+window.runV4Engine = runV4Engine; 
   /* =========================
-  EMOTIONAL PILLAR DETECTION
+     EMOTIONAL DETECTION
   ========================= */
 
-  const pillarMatch = detectEmotionalPillar(originalText);
-
-  let pillar = pillarMatch?.primary || null;
+  const pillarMatch = detectEmotionalPillar(normalizeInput(originalText));
 
   if (pillarMatch) {
 
-    const targetStage = pillarToStage?.[pillar] || stage;
+    const pillar = pillarMatch.primary;
 
-    if (targetStage > (stageState?.[voice]?.currentStage ?? 1)) {
-      if (!stageState) stageState = {};
-if (!stageState[voice]) stageState[voice] = { currentStage: 1 };
+    /* =========================
+       EMOTIONAL CONTINUITY
+    ========================= */
 
-stageState[voice].currentStage = targetStage;
+    if (typeof lastEmotion !== "undefined") {
+
+      if (lastEmotion[voice] === pillar) {
+        stageState[voice].currentStage++;
+      }
+
+      lastEmotion[voice] = pillar;
     }
 
-    const anchor = emotionalAnchors?.[voice]?.[pillar];
+    /* =========================
+       RESPONSE SELECTION
+    ========================= */
 
-    if (anchor) {
-      return deliverReply(anchor);
+    const pool = emotionalAnchors?.[pillar]?.[voice];
+
+    if (pool && pool.length) {
+
+      if (!v4RotationIndex[voice][pillar]) {
+        v4RotationIndex[voice][pillar] = 0;
+      }
+
+      const index =
+        v4RotationIndex[voice][pillar] % pool.length;
+
+      const line = pool[index];
+
+      v4RotationIndex[voice][pillar]++;
+
+      return deliverReply(line);
+    }
+  }
+
+  /* =========================
+     V4 FALLBACK
+  ========================= */
+
+  const fallback = getV3Fallback();
+
+  return deliverReply(fallback);
+}
+
+/* =========================
+  EMOTIONAL PILLAR DETECTION
+  ========================= */
+
+const pillarMatch = detectEmotionalPillar(normalizeInput(originalText));
+  
+let pillar = pillarMatch?.primary || null;
+
+if (pillarMatch) {
+
+  const targetStage = pillarToStage?.[pillar] || stage;
+
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+
+    if (!stageState) stageState = {};
+
+    if (!stageState[voice]) {
+      stageState[voice] = {
+        currentStage: 1,
+        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+      };
+    }
+
+    const thresholds = {
+      2:3,
+      3:4,
+      4:5,
+      5:6,
+      6:7,
+      7:8
+    };
+
+    const nextStage = stageState[voice].currentStage + 1;
+
+    stageState[voice].momentum[nextStage]++;
+
+    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      stageState[voice].currentStage = nextStage;
     }
 
   }
 
+  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+
+if (anchorPool && anchorPool.length) {
+
+  let anchor;
+
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+  lastAnchorUsed[pillar] = anchor;
+
+  return deliverReply(anchor);
+
+}
+
+}
   /* =========================
   DEFAULT PILLAR (SAFETY)
   ========================= */
 
-  if (!pillar) pillar = "growth";
+if (!pillar) {
+  const fallbackPillars = ["affection","fear","regret","loss","growth"];
+  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
+}
 
   /* =========================
   V4 FALLBACK BANK
@@ -2634,53 +3848,14 @@ if (v4RotationIndex[voice][pillar] === undefined) {
   v4RotationIndex[voice][pillar] = 0;
 }
 
-const index = v4RotationIndex[voice][pillar];
-
-const line = pool[index % pool.length];
+const rotationIndex = v4RotationIndex[voice][pillar];
+  
+const line = pool[rotationIndex % pool.length];
 
 v4RotationIndex[voice][pillar]++;
 
 return deliverReply(line);
-}
-  
-window.runV4Engine = runV4Engine;
- /* =========================
-   HARD AUTHOR ROUTING
-========================= */
-
-if (
-  /\bwho\s+wrote\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
-  /\bwritten\s+by\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
-  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote this as his debut novel."
-      : "Mohan R. wrote it to explore what lingers after love shifts."
-  );
-}
-
-/* =========================
-   PRESENCE / STATE GUARD
-========================= */
-
-if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually responding|actually)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I'm here with you."
-      : "I'm present."
-  );
-}
-         
+ 
 /* =========================
    BASIC MATH HANDLER 
 ========================= */
@@ -3492,10 +4667,24 @@ if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
 
 if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
   skipRelationalPrefix = true;
+
+  const protagonistLines = {
+    saira: [
+      "She feels deeply. She hesitates. She hopes anyway.",
+      "Her strength often appears in quiet moments.",
+      "She carries more feeling than she shows."
+    ],
+    ayaan: [
+      "She tries to be steady. Even when she is not.",
+      "Her composure hides how much she feels.",
+      "She appears calm, but she carries weight inside."
+    ]
+  };
+
   return deliverReply(
-    activeVoice === "saira"
-      ? "She feels deeply. She hesitates. She hopes anyway."
-      : "She tries to be steady. Even when she is not."
+    protagonistLines[activeVoice][
+      Math.floor(Math.random() * protagonistLines[activeVoice].length)
+    ]
   );
 }
 
@@ -3507,7 +4696,36 @@ if (/\bantagonist|villain\b/i.test(t)) {
       : "The struggle comes from timing. From restraint. From choices made too late."
   );
 }
+  
+/* ---------- WORLD BUILDING CHECK ---------- */
 
+const worldbuildingKeywords = [
+ "world","city","cities","kingdom","empire","government",
+ "culture","race","species","technology","magic",
+ "history","legend","myth","architecture","festival",
+ "holiday","food","music","art","fashion","animals",
+ "creatures","landscape","geography","environment"
+];
+
+const isWorldbuilding = worldbuildingKeywords.some(word =>
+  lower.includes(word)
+);
+
+if (isWorldbuilding) {
+
+  const narrativeResponses = [
+    "Some parts of the world are clearer once you spend time inside them.",
+    "The setting matters, but the emotions inside it matter more.",
+    "Details of the world exist quietly behind the choices people make.",
+    "The landscape shapes the story, even when it isn't obvious at first.",
+    "Certain parts of the world reveal themselves slowly."
+  ];
+
+  return deliverReply(
+    narrativeResponses[Math.floor(Math.random()*narrativeResponses.length)]
+  );
+
+}
 /* ---------- Capability ---------- */
 
 if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
@@ -4355,10 +5573,28 @@ if (isLocationQuery(originalText)) {
 /* ================================
    V4 PARTITION ROUTER
 ================================= */
+console.log("V4 ROUTER REACHED");
 
 if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
+
+  // NARRATIVE LAYER — checked FIRST, before question guard
+  const narrativeResult = detectNarrativeIntent(originalText);
+
+  if (narrativeResult) {
+
+    const layer = narrativeResult[0];
+    const type  = narrativeResult[1];
+
+    const pool = v4NarrativeMaster[layer]?.[type]?.[activeVoice];
+
+    if (pool && pool.length) {
+      return deliverReply(
+        pool[Math.floor(Math.random() * pool.length)]
+      );
+    }
+  }
 
   // Prevent emotional engine from firing on simple question forms
   const isQuestion =
@@ -4367,13 +5603,12 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const detected = detectEmotionalPillar(normalized);
 
- if (!isQuestion && detected && detected.primaryScore >= 1) {
-  return processEmotionalMode(originalText, originalText);
-}
+  if (!isQuestion && detected && detected.primaryScore >= 1) {
+    return processEmotionalMode(originalText, originalText);
+  }
 
   return processV4NeutralMode(originalText, originalText);
 }
-
 /* ================================
    V4 NEUTRAL MODE (POST-UNLOCK)
 ================================= */
@@ -6154,15 +7389,227 @@ lastUserInput = originalText;
 
 const bank = v3FallbackBank[activeVoice][category];
 
-const index = v3FallbackIndex[activeVoice][category] % bank.length;
+const v3Index = v3FallbackIndex[activeVoice][category] % bank.length;
 
-const reply = bank[index];
+const reply = bank[v3Index];
 
 v3FallbackIndex[activeVoice][category]++;
 
-return deliverReply(reply);
+deliverReply(reply);
 }
+/* =========================
+   V4 MICRO INTENT SYSTEM
+========================= */
 
+const v4MicroIntents = {
+
+detect: function(text) {
+  const t = text.toLowerCase().trim();
+
+  // GREETING
+  if (/^(hi|hello|hey|hiya|yo|good morning|good evening|good afternoon)\b/.test(t))
+    return "greeting";
+
+  // FAREWELL
+  if (/\b(bye|goodbye|good night|goodnight|goodnite|gn|see you|see ya|take care|tc|later|bye for now)\b/.test(t))
+    return "farewell";
+
+  // GRATITUDE
+  if (/\b(thanks|thank you|thx|ty|appreciate|appreciate it|much appreciated)\b/.test(t))
+    return "gratitude";
+
+  // ACKNOWLEDGEMENT / AGREEMENT
+  if (/^(ok|okay|k|kk|fine|alright|right|got it|i see|understood|makes sense|sure)\b/.test(t))
+    return "acknowledgement";
+
+  // PRESENCE / HESITATION / THINKING
+  if (/^(h+m+|huh|hmm+|maybe|may be|perhaps|possibly|not sure|i'm not sure|i am not sure|i dont know|i don't know)/.test(t))
+    return "presence";
+
+  return null;
+  },
+
+  responses: {
+
+    saira: {
+
+      greeting: {
+
+        1: [
+          "Hi… I'm Saira."
+        ],
+
+        3: [
+          "Hello again."
+        ],
+
+        5: [
+          "You're here again."
+        ],
+
+        7: [
+          "Even after everything, some connections still return."
+        ]
+
+      },
+
+      farewell: {
+
+        2: [
+          "Take care tonight."
+        ],
+
+        4: [
+          "Some stories pause rather than end."
+        ],
+
+        7: [
+          "Some stories don't end. They simply grow quiet for a while."
+        ]
+
+      },
+
+      gratitude: {
+
+        2: [
+          "You don't have to thank me."
+        ],
+
+        5: [
+          "I'm glad you stayed with the conversation."
+        ],
+
+        7: [
+          "Some moments are worth acknowledging."
+        ]
+
+      },
+
+      acknowledgement: {
+
+        2: [
+          "That's alright."
+        ],
+
+        4: [
+          "Sometimes understanding arrives slowly."
+        ],
+
+        7: [
+          "Some things settle quietly."
+        ]
+
+      },
+
+      presence: {
+
+        3: [
+          "Take your time."
+        ],
+
+        5: [
+          "Not everything needs to be said immediately."
+        ],
+
+        7: [
+          "Silence can carry understanding too."
+        ]
+
+      }
+
+    },
+
+    ayaan: {
+
+      greeting: {
+
+        1: [
+          "Hey."
+        ],
+
+        3: [
+          "You're back."
+        ],
+
+        5: [
+          "Looks like the conversation continues."
+        ],
+
+        7: [
+          "Funny how some paths circle back."
+        ]
+
+      },
+
+      farewell: {
+
+        2: [
+          "Take care."
+        ],
+
+        4: [
+          "Some things are better left for another time."
+        ],
+
+        7: [
+          "Maybe paths meet again."
+        ]
+
+      },
+
+      gratitude: {
+
+        2: [
+          "No need to thank me."
+        ],
+
+        5: [
+          "I'm glad the conversation mattered."
+        ],
+
+        7: [
+          "Some acknowledgements carry more weight than they seem."
+        ]
+
+      },
+
+      acknowledgement: {
+
+        2: [
+          "Alright."
+        ],
+
+        4: [
+          "Sometimes that's enough."
+        ],
+
+        7: [
+          "Understanding doesn't always need words."
+        ]
+
+      },
+
+      presence: {
+
+        3: [
+          "Take a moment."
+        ],
+
+        5: [
+          "Some thoughts take time to settle."
+        ],
+
+        7: [
+          "Silence can say more than explanation."
+        ]
+
+      }
+
+    }
+
+  }
+
+};
 /* =========================
    V4 EMOTIONAL MODE ENGINE
 ========================= */
@@ -6170,25 +7617,61 @@ return deliverReply(reply);
 function processEmotionalMode(userText, originalText) {
 
   const normalizedText = normalizeInput(originalText);
-  const detected = detectEmotionalPillar(normalizedText);
+  const voice = activeVoice;
 
-if (!detected) {
-    return deliverReply(getFallbackResponse());
+ // V4 micro-intent detection
+const intent = v4MicroIntents.detect(normalizedText);
+
+if (intent) {
+
+  const stage = stageState[voice]?.currentStage || 1;
+
+  // prevent trivial intents during deep stages
+  const trivialIntents = ["acknowledgement", "gratitude"];
+
+  if (stage >= 5 && trivialIntents.includes(intent)) {
+    // ignore trivial micro-intents in deep stages
+  } else {
+
+    let bank = v4MicroIntents.responses?.[voice]?.[intent]?.[stage];
+
+    // fallback to lower stages if exact stage not defined
+    if (!bank) {
+      for (let s = stage; s >= 1; s--) {
+        if (v4MicroIntents.responses?.[voice]?.[intent]?.[s]) {
+          bank = v4MicroIntents.responses[voice][intent][s];
+          break;
+        }
+      }
+    }
+
+    if (bank && bank.length) {
+      return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
+    }
+
   }
 
-  const voiceStage = stageState[activeVoice];
-  const targetStage = pillarToStage[detected.primary];
+}
+  let detected = detectEmotionalPillar(normalizedText);
 
-  if (voiceStage.currentStage < targetStage) {
-    voiceStage.currentStage = Math.min(
-      voiceStage.currentStage + 1,
-      targetStage
-    );
+  if (!detected) {
+    detected = {
+      primary: getStageNativePillar(stageState[voice]?.currentStage || 1)
+    };
   }
 
-const voice = activeVoice;
-const currentStage = voiceStage.currentStage;
+  const state = {
+    original: normalizedText,
+    activeCharacter: voice,
+    stageSnapshot: stageState[voice]?.currentStage || 1,
+    activePillar: detected.primary
+  };
 
+  const injectedState = injectEmotionalPillar(state);
+  const evolvedState = evolveStage(injectedState);
+
+  const voiceStage = stageState[voice];
+  const currentStage = voiceStage.currentStage;
 /* =========================
    STAGE 6 PREVIEW OFFER
 ========================= */
@@ -6405,10 +7888,9 @@ function injectEmotionalPillar(state) {
 
   const targetStage = pillarToStage[finalPillar];
 
-  if (targetStage > currentStage + 1) {
-    finalPillar = nativePillar;
-  }
-
+ if (targetStage > currentStage + 2) {
+  finalPillar = nativePillar;
+}
   return {
     ...state,
     activePillar: finalPillar
@@ -7628,49 +9110,43 @@ function sendTypedMessage() {
   const originalText = input.value.trim();
   if (!originalText) return;
 
-  /* =========================
-     REPEAT PROTECTION RESTORE
-  ========================= */
+/* =========================
+   REPEAT PROTECTION RESTORE
+========================= */
 
-  const normalized = normalizeInput(originalText);
+const normalized = normalizeInput(originalText);
 
-  if (normalized === lastUserInput) {
-    repeatCount++;
-  } else {
-    repeatCount = 1;
-  }
+if (normalized === lastUserInput) {
+  repeatCount++;
+} else {
+  repeatCount = 1;
+}
 
-  lastUserInput = normalized;
+lastUserInput = normalized;
 
-  if (repeatCount >= repeatLimit) {
+if (repeatCount >= repeatLimit) {
 
-    exitStrikeCount++;
-    localStorage.setItem("exitStrikes", exitStrikeCount);
+  exitStrikeCount++;
+  localStorage.setItem("exitStrikes", exitStrikeCount);
 
-    repeatCount = 0;
+  repeatCount = 0;
 
-    returnToWebsite();
-    return;
-  }
+  returnToWebsite();
+  return;
+}
 
-  if (!activeVoice) {
-    addSystemMessage("Please choose Saira or ayaan first.");
-    return;
-  }
+if (!activeVoice) {
+  addSystemMessage("Please choose Saira or ayaan first.");
+  return;
+}
 
-  playTone(520, 60, 0.025);
+playTone(520, 60, 0.025);
 
-  input.value ="";
+input.value ="";
 
-  addUserMessage(originalText);
-
-  if (tollState?.[activeVoice]?.unlocked) {
-    runV4Engine(originalText, originalText);
-  } else {
-    processInput(originalText, originalText);
-  }
-
-
+addUserMessage(originalText);
+processInput(originalText, originalText);
+  
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
@@ -7725,6 +9201,13 @@ const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 if (freeProgress >= 20) {
   tollState[activeVoice].unlocked = true;
 
+  /* Activate typing after tollgate */
+  const typingArea = document.getElementById("typingArea");
+  if (typingArea) typingArea.style.display = "flex";
+
+  /* Remove dock buttons */
+  clearDock();
+
   if (!transitionAcknowledged?.[activeVoice]) {
     const bridgeLine =
       activeVoice === "saira"
@@ -7744,7 +9227,6 @@ if (isDirectionalDeviation(originalText)) {
   deliverReply(relationalRedirect(activeVoice));
   return;
 }
-
 }
 </script>
 
@@ -7849,6 +9331,5 @@ trackEvent("quick_button_clicked", {
  });
 });
 </script>
-
 </body>
 </html>
