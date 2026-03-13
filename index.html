@@ -3364,7 +3364,7 @@ function getSelfReferencePrefix(stage) {
 ========================= */
 
 function processInput(userText, originalText) {
-
+const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
   let normalizedText = normalizeInput(originalText);
 /* =========================
    HARD AUTHOR ROUTING
