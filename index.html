@@ -2496,11 +2496,17 @@ function processInput(userText, originalText) {
    V4 NARRATIVE ENTRY
 ========================= */
 
- if (typeof runV4Engine === "function") {
-    runV4Engine(userText, originalText);
+if (typeof runV4Engine === "function") {
+
+  const beforeState = interactionLocked;
+
+  runV4Engine(userText, originalText);
+
+  if (interactionLocked !== beforeState) {
     return;
   }
 
+}
 /* =========================
    REPETITION / LOOP STRESS GUARD
 ========================= */
