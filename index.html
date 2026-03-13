@@ -3366,7 +3366,43 @@ function getSelfReferencePrefix(stage) {
 function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
+/* =========================
+   HARD AUTHOR ROUTING
+========================= */
 
+if (
+  /\bwho\s+wrote\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
+  /\bwritten\s+by\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
+  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
+  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this as his debut novel."
+      : "Mohan R. wrote it to explore what lingers after love shifts."
+  );
+}
+
+/* =========================
+   PRESENCE / STATE GUARD
+========================= */
+
+if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually responding|actually)\b/i.test(normalizedText)) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "I'm here with you."
+      : "I'm present."
+  );
+}
+       
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
@@ -3822,43 +3858,7 @@ return deliverReply(line);
 }
   
 window.runV4Engine = runV4Engine;
- /* =========================
-   HARD AUTHOR ROUTING
-========================= */
-
-if (
-  /\bwho\s+wrote\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
-  /\bwritten\s+by\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
-  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote this as his debut novel."
-      : "Mohan R. wrote it to explore what lingers after love shifts."
-  );
-}
-
-/* =========================
-   PRESENCE / STATE GUARD
-========================= */
-
-if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually responding|actually)\b/i.test(normalizedText)) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "I'm here with you."
-      : "I'm present."
-  );
-}
-         
+   
 /* =========================
    BASIC MATH HANDLER 
 ========================= */
