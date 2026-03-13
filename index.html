@@ -3848,9 +3848,9 @@ if (v4RotationIndex[voice][pillar] === undefined) {
   v4RotationIndex[voice][pillar] = 0;
 }
 
-const index = v4RotationIndex[voice][pillar];
-
-const line = pool[index % pool.length];
+const rotationIndex = v4RotationIndex[voice][pillar];
+  
+const line = pool[rotationIndex % pool.length];
 
 v4RotationIndex[voice][pillar]++;
 
