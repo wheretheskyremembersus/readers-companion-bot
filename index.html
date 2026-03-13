@@ -2498,11 +2498,13 @@ function processInput(userText, originalText) {
 
 if (typeof runV4Engine === "function") {
 
-  const beforeState = interactionLocked;
+  const beforeCount = chatBody ? chatBody.children.length : 0;
 
   runV4Engine(userText, originalText);
 
-  if (interactionLocked !== beforeState) {
+  const afterCount = chatBody ? chatBody.children.length : 0;
+
+  if (afterCount > beforeCount) {
     return;
   }
 
