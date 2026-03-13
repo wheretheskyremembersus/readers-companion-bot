@@ -1664,8 +1664,7 @@ function detectEmotionalPillar(text) {
 
   if (!text) return null;
 
-  const lower = text.toLowerCase(); 
-  
+  const lower = text.toLowerCase();
 /* =========================
 V4 MASTER NARRATIVE LAYER
 Handles:
@@ -2920,7 +2919,8 @@ function runV4Engine(text, originalText) {
   EMOTIONAL PILLAR DETECTION
   ========================= */
 
-const pillarMatch = detectEmotionalPillar(normalizeInput(originalText));
+const pillarMatch = detectEmotionalPillar(originalText);
+
 let pillar = pillarMatch?.primary || null;
 
 if (pillarMatch) {
@@ -5278,7 +5278,7 @@ if (tollState[activeVoice]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
 
-  // NARRATIVE LAYER — checked FIRST
+  // NARRATIVE LAYER — checked FIRST, before question guard
   const narrativeResult = detectNarrativeIntent(originalText);
 
   if (narrativeResult) {
@@ -5295,15 +5295,18 @@ if (tollState[activeVoice]?.unlocked === true) {
     }
   }
 
-  // EMOTIONAL DETECTION
+  // Prevent emotional engine from firing on simple question forms
+  const isQuestion =
+    /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
+    .test(normalized);
+
   const detected = detectEmotionalPillar(normalized);
 
-  if (detected && detected.primaryScore >= 1) {
-    return runV4Engine(originalText, originalText);
+  if (!isQuestion && detected && detected.primaryScore >= 1) {
+    return processEmotionalMode(originalText, originalText);
   }
 
-  // DEFAULT V4 RESPONSE
-  return runV4Engine(originalText, originalText);
+  return processV4NeutralMode(originalText, originalText);
 }
 /* ================================
    V4 NEUTRAL MODE (POST-UNLOCK)
@@ -9032,4 +9035,3 @@ trackEvent("quick_button_clicked", {
 
 </body>
 </html>
-
