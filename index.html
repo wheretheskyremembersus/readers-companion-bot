@@ -8884,15 +8884,17 @@ input.value ="";
 addUserMessage(originalText);
 
 if (tollState?.[activeVoice]?.unlocked) {
-  if (deliverV4NarrativeReply(originalText)) {
-    return;
-  }
-
   processEmotionalMode(originalText, originalText);
 } else {
   processInput(originalText, originalText);
 }
+function processEmotionalMode(userText, originalText) {
+  const normalizedText = normalizeInput(originalText);
+  const voice = activeVoice;
 
+  if (deliverV4NarrativeReply(originalText)) {
+    return;
+  }
 
 /* =========================
    ABUSE PROTECTION GUARD 
