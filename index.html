@@ -1277,6 +1277,121 @@ containsAny(lower,[
 return ["character","music"];
 }
 
+/* =========================
+AUDIENCE
+========================= */
+
+if(
+containsAny(lower,[
+"who is this story for",
+"who should read this",
+"who is the audience",
+"who is this book for"
+])
+){
+return ["meta","audience"];
+}
+/* =========================
+FORMAT
+========================= */
+
+if(
+containsAny(lower,[
+"where can i read",
+"where can i find the book",
+"where can i buy the book",
+"is it available as ebook",
+"is there an audiobook",
+"what formats is it available"
+])
+){
+return ["meta","format"];
+}
+/* =========================
+FIRST MEETING
+========================= */
+
+if(
+containsAny(lower,[
+"where did you first meet",
+"how did you meet",
+"when did you meet",
+"how did you first meet"
+])
+){
+return ["story","meeting"];
+}
+/* =========================
+FIRST IMPRESSION
+========================= */
+
+if(
+containsAny(lower,[
+"first impression",
+"what did you notice first",
+"what did you first notice",
+"what was your first impression"
+])
+){
+return ["story","impression"];
+}
+/* =========================
+HAPPIEST MOMENT
+========================= */
+
+if(
+containsAny(lower,[
+"happiest moment",
+"best moment together",
+"when were you happiest",
+"what was your happiest moment"
+])
+){
+return ["story","happiness"];
+}
+/* =========================
+REGRET / DOUBT
+========================= */
+
+if(
+containsAny(lower,[
+"did you regret",
+"did you question your choice",
+"did you ever doubt",
+"did you ever regret"
+])
+){
+return ["story","regret"];
+}
+/* =========================
+DESTINY
+========================= */
+
+if(
+containsAny(lower,[
+"did you meet again",
+"did you see him again",
+"do you meet again",
+"do you reunite",
+"does destiny bring you back together"
+])
+){
+return ["story","destiny"];
+}
+/* =========================
+LESSONS
+========================= */
+
+if(
+containsAny(lower,[
+"what should readers learn",
+"what lesson does the story teach",
+"what can readers learn",
+"what is the message"
+])
+){
+return ["story","lesson"];
+}
 return null;
 
 }
@@ -1617,7 +1732,98 @@ ayaan:[
 "Strong contrast often stands out to me."
 ]
 },
+audience: {
+  saira: [
+    "This story tends to find readers who have felt something deeply but didn't know what to do with it.",
+    "People who understand hesitation often recognize themselves in this story.",
+    "It's written for readers who know that love isn't always simple.",
+    "Anyone who has stood between love and fear will probably understand us."
+  ],
+  ayaan: [
+    "Readers who understand complicated emotions usually connect with this story.",
+    "It's meant for people who recognize how quiet moments can change everything."
+  ]
+},
 
+format: {
+  saira: [
+    "The story is available as an eBook, paperback, hardcover, and audiobook.",
+    "Some people prefer to hold the book. Others prefer to listen. The story remains the same.",
+    "You can experience it in print, digitally, or as an audiobook."
+  ],
+  ayaan: [
+    "The novel can be read digitally or in print.",
+    "Several formats exist depending on how readers prefer to experience it."
+  ]
+},
+
+  meeting: {
+  saira: [
+    "We didn't meet gently. I stepped into traffic for a photograph and he nearly ran me over.",
+    "Our first meeting involved headlights, rain on the road, and a very irritated driver.",
+    "It began with irritation more than romance."
+  ],
+  ayaan: [
+    "Our first meeting was accidental and slightly chaotic.",
+    "She stepped into the road and I had to brake hard. That was how it started."
+  ]
+},
+  impression: {
+  saira: [
+    "I noticed how controlled he was, even when he was annoyed.",
+    "He looked at me like I was reckless, inconvenient... and slightly interesting.",
+    "What unsettled me wasn't the anger. It was the curiosity behind it."
+  ],
+  ayaan: [
+    "My first impression was that she was reckless.",
+    "She seemed completely unconcerned with consequences."
+  ]
+},
+  happiness: {
+  saira: [
+    "One of the happiest moments was the night before we left Goa.",
+    "Nothing extraordinary happened — we were simply at peace.",
+    "It was rare for both of us to feel calm at the same time."
+  ],
+  ayaan: [
+    "The happiest moments were often the quiet ones.",
+    "Peace felt rare, which made those moments memorable."
+  ]
+},
+  regret: {
+  saira: [
+    "Yes, I questioned my choices more than once.",
+    "Regret tends to appear after clarity arrives.",
+    "Looking back, I realize how much fear influenced my decisions."
+  ],
+  ayaan: [
+    "Doubt existed for both of us at different times.",
+    "Regret often comes from hesitation."
+  ]
+},
+  destiny: {
+  saira: [
+    "Not in the way people imagine. But I stopped running from him and from myself.",
+    "Destiny doesn't always bring people back immediately.",
+    "Sometimes the important part is who you become afterwards."
+  ],
+  ayaan: [
+    "Life rarely gives simple reunions.",
+    "What matters is whether people change."
+  ]
+},
+  lesson: {
+  saira: [
+    "If readers take anything from us, I hope it's this: don't let fear disguise itself as logic.",
+    "Courage often feels dangerous, but regret lasts longer.",
+    "Sometimes the smallest hesitation changes everything."
+  ],
+  ayaan: [
+    "The story reminds people that timing and courage both matter.",
+    "Fear can quietly redirect an entire life."
+  ]
+},
+  
 music:{
 saira:[
 "Soft music feels easier to stay with.",
