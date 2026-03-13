@@ -994,24 +994,63 @@ function containsAny(text, keywords) {
 }
 /* =========================
 V4 MASTER NARRATIVE LAYER
+Handles:
+- Author
+- Book
+- Protagonist
+- Antagonist
+- Story questions
+- Relationship
+- Memory
+- Meaning
+- Preferences (food/place/pet/color/music)
 ========================= */
 
 function detectNarrativeIntent(text){
 
-const lower = normalizeInput(text);
+const lower = text.toLowerCase();
+/* =========================
+   QUESTION → EMOTION MAPPING
+========================= */
 
+let emotionalProxy = lower;
+
+// regret signals
+emotionalProxy = emotionalProxy
+  .replace(/did you regret/g, "regret")
+  .replace(/do you regret/g, "regret")
+  .replace(/why did you leave/g, "regret");
+
+// fear signals
+emotionalProxy = emotionalProxy
+  .replace(/were you afraid/g, "fear")
+  .replace(/were you scared/g, "fear")
+  .replace(/did you fear/g, "fear");
+
+// affection signals
+emotionalProxy = emotionalProxy
+  .replace(/do you still love/g, "love")
+  .replace(/did you love/g, "love");
+
+// loss signals
+emotionalProxy = emotionalProxy
+  .replace(/do you miss/g, "miss")
+  .replace(/did you lose/g, "loss");
 /* =========================
 AUTHOR
 ========================= */
 
 if(
-  lower.includes("author") ||
-  lower.includes("who wrote") ||
-  lower.includes("written by") ||
-  lower.includes("who created") ||
-  lower.includes("who made this story")
+containsAny(lower,[
+"who wrote",
+"author",
+"written by",
+"who created",
+"who made this story",
+"who created this story"
+])
 ){
-  return ["meta","author"];
+return ["meta","author"];
 }
 
 /* =========================
@@ -1019,14 +1058,20 @@ BOOK / NOVEL
 ========================= */
 
 if(
-  lower.includes("novel") ||
-  lower.includes("book") ||
-  lower.includes("title of the book") ||
-  lower.includes("title of the story") ||
-  lower.includes("name of the book") ||
-  lower.includes("name of the novel")
+containsAny(lower,[
+"novel",
+"book",
+"story called",
+"name of the book",
+"name of the novel",
+"what book",
+"what novel",
+"which novel",
+"title of the book",
+"title of the story"
+])
 ){
-  return ["meta","book"];
+return ["meta","book"];
 }
 
 /* =========================
@@ -1034,11 +1079,14 @@ PROTAGONIST
 ========================= */
 
 if(
-  lower.includes("protagonist") ||
-  lower.includes("main character") ||
-  lower.includes("lead character")
+containsAny(lower,[
+"protagonist",
+"main character",
+"lead character",
+"who is the main character"
+])
 ){
-  return ["meta","protagonist"];
+return ["meta","protagonist"];
 }
 
 /* =========================
@@ -1046,11 +1094,13 @@ ANTAGONIST
 ========================= */
 
 if(
-  lower.includes("antagonist") ||
-  lower.includes("villain") ||
-  lower.includes("enemy in the story")
+containsAny(lower,[
+"antagonist",
+"villain",
+"enemy in the story"
+])
 ){
-  return ["meta","antagonist"];
+return ["meta","antagonist"];
 }
 
 /* =========================
@@ -1058,11 +1108,14 @@ GENRE
 ========================= */
 
 if(
-  lower.includes("genre") ||
-  lower.includes("type of story") ||
-  lower.includes("what kind of story")
+containsAny(lower,[
+"genre",
+"type of story",
+"what kind of story",
+"what genre"
+])
 ){
-  return ["meta","genre"];
+return ["meta","genre"];
 }
 
 /* =========================
@@ -1070,19 +1123,23 @@ CHARACTER IDENTITY
 ========================= */
 
 if(
-  lower.includes("who are you") ||
-  lower.includes("your name") ||
-  lower.includes("who is saira") ||
-  lower.includes("tell me about saira")
+containsAny(lower,[
+"who are you",
+"your name",
+"who is saira",
+"tell me about saira"
+])
 ){
-  return ["character","identity"];
+return ["character","identity"];
 }
 
 if(
-  lower.includes("who is ayaan") ||
-  lower.includes("tell me about ayaan")
+containsAny(lower,[
+"who is ayaan",
+"tell me about ayaan"
+])
 ){
-  return ["story","relationship"];
+return ["story","relationship"];
 }
 
 /* =========================
@@ -1090,74 +1147,32 @@ RELATIONSHIP
 ========================= */
 
 if(
-  lower.includes("relationship") ||
-  lower.includes("connection") ||
-  lower.includes("bond") ||
-  lower.includes("friendship") ||
-  lower.includes("between you") ||
-  lower.includes("you and ayaan")
+containsAny(lower,[
+"relationship",
+"between you",
+"you and ayaan",
+"did you love",
+"did you care about him",
+"were you in love"
+])
 ){
-  return ["story","relationship"];
+return ["story","relationship"];
 }
 
 /* =========================
-FIRST MEETING
+STORY EVENTS
 ========================= */
 
 if(
-  lower.includes("meet") &&
-  (lower.includes("how") || lower.includes("when") || lower.includes("where") || lower.includes("first"))
+containsAny(lower,[
+"what happened",
+"why did",
+"why didnt",
+"why didn't",
+"how did it happen"
+])
 ){
-  return ["story","meeting"];
-}
-
-/* =========================
-FIRST IMPRESSION
-========================= */
-
-if(
-  lower.includes("first impression") ||
-  (lower.includes("notice") && lower.includes("first"))
-){
-  return ["story","impression"];
-}
-
-/* =========================
-HAPPIEST MOMENT
-========================= */
-
-if(
-  lower.includes("happiest moment") ||
-  lower.includes("best moment") ||
-  lower.includes("when were you happiest")
-){
-  return ["story","happiness"];
-}
-
-/* =========================
-REGRET / DOUBT
-========================= */
-
-if(
-  lower.includes("regret") ||
-  lower.includes("did you regret") ||
-  lower.includes("did you doubt") ||
-  lower.includes("question your choice")
-){
-  return ["story","regret"];
-}
-
-/* =========================
-DESTINY / REUNION
-========================= */
-
-if(
-  lower.includes("meet again") ||
-  lower.includes("see him again") ||
-  lower.includes("reunite") ||
-  lower.includes("destiny bring you back")
-){
-  return ["story","destiny"];
+return ["story","events"];
 }
 
 /* =========================
@@ -1165,11 +1180,14 @@ MEMORY
 ========================= */
 
 if(
-  lower.includes("remember") ||
-  lower.includes("memory") ||
-  lower.includes("back then")
+containsAny(lower,[
+"remember",
+"do you remember",
+"back then",
+"do you still remember"
+])
 ){
-  return ["story","memory"];
+return ["story","memory"];
 }
 
 /* =========================
@@ -1177,36 +1195,86 @@ MEANING
 ========================= */
 
 if(
-  lower.includes("meaning") ||
-  lower.includes("what does it mean") ||
-  lower.includes("what did it mean")
+containsAny(lower,[
+"meaning",
+"what does it mean",
+"what did it mean",
+"what does the story mean"
+])
 ){
-  return ["story","meaning"];
+return ["story","meaning"];
 }
 
 /* =========================
-LESSONS
+FOOD
 ========================= */
 
 if(
-  lower.includes("lesson") ||
-  lower.includes("message") ||
-  lower.includes("what should readers learn")
+containsAny(lower,[
+"favorite food",
+"favourite food",
+"what food do you like"
+])
 ){
-  return ["story","lesson"];
+return ["character","food"];
 }
 
 /* =========================
-WORLD / SETTING
+PLACE
 ========================= */
 
 if(
-  lower.includes("world") ||
-  lower.includes("setting") ||
-  lower.includes("story take place") ||
-  lower.includes("environment of the story")
+containsAny(lower,[
+"favorite place",
+"favourite place",
+"what place do you like"
+])
 ){
-  return ["story","world"];
+return ["character","place"];
+}
+
+/* =========================
+ANIMAL / PET
+========================= */
+
+if(
+containsAny(lower,[
+"favorite animal",
+"favourite animal",
+"pet",
+"animal you like"
+])
+){
+return ["character","animal"];
+}
+
+/* =========================
+COLOR
+========================= */
+
+if(
+containsAny(lower,[
+"favorite color",
+"favourite colour",
+"favorite colour",
+"what color do you like"
+])
+){
+return ["character","color"];
+}
+
+/* =========================
+MUSIC
+========================= */
+
+if(
+containsAny(lower,[
+"favorite music",
+"favourite music",
+"what music do you like"
+])
+){
+return ["character","music"];
 }
 
 /* =========================
@@ -1214,67 +1282,116 @@ AUDIENCE
 ========================= */
 
 if(
-  lower.includes("who is this story for") ||
-  lower.includes("who should read this") ||
-  lower.includes("who is the audience")
+containsAny(lower,[
+"who is this story for",
+"who should read this",
+"who is the audience",
+"who is this book for"
+])
 ){
-  return ["meta","audience"];
+return ["meta","audience"];
 }
-
 /* =========================
 FORMAT
 ========================= */
 
 if(
-  lower.includes("where can i read") ||
-  lower.includes("where can i find the book") ||
-  lower.includes("where can i buy the book") ||
-  lower.includes("ebook") ||
-  lower.includes("audiobook")
+containsAny(lower,[
+"where can i read",
+"where can i find the book",
+"where can i buy the book",
+"is it available as ebook",
+"is there an audiobook",
+"what formats is it available"
+])
 ){
-  return ["meta","format"];
+return ["meta","format"];
 }
-
 /* =========================
-FOOD
+FIRST MEETING
 ========================= */
 
-if(lower.includes("favorite food") || lower.includes("favourite food")){
-  return ["character","food"];
+if(
+containsAny(lower,[
+"where did you first meet",
+"how did you meet",
+"when did you meet",
+"how did you first meet"
+])
+){
+return ["story","meeting"];
 }
-
 /* =========================
-PLACE
+FIRST IMPRESSION
 ========================= */
 
-if(lower.includes("favorite place") || lower.includes("favourite place")){
-  return ["character","place"];
+if(
+containsAny(lower,[
+"first impression",
+"what did you notice first",
+"what did you first notice",
+"what was your first impression"
+])
+){
+return ["story","impression"];
 }
-
 /* =========================
-ANIMAL
+HAPPIEST MOMENT
 ========================= */
 
-if(lower.includes("favorite animal") || lower.includes("pet")){
-  return ["character","animal"];
+if(
+containsAny(lower,[
+"happiest moment",
+"best moment together",
+"when were you happiest",
+"what was your happiest moment"
+])
+){
+return ["story","happiness"];
 }
-
 /* =========================
-COLOR
+REGRET / DOUBT
 ========================= */
 
-if(lower.includes("favorite color") || lower.includes("favourite colour")){
-  return ["character","color"];
+if(
+containsAny(lower,[
+"did you regret",
+"did you question your choice",
+"did you ever doubt",
+"did you ever regret"
+])
+){
+return ["story","regret"];
 }
-
 /* =========================
-MUSIC
+DESTINY
 ========================= */
 
-if(lower.includes("favorite music") || lower.includes("favourite music")){
-  return ["character","music"];
+if(
+containsAny(lower,[
+"did you meet again",
+"did you see him again",
+"do you meet again",
+"do you reunite",
+"does destiny bring you back together"
+])
+){
+return ["story","destiny"];
 }
+/* =========================
+LESSONS
+========================= */
 
+if(
+containsAny(lower,[
+"what should readers learn",
+"what lesson does the story teach",
+"what can readers learn",
+"what is the message"
+])
+){
+return ["story","lesson"];
+}
 return null;
 
 }
@@ -9216,4 +9333,3 @@ trackEvent("quick_button_clicked", {
 </script>
 </body>
 </html>
-
