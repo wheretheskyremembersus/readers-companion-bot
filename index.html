@@ -1058,9 +1058,9 @@ function addVoiceMessage(text, voiceOverride) {
   autoScroll();
 
   // 🎯 ONLY speak if mic triggered it
-  if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
+if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
   setTimeout(() => {
-    speakText(text, voice);
+    speakText(cleanSpeechText(text), voice); 
 
     // ✅ turn off AFTER speaking
     voiceEnabled = false;
