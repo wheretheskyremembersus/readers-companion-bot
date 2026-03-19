@@ -9151,8 +9151,7 @@ let voicesReady = false;
 
 function loadVoices() {
   const voices = speechSynthesis.getVoices();
-const sairaBase = voices.find(v => v.lang === "en-IN") || voices[0];
-  
+
   if (voices.length > 0) {
     voicesReady = true;
   } else {
@@ -9160,20 +9159,16 @@ const sairaBase = voices.find(v => v.lang === "en-IN") || voices[0];
   }
 }
 
-// 🔥 Native event (MOST IMPORTANT)
-speechSynthesis.onvoiceschanged = () => {
-  voicesReady = true;
-};
-
 // 🔥 Initial attempt
 loadVoices();
 
 // 🔥 Ensure voices load after user interaction (CRITICAL FIX)
 document.addEventListener("click", function initVoices() {
-  speechSynthesis.getVoices(); // force load
   loadVoices();
+  speechSynthesis.getVoices(); // force load
   document.removeEventListener("click", initVoices);
 });
+
 
 // -------------------------------
 // SPEAK FUNCTION (FINAL STABLE)
@@ -9193,40 +9188,38 @@ function speakText(text, voiceType) {
   const speech = new SpeechSynthesisUtterance(cleanText);
 
   speech.lang = "en-IN";
-  speech.volume = 1;
 
   const voices = speechSynthesis.getVoices();
 
   let selectedVoice = null;
 
-  // 🇮🇳 Indian voices first
-  const indianVoices = voices.filter(v =>
-    v.lang === "en-IN" || v.lang === "hi-IN"
-  );
-
-  // 👩 SAIRA (Female)
+  // 👩 SAIRA (FEMALE)
   if (voiceType === "saira") {
 
-  selectedVoice =
-    voices.find(v => v.lang === "en-IN") || // always Indian
-    voices[0];
+    selectedVoice =
+      voices.find(v => v.name.includes("Female")) ||
+      voices.find(v => v.name.includes("Zira")) ||
+      voices.find(v => v.name.includes("Samantha")) ||
+      voices.find(v => v.name.includes("Google UK English Female"));
 
-  speech.pitch = 1.15;
-  speech.rate = 0.9;
-}
+    speech.pitch = 1.2;
+    speech.rate = 0.78;
+  }
 
-  // 👨 AYAAN (Male)
-else if (voiceType === "ayaan") {
+  // 👨 AYAAN (MALE)
+  else if (voiceType === "ayaan") {
 
-  selectedVoice =
-    voices.find(v => v.lang !== "en-IN") || // anything NOT Indian
-    voices[1] || voices[0];
+    selectedVoice =
+      voices.find(v => v.name.includes("Male")) ||
+      voices.find(v => v.name.includes("David")) ||
+      voices.find(v => v.name.includes("Alex")) ||
+      voices.find(v => v.name.includes("Google UK English Male"));
 
-  speech.pitch = 0.9;
-  speech.rate = 0.85;
-}
+    speech.pitch = 0.85;
+    speech.rate = 0.82;
+  }
 
-  // 🔁 fallback safety
+  // fallback
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
@@ -9238,9 +9231,6 @@ else if (voiceType === "ayaan") {
   speech.onerror = function (e) {
     console.warn("Speech error:", e);
   };
-
-  // ✅ prevent overlap
-  speechSynthesis.cancel();
 
   speechSynthesis.speak(speech);
 }
