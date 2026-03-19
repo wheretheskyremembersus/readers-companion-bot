@@ -1059,9 +1059,12 @@ function addVoiceMessage(text, voiceOverride) {
 
   autoScroll();
 
-  setTimeout(() => {
-    speakText(text, voice);
-  }, 600);
+  // 🎯 ONLY speak if mic triggered it
+  if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
+    setTimeout(() => {
+      speakText(text, voice);
+    }, 600);
+  }
 }
 
 function addSystemMessage(text) {
@@ -9041,7 +9044,7 @@ const wrapperInterval = setInterval(function () {
 }, 300);
 
 // -------------------------------
-// MIC INPUT (FINAL STABLE)
+// MIC INPUT (FINAL)
 // -------------------------------
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -9051,7 +9054,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const micBtn = document.getElementById("micBtn");
   if (!micBtn) return;
 
-  // ✅ Create ONLY ONE instance
   if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
 
@@ -9066,7 +9068,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   micBtn.addEventListener("click", function () {
 
-    // ✅ Prevent multiple starts
+    // ✅ ENABLE voice ONLY when mic is used
+    voiceEnabled = true;
+
     if (isListening) {
       recognition.stop();
       isListening = false;
@@ -9097,8 +9101,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (voiceSendLock) return;
     voiceSendLock = true;
 
-    console.log("Final:", finalTranscript);
-
     const inputBox = document.getElementById("userInput");
     inputBox.value = finalTranscript;
 
@@ -9109,9 +9111,11 @@ document.addEventListener("DOMContentLoaded", function () {
       recognition.stop();
       isListening = false;
 
+      // ✅ TURN OFF voice after one response
       setTimeout(() => {
+        voiceEnabled = false;
         voiceSendLock = false;
-      }, 1000);
+      }, 1200);
 
     }, 300);
   };
@@ -9119,6 +9123,7 @@ document.addEventListener("DOMContentLoaded", function () {
   recognition.onerror = function (event) {
     console.error("Speech error:", event.error);
     isListening = false;
+    voiceEnabled = false;
     voiceSendLock = false;
   };
 
