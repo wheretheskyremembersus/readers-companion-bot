@@ -719,7 +719,7 @@ let currentLayer = 0;
 
 let reflections = [];
 let reflectionStep = 0;
-
+let voiceSendLock = false;
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -9051,8 +9051,8 @@ recognition.start();
 
     recognition.onresult = function (event) {
 
-  if (recognition.handled) return;
-  recognition.handled = true;
+  if (voiceSendLock === true) return;
+  voiceSendLock = true;
 
   const transcript = event.results[0][0].transcript;
 
@@ -9061,11 +9061,18 @@ recognition.start();
   const inputBox = document.getElementById("userInput");
   inputBox.value = transcript;
 
+  recognition.stop();
+
   setTimeout(() => {
     const sendBtn = document.getElementById("sendBtn");
     if (sendBtn) {
       sendBtn.click();
     }
+
+    setTimeout(() => {
+      voiceSendLock = false;
+    }, 1200); // slightly longer buffer
+
   }, 300);
 };
 
