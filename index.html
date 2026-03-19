@@ -986,7 +986,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
   if (inputField) {
     inputField.addEventListener("keydown", function (e) {
-      if (e.key ==="Enter") {
+      if (e.key === "Enter") {
         e.preventDefault();
         sendTypedMessage();
       }
@@ -1001,11 +1001,11 @@ function autoScroll() {
 
   chatBody.scrollTo({
     top: chatBody.scrollHeight,
-    behavior:"smooth"
+    behavior: "smooth"
   });
 }
 
-/* ---------- Message Builders ---------- */
+/* ---------- Text Helpers ---------- */
 
 function sanitize(text) {
   const div = document.createElement("div");
@@ -1013,11 +1013,21 @@ function sanitize(text) {
   return div.innerHTML;
 }
 
+// ✅ NEW: Clean text for speech (removes emojis & symbols)
+function cleanSpeechText(text) {
+  return text
+    .replace(/[\u{1F600}-\u{1F6FF}]/gu, "") // remove emojis
+    .replace(/[^\w\s.,!?']/g, "")          // remove symbols
+    .trim();
+}
+
+/* ---------- Message Builders ---------- */
+
 function addUserMessage(text) {
   const safeText = sanitize(text);
 
   chatBody.insertAdjacentHTML(
-   "beforeend",
+    "beforeend",
     `<div class="message user">
         <div class="bubble"><strong>${safeText}</strong></div>
      </div>`
@@ -1027,35 +1037,36 @@ function addUserMessage(text) {
 
 function addVoiceMessage(text) {
   const side =
-    activeVoice ==="saira"
-      ?"saira-msg"
-      : activeVoice ==="ayaan"
-      ?"ayaan-msg"
-      :"system-msg";
+    activeVoice === "saira"
+      ? "saira-msg"
+      : activeVoice === "ayaan"
+      ? "ayaan-msg"
+      : "system-msg";
 
   chatBody.insertAdjacentHTML(
-   "beforeend",
+    "beforeend",
     `<div class="message ${side}">
         <div class="bubble">${text}</div>
      </div>`
   );
 
   autoScroll();
+
+  // 🎧 Speak safely (with cleaned text)
   setTimeout(() => {
-  speakText(text);
-}, 200);
+    speakText(text);
+  }, 200);
 }
 
 function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
-   "beforeend",
+    "beforeend",
     `<div class="message system-msg">
         <div class="bubble">${text}</div>
      </div>`
   );
   autoScroll();
 }
-
 /* =========================
    TYPING INDICATOR FUNCTIONS
 ========================= */
@@ -9115,15 +9126,25 @@ let isSpeaking = false;
 
 function speakText(text) {
 
+  if (!('speechSynthesis' in window)) return;
   if (isSpeaking) return;
 
-  if (!('speechSynthesis' in window)) return;
+  const cleanText = cleanSpeechText(text);
 
-  const speech = new SpeechSynthesisUtterance(text);
+  const speech = new SpeechSynthesisUtterance(cleanText);
 
-  speech.lang = "en-IN";
-  speech.rate = 0.95;
-  speech.pitch = 1;
+  speech.rate = 0.92;
+  speech.pitch = 1.1;
+
+  const voices = speechSynthesis.getVoices();
+
+  let selectedVoice =
+    voices.find(v => v.name.toLowerCase().includes("female")) ||
+    voices.find(v => v.name.toLowerCase().includes("google uk english female")) ||
+    voices.find(v => v.name.toLowerCase().includes("en")) ||
+    voices[0];
+
+  speech.voice = selectedVoice;
 
   speech.onstart = () => {
     isSpeaking = true;
@@ -9137,9 +9158,8 @@ function speakText(text) {
     isSpeaking = false;
   };
 
-  setTimeout(() => {
-    window.speechSynthesis.speak(speech);
-  }, 100);
+  speechSynthesis.cancel();
+  speechSynthesis.speak(speech);
 }
 </script>
 
