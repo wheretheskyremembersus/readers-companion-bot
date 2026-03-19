@@ -8991,15 +8991,25 @@ if (!localStorage.getItem("session_id")) {
 // -------------------------------
 // SAFE Tracking Function (NETWORK DISABLED)
 // -------------------------------
-window.trackEvent = async function(eventType, extraData) {
-  extraData = extraData || {};
-
+window.trackEvent = async function(eventType, extraData = {}) {
   try {
-    // ✅ Safe: no API call, no crash
-    console.log("Tracking (disabled):", eventType, extraData);
+    console.log("Tracking:", eventType, extraData);
+
+    const { error } = await supabaseClient
+      .from("analytics_events")
+      .insert([
+        {
+          event_name: eventType,
+          payload: extraData
+        }
+      ]);
+
+    if (error) {
+      console.error("Tracking failed:", error);
+    }
 
   } catch (e) {
-    console.warn("Analytics failed:", e);
+    console.warn("Analytics crash:", e);
   }
 };
 
