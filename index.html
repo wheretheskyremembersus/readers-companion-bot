@@ -1041,6 +1041,7 @@ function addVoiceMessage(text) {
   );
 
   autoScroll();
+  speakText(text);
 }
 
 function addSystemMessage(text) {
@@ -9037,9 +9038,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    recognition = new webkitSpeechRecognition();
-
-recognition.handled = false;
+recognition = new webkitSpeechRecognition();
 
 recognition.lang = "en-IN";
 recognition.continuous = true;
@@ -9047,9 +9046,9 @@ recognition.interimResults = true;
 
 recognition.start();
 
-    console.log("🎤 Listening...");
+console.log("🎤 Listening...");
 
-    recognition.onresult = function (event) {
+recognition.onresult = function (event) {
 
   let finalTranscript = "";
 
@@ -9063,7 +9062,6 @@ recognition.start();
 
   if (!finalTranscript) return;
 
-  
   if (voiceSendLock) return;
   voiceSendLock = true;
 
@@ -9076,11 +9074,14 @@ recognition.start();
     const sendBtn = document.getElementById("sendBtn");
     if (sendBtn) sendBtn.click();
 
+    recognition.stop();
+
     setTimeout(() => {
       voiceSendLock = false;
     }, 1200);
 
   }, 300);
+};
 
   recognition.stop();
 };
@@ -9092,6 +9093,20 @@ recognition.start();
   });
 
 });
+
+function speakText(text) {
+
+  // stop previous speech (important)
+  speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+
+  speech.lang = "en-IN";
+  speech.rate = 0.95;   // slightly slower = more natural
+  speech.pitch = 1;
+
+  speechSynthesis.speak(speech);
+}
 </script>
 
 </body>
