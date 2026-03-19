@@ -2943,65 +2943,70 @@ function runV4Engine(text, originalText) {
 
   const stage = stageState?.[voice]?.currentStage || 1;
 
-/* =========================
-  EMOTIONAL PILLAR DETECTION
-  ========================= */
+  // ✅ SAFE PROBE (ONLY ADDITION)
+  const metaIntentProbe = detectNarrativeIntent(originalText);
 
-const pillarMatch = detectEmotionalPillar(originalText);
-
-let pillar = pillarMatch?.primary || null;
-
-if (pillarMatch) {
-
-  const targetStage = pillarToStage?.[pillar] || stage;
-
- if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
-
-    if (!stageState) stageState = {};
-
-    if (!stageState[voice]) {
-      stageState[voice] = {
-        currentStage: 1,
-        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
-      };
-    }
-
-    const thresholds = {
-      2:3,
-      3:4,
-      4:5,
-      5:6,
-      6:7,
-      7:8
-    };
-
-    const nextStage = stageState[voice].currentStage + 1;
-
-    stageState[voice].momentum[nextStage]++;
-
-    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
-      stageState[voice].currentStage = nextStage;
-    }
-
+  if (metaIntentProbe) {
+    console.log("V4 META DETECTED:", metaIntentProbe, "| Input:", originalText);
   }
 
-  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+  /* =========================
+     EMOTIONAL PILLAR DETECTION
+  ========================= */
 
-if (anchorPool && anchorPool.length) {
+  const pillarMatch = detectEmotionalPillar(originalText);
 
-  let anchor;
+  let pillar = pillarMatch?.primary || null;
 
-  do {
-    anchor =
-      anchorPool[Math.floor(Math.random() * anchorPool.length)];
-  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+  if (pillarMatch) {
 
-  lastAnchorUsed[pillar] = anchor;
+    const targetStage = pillarToStage?.[pillar] || stage;
 
-  return deliverReply(anchor);
+    if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
-}
+      if (!stageState[voice]) {
+        stageState[voice] = {
+          currentStage: 1,
+          momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
+        };
+      }
 
+      const thresholds = {
+        2:3,
+        3:4,
+        4:5,
+        5:6,
+        6:7,
+        7:8
+      };
+
+      const nextStage = stageState[voice].currentStage + 1;
+
+      stageState[voice].momentum[nextStage]++;
+
+      if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+        stageState[voice].currentStage = nextStage;
+      }
+
+    }
+
+    const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+
+    if (anchorPool && anchorPool.length) {
+
+      let anchor;
+
+      do {
+        anchor =
+          anchorPool[Math.floor(Math.random() * anchorPool.length)];
+      } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+      lastAnchorUsed[pillar] = anchor;
+
+      return deliverReply(anchor);
+
+    }
+  }
 }
   /* =========================
   DEFAULT PILLAR (SAFETY)
