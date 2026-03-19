@@ -9145,7 +9145,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // -------------------------------
-// VOICE LOADING (FINAL FIX)
+// VOICE LOADING 
 // -------------------------------
 let voicesReady = false;
 
@@ -9159,25 +9159,60 @@ function loadVoices() {
   }
 }
 
-// 🔥 Initial attempt
+// Initial load
 loadVoices();
 
-// 🔥 Ensure voices load after user interaction (CRITICAL FIX)
+// Ensure voices load after user interaction
 document.addEventListener("click", function initVoices() {
   loadVoices();
-  speechSynthesis.getVoices(); // force load
+  speechSynthesis.getVoices();
   document.removeEventListener("click", initVoices);
 });
 
 
 // -------------------------------
-// SPEAK FUNCTION (FINAL STABLE)
+// 🔥 BEST VOICE PICKER (NEW)
+// -------------------------------
+function pickBestVoice(voices, type) {
+
+  const indianVoices = voices.filter(v =>
+    v.lang === "en-IN" || v.lang === "hi-IN"
+  );
+
+  if (type === "female") {
+    return (
+      indianVoices.find(v => v.name.toLowerCase().includes("female")) ||
+      indianVoices.find(v => v.name.includes("Google")) ||
+      voices.find(v => v.name.includes("Samantha")) ||
+      voices.find(v => v.name.includes("Zira")) ||
+      indianVoices[0] ||
+      voices[0]
+    );
+  }
+
+  if (type === "male") {
+    return (
+      indianVoices.find(v => v.name.toLowerCase().includes("male")) ||
+      voices.find(v => v.name.includes("Google")) ||
+      voices.find(v => v.name.includes("David")) ||
+      voices.find(v => v.name.includes("Alex")) ||
+      indianVoices[0] ||
+      voices[0]
+    );
+  }
+
+  return voices[0];
+}
+
+
+// -------------------------------
+// SPEAK FUNCTION (UPDATED)
 // -------------------------------
 function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
 
-  // ✅ Wait until voices are loaded
+  // wait for voices
   if (!voicesReady) {
     setTimeout(() => speakText(text, voiceType), 200);
     return;
@@ -9186,37 +9221,24 @@ function speakText(text, voiceType) {
   const cleanText = cleanSpeechText(text);
 
   const speech = new SpeechSynthesisUtterance(cleanText);
-
   speech.lang = "en-IN";
 
   const voices = speechSynthesis.getVoices();
 
-  let selectedVoice = null;
+  let selectedVoice;
 
   // 👩 SAIRA (FEMALE)
   if (voiceType === "saira") {
-
-    selectedVoice =
-      voices.find(v => v.name.includes("Female")) ||
-      voices.find(v => v.name.includes("Zira")) ||
-      voices.find(v => v.name.includes("Samantha")) ||
-      voices.find(v => v.name.includes("Google UK English Female"));
-
-    speech.pitch = 1.2;
-    speech.rate = 0.78;
+    selectedVoice = pickBestVoice(voices, "female");
+    speech.pitch = 1.15;
+    speech.rate = 0.8;
   }
 
   // 👨 AYAAN (MALE)
   else if (voiceType === "ayaan") {
-
-    selectedVoice =
-      voices.find(v => v.name.includes("Male")) ||
-      voices.find(v => v.name.includes("David")) ||
-      voices.find(v => v.name.includes("Alex")) ||
-      voices.find(v => v.name.includes("Google UK English Male"));
-
-    speech.pitch = 0.85;
-    speech.rate = 0.82;
+    selectedVoice = pickBestVoice(voices, "male");
+    speech.pitch = 0.9;
+    speech.rate = 0.85;
   }
 
   // fallback
