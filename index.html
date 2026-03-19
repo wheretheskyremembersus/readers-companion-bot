@@ -9133,69 +9133,20 @@ function speakText(text) {
 
   const speech = new SpeechSynthesisUtterance(cleanText);
 
-  speech.rate = 0.78;
+  // 🎯 KEY CHANGES
+  speech.rate = 0.78;   // slower = more emotional
+  speech.pitch = activeVoice === "saira" ? 1.15 : 0.85;
 
   const voices = speechSynthesis.getVoices();
 
-  let selectedVoice = null;
+  speech.voice =
+    voices.find(v => v.name.toLowerCase().includes("female")) ||
+    voices.find(v => v.name.toLowerCase().includes("en")) ||
+    voices[0];
 
-  // 🎭 Choose voice based on character
-  if (activeVoice === "saira") {
-
-    speech.pitch = 1.15;
-
-    for (let v of voices) {
-      const name = v.name.toLowerCase();
-
-      if (
-        name.includes("female") ||
-        name.includes("zira") ||
-        name.includes("susan")
-      ) {
-        selectedVoice = v;
-        break;
-      }
-    }
-
-  } else if (activeVoice === "ayaan") {
-
-    speech.pitch = 0.85;
-
-    for (let v of voices) {
-      const name = v.name.toLowerCase();
-
-      if (
-        name.includes("male") ||
-        name.includes("david") ||
-        name.includes("alex")
-      ) {
-        selectedVoice = v;
-        break;
-      }
-    }
-
-  }
-
-  // fallback
-  if (!selectedVoice && voices.length > 0) {
-    selectedVoice = voices[0];
-  }
-
-  if (selectedVoice) {
-    speech.voice = selectedVoice;
-  }
-
-  speech.onstart = function () {
-    isSpeaking = true;
-  };
-
-  speech.onend = function () {
-    isSpeaking = false;
-  };
-
-  speech.onerror = function () {
-    isSpeaking = false;
-  };
+  speech.onstart = () => isSpeaking = true;
+  speech.onend = () => isSpeaking = false;
+  speech.onerror = () => isSpeaking = false;
 
   speechSynthesis.cancel();
   speechSynthesis.speak(speech);
