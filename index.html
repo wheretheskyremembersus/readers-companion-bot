@@ -2813,9 +2813,7 @@ function processInput(userText, originalText) {
 const shortQuestionMatch =
   /^(why|what|how|when|where|who)\b/i.test(normalizedText);
 
-const shortWordCount = normalizedText.split(" ").length;
-  
-if (shortQuestionMatch && shortWordCount <= 2) {
+if (shortQuestionMatch && normalizedText.split(" ").length <= 2) {
   
   skipRelationalPrefix = true;
 
