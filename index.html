@@ -9170,7 +9170,7 @@ document.addEventListener("click", function initVoices() {
 });
 
 // -------------------------------
-// SPEAK FUNCTION (NATURAL VOICE UPGRADE)
+// SPEAK FUNCTION
 // -------------------------------
 function speakText(text, voiceType) {
 
@@ -9181,62 +9181,54 @@ function speakText(text, voiceType) {
     return;
   }
 
-  // 🔥 Add natural pauses (less robotic)
-  const enhancedText = text
-    .replace(/,/g, ", ")
-    .replace(/\./g, ". ")
-    .replace(/\?/g, "? ")
-    .replace(/!/g, "! ");
-
-  const speech = new SpeechSynthesisUtterance(enhancedText);
   const voices = speechSynthesis.getVoices();
 
   let selectedVoice;
 
-  // 👩 SAIRA (INDIAN FEMALE - NATURAL)
+  // 👩 SAIRA (INDIAN FEMALE)
   if (voiceType === "saira") {
-
     selectedVoice =
       voices.find(v => v.name === "Google हिन्दी") ||
       voices.find(v => v.name === "Vani") ||
-      voices.find(v => v.name === "Soumya") ||
-      voices.find(v => v.name === "Google UK English Female");
-
-    speech.lang = selectedVoice?.lang || "hi-IN";
-
-    // 🔥 tuned for natural feel
-    speech.pitch = 1.1;
-    speech.rate = 0.88;
-    speech.volume = 1;
+      voices.find(v => v.name === "Soumya");
   }
 
-  // 👨 AYAAN (SMART MALE - NATURAL)
+  // 👨 AYAAN (SMART MALE)
   else if (voiceType === "ayaan") {
-
     selectedVoice =
       voices.find(v => v.name === "Google UK English Male") ||
       voices.find(v => v.name === "Google US English");
-
-    speech.lang = "en-GB";
-
-    // 🔥 tuned for natural feel
-    speech.pitch = 0.92;
-    speech.rate = 0.9;
-    speech.volume = 1;
   }
 
-  if (selectedVoice) {
+  if (!selectedVoice) selectedVoice = voices[0];
+
+  // 🔥 Break into sentences (VERY IMPORTANT)
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+
+  sentences.forEach((sentence, index) => {
+
+    const speech = new SpeechSynthesisUtterance(sentence.trim());
+
     speech.voice = selectedVoice;
-  }
+    speech.lang = selectedVoice.lang;
 
-  speech.onerror = function (e) {
-    console.warn("Speech error:", e);
-  };
+    // 🔥 Random variation = human feel
+    if (voiceType === "saira") {
+      speech.pitch = 1.05 + Math.random() * 0.1;
+      speech.rate = 0.85 + Math.random() * 0.1;
+    } else {
+      speech.pitch = 0.9 + Math.random() * 0.08;
+      speech.rate = 0.88 + Math.random() * 0.08;
+    }
 
-  // 🔥 small delay = more human-like start
-  setTimeout(() => {
-    speechSynthesis.speak(speech);
-  }, 120);
+    speech.volume = 1;
+
+    // 🔥 Natural pause between sentences
+    setTimeout(() => {
+      speechSynthesis.speak(speech);
+    }, index * 600);
+  });
+
 }
 </script>
 
