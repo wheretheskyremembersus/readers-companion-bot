@@ -1058,16 +1058,17 @@ function addVoiceMessage(text, voiceOverride) {
   autoScroll();
 
   // 🎯 ONLY speak if mic triggered it
-if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
+  if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
   setTimeout(() => {
-    speakWithElevenLabs(text, voice);  // 🔥 changed here
+    speakText(text, voice);
 
     // ✅ turn off AFTER speaking
     voiceEnabled = false;
 
   }, 600);
 }
-  
+}
+
 function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
     "beforeend",
@@ -8961,6 +8962,9 @@ if (isDirectionalDeviation(originalText)) {
   return;
 }
 
+}
+</script>
+
 <!-- SUPABASE ANALYTICS -->
 <script>
 // Disable right click
@@ -9225,41 +9229,6 @@ function speakText(text, voiceType) {
     }, index * 600);
   });
 
-}
-  // ===============================
-// 🔥 ADD NEW FUNCTION HERE
-// ===============================
-async function speakWithElevenLabs(text, voiceType) {
-
-  const apiKey = "sk_b7329302fcda343c6047d94a7b14783f9bce33cdd4ed3d9f";
-
-  const voiceId = voiceType === "saira"
-    ? "dVTC43Yewy5fAIcmsISI"
-    : "CN3wrf4wja2qO5yPhs0E";
-
-  try {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "xi-api-key": apiKey
-      },
-      body: JSON.stringify({
-        text: text,
-        model_id: "eleven_multilingual_v2"
-      })
-    });
-
-    const audioBlob = await response.blob();
-    const audio = new Audio(URL.createObjectURL(audioBlob));
-    audio.play();
-
-  } catch (error) {
-    console.error("Error:", error);
-
-    // fallback
- speakText(text, voiceType);
-  }
 }
 </script>
 
