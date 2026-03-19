@@ -9193,18 +9193,34 @@ function speakText(text, voiceType) {
 
   let selectedVoice = null;
 
-  // 👩 SAIRA (FEMALE)
-  if (voiceType === "saira") {
+ // 👩 SAIRA (INDIAN FEMALE)
+if (voiceType === "saira") {
 
-    selectedVoice =
-      voices.find(v => v.name.includes("Female")) ||
-      voices.find(v => v.name.includes("Zira")) ||
-      voices.find(v => v.name.includes("Samantha")) ||
-      voices.find(v => v.name.includes("Google UK English Female"));
+  // Step 1: Get all Indian voices
+  const indianVoices = voices.filter(v =>
+    v.lang === "en-IN" || v.lang === "hi-IN"
+  );
 
-    speech.pitch = 1.2;
-    speech.rate = 0.78;
-  }
+  // Step 2: Prefer Indian voices that are NOT obvious male ones
+  selectedVoice =
+    indianVoices.find(v =>
+      !v.name.toLowerCase().includes("male") &&
+      !v.name.toLowerCase().includes("david") &&
+      !v.name.toLowerCase().includes("alex")
+    ) ||
+
+    // Step 3: fallback to any Indian voice
+    indianVoices[0] ||
+
+    // Step 4: your original female fallback
+    voices.find(v => v.name.includes("Samantha")) ||
+    voices.find(v => v.name.includes("Zira")) ||
+    voices.find(v => v.name.includes("Google UK English Female"));
+
+  speech.lang = selectedVoice?.lang || "en-IN";
+  speech.pitch = 1.15;
+  speech.rate = 0.8;
+}
 
   // 👨 AYAAN (MALE)
   else if (voiceType === "ayaan") {
