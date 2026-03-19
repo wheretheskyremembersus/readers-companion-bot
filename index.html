@@ -3036,6 +3036,11 @@ function runV4Engine(text, originalText) {
 
   return deliverReply(line);
 }
+window.runV4Engine = runV4Engine;
+
+function runV4Guards(normalizedText, originalText) {
+  return null;
+}
 /* =========================
 MASTER NARRATIVE RESPONSES
 ========================= */
