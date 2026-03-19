@@ -9133,16 +9133,39 @@ function speakText(text) {
 
   const speech = new SpeechSynthesisUtterance(cleanText);
 
-  // 🎯 KEY CHANGES
-  speech.rate = 0.78;   // slower = more emotional
-  speech.pitch = activeVoice === "saira" ? 1.15 : 0.85;
+  speech.rate = 0.78;
 
   const voices = speechSynthesis.getVoices();
 
-  speech.voice =
-    voices.find(v => v.name.toLowerCase().includes("female")) ||
-    voices.find(v => v.name.toLowerCase().includes("en")) ||
-    voices[0];
+  let selectedVoice;
+
+  if (activeVoice === "saira") {
+    // 🎭 FEMALE VOICE
+    selectedVoice =
+      voices.find(v => v.name.toLowerCase().includes("female")) ||
+      voices.find(v => v.name.toLowerCase().includes("zira")) ||
+      voices.find(v => v.name.toLowerCase().includes("google uk english female"));
+    
+    speech.pitch = 1.15;
+
+  } else if (activeVoice === "ayaan") {
+    // 🎭 MALE VOICE
+    selectedVoice =
+      voices.find(v => v.name.toLowerCase().includes("male")) ||
+      voices.find(v => v.name.toLowerCase().includes("david")) ||
+      voices.find(v => v.name.toLowerCase().includes("alex"));
+    
+    speech.pitch = 0.85;
+
+  } else {
+    // fallback
+    selectedVoice = voices[0];
+    speech.pitch = 1;
+  }
+
+  if (selectedVoice) {
+    speech.voice = selectedVoice;
+  }
 
   speech.onstart = () => isSpeaking = true;
   speech.onend = () => isSpeaking = false;
