@@ -9177,67 +9177,42 @@ function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
 
-  // ✅ Wait until voices are loaded
   if (!voicesReady) {
     setTimeout(() => speakText(text, voiceType), 200);
     return;
   }
 
   const cleanText = cleanSpeechText(text);
-
   const speech = new SpeechSynthesisUtterance(cleanText);
-
-  speech.lang = "en-IN";
 
   const voices = speechSynthesis.getVoices();
 
-  let selectedVoice = null;
+  let selectedVoice;
 
- // 👩 SAIRA (INDIAN FEMALE)
-if (voiceType === "saira") {
+  // 👩 SAIRA (INDIAN FEMALE — FIXED)
+  if (voiceType === "saira") {
 
-  // Step 1: Get all Indian voices
-  const indianVoices = voices.filter(v =>
-    v.lang === "en-IN" || v.lang === "hi-IN"
-  );
+    selectedVoice =
+      voices.find(v => v.name === "Google हिन्दी") ||   // ✅ YOUR INDIAN VOICE
+      voices.find(v => v.name === "Vani") ||
+      voices.find(v => v.name === "Soumya") ||
+      voices.find(v => v.name === "Google UK English Female");
 
-  // Step 2: Prefer Indian voices that are NOT obvious male ones
-  selectedVoice =
-    indianVoices.find(v =>
-      !v.name.toLowerCase().includes("male") &&
-      !v.name.toLowerCase().includes("david") &&
-      !v.name.toLowerCase().includes("alex")
-    ) ||
+    speech.lang = "hi-IN";
+    speech.pitch = 1.15;
+    speech.rate = 0.85;
+  }
 
-    // Step 3: fallback to any Indian voice
-    indianVoices[0] ||
-
-    // Step 4: your original female fallback
-    voices.find(v => v.name.includes("Samantha")) ||
-    voices.find(v => v.name.includes("Zira")) ||
-    voices.find(v => v.name.includes("Google UK English Female"));
-
-  speech.lang = selectedVoice?.lang || "en-IN";
-  speech.pitch = 1.15;
-  speech.rate = 0.8;
-}
-
-  // 👨 AYAAN (MALE)
+  // 👨 AYAAN (SMART MALE)
   else if (voiceType === "ayaan") {
 
     selectedVoice =
-      voices.find(v => v.name.includes("Male")) ||
-      voices.find(v => v.name.includes("David")) ||
-      voices.find(v => v.name.includes("Alex")) ||
-      voices.find(v => v.name.includes("Google UK English Male"));
+      voices.find(v => v.name === "Google UK English Male") ||
+      voices.find(v => v.name === "Google US English");
 
-    speech.pitch = 0.85;
-    speech.rate = 0.82;
-  }
-
-  // fallback
-  if (!selectedVoice && voices.length > 0) {
-    selectedVoice = voices[0];
+    speech.lang = "en-GB";
+    speech.pitch = 0.9;
+    speech.rate = 0.85;
   }
 
   if (selectedVoice) {
