@@ -1041,7 +1041,9 @@ function addVoiceMessage(text) {
   );
 
   autoScroll();
+setTimeout(() => {
   speakText(text);
+}, 50);
 }
 
 function addSystemMessage(text) {
@@ -9096,16 +9098,32 @@ recognition.onresult = function (event) {
 
 function speakText(text) {
 
-  // stop previous speech (important)
-  speechSynthesis.cancel();
+  try {
+    // ✅ stop any previous speech
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+    }
 
-  const speech = new SpeechSynthesisUtterance(text);
+    const speech = new SpeechSynthesisUtterance(text);
 
-  speech.lang = "en-IN";
-  speech.rate = 0.95;   // slightly slower = more natural
-  speech.pitch = 1;
+    speech.lang = "en-IN";
+    speech.rate = 0.95;
+    speech.pitch = 1;
 
-  speechSynthesis.speak(speech);
+    
+    speech.onend = () => {
+      // release UI naturally
+    };
+
+    speech.onerror = (e) => {
+      console.warn("Speech error:", e);
+    };
+
+    speechSynthesis.speak(speech);
+
+  } catch (e) {
+    console.warn("Speech failed:", e);
+  }
 }
 </script>
 
