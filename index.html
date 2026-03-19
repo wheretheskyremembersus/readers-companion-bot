@@ -1679,32 +1679,9 @@ const emotionalAnchors = {
   }
 
 };
-                    
-function normalizeWord(word) {
-  return word
-    .toLowerCase()
-    .replace(/[^a-z]/g,"")
-    .replace(/(ing|ed|ly|es|s)$/i,"")
-    .replace(/(ment|tion|ness)$/i,"");
-}
 
-function detectEmotionalPillar(text) {
-
-  if (!text) return null;
-
-  const lower = text.toLowerCase();
 /* =========================
 V4 MASTER NARRATIVE LAYER
-Handles:
-- Author
-- Book
-- Protagonist
-- Antagonist
-- Story questions
-- Relationship
-- Memory
-- Meaning
-- Preferences (food/place/pet/color/music)
 ========================= */
 
 function detectNarrativeIntent(text){
@@ -1955,9 +1932,23 @@ return ["character","music"];
 return null;
 
 }
+  
+function normalizeWord(word) {
+  return word
+    .toLowerCase()
+    .replace(/[^a-z]/g,"")
+    .replace(/(ing|ed|ly|es|s)$/i,"")
+    .replace(/(ment|tion|ness)$/i,"");
+}
+
+function detectEmotionalPillar(text) {
+
+  if (!text) return null;
+
+  const lower = text.toLowerCase();
+
 /* =========================
    NARRATIVE EMOTION PROXY
-   (improves story question detection)
 ========================= */
 
 const narrativeProxy = lower
