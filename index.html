@@ -9039,15 +9039,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     recognition = new webkitSpeechRecognition();
 
-    recognition.lang = "en-IN";
-    recognition.continuous = false;
-    recognition.interimResults = false;
+recognition.handled = false;
 
-    recognition.start();
+recognition.lang = "en-IN";
+recognition.continuous = false;
+recognition.interimResults = false;
+
+recognition.start();
 
     console.log("🎤 Listening...");
 
     recognition.onresult = function (event) {
+
+  if (recognition.handled) return;
+  recognition.handled = true;
+
   const transcript = event.results[0][0].transcript;
 
   console.log("You said:", transcript);
