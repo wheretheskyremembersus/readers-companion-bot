@@ -9207,23 +9207,21 @@ function speakText(text, voiceType) {
   // 👩 SAIRA (Female)
   if (voiceType === "saira") {
 
-    selectedVoice =
-      indianVoices.find(v => v.name.toLowerCase().includes("female")) ||
-      indianVoices[0] ||
-      voices.find(v => v.lang.startsWith("en"));
+  selectedVoice =
+    voices.find(v => v.lang === "en-IN") || // always Indian
+    voices[0];
 
-    speech.pitch = 1.15;
-    speech.rate = 0.9;
-  }
+  speech.pitch = 1.15;
+  speech.rate = 0.9;
+}
 
   // 👨 AYAAN (Male)
 else if (voiceType === "ayaan") {
 
   selectedVoice =
-  voices.find(v => v !== sairaBase && v.lang.startsWith("en")) ||
-  voices.find(v => v !== sairaBase) ||
-  voices[0];
-  
+    voices.find(v => v.lang !== "en-IN") || // anything NOT Indian
+    voices[1] || voices[0];
+
   speech.pitch = 0.9;
   speech.rate = 0.85;
 }
