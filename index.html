@@ -1035,11 +1035,14 @@ function addUserMessage(text) {
   autoScroll();
 }
 
-function addVoiceMessage(text) {
+function addVoiceMessage(text, voiceOverride) {
+
+  const voice = voiceOverride || activeVoice;
+
   const side =
-    activeVoice === "saira"
+    voice === "saira"
       ? "saira-msg"
-      : activeVoice === "ayaan"
+      : voice === "ayaan"
       ? "ayaan-msg"
       : "system-msg";
 
@@ -1052,11 +1055,9 @@ function addVoiceMessage(text) {
 
   autoScroll();
 
-const voiceForThisMessage = activeVoice;
-
-setTimeout(() => {
-  speakText(text, voiceForThisMessage);
-}, 600);
+  setTimeout(() => {
+    speakText(text, voice);
+  }, 600);
 }
 
 function addSystemMessage(text) {
