@@ -9024,7 +9024,7 @@ const wrapperInterval = setInterval(function () {
 }, 300);
 
 // -------------------------------
-// MIC INPUT (STEP 2)
+// MIC INPUT (STABLE VERSION)
 // -------------------------------
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -9040,56 +9040,57 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-recognition = new webkitSpeechRecognition();
+    recognition = new webkitSpeechRecognition();
 
-recognition.lang = "en-IN";
-recognition.continuous = true;
-recognition.interimResults = true;
+    recognition.lang = "en-IN";
+    recognition.continuous = true;
+    recognition.interimResults = true;
 
-recognition.start();
+    recognition.start();
 
-console.log("🎤 Listening...");
+    console.log("🎤 Listening...");
 
-recognition.onresult = function (event) {
+    recognition.onresult = function (event) {
 
-  let finalTranscript = "";
+      let finalTranscript = "";
 
-  for (let i = event.resultIndex; i < event.results.length; i++) {
-    const result = event.results[i];
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const result = event.results[i];
 
-    if (result.isFinal) {
-      finalTranscript += result[0].transcript;
-    }
-  }
+        if (result.isFinal) {
+          finalTranscript += result[0].transcript;
+        }
+      }
 
-  if (!finalTranscript) return;
+      if (!finalTranscript) return;
 
-  if (voiceSendLock) return;
-  voiceSendLock = true;
+      // ✅ prevent duplicate send
+      if (voiceSendLock) return;
+      voiceSendLock = true;
 
-  console.log("Final:", finalTranscript);
+      console.log("Final:", finalTranscript);
 
-  const inputBox = document.getElementById("userInput");
-  inputBox.value = finalTranscript;
+      const inputBox = document.getElementById("userInput");
+      inputBox.value = finalTranscript;
 
-  setTimeout(() => {
-    const sendBtn = document.getElementById("sendBtn");
-    if (sendBtn) sendBtn.click();
+      setTimeout(() => {
+        const sendBtn = document.getElementById("sendBtn");
+        if (sendBtn) sendBtn.click();
 
-    recognition.stop();
+        // ✅ stop recognition ONLY after sending
+        recognition.stop();
 
-    setTimeout(() => {
-      voiceSendLock = false;
-    }, 1200);
+        // ✅ release lock safely
+        setTimeout(() => {
+          voiceSendLock = false;
+        }, 1200);
 
-  }, 300);
-};
-
-  recognition.stop();
-};
+      }, 300);
+    };
 
     recognition.onerror = function (event) {
       console.error("Speech error:", event.error);
+      voiceSendLock = false;
     };
 
   });
