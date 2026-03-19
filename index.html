@@ -9123,18 +9123,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-let isSpeaking = false;
-
 function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
-  if (isSpeaking) return;
 
   const cleanText = cleanSpeechText(text);
 
   const speech = new SpeechSynthesisUtterance(cleanText);
 
-  speech.rate = 0.78;
+  speech.lang = "en-IN";
 
   const voices = speechSynthesis.getVoices();
 
@@ -9142,30 +9139,30 @@ function speakText(text, voiceType) {
 
   if (voiceType === "saira") {
 
-    speech.pitch = 1.15;
+    // 👩 FEMALE VOICE
+    selectedVoice =
+      voices.find(v => v.name.includes("Female")) ||
+      voices.find(v => v.name.includes("Zira")) ||
+      voices.find(v => v.name.includes("Samantha")) ||
+      voices.find(v => v.name.includes("Google UK English Female"));
 
-    for (let v of voices) {
-      const name = v.name.toLowerCase();
-      if (name.includes("female") || name.includes("zira") || name.includes("susan")) {
-        selectedVoice = v;
-        break;
-      }
-    }
+    speech.pitch = 1.2;
+    speech.rate = 0.78;
 
   } else if (voiceType === "ayaan") {
 
+    // 👨 MALE VOICE
+    selectedVoice =
+      voices.find(v => v.name.includes("Male")) ||
+      voices.find(v => v.name.includes("David")) ||
+      voices.find(v => v.name.includes("Alex")) ||
+      voices.find(v => v.name.includes("Google UK English Male"));
+
     speech.pitch = 0.85;
-
-    for (let v of voices) {
-      const name = v.name.toLowerCase();
-      if (name.includes("male") || name.includes("david") || name.includes("alex")) {
-        selectedVoice = v;
-        break;
-      }
-    }
-
+    speech.rate = 0.82;
   }
 
+  // fallback (if no match found)
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
@@ -9174,19 +9171,11 @@ function speakText(text, voiceType) {
     speech.voice = selectedVoice;
   }
 
-  speech.onstart = function () {
-    isSpeaking = true;
+  speech.onerror = function (e) {
+    console.warn("Speech error:", e);
   };
 
-  speech.onend = function () {
-    isSpeaking = false;
-  };
-
-  speech.onerror = function () {
-    isSpeaking = false;
-  };
-
-  speechSynthesis.cancel();
+  // ✅ IMPORTANT: no cancel(), no lock
   speechSynthesis.speak(speech);
 }
 </script>
