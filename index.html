@@ -9189,40 +9189,46 @@ function speakText(text, voiceType) {
 
   let selectedVoice;
 
-  // 👩 SAIRA (INDIAN FEMALE PRIORITY)
+  // 👩 SAIRA (INDIAN FEMALE ONLY)
   if (voiceType === "saira") {
 
     selectedVoice =
-      // 🇮🇳 FORCE INDIAN FIRST
-      voices.find(v => v.lang === "en-IN") ||
-      voices.find(v => v.lang === "hi-IN") ||
+      // 🇮🇳 Try Indian but avoid known male voices
+      voices.find(v =>
+        (v.lang === "en-IN" || v.lang === "hi-IN") &&
+        !v.name.toLowerCase().includes("male") &&
+        !v.name.toLowerCase().includes("david") &&
+        !v.name.toLowerCase().includes("alex")
+      ) ||
 
-      // fallback to your original good female voices
+      // fallback to known female voices
       voices.find(v => v.name.includes("Samantha")) ||
       voices.find(v => v.name.includes("Zira")) ||
       voices.find(v => v.name.includes("Google UK English Female"));
 
-    
     speech.lang = selectedVoice?.lang || "en-IN";
     speech.pitch = 1.15;
     speech.rate = 0.8;
   }
 
-  // 👨 AYAAN (SMART MALE - KEEP SIMPLE)
+  // 👨 AYAAN (FORCED MALE)
   else if (voiceType === "ayaan") {
 
     selectedVoice =
       voices.find(v => v.name.includes("Google UK English Male")) ||
       voices.find(v => v.name.includes("David")) ||
       voices.find(v => v.name.includes("Alex")) ||
+      voices.find(v =>
+        v.name.toLowerCase().includes("male")
+      ) ||
       voices[0];
 
-    speech.lang = "en-GB"; // sounds more "smart"
+    speech.lang = "en-GB";
     speech.pitch = 0.9;
     speech.rate = 0.85;
   }
 
-  // fallback safety
+  // fallback
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
