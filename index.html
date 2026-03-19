@@ -9137,39 +9137,65 @@ function speakText(text) {
 
   const voices = speechSynthesis.getVoices();
 
-  let selectedVoice;
+  let selectedVoice = null;
 
+  // 🎭 Choose voice based on character
   if (activeVoice === "saira") {
-    // 🎭 FEMALE VOICE
-    selectedVoice =
-      voices.find(v => v.name.toLowerCase().includes("female")) ||
-      voices.find(v => v.name.toLowerCase().includes("zira")) ||
-      voices.find(v => v.name.toLowerCase().includes("google uk english female"));
-    
+
     speech.pitch = 1.15;
 
+    for (let v of voices) {
+      const name = v.name.toLowerCase();
+
+      if (
+        name.includes("female") ||
+        name.includes("zira") ||
+        name.includes("susan")
+      ) {
+        selectedVoice = v;
+        break;
+      }
+    }
+
   } else if (activeVoice === "ayaan") {
-    // 🎭 MALE VOICE
-    selectedVoice =
-      voices.find(v => v.name.toLowerCase().includes("male")) ||
-      voices.find(v => v.name.toLowerCase().includes("david")) ||
-      voices.find(v => v.name.toLowerCase().includes("alex"));
-    
+
     speech.pitch = 0.85;
 
-  } else {
-    // fallback
+    for (let v of voices) {
+      const name = v.name.toLowerCase();
+
+      if (
+        name.includes("male") ||
+        name.includes("david") ||
+        name.includes("alex")
+      ) {
+        selectedVoice = v;
+        break;
+      }
+    }
+
+  }
+
+  // fallback
+  if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
-    speech.pitch = 1;
   }
 
   if (selectedVoice) {
     speech.voice = selectedVoice;
   }
 
-  speech.onstart = () => isSpeaking = true;
-  speech.onend = () => isSpeaking = false;
-  speech.onerror = () => isSpeaking = false;
+  speech.onstart = function () {
+    isSpeaking = true;
+  };
+
+  speech.onend = function () {
+    isSpeaking = false;
+  };
+
+  speech.onerror = function () {
+    isSpeaking = false;
+  };
 
   speechSynthesis.cancel();
   speechSynthesis.speak(speech);
