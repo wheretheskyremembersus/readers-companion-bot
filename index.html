@@ -578,11 +578,14 @@ body {
 
     <div class="question-dock" id="questionDock"></div>
 
-  <!-- TYPING AREA -->
- <div class="typing-area" id="typingArea" style="display:none;">
+<!-- TYPING AREA -->
+<div class="typing-area" id="typingArea" style="display:none;">
   <input type="text" id="userInput" placeholder="You can ask something..." />
   <button id="sendBtn" onclick="sendTypedMessage()">Send</button>
   <button id="micBtn">🎤</button>
+
+  <!-- ✅ ADD THIS -->
+  <button id="voiceToggleBtn">🔇 Voice Off</button>
 </div>
 </div>
 
@@ -720,6 +723,7 @@ let currentLayer = 0;
 let reflections = [];
 let reflectionStep = 0;
 let voiceSendLock = false;
+let voiceEnabled = false;
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
