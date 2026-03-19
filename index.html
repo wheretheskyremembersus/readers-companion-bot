@@ -9133,28 +9133,67 @@ function speakText(text) {
 
   const speech = new SpeechSynthesisUtterance(cleanText);
 
-  speech.rate = 0.92;
-  speech.pitch = 1.1;
+  speech.rate = 0.78;
 
   const voices = speechSynthesis.getVoices();
 
-  let selectedVoice =
-    voices.find(v => v.name.toLowerCase().includes("female")) ||
-    voices.find(v => v.name.toLowerCase().includes("google uk english female")) ||
-    voices.find(v => v.name.toLowerCase().includes("en")) ||
-    voices[0];
+  let selectedVoice = null;
 
-  speech.voice = selectedVoice;
+  // 🎭 Choose voice based on character
+  if (activeVoice === "saira") {
 
-  speech.onstart = () => {
+    speech.pitch = 1.15;
+
+    for (let v of voices) {
+      const name = v.name.toLowerCase();
+
+      if (
+        name.includes("female") ||
+        name.includes("zira") ||
+        name.includes("susan")
+      ) {
+        selectedVoice = v;
+        break;
+      }
+    }
+
+  } else if (activeVoice === "ayaan") {
+
+    speech.pitch = 0.85;
+
+    for (let v of voices) {
+      const name = v.name.toLowerCase();
+
+      if (
+        name.includes("male") ||
+        name.includes("david") ||
+        name.includes("alex")
+      ) {
+        selectedVoice = v;
+        break;
+      }
+    }
+
+  }
+
+  // fallback
+  if (!selectedVoice && voices.length > 0) {
+    selectedVoice = voices[0];
+  }
+
+  if (selectedVoice) {
+    speech.voice = selectedVoice;
+  }
+
+  speech.onstart = function () {
     isSpeaking = true;
   };
 
-  speech.onend = () => {
+  speech.onend = function () {
     isSpeaking = false;
   };
 
-  speech.onerror = () => {
+  speech.onerror = function () {
     isSpeaking = false;
   };
 
