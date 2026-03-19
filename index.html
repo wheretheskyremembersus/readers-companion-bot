@@ -9124,9 +9124,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+// -------------------------------
+// VOICE LOADING (FINAL FIX)
+// -------------------------------
+let voicesReady = false;
+
+function loadVoices() {
+  const voices = speechSynthesis.getVoices();
+
+  if (voices.length > 0) {
+    voicesReady = true;
+  } else {
+    setTimeout(loadVoices, 100);
+  }
+}
+
+// 🔥 Initial attempt
+loadVoices();
+
+// 🔥 Ensure voices load after user interaction (CRITICAL FIX)
+document.addEventListener("click", function initVoices() {
+  loadVoices();
+  speechSynthesis.getVoices(); // force load
+  document.removeEventListener("click", initVoices);
+});
+
+
+// -------------------------------
+// SPEAK FUNCTION (FINAL STABLE)
+// -------------------------------
 function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
+
+  // ✅ Wait until voices are loaded
+  if (!voicesReady) {
+    setTimeout(() => speakText(text, voiceType), 200);
+    return;
+  }
 
   const cleanText = cleanSpeechText(text);
 
@@ -9138,9 +9173,9 @@ function speakText(text, voiceType) {
 
   let selectedVoice = null;
 
+  // 👩 SAIRA (FEMALE)
   if (voiceType === "saira") {
 
-    // 👩 FEMALE VOICE
     selectedVoice =
       voices.find(v => v.name.includes("Female")) ||
       voices.find(v => v.name.includes("Zira")) ||
@@ -9149,10 +9184,11 @@ function speakText(text, voiceType) {
 
     speech.pitch = 1.2;
     speech.rate = 0.78;
+  }
 
-  } else if (voiceType === "ayaan") {
+  // 👨 AYAAN (MALE)
+  else if (voiceType === "ayaan") {
 
-    // 👨 MALE VOICE
     selectedVoice =
       voices.find(v => v.name.includes("Male")) ||
       voices.find(v => v.name.includes("David")) ||
@@ -9163,7 +9199,7 @@ function speakText(text, voiceType) {
     speech.rate = 0.82;
   }
 
-  // fallback (if no match found)
+  // fallback
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
@@ -9176,7 +9212,6 @@ function speakText(text, voiceType) {
     console.warn("Speech error:", e);
   };
 
-  // ✅ IMPORTANT: no cancel(), no lock
   speechSynthesis.speak(speech);
 }
 </script>
