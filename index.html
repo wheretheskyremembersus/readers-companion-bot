@@ -1052,10 +1052,11 @@ function addVoiceMessage(text) {
 
   autoScroll();
 
-  // 🎧 Speak safely (with cleaned text)
-  setTimeout(() => {
-    speakText(text);
-  }, 200);
+const voiceForThisMessage = activeVoice;
+
+setTimeout(() => {
+  speakText(text, voiceForThisMessage);
+}, 600);
 }
 
 function addSystemMessage(text) {
@@ -9124,7 +9125,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let isSpeaking = false;
 
-function speakText(text) {
+function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
   if (isSpeaking) return;
@@ -9139,36 +9140,25 @@ function speakText(text) {
 
   let selectedVoice = null;
 
-  // 🎭 Choose voice based on character
-  if (activeVoice === "saira") {
+  if (voiceType === "saira") {
 
     speech.pitch = 1.15;
 
     for (let v of voices) {
       const name = v.name.toLowerCase();
-
-      if (
-        name.includes("female") ||
-        name.includes("zira") ||
-        name.includes("susan")
-      ) {
+      if (name.includes("female") || name.includes("zira") || name.includes("susan")) {
         selectedVoice = v;
         break;
       }
     }
 
-  } else if (activeVoice === "ayaan") {
+  } else if (voiceType === "ayaan") {
 
     speech.pitch = 0.85;
 
     for (let v of voices) {
       const name = v.name.toLowerCase();
-
-      if (
-        name.includes("male") ||
-        name.includes("david") ||
-        name.includes("alex")
-      ) {
+      if (name.includes("male") || name.includes("david") || name.includes("alex")) {
         selectedVoice = v;
         break;
       }
@@ -9176,7 +9166,6 @@ function speakText(text) {
 
   }
 
-  // fallback
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
