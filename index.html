@@ -3039,6 +3039,30 @@ function runV4Engine(text, originalText) {
 window.runV4Engine = runV4Engine;
 
 function runV4Guards(normalizedText, originalText) {
+
+  // 🚫 DO NOT override V3 core routes
+  if (
+    /\bwho\s+wrote\b/i.test(normalizedText) ||
+    /\bauthor\b/i.test(normalizedText)
+  ) {
+    return null;
+  }
+
+  const intent = detectNarrativeIntent(normalizedText);
+
+  if (!intent) return null;
+
+  const layer = intent[0];
+  const type  = intent[1];
+
+  const pool = v4NarrativeMaster[layer]?.[type]?.[activeVoice];
+
+  if (pool && pool.length) {
+    return deliverReply(
+      pool[Math.floor(Math.random() * pool.length)]
+    );
+  }
+
   return null;
 }
 /* =========================
