@@ -9208,7 +9208,7 @@ function speakText(text, voiceType) {
 
     selectedVoice =
       indianVoices.find(v => v.name.toLowerCase().includes("female")) ||
-      indianVoices[0] ||
+      indianVoices[1] ||indianVoices[0] ||
       voices.find(v => v.lang.startsWith("en"));
 
     speech.pitch = 1.15;
