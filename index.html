@@ -2943,7 +2943,7 @@ function runV4Engine(text, originalText) {
 
   const stage = stageState?.[voice]?.currentStage || 1;
 
-  // ✅ SAFE META PROBE (no behavior change)
+  // ✅ SAFE META PROBE
   const metaIntentProbe = detectNarrativeIntent(originalText);
 
   if (metaIntentProbe) {
@@ -2971,12 +2971,7 @@ function runV4Engine(text, originalText) {
       }
 
       const thresholds = {
-        2:3,
-        3:4,
-        4:5,
-        5:6,
-        6:7,
-        7:8
+        2:3, 3:4, 4:5, 5:6, 6:7, 7:8
       };
 
       const nextStage = stageState[voice].currentStage + 1;
@@ -2986,7 +2981,6 @@ function runV4Engine(text, originalText) {
       if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
         stageState[voice].currentStage = nextStage;
       }
-
     }
 
     const anchorPool = emotionalAnchors?.[voice]?.[pillar];
@@ -3003,7 +2997,6 @@ function runV4Engine(text, originalText) {
       lastAnchorUsed[pillar] = anchor;
 
       return deliverReply(anchor);
-
     }
   }
 
@@ -3016,8 +3009,32 @@ function runV4Engine(text, originalText) {
     pillar = fallbackPillars[Math.floor(Math.random() * fallbackPillars.length)];
   }
 
-  // Optional: if you later want fallback behavior
-  return null;
+  /* =========================
+     SELECT FALLBACK RESPONSE
+  ========================= */
+
+  let pool = null;
+
+  if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
+    pool = v4FallbackBank[voice][pillar];
+  } else {
+    pool = v4FallbackBank.saira.growth;
+  }
+
+  if (!v4RotationIndex[voice]) {
+    v4RotationIndex[voice] = {};
+  }
+
+  if (v4RotationIndex[voice][pillar] === undefined) {
+    v4RotationIndex[voice][pillar] = 0;
+  }
+
+  const index = v4RotationIndex[voice][pillar];
+  const line = pool[index % pool.length];
+
+  v4RotationIndex[voice][pillar]++;
+
+  return deliverReply(line);
 }
 /* =========================
 MASTER NARRATIVE RESPONSES
@@ -3521,40 +3538,7 @@ ayaan:[
 
   };
 
-/* =========================
-SELECT FALLBACK RESPONSE
-========================= */
 
-let pool = null;
-
-if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
-  pool = v4FallbackBank[voice][pillar];
-} else {
-  pool = v4FallbackBank.saira.growth;
-}
-
-/* Ensure rotation structure exists */
-
-if (!v4RotationIndex[voice]) {
-  v4RotationIndex[voice] = {};
-}
-
-if (v4RotationIndex[voice][pillar] === undefined) {
-  v4RotationIndex[voice][pillar] = 0;
-}
-
-const index = v4RotationIndex[voice][pillar];
-
-const line = pool[index % pool.length];
-
-v4RotationIndex[voice][pillar]++;
-
-return deliverReply(line);
-}
-  
-window.runV4Engine = runV4Engine;
-  
-function runV4Guards(normalizedText, originalText) {
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
