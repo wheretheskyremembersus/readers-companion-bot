@@ -9151,7 +9151,8 @@ let voicesReady = false;
 
 function loadVoices() {
   const voices = speechSynthesis.getVoices();
-
+const sairaBase = voices.find(v => v.lang === "en-IN") || voices[0];
+  
   if (voices.length > 0) {
     voicesReady = true;
   } else {
@@ -9219,10 +9220,10 @@ function speakText(text, voiceType) {
 else if (voiceType === "ayaan") {
 
   selectedVoice =
-    voices.find(v => v.lang === "en-US") ||
-    voices.find(v => v.lang === "en-GB") ||
-    voices.find(v => v.lang.startsWith("en"));
-
+  voices.find(v => v !== sairaBase && v.lang.startsWith("en")) ||
+  voices.find(v => v !== sairaBase) ||
+  voices[0];
+  
   speech.pitch = 0.9;
   speech.rate = 0.85;
 }
