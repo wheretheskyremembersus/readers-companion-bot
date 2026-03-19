@@ -2943,7 +2943,7 @@ function runV4Engine(text, originalText) {
 
   const stage = stageState?.[voice]?.currentStage || 1;
 
-  // ✅ SAFE PROBE (ONLY ADDITION)
+  // ✅ SAFE META PROBE (no behavior change)
   const metaIntentProbe = detectNarrativeIntent(originalText);
 
   if (metaIntentProbe) {
@@ -2955,7 +2955,6 @@ function runV4Engine(text, originalText) {
   ========================= */
 
   const pillarMatch = detectEmotionalPillar(originalText);
-
   let pillar = pillarMatch?.primary || null;
 
   if (pillarMatch) {
@@ -3007,17 +3006,19 @@ function runV4Engine(text, originalText) {
 
     }
   }
-}
+
   /* =========================
-  DEFAULT PILLAR (SAFETY)
+     DEFAULT PILLAR (SAFETY)
   ========================= */
 
-if (!pillar) {
-  const fallbackPillars = ["affection","fear","regret","loss","growth"];
-  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
+  if (!pillar) {
+    const fallbackPillars = ["affection","fear","regret","loss","growth"];
+    pillar = fallbackPillars[Math.floor(Math.random() * fallbackPillars.length)];
+  }
+
+  // Optional: if you later want fallback behavior
+  return null;
 }
-
-
 /* =========================
 MASTER NARRATIVE RESPONSES
 ========================= */
