@@ -5295,7 +5295,7 @@ if (isLocationQuery(originalText)) {
   return deliverReply(locationRedirect(activeVoice));
 }
 
-const guardResponse = runV4Guards(normalized, originalText);
+const guardResponse = runV4Guards(normalizedText, originalText);
 if (guardResponse) return guardResponse;
   
 /* ================================
