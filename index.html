@@ -9061,8 +9061,6 @@ recognition.start();
   const inputBox = document.getElementById("userInput");
   inputBox.value = transcript;
 
-  recognition.stop();
-
   setTimeout(() => {
     const sendBtn = document.getElementById("sendBtn");
     if (sendBtn) {
@@ -9071,9 +9069,9 @@ recognition.start();
 
     setTimeout(() => {
       voiceSendLock = false;
-    }, 1200); // slightly longer buffer
+    }, 1200);
 
-  }, 300);
+  }, 500); 
 };
 
     recognition.onerror = function (event) {
