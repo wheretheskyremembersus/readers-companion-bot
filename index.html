@@ -8947,95 +8947,88 @@ document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 });
 
-  // -------------------------------
-  // Create Supabase Client
-  // -------------------------------
+ // -------------------------------
+// Create Supabase Client
+// -------------------------------
 window.supabaseClient = window.supabaseClient || 
   window.supabase.createClient(
     "https://gocmauqnfdcwfaqlpjrv.supabase.co",
     "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
   );
 
-  // -------------------------------
-  // Create Session ID
-  // -------------------------------
-  if (!localStorage.getItem("session_id")) {
-    localStorage.setItem("session_id", crypto.randomUUID());
-  }
+// -------------------------------
+// Create Session ID
+// -------------------------------
+if (!localStorage.getItem("session_id")) {
+  localStorage.setItem("session_id", crypto.randomUUID());
+}
 
-  // -------------------------------
-  // Core Tracking Function
-  // -------------------------------
+// -------------------------------
+// SAFE Tracking Function (NETWORK DISABLED)
+// -------------------------------
 window.trackEvent = async function(eventType, extraData) {
   extraData = extraData || {};
-    try {
-      await window.supabaseClient.from("events").insert([
-        {
-          event_type: eventType,
-          session_id: localStorage.getItem("session_id"),
-          traffic_source: document.referrer || "direct",
-          platform: "web",
-          source: "canva",
-          ...extraData
-        }
-      ]);
-    } catch (e) {
-      console.warn("Analytics failed:", e);
-    }
-  };
 
-  // -------------------------------
-  // Track Chat Loaded
-  // -------------------------------
-  trackEvent("chat_loaded");
+  try {
+    // ✅ Safe: no API call, no crash
+    console.log("Tracking (disabled):", eventType, extraData);
 
-  // -------------------------------
-  // Reliable processInput Wrapper
-  // -------------------------------
-  let wrapped = false;
-  let attempts = 0;
+  } catch (e) {
+    console.warn("Analytics failed:", e);
+  }
+};
 
-  const wrapperInterval = setInterval(function () {
+// -------------------------------
+// Track Chat Loaded
+// -------------------------------
+trackEvent("chat_loaded");
 
-    if (!wrapped && typeof window.processInput === "function") {
+// -------------------------------
+// Reliable processInput Wrapper
+// -------------------------------
+let wrapped = false;
+let attempts = 0;
 
-      const originalProcessInput = window.processInput;
+const wrapperInterval = setInterval(function () {
 
-      window.processInput = function(text, originalText) {
+  if (!wrapped && typeof window.processInput === "function") {
 
-        if (!window.chatStarted) {
-          window.chatStarted = true;
-          trackEvent("chat_initiated");
-        }
+    const originalProcessInput = window.processInput;
 
-        trackEvent("user_message", {
-          message_length: originalText ? originalText.length : 0
-        });
+    window.processInput = function(text, originalText) {
 
-        return originalProcessInput.apply(this, arguments);
-      };
+      if (!window.chatStarted) {
+        window.chatStarted = true;
+        trackEvent("chat_initiated");
+      }
 
-      wrapped = true;
-      clearInterval(wrapperInterval);
-    }
+      trackEvent("user_message", {
+        message_length: originalText ? originalText.length : 0
+      });
 
-    attempts++;
-    if (attempts > 30) {
-      clearInterval(wrapperInterval);
-    }
+      return originalProcessInput.apply(this, arguments);
+    };
 
-  }, 300);
+    wrapped = true;
+    clearInterval(wrapperInterval);
+  }
 
-  // -------------------------------
-  // Track Button Clicks
-  // -------------------------------
- document.addEventListener("DOMContentLoaded", function () {
+  attempts++;
+  if (attempts > 30) {
+    clearInterval(wrapperInterval);
+  }
+
+}, 300);
+
+// -------------------------------
+// MIC INPUT (STEP 2)
+// -------------------------------
+document.addEventListener("DOMContentLoaded", function () {
 
   let recognition;
 
   const micBtn = document.getElementById("micBtn");
-
-  if (!micBtn) return; // safety
+  if (!micBtn) return;
 
   micBtn.addEventListener("click", function () {
 
