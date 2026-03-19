@@ -9048,12 +9048,19 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("🎤 Listening...");
 
     recognition.onresult = function (event) {
-      const transcript = event.results[0][0].transcript;
+  const transcript = event.results[0][0].transcript;
 
-      console.log("You said:", transcript);
+  console.log("You said:", transcript);
 
-      document.getElementById("userInput").value = transcript;
-    };
+  const inputBox = document.getElementById("userInput");
+  inputBox.value = transcript;
+
+  setTimeout(() => {
+    if (typeof sendTypedMessage === "function") {
+      sendTypedMessage();
+    }
+  }, 300); // small delay for safety
+};
 
     recognition.onerror = function (event) {
       console.error("Speech error:", event.error);
