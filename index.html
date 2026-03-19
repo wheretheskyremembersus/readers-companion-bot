@@ -1061,10 +1061,14 @@ function addVoiceMessage(text, voiceOverride) {
 
   // 🎯 ONLY speak if mic triggered it
   if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
-    setTimeout(() => {
-      speakText(text, voice);
-    }, 600);
-  }
+  setTimeout(() => {
+    speakText(text, voice);
+
+    // ✅ turn off AFTER speaking
+    voiceEnabled = false;
+
+  }, 600);
+}
 }
 
 function addSystemMessage(text) {
@@ -9113,7 +9117,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // ✅ TURN OFF voice after one response
       setTimeout(() => {
-        voiceEnabled = false;
         voiceSendLock = false;
       }, 1200);
 
