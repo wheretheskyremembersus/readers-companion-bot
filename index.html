@@ -9224,22 +9224,6 @@ function speakText(text, voiceType) {
 
   speechSynthesis.speak(speech);
 }
-  document.addEventListener("DOMContentLoaded", function () {
-
-  const voiceBtn = document.getElementById("voiceToggleBtn");
-  if (!voiceBtn) return;
-
-  voiceBtn.addEventListener("click", function () {
-
-    voiceEnabled = !voiceEnabled;
-
-    this.textContent = voiceEnabled
-      ? "🔊 Voice On"
-      : "🔇 Voice Off";
-
-  });
-
-});
 </script>
 
 </body>
