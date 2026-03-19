@@ -1052,10 +1052,10 @@ function addVoiceMessage(text) {
 
   autoScroll();
 
-  // 🎧 Speak safely (with cleaned text)
+  if (text.length < 180) {
   setTimeout(() => {
     speakText(text);
-  }, 200);
+  }, 600);
 }
 
 function addSystemMessage(text) {
@@ -9133,30 +9133,20 @@ function speakText(text) {
 
   const speech = new SpeechSynthesisUtterance(cleanText);
 
-  speech.rate = 0.92;
-  speech.pitch = 1.1;
+  // 🎯 KEY CHANGES
+  speech.rate = 0.78;   // slower = more emotional
+  speech.pitch = activeVoice === "saira" ? 1.15 : 0.85;
 
   const voices = speechSynthesis.getVoices();
 
-  let selectedVoice =
+  speech.voice =
     voices.find(v => v.name.toLowerCase().includes("female")) ||
-    voices.find(v => v.name.toLowerCase().includes("google uk english female")) ||
     voices.find(v => v.name.toLowerCase().includes("en")) ||
     voices[0];
 
-  speech.voice = selectedVoice;
-
-  speech.onstart = () => {
-    isSpeaking = true;
-  };
-
-  speech.onend = () => {
-    isSpeaking = false;
-  };
-
-  speech.onerror = () => {
-    isSpeaking = false;
-  };
+  speech.onstart = () => isSpeaking = true;
+  speech.onend = () => isSpeaking = false;
+  speech.onerror = () => isSpeaking = false;
 
   speechSynthesis.cancel();
   speechSynthesis.speak(speech);
