@@ -5304,7 +5304,6 @@ if (guardResponse) return guardResponse;
 
 if (tollState[activeVoice]?.unlocked === true) {
 
-  const normalized = normalizeInput(originalText);
 
   // NARRATIVE LAYER — checked FIRST, before question guard
   const narrativeResult = detectNarrativeIntent(originalText);
@@ -5326,9 +5325,9 @@ if (tollState[activeVoice]?.unlocked === true) {
   // Prevent emotional engine from firing on simple question forms
   const isQuestion =
     /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
-    .test(normalized);
+    .test(normalizedText);
 
-  const detected = detectEmotionalPillar(normalized);
+  const detected = detectEmotionalPillar(normalizedText);
 
   if (!isQuestion && detected && detected.primaryScore >= 1) {
     return processEmotionalMode(originalText, originalText);
