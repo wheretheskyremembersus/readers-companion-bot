@@ -9029,16 +9029,45 @@ window.trackEvent = async function(eventType, extraData) {
   // -------------------------------
   // Track Button Clicks
   // -------------------------------
-  document.addEventListener("click", function(e) {
-    const button = e.target.closest("button");
-if (!button) return;
+ document.addEventListener("DOMContentLoaded", function () {
 
-const text = button.innerText.trim();
-if (!text || text === "Send") return;
+  let recognition;
 
-trackEvent("quick_button_clicked", {
-  button_text: text
- });
+  const micBtn = document.getElementById("micBtn");
+
+  if (!micBtn) return; // safety
+
+  micBtn.addEventListener("click", function () {
+
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("Voice input not supported in this browser");
+      return;
+    }
+
+    recognition = new webkitSpeechRecognition();
+
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.start();
+
+    console.log("🎤 Listening...");
+
+    recognition.onresult = function (event) {
+      const transcript = event.results[0][0].transcript;
+
+      console.log("You said:", transcript);
+
+      document.getElementById("userInput").value = transcript;
+    };
+
+    recognition.onerror = function (event) {
+      console.error("Speech error:", event.error);
+    };
+
+  });
+
 });
 </script>
 
