@@ -9159,16 +9159,20 @@ function loadVoices() {
   }
 }
 
+// 🔥 Native event (MOST IMPORTANT)
+speechSynthesis.onvoiceschanged = () => {
+  voicesReady = true;
+};
+
 // 🔥 Initial attempt
 loadVoices();
 
 // 🔥 Ensure voices load after user interaction (CRITICAL FIX)
 document.addEventListener("click", function initVoices() {
-  loadVoices();
   speechSynthesis.getVoices(); // force load
+  loadVoices();
   document.removeEventListener("click", initVoices);
 });
-
 
 // -------------------------------
 // SPEAK FUNCTION (FINAL STABLE)
@@ -9188,38 +9192,42 @@ function speakText(text, voiceType) {
   const speech = new SpeechSynthesisUtterance(cleanText);
 
   speech.lang = "en-IN";
+  speech.volume = 1;
 
   const voices = speechSynthesis.getVoices();
 
   let selectedVoice = null;
 
-  // 👩 SAIRA (FEMALE)
+  // 🇮🇳 Indian voices first
+  const indianVoices = voices.filter(v =>
+    v.lang === "en-IN" || v.lang === "hi-IN"
+  );
+
+  // 👩 SAIRA (Female)
   if (voiceType === "saira") {
 
     selectedVoice =
-      voices.find(v => v.name.includes("Female")) ||
-      voices.find(v => v.name.includes("Zira")) ||
-      voices.find(v => v.name.includes("Samantha")) ||
-      voices.find(v => v.name.includes("Google UK English Female"));
+      indianVoices.find(v => v.name.toLowerCase().includes("female")) ||
+      indianVoices[0] ||
+      voices.find(v => v.lang.startsWith("en"));
 
-    speech.pitch = 1.2;
-    speech.rate = 0.78;
+    speech.pitch = 1.15;
+    speech.rate = 0.9;
   }
 
-  // 👨 AYAAN (MALE)
+  // 👨 AYAAN (Male)
   else if (voiceType === "ayaan") {
 
     selectedVoice =
-      voices.find(v => v.name.includes("Male")) ||
-      voices.find(v => v.name.includes("David")) ||
-      voices.find(v => v.name.includes("Alex")) ||
-      voices.find(v => v.name.includes("Google UK English Male"));
+      indianVoices.find(v => v.name.toLowerCase().includes("male")) ||
+      indianVoices[indianVoices.length - 1] ||
+      voices.find(v => v.lang.startsWith("en"));
 
-    speech.pitch = 0.85;
-    speech.rate = 0.82;
+    speech.pitch = 0.9;
+    speech.rate = 0.85;
   }
 
-  // fallback
+  // 🔁 fallback safety
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
@@ -9231,6 +9239,9 @@ function speakText(text, voiceType) {
   speech.onerror = function (e) {
     console.warn("Speech error:", e);
   };
+
+  // ✅ prevent overlap
+  speechSynthesis.cancel();
 
   speechSynthesis.speak(speech);
 }
