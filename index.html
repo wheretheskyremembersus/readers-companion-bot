@@ -9024,76 +9024,90 @@ const wrapperInterval = setInterval(function () {
 }, 300);
 
 // -------------------------------
-// MIC INPUT (STABLE VERSION)
+// MIC INPUT (FINAL STABLE)
 // -------------------------------
 document.addEventListener("DOMContentLoaded", function () {
 
   let recognition;
+  let isListening = false;
 
   const micBtn = document.getElementById("micBtn");
   if (!micBtn) return;
 
-  micBtn.addEventListener("click", function () {
-
-    if (!('webkitSpeechRecognition' in window)) {
-      alert("Voice input not supported in this browser");
-      return;
-    }
-
+  // ✅ Create ONLY ONE instance
+  if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
 
     recognition.lang = "en-IN";
     recognition.continuous = true;
     recognition.interimResults = true;
 
+  } else {
+    alert("Voice input not supported in this browser");
+    return;
+  }
+
+  micBtn.addEventListener("click", function () {
+
+    // ✅ Prevent multiple starts
+    if (isListening) {
+      recognition.stop();
+      isListening = false;
+      console.log("🛑 Stopped listening");
+      return;
+    }
+
     recognition.start();
+    isListening = true;
 
     console.log("🎤 Listening...");
+  });
 
-    recognition.onresult = function (event) {
+  recognition.onresult = function (event) {
 
-      let finalTranscript = "";
+    let finalTranscript = "";
 
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const result = event.results[i];
 
-        if (result.isFinal) {
-          finalTranscript += result[0].transcript;
-        }
+      if (result.isFinal) {
+        finalTranscript += result[0].transcript;
       }
+    }
 
-      if (!finalTranscript) return;
+    if (!finalTranscript) return;
 
-      // ✅ prevent duplicate send
-      if (voiceSendLock) return;
-      voiceSendLock = true;
+    if (voiceSendLock) return;
+    voiceSendLock = true;
 
-      console.log("Final:", finalTranscript);
+    console.log("Final:", finalTranscript);
 
-      const inputBox = document.getElementById("userInput");
-      inputBox.value = finalTranscript;
+    const inputBox = document.getElementById("userInput");
+    inputBox.value = finalTranscript;
+
+    setTimeout(() => {
+      const sendBtn = document.getElementById("sendBtn");
+      if (sendBtn) sendBtn.click();
+
+      recognition.stop();
+      isListening = false;
 
       setTimeout(() => {
-        const sendBtn = document.getElementById("sendBtn");
-        if (sendBtn) sendBtn.click();
+        voiceSendLock = false;
+      }, 1000);
 
-        // ✅ stop recognition ONLY after sending
-        recognition.stop();
+    }, 300);
+  };
 
-        // ✅ release lock safely
-        setTimeout(() => {
-          voiceSendLock = false;
-        }, 1200);
+  recognition.onerror = function (event) {
+    console.error("Speech error:", event.error);
+    isListening = false;
+    voiceSendLock = false;
+  };
 
-      }, 300);
-    };
-
-    recognition.onerror = function (event) {
-      console.error("Speech error:", event.error);
-      voiceSendLock = false;
-    };
-
-  });
+  recognition.onend = function () {
+    isListening = false;
+  };
 
 });
 
