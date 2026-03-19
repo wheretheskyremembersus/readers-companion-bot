@@ -3552,6 +3552,8 @@ return deliverReply(line);
 }
   
 window.runV4Engine = runV4Engine;
+  
+function runV4Guards(normalizedText, originalText) {
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
@@ -3672,7 +3674,6 @@ if (operatorMatch || pureNumberMatch) {
       : "Some answers are straightforward."
   );
 }
-
        
 /* =========================
    REALITY ANCHOR GUARD 
@@ -5303,6 +5304,10 @@ function detectAndComputeMath(input) {
 if (isLocationQuery(originalText)) {
   return deliverReply(locationRedirect(activeVoice));
 }
+
+const guardResponse = runV4Guards(normalized, originalText);
+if (guardResponse) return guardResponse;
+  
 /* ================================
    V4 PARTITION ROUTER
 ================================= */
@@ -7127,9 +7132,8 @@ const reply = bank[index];
 
 v3FallbackIndex[activeVoice][category]++;
 
-return deliverReply(reply);
+return null;
 }
-
 /* =========================
    V4 MICRO INTENT SYSTEM
 ========================= */
