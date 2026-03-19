@@ -1679,9 +1679,32 @@ const emotionalAnchors = {
   }
 
 };
+                    
+function normalizeWord(word) {
+  return word
+    .toLowerCase()
+    .replace(/[^a-z]/g,"")
+    .replace(/(ing|ed|ly|es|s)$/i,"")
+    .replace(/(ment|tion|ness)$/i,"");
+}
 
+function detectEmotionalPillar(text) {
+
+  if (!text) return null;
+
+  const lower = text.toLowerCase();
 /* =========================
 V4 MASTER NARRATIVE LAYER
+Handles:
+- Author
+- Book
+- Protagonist
+- Antagonist
+- Story questions
+- Relationship
+- Memory
+- Meaning
+- Preferences (food/place/pet/color/music)
 ========================= */
 
 function detectNarrativeIntent(text){
@@ -1932,23 +1955,9 @@ return ["character","music"];
 return null;
 
 }
-  
-function normalizeWord(word) {
-  return word
-    .toLowerCase()
-    .replace(/[^a-z]/g,"")
-    .replace(/(ing|ed|ly|es|s)$/i,"")
-    .replace(/(ment|tion|ness)$/i,"");
-}
-
-function detectEmotionalPillar(text) {
-
-  if (!text) return null;
-
-  const lower = text.toLowerCase();
-
 /* =========================
    NARRATIVE EMOTION PROXY
+   (improves story question detection)
 ========================= */
 
 const narrativeProxy = lower
@@ -2764,31 +2773,6 @@ function getSelfReferencePrefix(stage) {
 
   return "If you're asking about me…";
 }
-  
-/* ================================
-V4 ROTATION INDEX
-(prevents repetition)
-================================= */
-
-var v4RotationIndex = {
-  saira: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  },
-  ayaan: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  }
-};
-  
 /* =========================
    RELATIONAL AWARENESS (V3)
 ========================= */
@@ -2796,92 +2780,6 @@ var v4RotationIndex = {
 function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
-
-/* =========================
-   SHORT QUESTION HANDLER
-========================= */
-
-const shortQuestionMatch =
-  /^(why|what|how|when|where|who)\b/i.test(normalizedText);
-
-if (shortQuestionMatch && normalizedText.split(" ").length <= 2) {
-  
-  skipRelationalPrefix = true;
-
-  const responses = {
-    saira: [
-      "You can ask it fully. I'll stay with it.",
-      "That feels unfinished… go on.",
-      "There's more behind that question.",
-      "Say the rest of it.",
-      "I think you're holding something back."
-    ],
-    ayaan: [
-      "Complete the question.",
-      "That's not precise enough.",
-      "Clarify what you're asking.",
-      "There's missing context.",
-      "Finish the thought."
-    ]
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
-
-/* =========================
-   FOLLOW-UP INTENT HANDLER
-========================= */
-
-const followUpPatterns = [
-  /^(but|and|so)\b/i,
-  /^(but why|why though|how so)\b/i,
-  /^(what about|what about him|what about her)\b/i,
-  /^(with whom|with who)\b/i,
-  /^(and then|then what|what next)\b/i
-];
-
-const isFollowUp = followUpPatterns.some(p => p.test(normalizedText));
-
-if (isFollowUp) {
-
-  skipRelationalPrefix = true;
-
-  const stage = stageState[activeVoice]?.currentStage || 1;
-
-  const responses = {
-
-    saira: [
-      "You're still holding onto that, aren't you?",
-      "That part stayed with you.",
-      "You're not asking randomly…",
-      "There's something underneath that question.",
-      "You didn't let that go.",
-      "That connects to something we were already touching.",
-      "You're circling back to it."
-    ],
-
-    ayaan: [
-      "You're continuing the same line of thought.",
-      "That isn't a new question.",
-      "You're building on something earlier.",
-      "Context matters here.",
-      "That connects to what was already said.",
-      "You're not shifting topics.",
-      "That follows from before."
-    ]
-
-  };
-
-  const pool = responses[activeVoice] || responses["saira"];
-
-  return deliverReply(
-    pool[Math.floor(Math.random() * pool.length)]
-  );
-}
 
 
 /* =========================
@@ -2959,7 +2857,30 @@ if (abuseTracker[activeVoice]?.locked) {
   );
 }
 
+/* ================================
+V4 ROTATION INDEX
+(prevents repetition)
+================================= */
 
+var v4RotationIndex = {
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+  
 /* ================================
    V4 UNLOCK CHECK
 ================================= */
@@ -3022,129 +2943,76 @@ function runV4Engine(text, originalText) {
 
   const stage = stageState?.[voice]?.currentStage || 1;
 
-  // ✅ SAFE META PROBE
-  const metaIntentProbe = detectNarrativeIntent(originalText);
-
-  if (metaIntentProbe) {
-    console.log("V4 META DETECTED:", metaIntentProbe, "| Input:", originalText);
-  }
-
-  /* =========================
-     EMOTIONAL PILLAR DETECTION
+/* =========================
+  EMOTIONAL PILLAR DETECTION
   ========================= */
 
-  const pillarMatch = detectEmotionalPillar(originalText);
-  let pillar = pillarMatch?.primary || null;
+const pillarMatch = detectEmotionalPillar(originalText);
 
-  if (pillarMatch) {
+let pillar = pillarMatch?.primary || null;
 
-    const targetStage = pillarToStage?.[pillar] || stage;
+if (pillarMatch) {
 
-    if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+  const targetStage = pillarToStage?.[pillar] || stage;
 
-      if (!stageState[voice]) {
-        stageState[voice] = {
-          currentStage: 1,
-          momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
-        };
-      }
+ if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
 
-      const thresholds = {
-        2:3, 3:4, 4:5, 5:6, 6:7, 7:8
+    if (!stageState) stageState = {};
+
+    if (!stageState[voice]) {
+      stageState[voice] = {
+        currentStage: 1,
+        momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
       };
-
-      const nextStage = stageState[voice].currentStage + 1;
-
-      stageState[voice].momentum[nextStage]++;
-
-      if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
-        stageState[voice].currentStage = nextStage;
-      }
     }
 
-    const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+    const thresholds = {
+      2:3,
+      3:4,
+      4:5,
+      5:6,
+      6:7,
+      7:8
+    };
 
-    if (anchorPool && anchorPool.length) {
+    const nextStage = stageState[voice].currentStage + 1;
 
-      let anchor;
+    stageState[voice].momentum[nextStage]++;
 
-      do {
-        anchor =
-          anchorPool[Math.floor(Math.random() * anchorPool.length)];
-      } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
-
-      lastAnchorUsed[pillar] = anchor;
-
-      return deliverReply(anchor);
+    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      stageState[voice].currentStage = nextStage;
     }
+
   }
 
+  const anchorPool = emotionalAnchors?.[voice]?.[pillar];
+
+if (anchorPool && anchorPool.length) {
+
+  let anchor;
+
+  do {
+    anchor =
+      anchorPool[Math.floor(Math.random() * anchorPool.length)];
+  } while (anchor === lastAnchorUsed[pillar] && anchorPool.length > 1);
+
+  lastAnchorUsed[pillar] = anchor;
+
+  return deliverReply(anchor);
+
+}
+
+}
   /* =========================
-     DEFAULT PILLAR (SAFETY)
+  DEFAULT PILLAR (SAFETY)
   ========================= */
 
-  if (!pillar) {
-    const fallbackPillars = ["affection","fear","regret","loss","growth"];
-    pillar = fallbackPillars[Math.floor(Math.random() * fallbackPillars.length)];
-  }
-
-
-  /* =========================
-     SELECT FALLBACK RESPONSE
-  ========================= */
-
-  let pool = null;
-
-  if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
-    pool = v4FallbackBank[voice][pillar];
-  } else {
-    pool = v4FallbackBank.saira.growth;
-  }
-
-  if (!v4RotationIndex[voice]) {
-    v4RotationIndex[voice] = {};
-  }
-
-  if (v4RotationIndex[voice][pillar] === undefined) {
-    v4RotationIndex[voice][pillar] = 0;
-  }
-
-  const index = v4RotationIndex[voice][pillar];
-  const line = pool[index % pool.length];
-
-  v4RotationIndex[voice][pillar]++;
-
-  return deliverReply(line);
+if (!pillar) {
+  const fallbackPillars = ["affection","fear","regret","loss","growth"];
+  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
 }
-window.runV4Engine = runV4Engine;
 
-function runV4Guards(normalizedText, originalText) {
 
-  // 🚫 DO NOT override V3 core routes
-  if (
-    /\bwho\s+wrote\b/i.test(normalizedText) ||
-    /\bauthor\b/i.test(normalizedText)
-  ) {
-    return null;
-  }
-
-  const intent = detectNarrativeIntent(normalizedText);
-
-  if (!intent) return null;
-
-  const layer = intent[0];
-  const type  = intent[1];
-
-  const pool = v4NarrativeMaster[layer]?.[type]?.[activeVoice];
-
-  if (pool && pool.length) {
-    return deliverReply(
-      pool[Math.floor(Math.random() * pool.length)]
-    );
-  }
-
-  return null;
-}
 /* =========================
 MASTER NARRATIVE RESPONSES
 ========================= */
@@ -3647,7 +3515,38 @@ ayaan:[
 
   };
 
+/* =========================
+SELECT FALLBACK RESPONSE
+========================= */
 
+let pool = null;
+
+if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
+  pool = v4FallbackBank[voice][pillar];
+} else {
+  pool = v4FallbackBank.saira.growth;
+}
+
+/* Ensure rotation structure exists */
+
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
+
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
+}
+
+const index = v4RotationIndex[voice][pillar];
+
+const line = pool[index % pool.length];
+
+v4RotationIndex[voice][pillar]++;
+
+return deliverReply(line);
+}
+  
+window.runV4Engine = runV4Engine;
  /* =========================
    HARD AUTHOR ROUTING
 ========================= */
@@ -3768,6 +3667,7 @@ if (operatorMatch || pureNumberMatch) {
       : "Some answers are straightforward."
   );
 }
+
        
 /* =========================
    REALITY ANCHOR GUARD 
@@ -5398,16 +5298,13 @@ function detectAndComputeMath(input) {
 if (isLocationQuery(originalText)) {
   return deliverReply(locationRedirect(activeVoice));
 }
-
-const guardResponse = runV4Guards(normalizedText, originalText);
-if (guardResponse) return guardResponse;
-  
 /* ================================
    V4 PARTITION ROUTER
 ================================= */
 
 if (tollState[activeVoice]?.unlocked === true) {
 
+  const normalized = normalizeInput(originalText);
 
   // NARRATIVE LAYER — checked FIRST, before question guard
   const narrativeResult = detectNarrativeIntent(originalText);
@@ -5429,9 +5326,9 @@ if (tollState[activeVoice]?.unlocked === true) {
   // Prevent emotional engine from firing on simple question forms
   const isQuestion =
     /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
-    .test(normalizedText);
+    .test(normalized);
 
-  const detected = detectEmotionalPillar(normalizedText);
+  const detected = detectEmotionalPillar(normalized);
 
   if (!isQuestion && detected && detected.primaryScore >= 1) {
     return processEmotionalMode(originalText, originalText);
@@ -7227,6 +7124,7 @@ v3FallbackIndex[activeVoice][category]++;
 
 return deliverReply(reply);
 }
+
 /* =========================
    V4 MICRO INTENT SYSTEM
 ========================= */
