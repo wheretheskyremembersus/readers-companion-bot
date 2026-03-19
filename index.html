@@ -9219,9 +9219,10 @@ function speakText(text, voiceType) {
   else if (voiceType === "ayaan") {
 
     selectedVoice =
-      indianVoices.find(v => v.name.toLowerCase().includes("male")) ||
-      indianVoices[indianVoices.length - 1] ||
-      voices.find(v => v.lang.startsWith("en"));
+  indianVoices.find(v => v.name.toLowerCase().includes("male")) ||
+  voices.find(v => v.lang === "en-GB") ||
+  voices.find(v => v.lang === "en-US") ||
+  voices.find(v => v.lang.startsWith("en"));
 
     speech.pitch = 0.9;
     speech.rate = 0.85;
