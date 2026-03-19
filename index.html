@@ -9171,77 +9171,58 @@ document.addEventListener("click", function initVoices() {
 
 
 // -------------------------------
-// 🔥 BEST VOICE PICKER (NEW)
-// -------------------------------
-function pickBestVoice(voices, type) {
-
-  const indianVoices = voices.filter(v =>
-    v.lang === "en-IN" || v.lang === "hi-IN"
-  );
-
-  if (type === "female") {
-    return (
-      indianVoices.find(v => v.name.toLowerCase().includes("female")) ||
-      indianVoices.find(v => v.name.includes("Google")) ||
-      voices.find(v => v.name.includes("Samantha")) ||
-      voices.find(v => v.name.includes("Zira")) ||
-      indianVoices[0] ||
-      voices[0]
-    );
-  }
-
-  if (type === "male") {
-    return (
-      indianVoices.find(v => v.name.toLowerCase().includes("male")) ||
-      voices.find(v => v.name.includes("Google")) ||
-      voices.find(v => v.name.includes("David")) ||
-      voices.find(v => v.name.includes("Alex")) ||
-      indianVoices[0] ||
-      voices[0]
-    );
-  }
-
-  return voices[0];
-}
-
-
-// -------------------------------
-// SPEAK FUNCTION (UPDATED)
+// SPEAK FUNCTION 
 // -------------------------------
 function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
 
-  // wait for voices
   if (!voicesReady) {
     setTimeout(() => speakText(text, voiceType), 200);
     return;
   }
 
   const cleanText = cleanSpeechText(text);
-
   const speech = new SpeechSynthesisUtterance(cleanText);
-  speech.lang = "en-IN";
 
   const voices = speechSynthesis.getVoices();
 
   let selectedVoice;
 
-  // 👩 SAIRA (FEMALE)
+  // 👩 SAIRA (INDIAN FEMALE PRIORITY)
   if (voiceType === "saira") {
-    selectedVoice = pickBestVoice(voices, "female");
+
+    selectedVoice =
+      // 🇮🇳 FORCE INDIAN FIRST
+      voices.find(v => v.lang === "en-IN") ||
+      voices.find(v => v.lang === "hi-IN") ||
+
+      // fallback to your original good female voices
+      voices.find(v => v.name.includes("Samantha")) ||
+      voices.find(v => v.name.includes("Zira")) ||
+      voices.find(v => v.name.includes("Google UK English Female"));
+
+    
+    speech.lang = selectedVoice?.lang || "en-IN";
     speech.pitch = 1.15;
     speech.rate = 0.8;
   }
 
-  // 👨 AYAAN (MALE)
+  // 👨 AYAAN (SMART MALE - KEEP SIMPLE)
   else if (voiceType === "ayaan") {
-    selectedVoice = pickBestVoice(voices, "male");
+
+    selectedVoice =
+      voices.find(v => v.name.includes("Google UK English Male")) ||
+      voices.find(v => v.name.includes("David")) ||
+      voices.find(v => v.name.includes("Alex")) ||
+      voices[0];
+
+    speech.lang = "en-GB"; // sounds more "smart"
     speech.pitch = 0.9;
     speech.rate = 0.85;
   }
 
-  // fallback
+  // fallback safety
   if (!selectedVoice && voices.length > 0) {
     selectedVoice = voices[0];
   }
