@@ -9042,8 +9042,8 @@ document.addEventListener("DOMContentLoaded", function () {
 recognition.handled = false;
 
 recognition.lang = "en-IN";
-recognition.continuous = false;
-recognition.interimResults = false;
+recognition.continuous = true;
+recognition.interimResults = true;
 
 recognition.start();
 
@@ -9051,27 +9051,38 @@ recognition.start();
 
     recognition.onresult = function (event) {
 
-  if (voiceSendLock === true) return;
+  let finalTranscript = "";
+
+  for (let i = event.resultIndex; i < event.results.length; i++) {
+    const result = event.results[i];
+
+    if (result.isFinal) {
+      finalTranscript += result[0].transcript;
+    }
+  }
+
+  if (!finalTranscript) return;
+
+  
+  if (voiceSendLock) return;
   voiceSendLock = true;
 
-  const transcript = event.results[0][0].transcript;
-
-  console.log("You said:", transcript);
+  console.log("Final:", finalTranscript);
 
   const inputBox = document.getElementById("userInput");
-  inputBox.value = transcript;
+  inputBox.value = finalTranscript;
 
   setTimeout(() => {
     const sendBtn = document.getElementById("sendBtn");
-    if (sendBtn) {
-      sendBtn.click();
-    }
+    if (sendBtn) sendBtn.click();
 
     setTimeout(() => {
       voiceSendLock = false;
     }, 1200);
 
-  }, 500); 
+  }, 300);
+
+  recognition.stop();
 };
 
     recognition.onerror = function (event) {
