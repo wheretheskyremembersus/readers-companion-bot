@@ -2773,6 +2773,31 @@ function getSelfReferencePrefix(stage) {
 
   return "If you're asking about me…";
 }
+  
+/* ================================
+V4 ROTATION INDEX
+(prevents repetition)
+================================= */
+
+var v4RotationIndex = {
+  saira: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  },
+  ayaan: {
+    affection: 0,
+    fear: 0,
+    regret: 0,
+    loss: 0,
+    growth: 0,
+    destiny: 0
+  }
+};
+  
 /* =========================
    RELATIONAL AWARENESS (V3)
 ========================= */
@@ -2780,6 +2805,94 @@ function getSelfReferencePrefix(stage) {
 function processInput(userText, originalText) {
 
   let normalizedText = normalizeInput(originalText);
+
+/* =========================
+   SHORT QUESTION HANDLER
+========================= */
+
+const shortQuestionMatch =
+  /^(why|what|how|when|where|who)\b/i.test(normalizedText);
+
+const wordCount = normalizedText.split(" ").length;
+
+if (shortQuestionMatch && wordCount <= 2) {
+
+  skipRelationalPrefix = true;
+
+  const responses = {
+    saira: [
+      "You can ask it fully. I'll stay with it.",
+      "That feels unfinished… go on.",
+      "There's more behind that question.",
+      "Say the rest of it.",
+      "I think you're holding something back."
+    ],
+    ayaan: [
+      "Complete the question.",
+      "That's not precise enough.",
+      "Clarify what you're asking.",
+      "There's missing context.",
+      "Finish the thought."
+    ]
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
+
+/* =========================
+   FOLLOW-UP INTENT HANDLER
+========================= */
+
+const followUpPatterns = [
+  /^(but|and|so)\b/i,
+  /^(but why|why though|how so)\b/i,
+  /^(what about|what about him|what about her)\b/i,
+  /^(with whom|with who)\b/i,
+  /^(and then|then what|what next)\b/i
+];
+
+const isFollowUp = followUpPatterns.some(p => p.test(normalizedText));
+
+if (isFollowUp) {
+
+  skipRelationalPrefix = true;
+
+  const stage = stageState[activeVoice]?.currentStage || 1;
+
+  const responses = {
+
+    saira: [
+      "You're still holding onto that, aren't you?",
+      "That part stayed with you.",
+      "You're not asking randomly…",
+      "There's something underneath that question.",
+      "You didn't let that go.",
+      "That connects to something we were already touching.",
+      "You're circling back to it."
+    ],
+
+    ayaan: [
+      "You're continuing the same line of thought.",
+      "That isn't a new question.",
+      "You're building on something earlier.",
+      "Context matters here.",
+      "That connects to what was already said.",
+      "You're not shifting topics.",
+      "That follows from before."
+    ]
+
+  };
+
+  const pool = responses[activeVoice] || responses["saira"];
+
+  return deliverReply(
+    pool[Math.floor(Math.random() * pool.length)]
+  );
+}
 
 
 /* =========================
@@ -2857,30 +2970,7 @@ if (abuseTracker[activeVoice]?.locked) {
   );
 }
 
-/* ================================
-V4 ROTATION INDEX
-(prevents repetition)
-================================= */
 
-var v4RotationIndex = {
-  saira: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  },
-  ayaan: {
-    affection: 0,
-    fear: 0,
-    regret: 0,
-    loss: 0,
-    growth: 0,
-    destiny: 0
-  }
-};
-  
 /* ================================
    V4 UNLOCK CHECK
 ================================= */
@@ -3008,6 +3098,7 @@ function runV4Engine(text, originalText) {
     const fallbackPillars = ["affection","fear","regret","loss","growth"];
     pillar = fallbackPillars[Math.floor(Math.random() * fallbackPillars.length)];
   }
+
 
   /* =========================
      SELECT FALLBACK RESPONSE
