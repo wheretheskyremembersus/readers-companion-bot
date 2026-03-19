@@ -581,7 +581,7 @@ body {
   <!-- TYPING AREA -->
  <div class="typing-area" id="typingArea" style="display:none;">
   <input type="text" id="userInput" placeholder="You can ask something..." />
-  <button onclick="sendTypedMessage()">Send</button>
+  <button id="sendBtn" onclick="sendTypedMessage()">Send</button>
   <button id="micBtn">🎤</button>
 </div>
 </div>
@@ -9056,10 +9056,11 @@ document.addEventListener("DOMContentLoaded", function () {
   inputBox.value = transcript;
 
   setTimeout(() => {
-    if (typeof sendTypedMessage === "function") {
-      sendTypedMessage();
+    const sendBtn = document.getElementById("sendBtn");
+    if (sendBtn) {
+      sendBtn.click();
     }
-  }, 300); // small delay for safety
+  }, 300);
 };
 
     recognition.onerror = function (event) {
