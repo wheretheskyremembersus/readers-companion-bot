@@ -9151,7 +9151,6 @@ let voicesReady = false;
 
 function loadVoices() {
   const voices = speechSynthesis.getVoices();
-  const femaleIndian = indianVoices[0];
 
   if (voices.length > 0) {
     voicesReady = true;
@@ -9209,7 +9208,7 @@ function speakText(text, voiceType) {
 
     selectedVoice =
       indianVoices.find(v => v.name.toLowerCase().includes("female")) ||
-      indianVoices[1] || indianVoices[0] ||
+      indianVoices[0] ||
       voices.find(v => v.lang.startsWith("en"));
 
     speech.pitch = 1.15;
@@ -9217,10 +9216,11 @@ function speakText(text, voiceType) {
   }
 
   // 👨 AYAAN (Male)
- else if (voiceType === "ayaan") {
+else if (voiceType === "ayaan") {
 
   selectedVoice =
-    voices.find(v => v !== indianVoices[0]) ||
+    voices.find(v => v.lang === "en-US") ||
+    voices.find(v => v.lang === "en-GB") ||
     voices.find(v => v.lang.startsWith("en"));
 
   speech.pitch = 0.9;
