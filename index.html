@@ -8969,7 +8969,14 @@ if (result.type === "v4") {
 }
 
 if (result.type === "v3") {
-  return processInput(normalized, originalText);
+  const v3Response = processInput(normalized, originalText);
+
+  // ✅ SAFETY FALLBACK
+  if (v3Response === undefined) {
+    return deliverReply(getV3Fallback());
+  }
+
+  return v3Response;
 }
 
 /* =========================
