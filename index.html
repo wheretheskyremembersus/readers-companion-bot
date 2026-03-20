@@ -8996,11 +8996,12 @@ META REDIRECT LAYER
 ========================= */
 
 if (isDirectionalDeviation(originalText)) {
-  deliverReply(relationalRedirect(activeVoice));
-  return;
+  return deliverReply(relationalRedirect(activeVoice));
 }
 
-}
+// ✅ HARD FALLBACK (NO NEW BRACES)
+return deliverReply(getV3Fallback());
+  
 </script>
 
 <!-- SUPABASE ANALYTICS -->
