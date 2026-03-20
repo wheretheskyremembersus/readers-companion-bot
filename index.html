@@ -649,9 +649,11 @@ speechSynthesis.onvoiceschanged = () => {
   voicesReady = true;
 };
 
-document.addEventListener("click", () => {
-  speechSynthesis.resume();
-});
+function unlockSpeech() {
+  if (speechSynthesis.paused) {
+    speechSynthesis.resume();
+  }
+}
   
 window.addEventListener("load", function () {
 
@@ -677,9 +679,9 @@ function speakText(text, voiceType) {
   if (!('speechSynthesis' in window)) return;
 
   if (!voicesReady) {
-    setTimeout(() => speakText(text, voiceType), 200);
-    return;
-  }
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return; 
+}
 
   const voices = speechSynthesis.getVoices();
   let selectedVoice = voices[0];
