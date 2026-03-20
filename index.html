@@ -1127,23 +1127,28 @@ window.addEventListener("DOMContentLoaded", function () {
     };
 
     recognition.onresult = (event) => {
-      if (voiceSendLock) return;
 
-      const resultIndex = event.resultIndex;
-      const transcript = event.results[resultIndex][0].transcript.trim();
+  const resultIndex = event.resultIndex;
+  const result = event.results[resultIndex];
 
-      if (!transcript) return;
+  // ✅ ignore interim (partial) results
+  if (!result.isFinal) return;
 
-      voiceSendLock = true;
+  const transcript = result[0].transcript.trim();
 
-      addUserMessage(transcript);
-      processInput(transcript, transcript);
+  if (!transcript) return;
+  if (voiceSendLock) return;
 
-      setTimeout(() => {
-        voiceSendLock = false;
-      }, 700);
-    };
-  } 
+  voiceSendLock = true;
+
+  addUserMessage(transcript);
+  processInput(transcript, transcript);
+
+  setTimeout(() => {
+    voiceSendLock = false;
+  }, 700);
+ };
+} 
 
   const micBtn = document.getElementById("micBtn");
 
