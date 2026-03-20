@@ -8982,23 +8982,31 @@ const result = handleIntelligence(normalized, originalText);
 // V3 / V4 EXECUTION SWITCH
 // =======================
 
-replyDelivered = false;
 returnFromEngine = false;
 
-if (result.type === "v4") {
+try {
 
-  runV4Engine(normalized, originalText);
+  if (result.type === "v4") {
 
-  if (returnFromEngine) return;
+    runV4Engine(normalized, originalText);
 
-  return deliverReply(getV3Fallback());
-}
+    if (returnFromEngine) return;
 
-if (result.type === "v3") {
+    return deliverReply(getV3Fallback());
+  }
 
-  processInput(normalized, originalText);
+  if (result.type === "v3") {
 
-  if (returnFromEngine) return;
+    processInput(normalized, originalText);
+
+    if (returnFromEngine) return;
+
+    return deliverReply(getV3Fallback());
+  }
+
+} catch (e) {
+
+  console.error("❌ ENGINE ERROR:", e);
 
   return deliverReply(getV3Fallback());
 }
