@@ -8304,84 +8304,88 @@ document.addEventListener("contextmenu", function (e) {
   e.preventDefault();
 });
 
-  // -------------------------------
-  // Create Supabase Client
-  // -------------------------------
+ // -------------------------------
+// Create Supabase Client
+// -------------------------------
 window.supabaseClient = window.supabaseClient || 
   window.supabase.createClient(
     "https://gocmauqnfdcwfaqlpjrv.supabase.co",
     "sb_publishable_H1J17xdbN0qEUOHE2qAnew_cc2E1m5P"
   );
 
-  // -------------------------------
-  // Create Session ID
-  // -------------------------------
-  if (!localStorage.getItem("session_id")) {
-    localStorage.setItem("session_id", crypto.randomUUID());
-  }
+// -------------------------------
+// Create Session ID
+// -------------------------------
+if (!localStorage.getItem("session_id")) {
+  localStorage.setItem("session_id", crypto.randomUUID());
+}
 
-  // -------------------------------
-  // Core Tracking Function
-  // -------------------------------
-window.trackEvent = async function(eventType, extraData) {
-  extraData = extraData || {};
-    try {
-      await window.supabaseClient.from("events").insert([
+// -------------------------------
+// SAFE Tracking Function (NETWORK DISABLED)
+// -------------------------------
+window.trackEvent = async function(eventType, extraData = {}) {
+  try {
+    console.log("Tracking:", eventType, extraData);
+
+    const { error } = await supabaseClient
+      .from("analytics_events")
+      .insert([
         {
-          event_type: eventType,
-          session_id: localStorage.getItem("session_id"),
-          traffic_source: document.referrer || "direct",
-          platform: "web",
-          source: "canva",
-          ...extraData
+          event_name: eventType,
+          payload: extraData
         }
       ]);
-    } catch (e) {
-      console.warn("Analytics failed:", e);
-    }
-  };
 
-  // -------------------------------
-  // Track Chat Loaded
-  // -------------------------------
-  trackEvent("chat_loaded");
-
-  // -------------------------------
-  // Reliable processInput Wrapper
-  // -------------------------------
-  let wrapped = false;
-  let attempts = 0;
-
-  const wrapperInterval = setInterval(function () {
-
-    if (!wrapped && typeof window.processInput === "function") {
-
-      const originalProcessInput = window.processInput;
-
-      window.processInput = function(text, originalText) {
-
-        if (!window.chatStarted) {
-          window.chatStarted = true;
-          trackEvent("chat_initiated");
-        }
-
-        trackEvent("user_message", {
-          message_length: originalText ? originalText.length : 0
-        });
-
-        return originalProcessInput.apply(this, arguments);
-      };
-
-      wrapped = true;
-      clearInterval(wrapperInterval);
+    if (error) {
+      console.error("Tracking failed:", error);
     }
 
-    attempts++;
-    if (attempts > 30) {
-      clearInterval(wrapperInterval);
-    }
+  } catch (e) {
+    console.warn("Analytics crash:", e);
+  }
+};
 
-  }, 300);
+// -------------------------------
+// Track Chat Loaded
+// -------------------------------
+trackEvent("chat_loaded");
+
+// -------------------------------
+// Reliable processInput Wrapper
+// -------------------------------
+let wrapped = false;
+let attempts = 0;
+
+const wrapperInterval = setInterval(function () {
+
+  if (!wrapped && typeof window.processInput === "function") {
+
+    const originalProcessInput = window.processInput;
+
+    window.processInput = function(text, originalText) {
+
+      if (!window.chatStarted) {
+        window.chatStarted = true;
+        trackEvent("chat_initiated");
+      }
+
+      trackEvent("user_message", {
+        message_length: originalText ? originalText.length : 0
+      });
+
+      return originalProcessInput.apply(this, arguments);
+    };
+
+    wrapped = true;
+    clearInterval(wrapperInterval);
+  }
+
+  attempts++;
+  if (attempts > 30) {
+    clearInterval(wrapperInterval);
+  }
+
+}, 300);
 
   // -------------------------------
   // Track Button Clicks
