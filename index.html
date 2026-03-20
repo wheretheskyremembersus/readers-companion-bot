@@ -9002,7 +9002,7 @@ META REDIRECT LAYER
 if (isDirectionalDeviation(originalText)) {
   return deliverReply(relationalRedirect(activeVoice));
 }
-  
+ return deliverReply(getV3Fallback()); 
 </script>
 
 <!-- SUPABASE ANALYTICS -->
