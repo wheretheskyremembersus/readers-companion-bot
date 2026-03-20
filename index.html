@@ -643,7 +643,16 @@ body {
 let skyLayer;
 let dock;
 let emotionalDepth = 0;
+let voicesReady = false;
 
+speechSynthesis.onvoiceschanged = () => {
+  voicesReady = true;
+};
+
+document.addEventListener("click", () => {
+  speechSynthesis.resume();
+});
+  
 window.addEventListener("load", function () {
 
   skyLayer = document.getElementById("skyLayer");
@@ -798,8 +807,7 @@ let voiceEnabled = false;
   
 let reflections = [];
 let reflectionStep = 0;
-let voiceSendLock = false;
-  
+let voiceSendLock = false; 
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
