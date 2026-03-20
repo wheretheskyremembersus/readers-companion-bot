@@ -8983,11 +8983,7 @@ if (result.type === "v3") {
 
   replyDelivered = false;
 
-  try {
-    processInput(normalized, originalText);
-  } catch (e) {
-    console.error("V3 error:", e);
-  }
+  processInput(normalized, originalText);
 
   if (!replyDelivered) {
     return deliverReply(getV3Fallback());
@@ -9000,10 +8996,11 @@ META REDIRECT LAYER
 ========================= */
 
 if (isDirectionalDeviation(originalText)) {
-  return deliverReply(relationalRedirect(activeVoice));
+  deliverReply(relationalRedirect(activeVoice));
+  return;
 }
- return deliverReply(getV3Fallback()); 
-</script>
+
+}
 
 <!-- SUPABASE ANALYTICS -->
 <script>
