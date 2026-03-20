@@ -695,7 +695,7 @@ function cleanSpeechText(text) {
 
 function addVoiceMessage(text, voiceOverride) {
 
- const voice = voiceOverride ?? activeVoice;
+  const voice = voiceOverride || activeVoice;
 
   const side =
     voice === "saira"
@@ -713,14 +713,12 @@ function addVoiceMessage(text, voiceOverride) {
 
   autoScroll();
 
- addVoiceMessage(replyText);
-
-if (voiceEnabled) {
-  setTimeout(() => {
-    speakText(cleanSpeechText(replyText), activeVoice);
-    voiceEnabled = false;
-  }, 600);
-}
+  if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
+    setTimeout(() => {
+      speakText(cleanSpeechText(text), voice);
+      voiceEnabled = false;
+    }, 600);
+  }
 }
 
 document.addEventListener("click", function (e) {
