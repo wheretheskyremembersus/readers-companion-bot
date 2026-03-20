@@ -2824,7 +2824,13 @@ v4RotationIndex[voice][pillar]++;
 FINAL RESPONSE (CLEAN)
 ========================= */
 
-return deliverReply(line || getV3Fallback());
+if (line) {
+  return deliverReply(line);
+}
+
+if (!returnFromEngine) {
+  return deliverReply(getV3Fallback());
+}
 }
   
 window.runV4Engine = runV4Engine;
