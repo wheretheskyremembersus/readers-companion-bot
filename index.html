@@ -682,10 +682,25 @@ function speakText(text, voiceType) {
   const voices = speechSynthesis.getVoices();
   if (!voices.length) return; 
 }
+const voices = speechSynthesis.getVoices();
+let selectedVoice = null;
+if (voiceType === "saira") {
+  selectedVoice =
+    voices.find(v => v.name === "Google हिन्दी") ||
+    voices.find(v => v.name === "Vani") ||
+    voices.find(v => v.name === "Soumya");
+}
 
-  const voices = speechSynthesis.getVoices();
-  let selectedVoice = voices[0];
+else if (voiceType === "ayaan") {
+  selectedVoice =
+    voices.find(v => v.name === "Google UK English Male") ||
+    voices.find(v => v.name === "Google US English");
+}
 
+// fallback
+if (!selectedVoice) {
+  selectedVoice = voices[0];
+}
   const speech = new SpeechSynthesisUtterance(text);
 
   speech.voice = selectedVoice;
@@ -724,12 +739,12 @@ function addVoiceMessage(text, voiceOverride) {
 
   autoScroll();
 
-  if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
-    setTimeout(() => {
-      speakText(cleanSpeechText(text), voice);
-      voiceEnabled = false;
-    }, 600);
-  }
+  if (micTriggered && (voice === "saira" || voice === "ayaan")) {
+  setTimeout(() => {
+    speakText(cleanSpeechText(text), voice);
+    micTriggered = false; 
+  }, 600);
+ }
 }
 
 document.addEventListener("click", function (e) {
@@ -808,6 +823,7 @@ let currentLayer = 0;
 let voiceEnabled = false;
 let recognition;
 let isListening = false;
+let micTriggered = false;
   
 let reflections = [];
 let reflectionStep = 0;
@@ -1127,9 +1143,7 @@ window.addEventListener("DOMContentLoaded", function () {
         voiceSendLock = false;
       }, 700);
     };
-  } // ✅ properly closes SpeechRecognition block
-
-  // ✅ MIC BUTTON HANDLER
+  } 
 
   const micBtn = document.getElementById("micBtn");
 
@@ -1139,7 +1153,9 @@ window.addEventListener("DOMContentLoaded", function () {
       if (!recognition) return;
 
       unlockSpeech();
-
+      
+      micTriggered = true;
+      
       if (isListening) {
         recognition.stop();
         return;
