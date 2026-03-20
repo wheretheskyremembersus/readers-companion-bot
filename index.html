@@ -8882,20 +8882,38 @@ input.value ="";
 
 addUserMessage(originalText);
 
-const result = handleIntelligence(normalized, originalText);
+/* =========================
+V3 FREEHAND PROGRESSION + TOLLGATE
+========================= */
 
-// =======================
-// V3 / V4 EXECUTION SWITCH
-// =======================
-
-if (result.type === "v4") {
-  return runV4Engine(normalized, originalText);
+if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
+  tollState[activeVoice].freeCount++;
 }
 
-if (result.type === "v3") {
-  return processInput(normalized, originalText);
-}
+const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 
+if (freeProgress >= 20) {
+  tollState[activeVoice].unlocked = true;
+
+  emotionalModeActive = true;   // ✅ ADD THIS LINE
+
+  /* Activate typing after tollgate */
+  const typingArea = document.getElementById("typingArea");
+  if (typingArea) typingArea.style.display = "flex";
+
+  /* Remove dock buttons */
+  clearDock();
+
+  if (!transitionAcknowledged?.[activeVoice]) {
+    const bridgeLine =
+      activeVoice === "saira"
+        ? "You didn't just pass through that."
+        : "You stayed with it.";
+
+    transitionAcknowledged[activeVoice] = true;
+    deliverReply(bridgeLine);
+  }
+}
 /* =========================
    ABUSE PROTECTION GUARD 
 ========================= */
@@ -8936,38 +8954,19 @@ if (unsafeDetected) {
       : "That direction isn't supported here. Adjust the tone."
   );
 }
+  
+const result = handleIntelligence(normalized, originalText);
 
-/* =========================
-V3 FREEHAND PROGRESSION + TOLLGATE
-========================= */
+// =======================
+// V3 / V4 EXECUTION SWITCH
+// =======================
 
-if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
-  tollState[activeVoice].freeCount++;
+if (result.type === "v4") {
+  return runV4Engine(normalized, originalText);
 }
 
-const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
-
-if (freeProgress >= 20) {
-  tollState[activeVoice].unlocked = true;
-
-  emotionalModeActive = true;   // ✅ ADD THIS LINE
-
-  /* Activate typing after tollgate */
-  const typingArea = document.getElementById("typingArea");
-  if (typingArea) typingArea.style.display = "flex";
-
-  /* Remove dock buttons */
-  clearDock();
-
-  if (!transitionAcknowledged?.[activeVoice]) {
-    const bridgeLine =
-      activeVoice === "saira"
-        ? "You didn't just pass through that."
-        : "You stayed with it.";
-
-    transitionAcknowledged[activeVoice] = true;
-    deliverReply(bridgeLine);
-  }
+if (result.type === "v3") {
+  return processInput(normalized, originalText);
 }
 
 /* =========================
