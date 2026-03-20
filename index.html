@@ -824,6 +824,7 @@ let voiceEnabled = false;
 let recognition;
 let isListening = false;
 let micTriggered = false;
+let lastTranscript = "";
   
 let reflections = [];
 let reflectionStep = 0;
@@ -1131,12 +1132,15 @@ window.addEventListener("DOMContentLoaded", function () {
   const resultIndex = event.resultIndex;
   const result = event.results[resultIndex];
 
-  // ✅ ignore interim (partial) results
   if (!result.isFinal) return;
 
   const transcript = result[0].transcript.trim();
 
   if (!transcript) return;
+
+  if (transcript === lastTranscript) return;
+  lastTranscript = transcript;
+
   if (voiceSendLock) return;
 
   voiceSendLock = true;
