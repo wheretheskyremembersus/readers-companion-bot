@@ -667,17 +667,21 @@ function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
 
-  const utterance = new SpeechSynthesisUtterance(text);
-
-  if (voiceType === "saira") {
-    utterance.pitch = 1.2;
-    utterance.rate = 0.95;
-  } else if (voiceType === "ayaan") {
-    utterance.pitch = 0.9;
-    utterance.rate = 0.9;
+  if (!voicesReady) {
+    setTimeout(() => speakText(text, voiceType), 200);
+    return;
   }
 
-  speechSynthesis.speak(utterance);
+  const voices = speechSynthesis.getVoices();
+  let selectedVoice = voices[0];
+
+  const speech = new SpeechSynthesisUtterance(text);
+
+  speech.voice = selectedVoice;
+  speech.pitch = voiceType === "saira" ? 1.1 : 0.9;
+  speech.rate  = voiceType === "saira" ? 0.95 : 0.9;
+
+  speechSynthesis.speak(speech);
 }
 /* =========================
    Clean Speech Text
@@ -8567,7 +8571,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // -------------------------------
-// VOICE LOADING (FINAL FIX)
+// VOICE LOADING
 // -------------------------------
 let voicesReady = false;
 
@@ -8581,13 +8585,13 @@ function loadVoices() {
   }
 }
 
-// 🔥 Initial attempt
+// Initial attempt
 loadVoices();
 
-// 🔥 Ensure voices load after user interaction (CRITICAL FIX)
+// Force load after interaction
 document.addEventListener("click", function initVoices() {
   loadVoices();
-  speechSynthesis.getVoices(); // force load
+  speechSynthesis.getVoices();
   document.removeEventListener("click", initVoices);
 });
 
