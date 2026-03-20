@@ -723,6 +723,7 @@ let reflectionStep = 0;
 let voiceSendLock = false;
 let voiceEnabled = false;
 let replyDelivered = false;
+let returnFromEngine = false;
 var v4RotationIndex = {
   saira: {},
   ayaan: {}
@@ -1117,12 +1118,14 @@ function removeTypingIndicator() {
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
 
 function deliverReply(replyText, callback) {
-replyDelivered = true;
-  if (!replyText) return;
 
- if (Array.isArray(replyText)) {
-  replyText = replyText[Math.floor(Math.random() * replyText.length)];
-}
+  if (!replyText) return;
+  replyDelivered = true;
+  returnFromEngine = true;
+
+  if (Array.isArray(replyText)) {
+    replyText = replyText[Math.floor(Math.random() * replyText.length)];
+  }
  
   /* =========================
    AUTO RELATIONAL PREFIX
@@ -8892,6 +8895,7 @@ input.value ="";
 
 addUserMessage(originalText);
 replyDelivered = false;
+returnFromEngine = false;
 /* =========================
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
@@ -8971,36 +8975,25 @@ const result = handleIntelligence(normalized, originalText);
 // V3 / V4 EXECUTION SWITCH
 // =======================
 
-if (result.type === "v4") {
+replyDelivered = false;
+returnFromEngine = false;
 
-  replyDelivered = false;
+if (result.type === "v4") {
 
   runV4Engine(normalized, originalText);
 
-  if (!replyDelivered) {
-    return deliverReply(getV3Fallback());
-  }
+  if (returnFromEngine) return;
 
-  return;
+  return deliverReply(getV3Fallback());
 }
 
 if (result.type === "v3") {
 
-  replyDelivered = false;
+  processInput(normalized, originalText);
 
-  const response = processInput(normalized, originalText);
+  if (returnFromEngine) return;
 
-  // ✅ If processInput returned something, use it
-  if (response !== undefined) {
-    return response;
-  }
-
-  // ✅ If nothing was returned AND no reply sent → fallback
-  if (!replyDelivered) {
-    return deliverReply(getV3Fallback());
-  }
-
-  return;
+  return deliverReply(getV3Fallback());
 }
 /* =========================
 META REDIRECT LAYER
