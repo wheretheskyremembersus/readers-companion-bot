@@ -8988,8 +8988,14 @@ if (result.type === "v3") {
 
   replyDelivered = false;
 
-  processInput(normalized, originalText);
+  const response = processInput(normalized, originalText);
 
+  // ✅ If processInput returned something, use it
+  if (response !== undefined) {
+    return response;
+  }
+
+  // ✅ If nothing was returned AND no reply sent → fallback
   if (!replyDelivered) {
     return deliverReply(getV3Fallback());
   }
