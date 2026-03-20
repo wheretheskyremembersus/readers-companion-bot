@@ -663,8 +663,22 @@ window.addEventListener("load", function () {
    Voice function 
 ========================= */
   
-function speakText(text, voiceType) { ... }
+function speakText(text, voiceType) {
 
+  if (!('speechSynthesis' in window)) return;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  if (voiceType === "saira") {
+    utterance.pitch = 1.2;
+    utterance.rate = 0.95;
+  } else if (voiceType === "ayaan") {
+    utterance.pitch = 0.9;
+    utterance.rate = 0.9;
+  }
+
+  speechSynthesis.speak(utterance);
+}
 /* =========================
    Clean Speech Text
 ========================= */
