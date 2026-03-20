@@ -8983,7 +8983,11 @@ if (result.type === "v3") {
 
   replyDelivered = false;
 
-  processInput(normalized, originalText);
+  try {
+    processInput(normalized, originalText);
+  } catch (e) {
+    console.error("V3 error:", e);
+  }
 
   if (!replyDelivered) {
     return deliverReply(getV3Fallback());
@@ -8999,8 +9003,6 @@ if (isDirectionalDeviation(originalText)) {
   return deliverReply(relationalRedirect(activeVoice));
 }
 }
-// ✅ HARD FALLBACK (NO NEW BRACES)
-return deliverReply(getV3Fallback());
   
 </script>
 
