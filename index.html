@@ -722,6 +722,10 @@ let reflections = [];
 let reflectionStep = 0;
 let voiceSendLock = false;
 let voiceEnabled = false;
+var v4RotationIndex = {
+  saira: {},
+  ayaan: {}
+};
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -3495,8 +3499,7 @@ if (abuseTracker[activeVoice]?.locked) {
 }
 
 /* ================================
-V4 ROTATION INDEX
-(prevents repetition)
+V4 ROTATION INDEX (prevents repetition)
 ================================= */
 
 var v4RotationIndex = {
