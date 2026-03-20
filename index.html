@@ -2812,12 +2812,15 @@ if (v4RotationIndex[voice][pillar] === undefined) {
 }
 
 const index = v4RotationIndex[voice][pillar];
-
 const line = pool[index % pool.length];
 
 v4RotationIndex[voice][pillar]++;
 
-return deliverReply(line);
+/* =========================
+FINAL RESPONSE (CLEAN)
+========================= */
+
+return deliverReply(line || getV3Fallback());
 }
   
 window.runV4Engine = runV4Engine;
@@ -8969,7 +8972,16 @@ const result = handleIntelligence(normalized, originalText);
 // =======================
 
 if (result.type === "v4") {
-  return runV4Engine(normalized, originalText);
+
+  replyDelivered = false;
+
+  runV4Engine(normalized, originalText);
+
+  if (!replyDelivered) {
+    return deliverReply(getV3Fallback());
+  }
+
+  return;
 }
 
 if (result.type === "v3") {
