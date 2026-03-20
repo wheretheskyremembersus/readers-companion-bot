@@ -662,19 +662,9 @@ window.addEventListener("load", function () {
 /* =========================
    Voice function 
 ========================= */
-function speakText(text, voice) {
-  const utterance = new SpeechSynthesisUtterance(text);
+  
+function speakText(text, voiceType) { ... }
 
-  if (voice === "saira") {
-    utterance.pitch = 1.2;
-    utterance.rate = 0.95;
-  } else if (voice === "ayaan") {
-    utterance.pitch = 0.9;
-    utterance.rate = 0.9;
-  }
-
-  speechSynthesis.speak(utterance);
-}
 /* =========================
    Clean Speech Text
 ========================= */
