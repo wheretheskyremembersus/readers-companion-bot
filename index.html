@@ -1188,24 +1188,6 @@ function addUserMessage(text) {
   autoScroll();
 }
 
-function addVoiceMessage(text) {
-  const side =
-    activeVoice ==="saira"
-      ?"saira-msg"
-      : activeVoice ==="ayaan"
-      ?"ayaan-msg"
-      :"system-msg";
-
-  chatBody.insertAdjacentHTML(
-   "beforeend",
-    `<div class="message ${side}">
-        <div class="bubble">${text}</div>
-     </div>`
-  );
-
-  autoScroll();
-}
-
 function addSystemMessage(text) {
   chatBody.insertAdjacentHTML(
    "beforeend",
