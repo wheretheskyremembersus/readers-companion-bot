@@ -1111,20 +1111,22 @@ window.addEventListener("DOMContentLoaded", function () {
     };
 
     recognition.onresult = (event) => {
-      if (voiceSendLock) return;
+  if (voiceSendLock) return;
 
-      voiceSendLock = true;
+  const resultIndex = event.resultIndex;
+  const transcript = event.results[resultIndex][0].transcript.trim();
 
-      const text = event.results[0][0].transcript;
+  if (!transcript) return;
 
-      addUserMessage(text);
-      processInput(text, text);
+  voiceSendLock = true;
 
-      setTimeout(() => {
-        voiceSendLock = false;
-      }, 500);
-    };
-  }
+  addUserMessage(transcript);
+  processInput(transcript, transcript);
+
+  setTimeout(() => {
+    voiceSendLock = false;
+  }, 700);
+};
 
   // ✅ MIC BUTTON HANDLER (added here — AFTER setup)
 
