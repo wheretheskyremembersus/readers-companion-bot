@@ -4658,7 +4658,7 @@ if (/\bserious|real\b/i.test(t)) {
       : "Yes. It carries weight from beginning to end."
   );
 }
-
+  
 /* =========================
    COMPOSURE / ABSURDITY GUARD
 ========================= */
@@ -8979,35 +8979,20 @@ if (unsafeDetected) {
 const result = handleIntelligence(normalized, originalText);
 
 // =======================
-// V3 / V4 EXECUTION SWITCH
+// V3 / V4 EXECUTION SWITCH (FINAL)
 // =======================
 
 returnFromEngine = false;
 
-try {
+// 🔹 Route to correct engine
+if (result.type === "v4") {
+  runV4Engine(normalized, originalText);
+} else {
+  processInput(normalized, originalText);
+}
 
-  if (result.type === "v4") {
-
-    runV4Engine(normalized, originalText);
-
-    if (returnFromEngine) return;
-
-    return deliverReply(getV3Fallback());
-  }
-
-  if (result.type === "v3") {
-
-    processInput(normalized, originalText);
-
-    if (returnFromEngine) return;
-
-    return deliverReply(getV3Fallback());
-  }
-
-} catch (e) {
-
-  console.error("❌ ENGINE ERROR:", e);
-
+// 🔹 GUARANTEED RESPONSE
+if (!returnFromEngine) {
   return deliverReply(getV3Fallback());
 }
 /* =========================
