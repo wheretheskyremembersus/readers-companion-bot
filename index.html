@@ -2281,7 +2281,20 @@ if (!pillar) {
   const fallbackPillars = ["affection","fear","regret","loss","growth"];
   pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
 }
+  
+const voiceStage = stageState[voice];
 
+const nextStage = voiceStage.currentStage + 1;
+
+if (nextStage <= 7) {
+  voiceStage.momentum[nextStage]++;
+
+  const thresholds = {2:3,3:4,4:5,5:6,6:7,7:8};
+
+  if (voiceStage.momentum[nextStage] >= thresholds[nextStage]) {
+    voiceStage.currentStage = nextStage;
+  }
+}
 
 /* =========================
 MASTER NARRATIVE RESPONSES
@@ -8971,8 +8984,7 @@ if (result.type === "v4") {
 if (result.type === "v3") {
   const v3Response = processInput(normalized, originalText);
 
-  // ✅ SAFETY FALLBACK
-  if (v3Response === undefined) {
+  if (!v3Response) {
     return deliverReply(getV3Fallback());
   }
 
