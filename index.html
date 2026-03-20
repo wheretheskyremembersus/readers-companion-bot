@@ -1120,6 +1120,7 @@ function removeTypingIndicator() {
 function deliverReply(replyText, callback) {
 
   if (!replyText) return;
+  console.log("✅ REPLY:", replyText);
   replyDelivered = true;
   returnFromEngine = true;
 
@@ -2186,7 +2187,7 @@ V4 EMOTIONAL ENGINE
 ================================= */
 
 function runV4Engine(text, originalText) {
-
+console.log("👉 V4 ENTERED:", originalText);
   const voice =
     activeVoice === "saira" || activeVoice === "ayaan"
       ? activeVoice
@@ -3429,7 +3430,7 @@ function getSelfReferencePrefix(stage) {
 ========================= */
 
 function processInput(userText, originalText) {
-
+console.log("👉 V3 ENTERED:", originalText);
   let normalizedText = normalizeInput(originalText);
 
 
