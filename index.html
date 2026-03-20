@@ -8664,31 +8664,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // -------------------------------
-// VOICE LOADING
-// -------------------------------
-let voicesReady = false;
-
-function loadVoices() {
-  const voices = speechSynthesis.getVoices();
-
-  if (voices.length > 0) {
-    voicesReady = true;
-  } else {
-    setTimeout(loadVoices, 100);
-  }
-}
-
-// Initial attempt
-loadVoices();
-
-// Force load after interaction
-document.addEventListener("click", function initVoices() {
-  loadVoices();
-  speechSynthesis.getVoices();
-  document.removeEventListener("click", initVoices);
-});
-
-// -------------------------------
 // SPEAK FUNCTION
 // -------------------------------
 function speakText(text, voiceType) {
