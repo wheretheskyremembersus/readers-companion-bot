@@ -722,6 +722,7 @@ let reflections = [];
 let reflectionStep = 0;
 let voiceSendLock = false;
 let voiceEnabled = false;
+let replyDelivered = false;
 var v4RotationIndex = {
   saira: {},
   ayaan: {}
@@ -1019,7 +1020,6 @@ function sanitize(text) {
   return div.innerHTML;
 }
 
-// ✅ NEW: Clean text for speech (removes emojis & symbols)
 function cleanSpeechText(text) {
   return text
     .replace(/[\u{1F600}-\u{1F6FF}]/gu, "") // remove emojis
@@ -1061,12 +1061,10 @@ function addVoiceMessage(text, voiceOverride) {
 
   autoScroll();
 
-  // 🎯 ONLY speak if mic triggered it
 if (voiceEnabled && (voice === "saira" || voice === "ayaan")) {
   setTimeout(() => {
     speakText(cleanSpeechText(text), voice); 
 
-    // ✅ turn off AFTER speaking
     voiceEnabled = false;
 
   }, 600);
@@ -1119,7 +1117,7 @@ function removeTypingIndicator() {
 /* ---------- Reply Delivery + Atmosphere Engine ---------- */
 
 function deliverReply(replyText, callback) {
-
+replyDelivered = true;
   if (!replyText) return;
 
  if (Array.isArray(replyText)) {
@@ -8897,7 +8895,7 @@ playTone(520, 60, 0.025);
 input.value ="";
 
 addUserMessage(originalText);
-
+replyDelivered = false;
 /* =========================
 V3 FREEHAND PROGRESSION + TOLLGATE
 ========================= */
@@ -8911,7 +8909,7 @@ const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
 if (freeProgress >= 20) {
   tollState[activeVoice].unlocked = true;
 
-  emotionalModeActive = true;   // ✅ ADD THIS LINE
+  emotionalModeActive = true;   
 
   /* Activate typing after tollgate */
   const typingArea = document.getElementById("typingArea");
@@ -8982,15 +8980,17 @@ if (result.type === "v4") {
 }
 
 if (result.type === "v3") {
-  const v3Response = processInput(normalized, originalText);
 
-  if (!v3Response) {
+  replyDelivered = false;
+
+  processInput(normalized, originalText);
+
+  if (!replyDelivered) {
     return deliverReply(getV3Fallback());
   }
 
-  return v3Response;
+  return;
 }
-
 /* =========================
 META REDIRECT LAYER
 ========================= */
