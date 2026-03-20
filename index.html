@@ -806,6 +806,8 @@ let foundationalAnswered = new Set();
 let characterAnswered = 0;
 let currentLayer = 0;
 let voiceEnabled = false;
+let recognition;
+let isListening = false;
   
 let reflections = [];
 let reflectionStep = 0;
@@ -1082,8 +1084,79 @@ window.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-});
 
+  // ✅ MIC SETUP (moved inside here — ONLY change)
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      isListening = true;
+      console.log("🎤 listening...");
+    };
+
+    recognition.onend = () => {
+      isListening = false;
+      console.log("🛑 stopped");
+    };
+
+    recognition.onerror = (e) => {
+      isListening = false;
+      console.error("Mic error:", e.error);
+    };
+
+    recognition.onresult = (event) => {
+      if (voiceSendLock) return;
+
+      voiceSendLock = true;
+
+      const text = event.results[0][0].transcript;
+
+      addUserMessage(text);
+      processInput(text, text);
+
+      setTimeout(() => {
+        voiceSendLock = false;
+      }, 500);
+    };
+  }
+
+  // ✅ MIC BUTTON HANDLER (added here — AFTER setup)
+
+  const micBtn = document.getElementById("micBtn");
+
+  if (micBtn) {
+    micBtn.addEventListener("click", () => {
+
+      if (!recognition) return;
+
+      unlockSpeech();
+
+      if (isListening) {
+        recognition.stop();
+        return;
+      }
+
+      voiceSendLock = false;
+
+      try {
+        recognition.start();
+      } catch (e) {
+        console.log("Restarting mic...");
+        recognition.stop();
+        setTimeout(() => recognition.start(), 200);
+      }
+
+    });
+  }
+
+});
+  
 /* ---------- Auto Scroll ---------- */
 
 function autoScroll() {
@@ -1142,7 +1215,6 @@ function addSystemMessage(text) {
   );
   autoScroll();
 }
-
 /* =========================
    TYPING INDICATOR FUNCTIONS
 ========================= */
