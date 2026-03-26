@@ -7155,7 +7155,7 @@ if (response) {
 
   if (typeof applyV4Integration === "function") {
 
-    if (Math.random() < 0.35) {
+    if (Math.random() < 0.25) {
       finalText = applyV4Integration(
         finalText,
         detected.primary
@@ -7295,7 +7295,7 @@ function injectEmotionalPillar(state) {
   let finalPillar = detected ? detected.primary : nativePillar;
 
   /* =========================
-   ANTI-LOOP CONTROL
+     ANTI-LOOP CONTROL
   ========================= */
 
   if (!v4PillarHistory) v4PillarHistory = {};
@@ -7306,11 +7306,9 @@ function injectEmotionalPillar(state) {
 
   const history = v4PillarHistory[activeVoice];
 
-  // Count repeats BEFORE modifying history
   const sameCount = history.filter(p => p === finalPillar).length;
 
-  // Diversify ONLY if stuck
-  if (sameCount >= 4) {
+  if (sameCount >= 3) {
 
     const allPillars = Object.keys(emotionalResponseBank);
 
@@ -7320,7 +7318,8 @@ function injectEmotionalPillar(state) {
         emotionalResponseBank[p]?.[activeVoice]?.[currentStage]
     );
 
-    if (validAlternatives.length > 0) {
+  
+    if (validAlternatives.length > 0 && Math.random() < 0.6) {
       finalPillar =
         validAlternatives[Math.floor(Math.random() * validAlternatives.length)];
     }
