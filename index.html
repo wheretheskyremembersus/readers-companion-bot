@@ -7328,166 +7328,172 @@ function applyV4Integration(baseText, pillar) {
 
 const emotionalResponseBank = {
 
-  affection: {
-
-    saira: {
-      1: "I can hear that something in this mattered to you.",
-      2: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you.",
-      3: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you. You don't hold onto something like that without it meaning more than you expected.",
-      4: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you. Sometimes affection grows quietly before we recognise it. It can feel unsettling when you realise it has already taken root.",
-      5: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you. Sometimes affection grows quietly before we recognise it. I remember noticing that shift in myself and pretending it was smaller than it was.",
-      6: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you. Sometimes affection grows quietly before we recognise it. I tried to dismiss it once. Later, I realised denying it only made it stronger.",
-      7: "I can hear that something in this mattered to you. Even if you're not fully certain why yet, it makes sense that it stayed with you. Sometimes affection grows quietly before we recognise it. I've learned not to dismiss those shifts anymore. The things that settle gently often shape us the most."
-    },
-
-    ayaan: {
-      1: "I can hear that this wasn't casual for you.",
-      2: "I can hear that this wasn't casual for you. When something stays in your thoughts longer than expected, it usually means it mattered.",
-      3: "I can hear that this wasn't casual for you. When something stays in your thoughts, it usually means it carried weight. That doesn't happen without reason.",
-      4: "I can hear that this wasn't casual for you. Attachment rarely announces itself. It builds quietly before you decide what it means.",
-      5: "I can hear that this wasn't casual for you. Attachment rarely announces itself. I don't attach easily, so when I noticed that shift, I paid attention to it.",
-      6: "I can hear that this wasn't casual for you. Attachment rarely announces itself. I once underestimated how deeply something had already rooted itself. By the time I acknowledged it, it had already altered me.",
-      7: "I can hear that this wasn't casual for you. Attachment rarely announces itself. I've learned not to dismiss it when something remains steady in my mind. Some bonds integrate rather than fade."
-    }
-  },
-
-  vulnerability: {
-
-   saira: {
-  1: "Feeling that way can be heavier than it looks.",
-2: "Sometimes we measure ourselves against silence and decide we fall short. Silence has a way of making us question ourselves more than we should.",
-  3: "When you care deeply, it can become easier to question yourself than to question what happened.",
-  4: "It hurts to wonder if you were less than enough. I remember asking myself that too - in the quiet that followed.",
-5: "There was a time I questioned myself the same way. Wondering if I had been too much… or somehow not enough to make someone stay.",
-6: "Doubt can soften the way you see yourself. I carried that doubt longer than I admitted - even when I knew what we had was real.",
-7: "If you gave something honest, then you were never lacking. Sometimes timing fails before love does."
-},
-
-    ayaan: {
-      1: "I can hear that this feels exposing.",
-      2: "I can hear that this feels exposing. Admitting uncertainty isn't easy.",
-      3: "I can hear that this feels exposing. Admitting that isn't simple. It suggests you're stepping outside your usual control.",
-      4: "I can hear that this feels exposing. Vulnerability can feel like instability, even when it's simply honesty.",
-      5: "I can hear that this feels exposing. I used to believe maintaining control was strength.",
-      6: "I can hear that this feels exposing. I kept myself contained for a long time. It preserved composure - but it also limited connection.",
-      7: "I can hear that this feels exposing. I've learned that steadiness doesn't require concealment. Strength can allow openness without collapse."
-    }
-  },
-
- fear: {
+affection: {
 
   saira: {
-    1: "When someone matters, even a small distance can feel larger than it is.",
-    2: "When someone once stood close, even silence can feel heavier than it should.",
-    3: "When something unfinished lingers, the fear of it fading can feel louder than reason.",
-    4: "Distance does not always mean disappearance. Fear often speaks before truth has the chance to.",
-    5: "What was real does not dissolve easily. Some connections remain steady even when circumstances shift.",
-    6: "Not all distance is an ending. Some bonds survive quiet seasons without asking for proof.",
-    7: "If something was true, it does not collapse at the first sign of absence. What was real remains real."
+    1: "Something about this seems to have stayed with you.",
+    2: "There’s a part of this that didn’t just pass by. Even if you can’t fully explain it yet, it makes sense that it remained.",
+    3: "What you’re describing doesn’t fade easily. Even without complete clarity, it’s understandable that it stayed. People don’t carry something like that unless it meant more than they realised at first.",
+    4: "This feels like something that settled before you had the chance to recognise it. Even if it’s not fully clear yet, it makes sense that it stayed. Affection often grows quietly, and it can feel unsettling when you realise it’s already there.",
+    5: "There’s a quiet shift in what you’re describing that doesn’t come from nowhere. Even without full understanding, it makes sense that it stayed. I remember noticing something similar and trying to treat it as smaller than it actually was.",
+    6: "It sounds like something here took hold before you intended it to. Even if you couldn’t name it at the time, it makes sense that it stayed. I once tried to push something like that away, only to realise later that resisting it made it stronger.",
+    7: "What you’re describing has a kind of quiet persistence to it. Even if it wasn’t clear immediately, it makes sense that it stayed. I’ve learned not to ignore those shifts anymore. The things that settle gently often end up shaping us the most."
   },
 
   ayaan: {
-    1: "I can hear the caution in your words.",
-    2: "I can hear the caution in your words. Fear often presents itself as restraint.",
-    3: "I can hear the caution in your words. It sounds measured. That usually means the stakes feel significant.",
-    4: "I can hear the caution in your words. Fear often presents itself as restraint. It frames distance as responsibility.",
-    5: "I can hear the caution in your words. I've chosen restraint before, believing it was the rational path.",
-    6: "I can hear the caution in your words. I once convinced myself that avoidance was discipline. Later, I understood I was protecting myself from depth as much as from risk.",
-    7: "I can hear the caution in your words. Fear can preserve order. But it can also quietly restrict expansion."
+    1: "This doesn’t come across as something casual.",
+    2: "There’s a level of attention in this that suggests it wasn’t incidental. When something stays in your thoughts longer than expected, it usually indicates it mattered.",
+    3: "What you’re describing carries a degree of weight. When something continues to occupy your thoughts, it generally means it had significance. That doesn’t occur without reason.",
+    4: "There’s a pattern here that doesn’t align with something casual. Attachment doesn’t typically present itself clearly at first. It develops gradually before you assign meaning to it.",
+    5: "The way you describe this suggests it wasn’t something superficial. Attachment tends to form without announcement. I don’t attach easily, so when I noticed that shift, I paid attention to it.",
+    6: "This reflects something that had already settled more deeply than expected. Attachment doesn’t make itself obvious. I once underestimated how far something had already rooted itself, and by the time I recognised it, it had already changed me.",
+    7: "There’s consistency in what you’re describing that doesn’t suggest something temporary. Attachment rarely declares itself directly. I’ve learned not to dismiss it when something remains steady in my mind. Some connections integrate rather than fade."
+  }
+
+},
+
+ vulnerability: {
+
+  saira: {
+    1: "That kind of feeling can carry more weight than it seems on the surface.",
+    2: "There are moments where silence makes us turn inward and question ourselves more than we should.",
+    3: "When something matters deeply, it’s easy to start questioning yourself instead of what actually happened.",
+    4: "It can hurt to sit with the thought that maybe you weren’t enough. I’ve been in that space too — especially in the quiet after everything settles.",
+    5: "I remember going through something similar, wondering if I had been too much… or somehow not enough to make someone stay.",
+    6: "That kind of doubt can slowly change how you see yourself. I held onto it longer than I admitted, even when I knew what I felt was real.",
+    7: "If what you gave was honest, then you were never lacking. Sometimes it isn’t about worth — sometimes things just don’t align when they should."
+  },
+
+  ayaan: {
+    1: "This seems like something that leaves you feeling a bit exposed.",
+    2: "There’s a level of openness in what you’re saying, and that’s not always easy to sit with.",
+    3: "Speaking about this takes a kind of honesty that doesn’t come naturally. It usually means stepping outside your usual sense of control.",
+    4: "There’s a point where being open can feel unsteady, even though it’s simply the truth coming through.",
+    5: "I used to think staying in control was the same as being strong.",
+    6: "For a long time, I kept things contained. It helped me stay composed — but it also kept real connection at a distance.",
+    7: "Over time, I’ve come to understand that being steady doesn’t mean hiding everything. You can stay grounded and still allow yourself to be seen."
+  }
+
+},
+  
+ fear: {
+
+  saira: {
+    1: "When someone matters, even a little distance can start to feel much bigger than it actually is.",
+    2: "When someone used to feel close, even silence can begin to carry more weight than expected.",
+    3: "When something feels unfinished, the thought of losing it can start to feel louder than anything else.",
+    4: "Distance doesn’t always mean something is gone. Sometimes fear speaks first, before anything real has actually changed.",
+    5: "What was real doesn’t just disappear. Some connections stay steady, even when everything around them shifts.",
+    6: "Distance isn’t always an ending. Some bonds hold quietly, even when there’s nothing to reassure them.",
+    7: "If something was genuine, it doesn’t fall apart the moment space appears. What was real doesn’t stop being real."
+  },
+
+  ayaan: {
+    1: "There’s a sense of hesitation in what you’re saying.",
+    2: "That hesitation usually comes from trying to stay careful. Fear often shows up that way.",
+    3: "The way you’re approaching this feels measured. That usually means something about it matters more than you’re saying directly.",
+    4: "Holding back can sometimes feel like the responsible choice. Fear often frames distance as something necessary.",
+    5: "I’ve chosen to hold back before, convincing myself it was the logical way to handle things.",
+    6: "There was a point where I told myself avoidance was discipline. Later, I realised I was protecting myself from going deeper just as much as from getting hurt.",
+    7: "Fear can keep things structured and controlled. But over time, it can also quietly limit what you allow yourself to experience."
   }
 
 },
   regret: {
 
-    saira: {
-      1: "I can hear that something feels unfinished.",
-      2: "I can hear that something feels unfinished. Regret rarely arrives loudly - it lingers.",
-      3: "I can hear that something feels unfinished. It sounds like it still sits with you. That kind of weight doesn't disappear easily.",
-      4: "I can hear that something feels unfinished. Regret often stays quiet but persistent. It tends to return when things are still.",
-      5: "I can hear that something feels unfinished. I've asked myself similar questions before - about moments I let pass.",
-      6: "I can hear that something feels unfinished. I've replayed moments in my mind, wondering what might have shifted if I had spoken sooner. Regret has a way of teaching us where courage was missing.",
-      7: "I can hear that something feels unfinished. I've learned that regret doesn't have to define you. Sometimes it becomes the reason you act differently the next time."
-    },
-
-    ayaan: {
-      1: "I can hear that something feels unresolved.",
-      2: "I can hear that something feels unresolved. Regret doesn't disappear simply because time passes.",
-      3: "I can hear that something feels unresolved. It hasn't settled for you. That usually means it mattered more than you expected.",
-      4: "I can hear that something feels unresolved. Regret tends to return in moments of stillness.",
-      5: "I can hear that something feels unresolved. I've revisited decisions I once defended confidently.",
-      6: "I can hear that something feels unresolved. I believed precision protected me from consequence. It didn't. Reflection revealed what I had overlooked.",
-      7: "I can hear that something feels unresolved. I've learned that regret can refine future clarity - if you allow it to inform rather than paralyse you."
-    }
+  saira: {
+    1: "It feels like something here didn’t fully come to a close.",
+    2: "There’s a sense that this never quite settled. Regret doesn’t usually arrive loudly — it tends to stay quietly in the background.",
+    3: "What you’re describing still seems to sit with you. That kind of feeling doesn’t just fade on its own.",
+    4: "Some things don’t leave, they just become quieter. Regret has a way of returning in still moments, when there’s nothing to distract from it.",
+    5: "I’ve found myself thinking about moments like that too — the ones that slipped by when I could have done something differently.",
+    6: "There were times I kept going over things in my head, wondering how it might have changed if I had spoken sooner. Regret has a way of showing us where we held back.",
+    7: "Over time, I’ve realised regret doesn’t have to stay as something heavy. Sometimes it becomes what guides you to act differently when it matters again."
   },
 
-  loss: {
+  ayaan: {
+    1: "This doesn’t seem fully resolved for you.",
+    2: "There’s something here that hasn’t quite settled. Time passing doesn’t always remove that kind of feeling.",
+    3: "It sounds like this still lingers in your mind. When something stays that way, it usually meant more than expected.",
+    4: "These things tend to return when everything else is quiet. Regret doesn’t need much to resurface.",
+    5: "I’ve gone back over decisions I once felt certain about, seeing them differently later.",
+    6: "At one point, I believed being precise would protect me from consequences. It didn’t. Looking back made it clear what I had missed.",
+    7: "What I’ve come to understand is that regret can sharpen how you see things going forward — if you let it guide you instead of holding you in place."
+  }
 
-    saira: {
-      1: "I can hear the quiet in what you're describing.",
-      2: "I can hear the quiet in what you're describing. Loss often sounds softer than people expect.",
-      3: "I can hear the quiet in what you're describing. It feels like something important isn't there anymore. That absence can sit heavily.",
-      4: "I can hear the quiet in what you're describing. Loss often shows up in ordinary moments. It changes the shape of days without announcing itself.",
-      5: "I can hear the quiet in what you're describing. I remember noticing the silence more than the goodbye.",
-      6: "I can hear the quiet in what you're describing. I underestimated how deeply absence could affect the rhythm of my life. It changes you in ways you don't expect.",
-      7: "I can hear the quiet in what you're describing. Loss doesn't erase you - it reshapes you. Carrying it forward doesn't make you weak."
-    },
+},
 
-    ayaan: {
-      1: "I can hear the weight beneath what you're saying.",
-      2: "I can hear the weight beneath what you're saying. Loss doesn't always appear dramatic.",
-      3: "I can hear the weight beneath what you're describing. It sounds like something important is absent. That absence is noticeable.",
-      4: "I can hear the weight beneath what you're describing. Loss doesn't always appear dramatic. It often shows up in routine.",
-      5: "I can hear the weight beneath what you're describing. I underestimated how much silence could alter daily structure.",
-      6: "I can hear the weight beneath what you're describing. Absence reorganised more in my life than I anticipated. It shifted perspective permanently.",
-      7: "I can hear the weight beneath what you're describing. Loss doesn't erase continuity. It integrates into how you move forward."
-    }
+ loss: {
+
+  saira: {
+    1: "There’s a kind of quiet in what you’re describing.",
+    2: "Something about this feels softer than people expect loss to be. It doesn’t always come with noise.",
+    3: "It feels like something that mattered isn’t there in the same way anymore. That kind of absence can sit heavily.",
+    4: "Loss often shows up in the small, everyday moments. It shifts the shape of things without announcing itself.",
+    5: "I remember noticing the silence more than anything else — more than the moment it ended.",
+    6: "I didn’t realise at first how deeply absence could change the rhythm of my life. It reaches into places you don’t expect.",
+    7: "Loss doesn’t take away who you are — it changes how you carry things forward. Holding that doesn’t make you weak."
   },
 
-  growth: {
+  ayaan: {
+    1: "There’s a weight beneath what you’re saying.",
+    2: "Loss doesn’t always come through in obvious ways. Sometimes it’s quieter than expected.",
+    3: "It sounds like something important is no longer there. That kind of absence is hard not to notice.",
+    4: "These things don’t always present themselves dramatically. Often, they show up through changes in routine.",
+    5: "I didn’t expect how much silence could shift the structure of everyday life.",
+    6: "At one point, I realised absence had changed more than I anticipated. It altered how I saw things going forward.",
+    7: "Loss doesn’t break continuity — it becomes part of it. It integrates into how you move ahead."
+  }
 
-    saira: {
-      1: "I can hear that something changed you.",
-      2: "I can hear that something changed you. Growth rarely feels comfortable at first.",
-      3: "I can hear that something changed you. It doesn't sound small. Change like that usually comes from something significant.",
-      4: "I can hear that something changed you. Growth rarely feels comfortable at first. It often begins where something unsettled you.",
-      5: "I can hear that something changed you. I had to confront parts of myself I once ignored.",
-      6: "I can hear that something changed you. I didn't grow because it was easy. I grew because staying the same would have cost me more.",
-      7: "I can hear that something changed you. Growth doesn't erase who you were - it steadies who you are becoming."
-    },
+},
 
-    ayaan: {
-      1: "I can hear that this changed you.",
-      2: "I can hear that this changed you. Growth rarely feels comfortable.",
-      3: "I can hear that this changed you. It doesn't sound minor. Change like that usually follows impact.",
-      4: "I can hear that this changed you. Growth often begins where previous structure proves insufficient.",
-      5: "I can hear that this changed you. I had to confront aspects of myself I once justified.",
-      6: "I can hear that this changed you. I didn't evolve because it was comfortable. I evolved because remaining unchanged would have limited me.",
-      7: "I can hear that this changed you. Growth integrates discipline with awareness. It doesn't discard the past - it recalibrates it."
-    }
+ growth: {
+
+  saira: {
+    1: "It feels like something in this changed you in some way.",
+    2: "There’s a shift in what you’re describing. Growth doesn’t usually feel comfortable when it begins.",
+    3: "What you went through doesn’t seem small. Change like that usually comes from something that really affected you.",
+    4: "Growth often starts in places that feel unsettled. It doesn’t come from ease — it comes from something that moved you.",
+    5: "There were parts of myself I had to face that I had ignored for a long time.",
+    6: "It wasn’t easy to grow through it. But staying where I was would have cost me more in the long run.",
+    7: "Growth doesn’t take away who you were. It steadies who you’re becoming and gives it direction."
   },
+
+  ayaan: {
+    1: "This seems like something that left a mark on you.",
+    2: "There’s a clear shift in this. Growth rarely comes through comfort.",
+    3: "What you’re describing doesn’t feel minor. Change like that usually follows something that had real impact.",
+    4: "Growth often begins when what you relied on before stops being enough.",
+    5: "There were parts of myself I had to confront — things I had justified for a long time.",
+    6: "Change didn’t come because it was easy. It came because staying the same would have limited me.",
+    7: "Growth isn’t about discarding the past. It’s about understanding it and moving forward with more clarity."
+  }
+
+},
 
   destiny: {
 
-    saira: {
-      1: "I can hear that something still feels connected.",
-      2: "I can hear that something still feels connected. Some bonds don't dissolve easily.",
-      3: "I can hear that this still feels connected for you. It doesn't sound fully closed. Some things linger longer than we expect.",
-      4: "I can hear that this still feels connected for you. Not everything resolves when we decide it should. Some threads stay present.",
-      5: "I can hear that this still feels connected for you. I've wondered before whether timing changed more than the feeling did.",
-      6: "I can hear that this still feels connected for you. I used to think distance meant finality. Later, I realised some connections shift form rather than disappear.",
-      7: "I can hear that this still feels connected for you. I don't believe everything unfinished is meant to stay that way. Sometimes readiness changes what feels possible."
-    },
+  saira: {
+    1: "It feels like something here is still connected for you.",
+    2: "There’s a sense that this hasn’t fully let go. Some connections don’t just fade easily.",
+    3: "What you’re describing doesn’t feel completely closed. Some things stay with us longer than we expect.",
+    4: "Not everything resolves just because we want it to. Some threads remain, even when we try to move forward.",
+    5: "There have been times I wondered if it was timing that changed things more than the feeling itself.",
+    6: "I used to believe distance meant something was over. Later, I realised some connections don’t disappear — they just change form.",
+    7: "I don’t think everything unfinished is meant to stay that way. Sometimes it’s not about the ending — it’s about when we’re ready to meet it again."
+  },
 
-    ayaan: {
-      1: "I can hear that this still feels unfinished.",
-      2: "I can hear that this still feels unfinished. Not everything concludes when expected.",
-      3: "I can hear that this doesn't feel entirely closed for you. It sounds incomplete. That suggests it still holds relevance.",
-      4: "I can hear that this doesn't feel entirely closed for you. Not everything concludes when expected. Some patterns resurface.",
-      5: "I can hear that this doesn't feel entirely closed for you. I've considered whether readiness matters more than timing.",
-      6: "I can hear that this doesn't feel entirely closed for you. I once assumed distance meant conclusion. Later, I understood some connections shift form rather than disappear.",
-      7: "I can hear that this doesn't feel entirely closed for you. Destiny isn't force. It's alignment that follows growth."
-    }
-  }
+  ayaan: {
+    1: "This doesn’t seem fully complete for you.",
+    2: "There’s something here that hasn’t reached a clear end. Not everything finishes when we expect it to.",
+    3: "It sounds like this still holds meaning for you. When something feels incomplete, it usually means it still matters.",
+    4: "Some things don’t resolve in a straight line. They return in different ways over time.",
+    5: "I’ve thought about whether readiness matters more than timing in situations like this.",
+    6: "At one point, I assumed distance meant something was finished. Later, I realised some connections don’t end — they shift.",
+    7: "I don’t see destiny as something fixed. It feels more like alignment that happens when things — and people — are ready."
+   }
+
+ }
 
 };
 
