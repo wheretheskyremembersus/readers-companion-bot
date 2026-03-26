@@ -4326,6 +4326,28 @@ destiny: {
 };
 
 /* =========================
+   HARD AUTHOR ROUTING
+========================= */
+
+if (
+  /\bwho\s+wrote\b/i.test(originalText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(originalText) ||
+  /\bwritten\s+by\b/i.test(originalText) ||
+  /\bwho\s+is\s+mohan\b/i.test(originalText) ||
+  /\bwho\s+is\s+mohan\s*r\b/i.test(originalText) ||
+  /\btell\s+me\s+about\s+mohan\b/i.test(originalText)
+) {
+
+  skipRelationalPrefix = true;
+
+  return deliverReply(
+    activeVoice === "saira"
+      ? "Mohan R. wrote this as his debut novel."
+      : "Mohan R. wrote it to explore what lingers after love shifts."
+  );
+}
+
+/* =========================
 SELECT FALLBACK RESPONSE
 ========================= */
 
@@ -4354,28 +4376,6 @@ const line = pool[index % pool.length];
 v4RotationIndex[voice][pillar]++;
 
 return deliverReply(line);
-
-/* =========================
-   HARD AUTHOR ROUTING
-========================= */
-
-if (
-  /\bwho\s+wrote\b/i.test(originalText) ||
-  /\bwho\s+is\s+the\s+author\b/i.test(originalText) ||
-  /\bwritten\s+by\b/i.test(originalText) ||
-  /\bwho\s+is\s+mohan\b/i.test(originalText) ||
-  /\bwho\s+is\s+mohan\s*r\b/i.test(originalText) ||
-  /\btell\s+me\s+about\s+mohan\b/i.test(originalText)
-) {
-
-  skipRelationalPrefix = true;
-
-  return deliverReply(
-    activeVoice === "saira"
-      ? "Mohan R. wrote this as his debut novel."
-      : "Mohan R. wrote it to explore what lingers after love shifts."
-  );
-}
 
 } 
 
