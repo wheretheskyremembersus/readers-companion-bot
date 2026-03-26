@@ -830,6 +830,8 @@ let reflections = [];
 let reflectionStep = 0;
 let voiceSendLock = false; 
 let v4PillarHistory = {};
+let fallbackRotation = {};
+  
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -4323,37 +4325,54 @@ destiny: {
  }
 
 };
-
+  
 /* =========================
-SELECT FALLBACK RESPONSE
+FALLBACK RESPONSE FUNCTION
 ========================= */
 
-let pool = null;
+function getFallbackResponse(pillar) {
 
-if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
-  pool = v4FallbackBank[voice][pillar];
-} else {
-  pool = v4FallbackBank.saira.growth;
+  const voice = activeVoice || "saira";
+  const stage = stageState?.[voice]?.currentStage || 1;
+
+  if (!fallbackRotation) fallbackRotation = {};
+  fallbackRotation[voice] = fallbackRotation[voice] || {};
+
+  let responses =
+    fallbackResponseBank?.[pillar]?.[voice]?.[stage];
+
+  /* SAFETY FALLBACK */
+  if (!responses || responses.length === 0) {
+    return "I’m here with you. You can take your time.";
+  }
+
+  /* INIT ROTATION */
+  fallbackRotation[voice][pillar] =
+    fallbackRotation[voice][pillar] || {};
+
+  fallbackRotation[voice][pillar][stage] =
+    fallbackRotation[voice][pillar][stage] ?? 0;
+
+  const index =
+    fallbackRotation[voice][pillar][stage] % responses.length;
+
+  const response = responses[index];
+
+  fallbackRotation[voice][pillar][stage]++;
+
+  return response;
 }
+  
+/* =========================
+FALLBACK EXECUTION 
+========================= */
 
-/* Ensure rotation structure exists */
+const fallbackPillar =
+  pillar || getStageNativePillar(stage);
 
-if (!v4RotationIndex[voice]) {
-  v4RotationIndex[voice] = {};
-}
-
-if (v4RotationIndex[voice][pillar] === undefined) {
-  v4RotationIndex[voice][pillar] = 0;
-}
-
-const index = v4RotationIndex[voice][pillar];
-
-const line = pool[index % pool.length];
-
-v4RotationIndex[voice][pillar]++;
-
-return deliverReply(line);
-}
+return deliverReply(
+  getFallbackResponse(fallbackPillar)
+);
   
 window.runV4Engine = runV4Engine;
  /* =========================
