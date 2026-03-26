@@ -4354,20 +4354,18 @@ const line = pool[index % pool.length];
 v4RotationIndex[voice][pillar]++;
 
 return deliverReply(line);
-}
-  
-window.runV4Engine = runV4Engine;
- /* =========================
+
+/* =========================
    HARD AUTHOR ROUTING
 ========================= */
 
 if (
-  /\bwho\s+wrote\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+the\s+author\b/i.test(normalizedText) ||
-  /\bwritten\s+by\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+mohan\b/i.test(normalizedText) ||
-  /\bwho\s+is\s+mohan\s*r\b/i.test(normalizedText) ||
-  /\btell\s+me\s+about\s+mohan\b/i.test(normalizedText)
+  /\bwho\s+wrote\b/i.test(originalText) ||
+  /\bwho\s+is\s+the\s+author\b/i.test(originalText) ||
+  /\bwritten\s+by\b/i.test(originalText) ||
+  /\bwho\s+is\s+mohan\b/i.test(originalText) ||
+  /\bwho\s+is\s+mohan\s*r\b/i.test(originalText) ||
+  /\btell\s+me\s+about\s+mohan\b/i.test(originalText)
 ) {
 
   skipRelationalPrefix = true;
@@ -4378,6 +4376,10 @@ if (
       : "Mohan R. wrote it to explore what lingers after love shifts."
   );
 }
+
+} 
+
+window.runV4Engine = runV4Engine;
 
 /* =========================
    PRESENCE / STATE GUARD
