@@ -7153,10 +7153,14 @@ if (response) {
   let finalText = response;
 
   if (typeof applyV4Integration === "function") {
-    finalText = applyV4Integration(
-      finalText,
-      detected.primary
-    );
+
+    if (Math.random() < 0.35) {
+      finalText = applyV4Integration(
+        finalText,
+        detected.primary
+      );
+    }
+
   }
 
   return deliverReply(finalText);
@@ -7164,7 +7168,6 @@ if (response) {
 
 return getFallbackResponse();
 }
-  
 /* =================================================
    RELATIONAL TRIGGER DETECTION
 ================================================= */
