@@ -1302,10 +1302,6 @@ setTimeout(() => {
 setTimeout(() => {
 
   removeTypingIndicator();
-
-  if (tollState[activeVoice]?.unlocked && !interactionLocked) {
-    runV4Engine(replyText, replyText);
-  }
   
   addVoiceMessage(replyText);
   playTone(420,120,0.025,360);
