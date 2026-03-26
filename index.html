@@ -2814,6 +2814,9 @@ V4 EMOTIONAL ENGINE
 
 function runV4Engine(text, originalText) {
 
+  if (!originalText || originalText.trim() === "") return;
+  if (interactionLocked) return;
+
   const voice =
     activeVoice === "saira" || activeVoice === "ayaan"
       ? activeVoice
