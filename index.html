@@ -2670,8 +2670,10 @@ function getSelfReferencePrefix(stage) {
 
 function processInput(userText, originalText) {
 
-  let normalizedText = normalizeInput(originalText);
+  if (interactionLocked) return;
+  interactionLocked = true;
 
+  let normalizedText = normalizeInput(originalText);
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
