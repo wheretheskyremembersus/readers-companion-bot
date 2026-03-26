@@ -8247,7 +8247,7 @@ if (
 applyStageAtmosphere(voiceStage.currentStage);
 
 /* =========================
-   FALLBACK SYSTEM (PILLAR + STAGE + ROTATION)
+   FALLBACK SYSTEM (FINAL - FIXED)
 ========================= */
 
 function getFallbackResponse(pillar) {
@@ -8256,15 +8256,12 @@ function getFallbackResponse(pillar) {
   const stage = stageState?.[voice]?.currentStage || 1;
 
   if (!fallbackRotation) fallbackRotation = {};
-
   fallbackRotation[voice] = fallbackRotation[voice] || {};
-  fallbackRotation[voice][pillar] =
-    fallbackRotation[voice][pillar] || {};
-  fallbackRotation[voice][pillar][stage] =
-    fallbackRotation[voice][pillar][stage] ?? 0;
+
+  let activePillar = pillar;
 
   let responses =
-    fallbackResponseBank?.[pillar]?.[voice]?.[stage];
+    fallbackResponseBank?.[activePillar]?.[voice]?.[stage];
 
   /* =========================
      SAFETY: FALLBACK PILLAR
@@ -8272,22 +8269,29 @@ function getFallbackResponse(pillar) {
 
   if (!responses || responses.length === 0) {
 
-    const safePillar = getStageNativePillar(stage);
+    activePillar = getStageNativePillar(stage);
 
     responses =
-      fallbackResponseBank?.[safePillar]?.[voice]?.[stage];
+      fallbackResponseBank?.[activePillar]?.[voice]?.[stage];
 
     if (!responses || responses.length === 0) {
       return "I’m here with you. You can take your time.";
     }
   }
 
-  const index = fallbackRotation[voice][pillar][stage];
+  // INIT ROTATION SAFELY
+  fallbackRotation[voice][activePillar] =
+    fallbackRotation[voice][activePillar] || {};
+
+  fallbackRotation[voice][activePillar][stage] =
+    fallbackRotation[voice][activePillar][stage] ?? 0;
+
+  const index =
+    fallbackRotation[voice][activePillar][stage] % responses.length;
 
   const response = responses[index];
 
-  fallbackRotation[voice][pillar][stage] =
-    (index + 1) % responses.length;
+  fallbackRotation[voice][activePillar][stage]++;
 
   return response;
 }
@@ -8325,7 +8329,8 @@ if (Array.isArray(response)) {
     emotionalRotationTracker[voice][pillar][stage] = 0;
   }
 
-  const responses = emotionalResponseBank[pillar][voice][stage];
+  const responses =
+    emotionalResponseBank[pillar][voice][stage];
 
   const index =
     emotionalRotationTracker[voice][pillar][stage] % responses.length;
