@@ -1918,8 +1918,8 @@ if (secondary && primary[1] - secondary[1] <= 1) {
   primary = candidates[Math.floor(Math.random() * candidates.length)];
 }
 
-const confidenceThreshold = 1;
-
+const confidenceThreshold = tollState[activeVoice]?.unlocked ? 2 : 1;
+  
 if (primary[1] >= confidenceThreshold) {
 
   // ignore weak single matches
