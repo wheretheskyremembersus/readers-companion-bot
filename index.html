@@ -7294,7 +7294,7 @@ function injectEmotionalPillar(state) {
   let finalPillar = detected ? detected.primary : nativePillar;
 
   /* =========================
-    ANTI-LOOP PILLAR CONTROL
+   ANTI-LOOP CONTROL
   ========================= */
 
   if (!v4PillarHistory) v4PillarHistory = {};
@@ -7305,25 +7305,28 @@ function injectEmotionalPillar(state) {
 
   const history = v4PillarHistory[activeVoice];
 
-  // Track last 5 pillar selections
-  history.push(finalPillar);
-  if (history.length > 5) history.shift();
-
-  // Count how many times current pillar repeats
+  // Count repeats BEFORE modifying history
   const sameCount = history.filter(p => p === finalPillar).length;
 
-  // If stuck in same pillar → diversify
+  // Diversify ONLY if stuck
   if (sameCount >= 4) {
 
-    const alternatives = ["affection", "fear", "growth"];
+    const allPillars = Object.keys(emotionalResponseBank);
 
-    const filtered = alternatives.filter(p => p !== finalPillar);
+    const validAlternatives = allPillars.filter(
+      p =>
+        p !== finalPillar &&
+        emotionalResponseBank[p]?.[activeVoice]?.[currentStage]
+    );
 
-    if (filtered.length > 0) {
+    if (validAlternatives.length > 0) {
       finalPillar =
-        filtered[Math.floor(Math.random() * filtered.length)];
+        validAlternatives[Math.floor(Math.random() * validAlternatives.length)];
     }
   }
+
+  history.push(finalPillar);
+  if (history.length > 5) history.shift();
 
   /* =========================
      EXISTING GUARDRAIL
