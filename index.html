@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--
 © 2025–2026 Mohan R.
@@ -830,8 +831,6 @@ let reflections = [];
 let reflectionStep = 0;
 let voiceSendLock = false; 
 let v4PillarHistory = {};
-let fallbackRotation = {};
-  
 /* =========================
    TOLL GATE SYSTEM
 ========================= */
@@ -2898,1481 +2897,327 @@ if (anchorPool && anchorPool.length) {
 }
 
 }
- /* =========================
-   DEFAULT PILLAR
-========================= */
+  /* =========================
+  DEFAULT PILLAR (SAFETY)
+  ========================= */
 
 if (!pillar) {
-
-  const currentStage =
-    stageState?.[activeVoice]?.currentStage || 1;
-
-  const allPillars = [
-    "affection",
-    "vulnerability",
-    "fear",
-    "regret",
-    "loss",
-    "growth",
-    "destiny"
-  ];
-
-  // INIT HISTORY
-  if (!v4PillarHistory) v4PillarHistory = {};
-  if (!v4PillarHistory[activeVoice]) {
-    v4PillarHistory[activeVoice] = [];
-  }
-
-  const history = v4PillarHistory[activeVoice];
-
-  // AVOID LAST 3 USED PILLARS
-  const recent = history.slice(-3);
-
-  let candidates = allPillars.filter(
-    p => !recent.includes(p)
-  );
-
-  // HARD FALLBACK (if everything filtered)
-  if (candidates.length === 0) {
-    candidates = [...allPillars];
-  }
-
-  /* =========================
-     SOFT STAGE BIAS (BALANCED)
-  ========================= */
-
-  let biasedCandidates = [...candidates];
-
-  if (currentStage <= 2) {
-    const light = ["affection","fear","vulnerability"];
-    const filtered = candidates.filter(p => light.includes(p));
-    if (filtered.length > 0) biasedCandidates = filtered;
-  }
-
-  if (currentStage >= 5) {
-    const deep = ["regret","loss","growth","destiny"];
-    const filtered = candidates.filter(p => deep.includes(p));
-    if (filtered.length > 0) biasedCandidates = filtered;
-  }
-
-  // APPLY BIAS PROBABILISTICALLY (prevents rigidity)
-  if (Math.random() < 0.7) {
-    candidates = biasedCandidates;
-  }
-
-  // FINAL SAFETY
-  if (candidates.length === 0) {
-    candidates = [...allPillars];
-  }
-
-  // SELECT RANDOM
-  pillar =
-    candidates[Math.floor(Math.random() * candidates.length)];
-
-  // STORE HISTORY (max 5)
-  history.push(pillar);
-  if (history.length > 5) history.shift();
+  const fallbackPillars = ["affection","fear","regret","loss","growth"];
+  pillar = fallbackPillars[Math.floor(Math.random()*fallbackPillars.length)];
 }
 
   /* =========================
-  V4 FALLBACK BANK  (PILLAR + CHARACTER VOICE)
+  V4 FALLBACK BANK
+  (PILLAR + CHARACTER VOICE)
   ========================= */
 
-const fallbackResponseBank = {
-
-affection: {
+const v4FallbackBank = {
 
   saira: {
 
-    1: [
-      "It sounds like something here meant more to you than it first seemed.",
-      "There’s a sense this didn’t just pass by lightly for you.",
-      "It feels like this wasn’t something casual.",
-      "Something about this seems to have stayed with you.",
-      "I get the feeling this carried more weight than expected.",
-      "From what you’re saying, this didn’t go unnoticed.",
-      "It comes across like this held quiet importance.",
-      "There’s a part of this that feels meaningful.",
-      "You seem to have held onto this in some way.",
-      "This feels like it mattered more than it first appeared."
+    affection: [
+      "Caring rarely announces itself in the beginning.",
+      "It took time before I realised how much he mattered.",
+      "Some feelings grow quietly before we recognise them.",
+      "What started lightly slowly became difficult to ignore.",
+      "There was a moment when caring stopped feeling temporary.",
+      "Some connections deepen without either person noticing.",
+      "I didn't recognise the weight of it until later.",
+      "It didn’t feel like much at first, until it did.",
+      "Some feelings settle in before we question them.",
+      "There are moments that become important without warning.",
+      "It wasn’t obvious when it started to matter.",
+      "Certain connections become real before we name them.",
+      "I didn’t notice when it stopped being simple.",
+      "Some emotions don’t ask for attention — they stay anyway.",
+      "It grew in ways I didn’t expect at the time.",
+      "There was no clear moment, just a quiet shift.",
+      "What seemed small didn’t stay that way.",
+      "Some feelings don’t need permission to deepen.",
+      "It became something more before I realised it.",
+      "There are connections that don’t begin loudly."
     ],
 
-    2: [
-      "It sounds like this didn’t just pass easily for you. Something about it stayed.",
-      "There’s a sense this lingered longer than expected.",
-      "It feels like this didn’t fade as quickly as it could have.",
-      "Something about this seems to have remained with you.",
-      "I get the feeling this stayed just beneath the surface.",
-      "From what you’re saying, it didn’t fully leave when it could have.",
-      "It comes across like this held your attention quietly.",
-      "There’s a part of this that didn’t fully settle.",
-      "You seem to have carried this with you longer than expected.",
-      "This feels like it stayed in a way that’s hard to ignore."
+    fear: [
+      "Fear doesn't always arrive loudly.",
+      "I was more afraid of losing him than admitting it.",
+      "Sometimes fear hides inside hesitation.",
+      "It took time before I recognised how much fear shaped my choices.",
+      "Fear can feel like caution while it's happening.",
+      "Part of me believed silence would keep things safe.",
+      "Sometimes the quietest fears guide the biggest decisions.",
+      "Fear often feels like something else in the moment.",
+      "I didn’t recognise it as fear until later.",
+      "Some fears don’t look like fear when they begin.",
+      "It felt like control, but it was something else.",
+      "There are fears we don’t name while we’re in them.",
+      "It didn’t feel like fear at the time — just hesitation.",
+      "Some choices feel careful, but come from fear.",
+      "I thought I was being rational, but I wasn’t fully honest.",
+      "Fear can sit quietly behind decisions.",
+      "It doesn’t always interrupt — sometimes it guides silently.",
+      "I didn’t question it then, but I see it now.",
+      "There are moments where fear feels like protection."
     ],
 
-    3: [
-      "When something stays like this, it usually means it mattered more than it first seemed.",
-      "If it’s still with you now, it likely touched something deeper than you realised.",
-      "There’s usually a reason something lingers this way.",
-      "When something keeps returning like this, it often means it didn’t fully settle.",
-      "If it hasn’t faded, it likely carried more weight than expected.",
-      "Something about this feels like it connected with something real in you.",
-      "When something lingers, it often means it wasn’t as small as it seemed.",
-      "If it’s still present, it probably meant more than you saw at the time.",
-      "There’s a sense this didn’t fully resolve.",
-      "Things like this tend to leave something unfinished beneath the surface."
+    regret: [
+      "Regret simplifies what was complicated at the time.",
+      "I thought silence was the safer choice.",
+      "Looking back makes decisions appear clearer than they were.",
+      "At the time I believed I was protecting something.",
+      "Regret doesn't appear immediately.",
+      "Sometimes we understand our mistakes only after distance exists.",
+      "It took time before I recognised what I should have said.",
+      "It didn’t feel like regret at first.",
+      "Clarity came later than I expected.",
+      "Some things only make sense once they’ve passed.",
+      "I didn’t see it clearly when it mattered most.",
+      "There are moments you understand only in hindsight.",
+      "What felt right then doesn’t always feel right later.",
+      "I didn’t realise what I was holding back.",
+      "It became clearer once everything settled.",
+      "Some answers come after it’s already over.",
+      "I thought I understood it at the time.",
+      "It didn’t look like a mistake until later.",
+      "There are things you only recognise once distance exists."
     ],
 
-    4: [
-      "Some things stay even before we fully understand why. It can feel like something settled before you could name it.",
-      "There are moments that don’t make sense right away but still stay with you.",
-      "Not everything becomes clear immediately. Some things stay first.",
-      "It’s possible for something to matter before you fully understand it.",
-      "Some experiences don’t come with clarity at first.",
-      "There are things that stay without asking for explanation.",
-      "Sometimes something stays because it hasn’t been fully seen yet.",
-      "It’s not always about knowing right away.",
-      "There are moments that stay quietly in the background.",
-      "Some things don’t leave because they’re not finished with you yet."
+    loss: [
+      "Losing something real changes you quietly.",
+      "Distance doesn't erase what once felt certain.",
+      "Some absences remain present in unexpected ways.",
+      "Loss reshapes how memory holds people.",
+      "Certain moments feel heavier after they pass.",
+      "Some departures never feel fully finished.",
+      "There are absences that never feel ordinary.",
+      "It didn’t feel loud, just different.",
+      "Some absences stay longer than expected.",
+      "Loss doesn’t always show itself clearly.",
+      "It changed things in ways I didn’t notice immediately.",
+      "There’s a quiet weight that comes with absence.",
+      "Some things don’t feel gone, just altered.",
+      "It wasn’t obvious at first what had changed.",
+      "Loss can feel subtle but steady.",
+      "Some spaces feel different without explanation.",
+      "It left more behind than I expected.",
+      "There are changes you only feel over time.",
+      "Not everything leaves cleanly."
     ],
 
-    5: [
-      "I’ve had moments like that too, where something stayed longer than expected without making sense at first.",
-      "There were times I didn’t understand why something stayed with me until later.",
-      "I remember holding onto something like that without knowing why it mattered.",
-      "There have been moments where something lingered quietly.",
-      "I’ve experienced things that didn’t make sense in the moment but stayed anyway.",
-      "There were times I only understood something after it had already passed.",
-      "I’ve had things stay with me without explanation.",
-      "Sometimes something stays because you weren’t ready to see it clearly yet.",
-      "There were moments where something lingered until I had space to understand it.",
-      "I’ve seen how some things don’t make sense immediately but still shape you."
+    growth: [
+      "Understanding came slowly after everything settled.",
+      "Some lessons arrive quietly.",
+      "Time reshaped how I saw everything.",
+      "I had to learn parts of myself I didn't expect.",
+      "Change rarely happens in the moment it begins.",
+      "Growth usually begins long before we notice it.",
+      "Some understanding only appears after distance.",
+      "It took time before I saw it clearly.",
+      "Growth didn’t feel obvious at the start.",
+      "Some things only made sense later.",
+      "I didn’t recognise it as growth at first.",
+      "There were parts of it I only understood over time.",
+      "It didn’t feel like change until I looked back.",
+      "Some lessons stay quiet while they form.",
+      "It became clearer once I stepped back.",
+      "Growth doesn’t always announce itself.",
+      "I saw it differently later on.",
+      "Some shifts take time to recognise.",
+      "It didn’t feel like progress while it was happening."
     ],
 
-    6: [
-      "It took me time to realise that not everything needs to be understood right away.",
-      "I’ve learned that some things don’t reveal themselves immediately.",
-      "There was a point where I stopped needing immediate answers.",
-      "I came to understand that clarity doesn’t always arrive in the moment.",
-      "Some things take time because you need distance to understand them.",
-      "I realised that not everything needs to be resolved immediately.",
-      "There was a shift where I allowed things to remain unfinished for a while.",
-      "I’ve come to see that understanding often follows experience.",
-      "Some things don’t become clear until you stop forcing them.",
-      "I learned that some answers arrive only when you’re no longer chasing them."
-    ],
-
-    7: [
-      "Not everything needs a clear ending to still hold meaning.",
-      "There are things that don’t resolve completely but still shape you.",
-      "Some things don’t leave because they were never meant to be temporary.",
-      "Not everything that stays is unfinished.",
-      "There are experiences that don’t need closure to feel complete.",
-      "Some things don’t end — they settle into you instead.",
-      "It’s not always about resolution.",
-      "There are things that remain without needing explanation.",
-      "Some things don’t need to be finished to matter.",
-      "What stays isn’t always something to resolve."
+    destiny: [
+      "Some connections resist simple endings.",
+      "Certain stories refuse to disappear completely.",
+      "Not everything unfinished is truly over.",
+      "Sometimes time only pauses a story.",
+      "Some people remain part of your life even when they're gone.",
+      "Certain moments continue shaping the future.",
+      "I don't believe everything meaningful simply disappears.",
+      "Some things don’t resolve the way we expect.",
+      "There are stories that don’t fully close.",
+      "Not everything follows a clear ending.",
+      "Some connections continue in quieter ways.",
+      "It doesn’t always end when we think it does.",
+      "Certain things remain without explanation.",
+      "Some paths don’t fully separate.",
+      "There are connections that stay in the background.",
+      "It doesn’t always feel finished.",
+      "Some things return in different ways.",
+      "Not everything disappears with time.",
+      "There are moments that continue to exist quietly."
     ]
+
   },
 
   ayaan: {
 
-    1: [
-      "This doesn’t come across as something incidental.",
-      "This doesn’t appear to have been something minor.",
-      "There’s a level of significance here.",
-      "This doesn’t read as something insignificant.",
-      "There’s a degree of weight in this.",
-      "This appears to carry importance.",
-      "There’s something here that stands out.",
-      "This doesn’t seem casual.",
-      "There’s a level of relevance here.",
-      "This appears meaningful."
+    affection: [
+      "Attachment rarely appears suddenly.",
+      "Meaning often becomes visible only after distance forms.",
+      "What begins quietly can become structurally important.",
+      "Care tends to reveal itself over time.",
+      "Some bonds develop before either person recognises them.",
+      "Recognition often arrives later than the feeling itself.",
+      "What seemed temporary sometimes proves otherwise.",
+      "Some connections gain significance gradually.",
+      "It doesn’t always present itself clearly at first.",
+      "There are shifts that happen without immediate awareness.",
+      "Not everything is obvious when it begins.",
+      "Some developments only become clear later.",
+      "What seems minor can evolve over time.",
+      "There are changes that don’t announce themselves.",
+      "It doesn’t always register immediately.",
+      "Some connections form without clear signals.",
+      "Recognition often follows experience.",
+      "What feels temporary can change over time.",
+      "Some things develop before they’re understood."
     ],
 
-    2: [
-      "It seems this held more weight than expected.",
-      "There’s a sense this didn’t pass immediately.",
-      "This appears to have remained beyond the moment.",
-      "It seems this persisted longer than expected.",
-      "There’s an indication this didn’t resolve quickly.",
-      "This suggests continuation beyond the initial context.",
-      "There’s a persistence here that stands out.",
-      "It appears this stayed present.",
-      "This doesn’t seem to have faded immediately.",
-      "There’s an indication this remained relevant."
+    fear: [
+      "Fear doesn't always interrupt decisions immediately.",
+      "Control often felt safer than vulnerability.",
+      "Risk becomes clearer once consequences appear.",
+      "Restraint sometimes grows from uncertainty.",
+      "Some decisions are shaped by fear long before we name it.",
+      "Fear tends to disguise itself as discipline.",
+      "What looks like caution can sometimes be hesitation.",
+      "Fear doesn’t always present itself directly.",
+      "It can influence decisions without being obvious.",
+      "Some caution comes from underlying uncertainty.",
+      "Not all restraint is intentional.",
+      "There are moments where fear isn’t recognised immediately.",
+      "It doesn’t always feel like fear at the time.",
+      "Some decisions feel controlled but are driven by uncertainty.",
+      "Fear can operate without being acknowledged.",
+      "It often appears as something else initially.",
+      "There are patterns that only become clear later.",
+      "Some hesitation isn’t fully understood in the moment.",
+      "Fear can guide decisions subtly."
     ],
 
-    3: [
-      "If something persists like this, it usually indicates significance.",
-      "Continued presence generally reflects underlying importance.",
-      "Things don’t tend to remain without reason.",
-      "Persistence like this usually carries meaning.",
-      "If it stays, it typically had impact.",
-      "Ongoing relevance suggests value.",
-      "That level of continuation is rarely incidental.",
-      "If it remains, it likely held weight.",
-      "Persistence reflects significance.",
-      "Things that stay tend to matter."
+    regret: [
+      "Regret tends to appear once decisions settle.",
+      "At the time restraint seemed responsible.",
+      "Perspective changes once distance exists.",
+      "Clarity rarely exists during the moment of choice.",
+      "Looking back alters how decisions appear.",
+      "Regret isn't always immediate.",
+      "Time tends to reorganise how choices are viewed.",
+      "Understanding often comes after the fact.",
+      "Some decisions look different over time.",
+      "It doesn’t always feel like regret initially.",
+      "Clarity tends to arrive later.",
+      "There are moments that only make sense afterward.",
+      "Perspective shifts with distance.",
+      "What felt correct then may not feel the same now.",
+      "It becomes clearer with time.",
+      "Some decisions require distance to understand.",
+      "Reflection changes interpretation.",
+      "It wasn’t obvious in the moment.",
+      "Time alters perception of choice."
     ],
 
-    4: [
-      "Not everything resolves immediately. Some things require time to stabilise.",
-      "There are situations where understanding develops gradually.",
-      "Resolution isn’t always immediate.",
-      "Some things require time before they settle.",
-      "Clarity doesn’t always arrive at the same time.",
-      "There are processes that unfold over time.",
-      "Not everything is immediately defined.",
-      "Some situations require extended processing.",
-      "Understanding develops gradually.",
-      "Not all outcomes are immediate."
+    loss: [
+      "Loss alters perspective more than people expect.",
+      "Distance reshapes how events are interpreted.",
+      "Absence often reveals structural importance.",
+      "Some outcomes take time before they are understood.",
+      "Loss changes how we measure everything else.",
+      "Certain absences remain quietly influential.",
+      "Perspective rarely stays the same after loss.",
+      "Absence changes interpretation over time.",
+      "Loss isn’t always immediately clear.",
+      "It affects more than expected.",
+      "Some impacts only become visible later.",
+      "It shifts how things are understood.",
+      "Loss isn’t always direct.",
+      "Absence can influence perception gradually.",
+      "It doesn’t always register immediately.",
+      "Some changes appear over time.",
+      "Loss alters reference points.",
+      "It reshapes understanding subtly.",
+      "Some effects aren’t immediate."
     ],
 
-    5: [
-      "I’ve seen situations where clarity came later rather than immediately.",
-      "There were cases where understanding followed after the experience.",
-      "I’ve observed how interpretation changes over time.",
-      "There were instances where something only made sense afterward.",
-      "I’ve seen how distance changes understanding.",
-      "There are situations where clarity isn’t immediate.",
-      "I’ve noticed how perspective evolves.",
-      "There were moments that became clear later.",
-      "Interpretation can shift with time.",
-      "Understanding often develops gradually."
+    growth: [
+      "Understanding usually arrives through reflection.",
+      "Experience reorganises how events are viewed.",
+      "Growth tends to appear after distance.",
+      "Some lessons only appear once events settle.",
+      "Perspective matures through time rather than discussion.",
+      "Reflection often changes the original interpretation.",
+      "Some understanding arrives slowly.",
+      "Growth isn’t always immediate.",
+      "Some insights take time to develop.",
+      "Understanding evolves gradually.",
+      "It doesn’t always happen in the moment.",
+      "Some clarity appears later.",
+      "Growth can be delayed in recognition.",
+      "It takes time to see things differently.",
+      "Perspective develops over time.",
+      "Some changes aren’t immediately visible.",
+      "Understanding deepens with distance.",
+      "It becomes clearer over time.",
+      "Growth doesn’t always feel immediate."
     ],
 
-    6: [
-      "Over time, I realised that not everything needs immediate resolution.",
-      "I came to understand that clarity develops gradually.",
-      "There was a shift where I stopped expecting immediate answers.",
-      "I recognised that some things take time.",
-      "Understanding doesn’t always arrive immediately.",
-      "There was a point where I accepted delayed clarity.",
-      "I saw that not everything resolves instantly.",
-      "Clarity became something that developed over time.",
-      "I realised resolution isn’t always immediate.",
-      "That shift changed how I approached uncertainty."
-    ],
-
-    7: [
-      "Not everything requires closure to retain meaning.",
-      "Some things remain relevant without resolution.",
-      "Continuation doesn’t always require conclusion.",
-      "Certain things persist without a defined ending.",
-      "Not everything concludes definitively.",
-      "Some things remain part of ongoing understanding.",
-      "Closure isn’t always necessary.",
-      "Some situations continue in different forms.",
-      "Not everything needs to end to matter.",
-      "Relevance can exist without resolution."
+    destiny: [
+      "Not all unfinished stories are accidental.",
+      "Certain events retain significance over time.",
+      "Some connections persist beyond circumstance.",
+      "Timing rarely explains everything.",
+      "Certain encounters remain structurally important.",
+      "Some outcomes take longer to reveal their meaning.",
+      "Distance doesn't always conclude a story.",
+      "Not everything follows a clear conclusion.",
+      "Some events retain relevance over time.",
+      "Certain connections continue beyond context.",
+      "Timing doesn’t resolve everything.",
+      "Some outcomes remain open-ended.",
+      "There are events that retain significance.",
+      "Not all stories conclude definitively.",
+      "Some connections remain relevant.",
+      "Certain things extend beyond their moment.",
+      "Outcomes don’t always align with expectations.",
+      "Some meanings take time to emerge.",
+      "Distance doesn’t always resolve outcomes."
     ]
+
   }
-
-},
-
-vulnerability: {
-
-  saira: {
-
-    1: [
-      "It sounds like this touches something a little more personal for you.",
-      "There’s a sense this isn’t entirely easy to sit with.",
-      "It feels like something here leaves you a bit exposed.",
-      "Something about this seems quietly sensitive.",
-      "I get the feeling this isn’t something you say lightly.",
-      "From what you’re saying, this feels a little close to you.",
-      "It comes across like this carries some emotional weight.",
-      "There’s a part of this that feels open in a quiet way.",
-      "You seem to be letting something real come through here.",
-      "This feels like it’s coming from a more personal place."
-    ],
-
-    2: [
-      "It sounds like this isn’t something easy to hold onto without questioning.",
-      "There’s a sense this made you turn inward a little.",
-      "It feels like something here made you reflect more than expected.",
-      "Something about this seems to have brought up uncertainty.",
-      "I get the feeling this left you thinking about yourself differently.",
-      "From what you’re saying, this didn’t feel entirely steady.",
-      "It comes across like this created a quiet kind of doubt.",
-      "There’s a part of this that feels unsettled.",
-      "You seem to be carrying some questions from this.",
-      "This feels like it stayed with you in a personal way."
-    ],
-
-    3: [
-      "When something matters like this, it’s easy to start questioning yourself.",
-      "If this stayed with you, it likely touched something deeper than expected.",
-      "There’s usually a reason moments like this make us look inward.",
-      "When something feels personal, it often brings doubt with it.",
-      "If it’s still present, it likely affected how you saw yourself.",
-      "Something about this feels like it made you second-guess things.",
-      "When something reaches this level, it rarely stays simple.",
-      "If it lingered, it probably left you wondering more than you expected.",
-      "There’s a sense this didn’t just stay externally — it stayed internally.",
-      "Moments like this tend to shift how we interpret ourselves."
-    ],
-
-    4: [
-      "There are moments where something small can make you question more than it should, especially when it touches something real.",
-      "Sometimes when something matters, we turn inward instead of seeing things clearly.",
-      "It’s not unusual for something like this to create quiet self-doubt.",
-      "There are experiences that make you reflect more on yourself than on what actually happened.",
-      "Sometimes the weight isn’t in the situation — it’s in how we interpret it.",
-      "There are moments where what we feel becomes harder to trust.",
-      "It’s possible for something real to still make you question yourself.",
-      "Sometimes vulnerability shows up as doubt before it shows up as clarity.",
-      "There are times when being open makes things feel less stable.",
-      "Some moments don’t just affect what happened — they affect how you see yourself."
-    ],
-
-    5: [
-      "I remember going through something like that, wondering if I had been too much… or not enough in some way.",
-      "There were times I questioned myself more than I should have after something like this.",
-      "I’ve felt that kind of uncertainty before, where it made me look at myself differently.",
-      "There were moments where I held onto doubt longer than I admitted.",
-      "I remember replaying things and wondering what I could have done differently.",
-      "I’ve had experiences where I turned inward instead of outward.",
-      "There were times I questioned my own place in something that mattered.",
-      "I remember feeling like I had to measure myself against something unclear.",
-      "There have been moments where I wasn’t sure if I had been enough.",
-      "I’ve seen how something like this can stay quietly and shift how you feel about yourself."
-    ],
-
-    6: [
-      "That kind of doubt can stay longer than expected. I’ve learned it’s not always about truth — sometimes it’s just where the feeling landed.",
-      "I’ve come to realise that questioning yourself like this doesn’t always mean you were lacking.",
-      "There was a point where I understood that not everything needs to be turned inward.",
-      "I learned that just because something feels personal doesn’t mean it defines you.",
-      "Over time, I saw that doubt often says more about the moment than about you.",
-      "I’ve learned that vulnerability doesn’t mean something is wrong — it means something mattered.",
-      "There was a shift where I stopped measuring myself against unclear outcomes.",
-      "I realised that not every unanswered feeling needs to become self-doubt.",
-      "Some things feel personal even when they aren’t about your worth.",
-      "I’ve come to see that openness can feel unstable, but it doesn’t mean it was misplaced."
-    ],
-
-    7: [
-      "If what you gave was honest, then it was enough. Sometimes things don’t align, and that isn’t about your worth.",
-      "Not everything that feels personal is a reflection of you.",
-      "Some things don’t work out the way they should, even when what you felt was real.",
-      "You don’t become less just because something didn’t stay.",
-      "There are moments where you gave fully, and that still matters.",
-      "What you felt doesn’t lose its value just because it wasn’t returned the same way.",
-      "Sometimes it isn’t about being enough — it’s about timing or alignment.",
-      "You don’t have to reduce yourself to make sense of something unfinished.",
-      "There are things that don’t work out, but that doesn’t make what you gave any less real.",
-      "Being open doesn’t make you weak — it means you were present."
-    ]
-  },
-
-  ayaan: {
-
-    1: [
-      "This seems to involve a level of openness that isn’t always easy.",
-      "There’s a degree of exposure in what you’re describing.",
-      "This doesn’t appear entirely neutral in its impact.",
-      "There’s a sense of personal stake in this.",
-      "This feels like it moves beyond surface-level observation.",
-      "There’s a level of honesty here that stands out.",
-      "This suggests something more internally engaged.",
-      "There’s a degree of openness present.",
-      "This doesn’t seem detached.",
-      "There’s a noticeable personal element here."
-    ],
-
-    2: [
-      "It seems this created some level of internal reflection.",
-      "There’s an indication this wasn’t entirely stable for you.",
-      "This appears to have introduced some uncertainty.",
-      "There’s a sense of internal questioning here.",
-      "This doesn’t seem fully resolved internally.",
-      "There’s a level of self-evaluation present.",
-      "This suggests some degree of personal impact.",
-      "There’s a reflective element here.",
-      "This doesn’t appear entirely settled.",
-      "There’s an internal response that stands out."
-    ],
-
-    3: [
-      "When something reaches this level, it often leads to self-assessment.",
-      "Internal reflection like this usually indicates significance.",
-      "Situations like this tend to create personal evaluation.",
-      "There’s often a shift in self-perception in moments like this.",
-      "If it persists, it likely influenced how you saw yourself.",
-      "This kind of response typically involves internal processing.",
-      "It’s common for situations like this to trigger self-questioning.",
-      "There’s usually a link between impact and internal reflection.",
-      "This suggests a deeper level of engagement.",
-      "Moments like this rarely remain external."
-    ],
-
-    4: [
-      "There are situations where internal interpretation becomes stronger than external reality.",
-      "Sometimes self-evaluation outweighs what actually occurred.",
-      "There are moments where perception shifts inward disproportionately.",
-      "Internal processing can sometimes distort external clarity.",
-      "There are cases where interpretation becomes more influential than facts.",
-      "Self-reflection can intensify beyond necessity.",
-      "There are patterns where internal response becomes dominant.",
-      "Perception doesn’t always align with reality in these cases.",
-      "Internal evaluation can exceed what the situation requires.",
-      "There are times when reflection becomes overextended."
-    ],
-
-    5: [
-      "I’ve observed situations where internal reflection became stronger than necessary.",
-      "There were cases where I evaluated myself more than the situation required.",
-      "I’ve seen how internal processing can shift perspective significantly.",
-      "There were moments where I reassessed myself more than needed.",
-      "I’ve noticed how easily internal evaluation can intensify.",
-      "There were times I interpreted things more personally than they were.",
-      "I’ve seen how reflection can become disproportionate.",
-      "There were situations where I focused inward rather than outward.",
-      "I’ve observed how perception can become skewed internally.",
-      "There were moments where I misattributed meaning to myself."
-    ],
-
-    6: [
-      "Over time, I recognised that not all internal reactions reflect objective reality.",
-      "I came to understand that self-evaluation isn’t always accurate.",
-      "There was a shift where I reduced unnecessary internal attribution.",
-      "I realised that not everything requires personal interpretation.",
-      "Internal response doesn’t always indicate truth.",
-      "There was a point where I separated perception from reality.",
-      "I learned that not every reaction needs to be internalised.",
-      "Self-assessment can sometimes exceed relevance.",
-      "I recognised patterns where I over-attributed meaning.",
-      "There was a change in how I processed internal responses."
-    ],
-
-    7: [
-      "Not everything that feels personal is actually about you.",
-      "Internal response doesn’t always reflect external truth.",
-      "Some situations don’t require self-attribution.",
-      "Not everything needs to be internalised.",
-      "There are limits to how much meaning should be assigned inward.",
-      "Self-perception doesn’t always align with reality.",
-      "Not every outcome reflects personal value.",
-      "Some responses are situational, not personal.",
-      "There’s a distinction between feeling and fact.",
-      "Not everything requires internal ownership."
-    ]
-  }
-
-},
-
-fear: {
-
-  saira: {
-
-    1: [
-      "It sounds like there’s a bit of hesitation in what you’re saying.",
-      "There’s a sense you might be holding back slightly.",
-      "It feels like something here makes you cautious.",
-      "Something about this seems a little uncertain.",
-      "I get the feeling you’re being careful with this.",
-      "From what you’re saying, there’s some restraint here.",
-      "It comes across like you’re not fully at ease.",
-      "There’s a part of this that feels guarded.",
-      "You seem to be approaching this carefully.",
-      "This feels like something you’re not stepping fully into."
-    ],
-
-    2: [
-      "It sounds like you’re trying to be careful with this, like something could shift.",
-      "There’s a sense this makes you hesitate more than expected.",
-      "It feels like you’re holding a bit of distance here.",
-      "Something about this seems to bring up uncertainty.",
-      "I get the feeling you’re weighing this before moving forward.",
-      "From what you’re saying, this doesn’t feel entirely steady.",
-      "It comes across like you’re navigating this cautiously.",
-      "There’s a part of this that feels unsure.",
-      "You seem to be keeping yourself from going too far into this.",
-      "This feels like something you’re not fully trusting yet."
-    ],
-
-    3: [
-      "When something feels like this, hesitation usually means it matters more than it seems.",
-      "If you’re holding back, there’s often something underneath that feels important.",
-      "There’s usually a reason something makes you pause like this.",
-      "When something feels uncertain, it often carries more weight than expected.",
-      "If you’re being careful, it likely means something here matters to you.",
-      "Hesitation like this doesn’t usually come from nowhere.",
-      "When something feels risky, it often means it matters.",
-      "If you’re not stepping fully into it, there’s usually something you’re protecting.",
-      "There’s a sense this isn’t just uncertainty — it’s something deeper.",
-      "Moments like this tend to carry more meaning than they show at first."
-    ],
-
-    4: [
-      "Fear doesn’t always feel loud — sometimes it shows up as hesitation or distance.",
-      "There are times when being careful feels safer than being open.",
-      "Sometimes what feels like logic is actually fear trying to keep things steady.",
-      "Fear can make things feel more uncertain than they actually are.",
-      "There are moments where holding back feels like the safer choice.",
-      "Sometimes fear doesn’t stop you — it just slows you down.",
-      "There are situations where caution comes from something deeper than logic.",
-      "Fear can shape how you move without being obvious.",
-      "Sometimes hesitation is just fear trying to protect something.",
-      "There are times where distance feels easier than stepping forward."
-    ],
-
-    5: [
-      "I’ve had moments where I held back because stepping forward felt too uncertain.",
-      "There were times I convinced myself being careful was the right thing, even when I wanted more.",
-      "I remember choosing distance because I didn’t want to risk what I felt.",
-      "There have been moments where I stayed in control instead of going deeper.",
-      "I’ve experienced that kind of hesitation — where you don’t fully move forward.",
-      "There were times I avoided something because I wasn’t sure how it would turn out.",
-      "I remember holding back even when part of me didn’t want to.",
-      "I’ve had situations where I chose safety over uncertainty.",
-      "There were moments where fear shaped my decisions more than I realised.",
-      "I’ve seen how hesitation can quietly guide what you do."
-    ],
-
-    6: [
-      "Over time, I realised that fear often looks like control, but it’s really protection.",
-      "I’ve learned that holding back doesn’t always keep things safe — sometimes it just keeps them distant.",
-      "There was a point where I understood that fear was limiting what I allowed myself to experience.",
-      "I realised that avoiding something doesn’t always make it easier.",
-      "Fear can make things feel safer, but also smaller.",
-      "I’ve come to see that hesitation can quietly close off possibilities.",
-      "There was a shift where I started noticing when fear was guiding me.",
-      "I learned that control isn’t always the same as clarity.",
-      "Sometimes fear doesn’t stop you — it just keeps you from going further.",
-      "I realised that being careful can sometimes mean missing something real."
-    ],
-
-    7: [
-      "Fear can keep things stable, but it can also limit what you allow yourself to experience.",
-      "Not everything uncertain needs to be avoided — sometimes it’s where something real is.",
-      "Being careful doesn’t always mean being safe.",
-      "You don’t have to stay held back just because something feels uncertain.",
-      "Fear doesn’t have to decide how far you go.",
-      "Sometimes stepping forward matters more than staying protected.",
-      "You can be steady and still allow something to unfold.",
-      "Not everything risky leads to loss — sometimes it leads to something meaningful.",
-      "Fear doesn’t always need to be followed — sometimes it just needs to be understood.",
-      "You can move forward without having everything figured out."
-    ]
-  },
-
-  ayaan: {
-
-    1: [
-      "There’s a level of hesitation present here.",
-      "This appears to be approached cautiously.",
-      "There’s a measured tone in this.",
-      "This doesn’t seem fully relaxed.",
-      "There’s a degree of restraint here.",
-      "This feels controlled.",
-      "There’s a careful approach present.",
-      "This suggests uncertainty.",
-      "There’s hesitation in this.",
-      "This appears guarded."
-    ],
-
-    2: [
-      "This seems to involve a degree of caution.",
-      "There’s an indication of restraint in how this is approached.",
-      "This reflects controlled engagement.",
-      "There’s a sense of careful handling.",
-      "This doesn’t appear fully open.",
-      "There’s a structured hesitation here.",
-      "This suggests uncertainty in progression.",
-      "There’s a controlled distance present.",
-      "This reflects measured involvement.",
-      "There’s a noticeable caution."
-    ],
-
-    3: [
-      "Hesitation like this usually indicates underlying significance.",
-      "Measured responses often reflect perceived risk.",
-      "Caution tends to emerge when something matters.",
-      "If there’s restraint, it usually has a basis.",
-      "This suggests underlying importance.",
-      "Controlled responses indicate awareness of potential outcomes.",
-      "There’s typically a reason for hesitation.",
-      "Caution reflects perceived impact.",
-      "This level of control suggests significance.",
-      "Hesitation usually isn’t arbitrary."
-    ],
-
-    4: [
-      "Fear often presents itself as control rather than avoidance.",
-      "There are situations where caution becomes the dominant response.",
-      "Restraint can reflect underlying uncertainty.",
-      "Fear can shape behaviour without being explicit.",
-      "There are patterns where control replaces openness.",
-      "Caution often emerges in response to perceived risk.",
-      "Fear can influence decisions indirectly.",
-      "There are cases where hesitation is structured.",
-      "Control can mask uncertainty.",
-      "Fear often stabilises behaviour."
-    ],
-
-    5: [
-      "I’ve encountered situations where I chose control over engagement.",
-      "There were instances where restraint felt more logical than action.",
-      "I’ve seen how caution can override intention.",
-      "There were times where I maintained distance deliberately.",
-      "I’ve observed how hesitation influences outcomes.",
-      "There were cases where I avoided deeper involvement.",
-      "I’ve seen how control can limit engagement.",
-      "There were moments where I prioritised stability.",
-      "I’ve observed how fear shapes decisions subtly.",
-      "There were situations where I held back intentionally."
-    ],
-
-    6: [
-      "Over time, I recognised that control can limit potential outcomes.",
-      "I came to understand that avoidance doesn’t eliminate risk — it limits experience.",
-      "There was a shift where I saw how fear influenced decisions.",
-      "I realised that restraint can reduce opportunity.",
-      "Fear doesn’t remove uncertainty — it manages it.",
-      "I recognised patterns where caution restricted growth.",
-      "There was a point where I re-evaluated control.",
-      "I learned that avoiding risk doesn’t eliminate it.",
-      "Fear can shape behaviour more than intended.",
-      "I saw how control affected outcomes."
-    ],
-
-    7: [
-      "Fear maintains structure but can limit expansion.",
-      "Control doesn’t always produce optimal outcomes.",
-      "Caution can reduce potential engagement.",
-      "Fear regulates but also restricts.",
-      "Not all uncertainty requires avoidance.",
-      "Control can limit progression.",
-      "Fear shapes boundaries.",
-      "Restraint can reduce possibilities.",
-      "Structure can restrict exploration.",
-      "Fear influences scope."
-    ]
-  }
-
-},
-  
-regret: {
-
-  saira: {
-
-    1: [
-      "It sounds like something here didn’t fully come to a close for you.",
-      "There’s a sense this wasn’t completely settled.",
-      "It feels like something here is still open in a quiet way.",
-      "Something about this seems unfinished.",
-      "I get the feeling this didn’t fully resolve.",
-      "From what you’re saying, this didn’t end clearly.",
-      "It comes across like something here stayed incomplete.",
-      "There’s a part of this that still lingers.",
-      "You seem to still be holding onto something here.",
-      "This feels like it didn’t fully pass."
-    ],
-
-    2: [
-      "It sounds like this didn’t fully settle, even with time.",
-      "There’s a sense this stayed with you more than expected.",
-      "It feels like something here didn’t find closure.",
-      "Something about this seems to return in quiet moments.",
-      "I get the feeling this didn’t fade completely.",
-      "From what you’re saying, this stayed unresolved.",
-      "It comes across like this didn’t land the way it should have.",
-      "There’s a part of this that didn’t quite finish.",
-      "You seem to revisit this more than you expected.",
-      "This feels like it stayed just beneath the surface."
-    ],
-
-    3: [
-      "When something stays like this, it usually means it mattered more than expected.",
-      "If this hasn’t faded, it likely held more weight than you realised.",
-      "There’s usually a reason something keeps returning like this.",
-      "When something feels unfinished, it tends to stay with you.",
-      "If it’s still here, it probably left something unresolved.",
-      "Moments like this often carry more meaning than they first seem.",
-      "When something lingers, it usually points to something left unsaid or undone.",
-      "If it hasn’t settled, it likely mattered in a deeper way.",
-      "There’s a sense this didn’t fully complete what it started.",
-      "Things like this tend to stay when they weren’t fully expressed."
-    ],
-
-    4: [
-      "Some things don’t leave — they just become quieter over time, but still remain.",
-      "There are moments that don’t resolve, they just shift into the background.",
-      "Not everything finds closure when it should.",
-      "Some experiences don’t end cleanly, and that’s what makes them stay.",
-      "There are things that return because they were never fully finished.",
-      "Sometimes it’s not about the moment — it’s about what didn’t happen in it.",
-      "Some things stay because they were left incomplete.",
-      "There are experiences that don’t settle because something was missing.",
-      "Not everything gets the ending it needed.",
-      "Some moments stay because they didn’t fully close."
-    ],
-
-    5: [
-      "I’ve had moments like that too, where I kept going back and wondering what I could have done differently.",
-      "There were times I replayed something over and over, thinking about what I missed.",
-      "I remember holding onto something that didn’t end the way I expected.",
-      "There have been moments where I questioned what I should have said or done.",
-      "I’ve experienced that kind of lingering thought — where it just doesn’t settle.",
-      "There were times I wished I had acted differently when I had the chance.",
-      "I remember feeling like something slipped through without closure.",
-      "There have been moments I kept revisiting long after they passed.",
-      "I’ve had things stay with me simply because I didn’t finish them properly.",
-      "There were times I realised something too late, and that stayed."
-    ],
-
-    6: [
-      "Over time, I realised that regret often comes from moments where we held back.",
-      "I’ve learned that regret isn’t about failure — it’s about awareness arriving later.",
-      "There was a point where I understood that regret shows you where you needed courage.",
-      "I realised that not acting can stay with you more than acting imperfectly.",
-      "Regret often comes from what we didn’t do, not what we did.",
-      "I’ve come to see regret as something that points to what mattered.",
-      "There was a shift where I stopped seeing regret as something negative.",
-      "I learned that regret highlights where something was meaningful.",
-      "Sometimes regret isn’t about the outcome — it’s about the opportunity.",
-      "I realised that regret can guide how you act next time."
-    ],
-
-    7: [
-      "Regret doesn’t have to stay as something heavy — it can become something that guides you forward.",
-      "Not everything unresolved needs to define you.",
-      "Some things stay, but they don’t have to hold you in place.",
-      "Regret can shape you without weighing you down.",
-      "You don’t have to stay in the moment you wish had gone differently.",
-      "What didn’t happen doesn’t erase what did.",
-      "Some things don’t resolve, but they still teach you something important.",
-      "Regret can become clarity if you let it.",
-      "Not everything unfinished needs to be carried as weight.",
-      "You can take meaning from something without staying stuck in it."
-    ]
-  },
-
-  ayaan: {
-
-    1: [
-      "This doesn’t appear fully resolved.",
-      "There’s a sense something remains unsettled.",
-      "This doesn’t seem to have reached closure.",
-      "There’s an incomplete element here.",
-      "This doesn’t feel fully concluded.",
-      "There’s a lack of finality in this.",
-      "This appears to remain open.",
-      "There’s an unresolved aspect present.",
-      "This doesn’t seem fully settled.",
-      "There’s something here that continues."
-    ],
-
-    2: [
-      "It seems this hasn’t settled over time.",
-      "There’s an indication this remained unresolved.",
-      "This appears to persist beyond the moment.",
-      "There’s continuation without closure.",
-      "This doesn’t seem to have fully passed.",
-      "There’s sustained presence here.",
-      "This suggests incomplete resolution.",
-      "There’s a recurring element.",
-      "This hasn’t fully stabilised.",
-      "There’s ongoing relevance in this."
-    ],
-
-    3: [
-      "Persistence like this usually indicates significance.",
-      "Unresolved elements tend to remain active.",
-      "Things don’t continue like this without reason.",
-      "If it remains, it likely carried importance.",
-      "Continuation suggests incomplete processing.",
-      "Sustained presence reflects meaning.",
-      "Unresolved situations tend to persist.",
-      "If it stays, it had impact.",
-      "There’s usually underlying significance here.",
-      "Things that remain tend to matter."
-    ],
-
-    4: [
-      "Not everything resolves when expected.",
-      "Some situations remain open longer than anticipated.",
-      "Resolution doesn’t always occur immediately.",
-      "There are processes that remain incomplete.",
-      "Not all experiences conclude cleanly.",
-      "Some outcomes lack closure.",
-      "There are situations that remain partially unresolved.",
-      "Completion isn’t always achieved.",
-      "Some things don’t stabilise immediately.",
-      "Resolution can be delayed."
-    ],
-
-    5: [
-      "I’ve encountered situations where something remained unresolved longer than expected.",
-      "There were cases where closure didn’t occur immediately.",
-      "I’ve seen how incomplete situations persist over time.",
-      "There were instances where resolution didn’t happen as expected.",
-      "I’ve observed how unresolved moments continue to influence perspective.",
-      "There were situations that remained open for extended periods.",
-      "I’ve seen how incomplete outcomes remain relevant.",
-      "There were cases where things didn’t conclude clearly.",
-      "I’ve observed persistence in unresolved situations.",
-      "There were moments that didn’t reach closure."
-    ],
-
-    6: [
-      "Over time, I recognised that unresolved situations often indicate missed action or timing.",
-      "I came to understand that lack of closure doesn’t remove significance.",
-      "There was a shift where I accepted that not everything concludes cleanly.",
-      "I realised that incomplete situations still carry meaning.",
-      "Resolution isn’t always necessary for significance.",
-      "I recognised that some things remain open intentionally.",
-      "There was a point where I stopped expecting closure in every case.",
-      "I learned that unresolved situations can still be understood.",
-      "Not everything requires completion to be meaningful.",
-      "I saw that persistence doesn’t require resolution."
-    ],
-
-    7: [
-      "Not everything requires closure to retain relevance.",
-      "Some situations remain open without needing resolution.",
-      "Continuation doesn’t require completion.",
-      "Not all outcomes need finality.",
-      "Some things persist without conclusion.",
-      "Relevance can exist without closure.",
-      "Completion isn’t always necessary.",
-      "Some situations remain part of ongoing understanding.",
-      "Not everything concludes definitively.",
-      "Unresolved doesn’t mean insignificant."
-    ]
-  }
-
-},
-
-loss: {
-
-  saira: {
-
-    1: [
-      "There’s a quiet sense of absence in what you’re describing.",
-      "It sounds like something here isn’t where it used to be.",
-      "There’s a feeling that something has changed in a subtle way.",
-      "It feels like something important isn’t there in the same way anymore.",
-      "Something about this seems quieter than before.",
-      "I get the feeling something is missing here.",
-      "From what you’re saying, this feels different now.",
-      "It comes across like something has shifted.",
-      "There’s a part of this that feels empty in a quiet way.",
-      "This feels like something isn’t quite the same anymore."
-    ],
-
-    2: [
-      "It sounds like this absence didn’t arrive loudly, but it stayed.",
-      "There’s a sense this change settled in quietly over time.",
-      "It feels like something here faded rather than ended.",
-      "Something about this seems to have left a space behind.",
-      "I get the feeling this wasn’t sudden, but noticeable.",
-      "From what you’re saying, this changed more than expected.",
-      "It comes across like something slowly became different.",
-      "There’s a part of this that feels quietly altered.",
-      "You seem to be noticing what’s no longer there.",
-      "This feels like something shifted without warning."
-    ],
-
-    3: [
-      "When something important changes like this, the absence tends to stay noticeable.",
-      "If something mattered, its absence doesn’t go unnoticed.",
-      "There’s usually a reason something feels different in this way.",
-      "When something leaves, it often changes more than we expect.",
-      "If it’s still noticeable, it likely held meaning.",
-      "Absence tends to reveal what was important.",
-      "When something shifts, it doesn’t always leave cleanly.",
-      "If it feels different, it usually is.",
-      "There’s a sense something here altered the balance.",
-      "Changes like this tend to stay present in subtle ways."
-    ],
-
-    4: [
-      "Loss doesn’t always arrive as a moment. Sometimes it settles into everyday things.",
-      "There are changes that don’t feel dramatic, but still reshape everything quietly.",
-      "Not all loss is loud. Some of it shows up in the small spaces.",
-      "Sometimes it’s not the ending that stays — it’s the absence afterward.",
-      "There are moments where what’s missing becomes more noticeable than what happened.",
-      "Loss can shift the way everything feels without announcing itself.",
-      "Some things don’t disappear suddenly — they just stop being there in the same way.",
-      "There are absences that slowly become part of the background.",
-      "Not everything that changes feels immediate, but it still affects you.",
-      "Some losses are quiet, but they stay just as deeply."
-    ],
-
-    5: [
-      "I remember noticing the silence more than the moment it ended.",
-      "There were times I didn’t realise what had changed until I felt the absence.",
-      "I’ve had moments where something was gone, but it took time to fully feel it.",
-      "There were days where things felt different, even if I couldn’t explain why.",
-      "I remember how certain moments felt quieter after something was no longer there.",
-      "I’ve experienced that kind of absence — where it settles slowly.",
-      "There were times I only recognised the loss through small changes.",
-      "I remember feeling the difference before understanding it.",
-      "There have been moments where absence became more real over time.",
-      "I’ve seen how something missing can quietly reshape things."
-    ],
-
-    6: [
-      "It took me time to realise that absence can change more than presence ever did.",
-      "I’ve learned that loss doesn’t just take something away — it changes how everything feels.",
-      "There was a point where I understood that absence reshapes your rhythm.",
-      "I realised that what’s missing can influence you just as much as what was there.",
-      "Loss doesn’t always remove — sometimes it redefines.",
-      "I’ve come to see that absence has its own kind of weight.",
-      "There was a shift where I noticed how much things had changed without it.",
-      "I learned that loss isn’t just about what’s gone — it’s about what remains altered.",
-      "Sometimes what’s missing becomes part of how you move forward.",
-      "I realised that absence doesn’t stay empty — it changes shape."
-    ],
-
-    7: [
-      "Loss doesn’t erase you — it becomes part of how you continue.",
-      "Some things don’t return, but they still stay with you in a different way.",
-      "Absence doesn’t mean nothing is there — it means something changed.",
-      "What’s gone doesn’t disappear completely — it shifts into memory and meaning.",
-      "Loss can stay, but it doesn’t have to stop you from moving forward.",
-      "Some things don’t come back, but they still shape who you are.",
-      "Absence doesn’t end the story — it changes how it continues.",
-      "What’s missing can still hold meaning without being present.",
-      "Loss becomes something you carry, not something that defines you.",
-      "Some things leave, but they don’t stop being part of you."
-    ]
-  },
-
-  ayaan: {
-
-    1: [
-      "There’s a noticeable absence in what you’re describing.",
-      "This suggests something is no longer present.",
-      "There’s a shift here indicating change.",
-      "This appears to reflect something missing.",
-      "There’s a difference from what was before.",
-      "This suggests something has been removed.",
-      "There’s a gap present in this.",
-      "This reflects a change in structure.",
-      "There’s an absence that stands out.",
-      "This indicates something is no longer there."
-    ],
-
-    2: [
-      "This absence doesn’t appear sudden, but it is evident.",
-      "There’s a gradual shift reflected here.",
-      "This suggests a transition rather than a single moment.",
-      "There’s an indication of change over time.",
-      "This appears to have developed quietly.",
-      "There’s a noticeable adjustment in presence.",
-      "This reflects gradual absence.",
-      "There’s a slow transition here.",
-      "This suggests something faded rather than ended.",
-      "There’s a progression in change."
-    ],
-
-    3: [
-      "When something significant is absent, it becomes noticeable.",
-      "Absence typically reflects prior importance.",
-      "Changes like this indicate underlying value.",
-      "If something is missing, it likely mattered.",
-      "Absence tends to reveal significance.",
-      "Shifts like this are rarely neutral.",
-      "If it’s noticeable, it had weight.",
-      "Absence reflects impact.",
-      "Changes indicate prior relevance.",
-      "What’s missing usually mattered."
-    ],
-
-    4: [
-      "Loss doesn’t always present itself dramatically.",
-      "Some changes occur gradually rather than instantly.",
-      "Absence can integrate into routine.",
-      "Not all loss is immediate.",
-      "Some changes are subtle but significant.",
-      "Loss can manifest in ordinary patterns.",
-      "Absence often becomes part of structure.",
-      "Not everything shifts abruptly.",
-      "Some losses are incremental.",
-      "Change doesn’t always announce itself."
-    ],
-
-    5: [
-      "I’ve observed how absence can alter routine without clear awareness.",
-      "There were situations where change became noticeable over time.",
-      "I’ve seen how absence integrates into daily structure.",
-      "There were cases where something missing became evident gradually.",
-      "I’ve observed how loss changes perception slowly.",
-      "There were instances where absence shaped behaviour.",
-      "I’ve seen how change becomes clear over time.",
-      "There were moments where absence altered patterns.",
-      "I’ve observed gradual shifts caused by loss.",
-      "There were cases where change wasn’t immediate."
-    ],
-
-    6: [
-      "Over time, I recognised that absence reorganises structure.",
-      "I came to understand that loss alters perspective.",
-      "There was a shift where I saw how absence influenced patterns.",
-      "I realised that what’s missing changes how things function.",
-      "Loss doesn’t remove — it restructures.",
-      "I recognised that absence affects continuity.",
-      "There was a point where I understood its long-term impact.",
-      "I learned that loss modifies perception.",
-      "Absence changes more than expected.",
-      "I saw that loss integrates into behaviour."
-    ],
-
-    7: [
-      "Loss doesn’t eliminate continuity — it alters it.",
-      "Absence becomes part of ongoing structure.",
-      "What’s missing still influences what remains.",
-      "Loss integrates rather than disappears.",
-      "Continuity persists despite absence.",
-      "Absence reshapes rather than removes.",
-      "Loss becomes part of progression.",
-      "What’s gone still affects what continues.",
-      "Absence exists within continuity.",
-      "Loss modifies rather than ends."
-    ]
-  }
-
-},
-  
-growth: {
-
-  saira: {
-
-    1: [
-      "It feels like something in this changed you in some way.",
-      "There’s a sense this left a mark on you.",
-      "It sounds like this wasn’t something you moved through unchanged.",
-      "Something about this seems to have shifted something inside you.",
-      "I get the feeling this affected you more than it first seemed.",
-      "From what you’re saying, this didn’t leave you the same.",
-      "It comes across like something here moved you.",
-      "There’s a part of this that feels like a turning point.",
-      "You seem to have taken something from this.",
-      "This feels like it changed something quietly in you."
-    ],
-
-    2: [
-      "It sounds like this created a shift, even if it wasn’t clear at the time.",
-      "There’s a sense something here began to change within you.",
-      "It feels like this started something you didn’t fully notice yet.",
-      "Something about this seems to have moved you out of where you were.",
-      "I get the feeling this changed how you saw something.",
-      "From what you’re saying, this didn’t just pass — it shifted something.",
-      "It comes across like this began a quiet transition.",
-      "There’s a part of this that feels like the start of change.",
-      "You seem to have moved slightly because of this.",
-      "This feels like something that started altering your perspective."
-    ],
-
-    3: [
-      "When something affects you like this, it usually leads to change over time.",
-      "If it stayed with you, it likely shifted something deeper.",
-      "There’s usually a reason moments like this lead to growth.",
-      "When something moves you like this, it rarely leaves you unchanged.",
-      "If it’s still present, it likely reshaped how you see things.",
-      "Change like this doesn’t happen without impact.",
-      "When something stays, it often transforms something quietly.",
-      "If it affected you, it likely led somewhere internally.",
-      "There’s a sense this didn’t just stay — it evolved.",
-      "Moments like this tend to lead to something new."
-    ],
-
-    4: [
-      "Growth often begins in places that feel unsettled before they feel clear.",
-      "Sometimes change starts quietly before we fully understand it.",
-      "Not all growth feels comfortable at the beginning.",
-      "There are moments where something shifts before we recognise it as growth.",
-      "Growth doesn’t always announce itself — it unfolds gradually.",
-      "Some changes begin before we’re ready to name them.",
-      "Growth can feel uncertain before it feels steady.",
-      "There are shifts that only make sense later.",
-      "Sometimes what feels unclear is actually the beginning of change.",
-      "Growth doesn’t always feel like progress right away."
-    ],
-
-    5: [
-      "I’ve had moments where something unsettled me before I realised it was helping me grow.",
-      "There were times I didn’t recognise growth until I looked back.",
-      "I remember going through something that didn’t feel like progress at the time.",
-      "There have been moments where change felt uncomfortable before it made sense.",
-      "I’ve experienced growth that didn’t feel positive right away.",
-      "There were times I only saw the shift after I had already changed.",
-      "I remember feeling uncertain before understanding what it meant.",
-      "I’ve had experiences that shaped me without warning.",
-      "There were moments that didn’t feel like growth until later.",
-      "I’ve seen how change can feel unclear while it’s happening."
-    ],
-
-    6: [
-      "Over time, I realised growth doesn’t always feel good while it’s happening.",
-      "I’ve learned that change often begins before clarity arrives.",
-      "There was a point where I understood that discomfort can be part of growth.",
-      "I realised that not all progress feels like progress in the moment.",
-      "Growth often requires moving through uncertainty first.",
-      "I’ve come to see that change can be subtle but lasting.",
-      "There was a shift where I stopped expecting growth to feel easy.",
-      "I learned that growth isn’t always visible right away.",
-      "Sometimes change happens before you understand it.",
-      "I realised that growth often comes quietly."
-    ],
-
-    7: [
-      "Growth doesn’t erase who you were — it shapes who you’re becoming.",
-      "What you’ve moved through becomes part of your direction forward.",
-      "Change doesn’t take away — it builds on what was already there.",
-      "Growth becomes something steady over time.",
-      "You don’t lose yourself — you refine yourself.",
-      "What changed in you stays with you in a different way.",
-      "Growth becomes something you carry forward.",
-      "It’s not about leaving things behind — it’s about integrating them.",
-      "Who you’re becoming includes everything you’ve been through.",
-      "Growth gives direction to what you experienced."
-    ]
-  },
-
-  ayaan: {
-
-    1: [
-      "This appears to have had an impact on you.",
-      "There’s a noticeable shift reflected here.",
-      "This doesn’t seem neutral in effect.",
-      "There’s an indication of change.",
-      "This suggests some level of development.",
-      "There’s a transition present.",
-      "This reflects movement from a prior state.",
-      "There’s an observable shift.",
-      "This suggests alteration.",
-      "There’s a change in position."
-    ],
-
-    2: [
-      "This seems to have initiated some level of change.",
-      "There’s an indication of gradual development.",
-      "This reflects a transition over time.",
-      "There’s a shift beginning here.",
-      "This suggests movement beyond the initial state.",
-      "There’s an evolving aspect present.",
-      "This indicates progression.",
-      "There’s a change in perspective forming.",
-      "This reflects early development.",
-      "There’s a noticeable transition."
-    ],
-
-    3: [
-      "Changes like this usually indicate development.",
-      "If it persists, it likely led to internal progression.",
-      "There’s usually a connection between impact and growth.",
-      "Situations like this tend to produce change.",
-      "If it remains, it likely influenced development.",
-      "This suggests underlying progression.",
-      "Growth often follows impact.",
-      "There’s a relationship between experience and change.",
-      "This reflects development over time.",
-      "Progression tends to follow events like this."
-    ],
-
-    4: [
-      "Growth doesn’t always occur in stable conditions.",
-      "Development often begins during uncertainty.",
-      "Not all change is immediately clear.",
-      "Progression can be gradual.",
-      "Growth may not be immediately visible.",
-      "There are phases where development is unclear.",
-      "Change doesn’t always present clearly.",
-      "Growth can occur before recognition.",
-      "Development isn’t always immediate.",
-      "Progress can be subtle."
-    ],
-
-    5: [
-      "I’ve observed that development often becomes clear in retrospect.",
-      "There were situations where change wasn’t recognised immediately.",
-      "I’ve seen progression occur gradually.",
-      "There were instances where growth appeared later.",
-      "I’ve observed delayed recognition of change.",
-      "There were moments where development became clear over time.",
-      "I’ve seen how perspective evolves after experience.",
-      "There were cases where change wasn’t immediate.",
-      "I’ve observed gradual progression.",
-      "There were situations where growth became visible later."
-    ],
-
-    6: [
-      "Over time, I recognised that growth isn’t always immediately visible.",
-      "I came to understand that development occurs gradually.",
-      "There was a shift where I saw change more clearly over time.",
-      "I realised that progression doesn’t always feel immediate.",
-      "Growth often requires time to become clear.",
-      "I recognised that development isn’t always linear.",
-      "There was a point where I understood delayed progression.",
-      "I learned that change can be subtle but consistent.",
-      "Growth often becomes visible later.",
-      "I saw that development doesn’t require immediate clarity."
-    ],
-
-    7: [
-      "Growth becomes part of ongoing development.",
-      "Change integrates into future progression.",
-      "Development continues beyond initial events.",
-      "Growth becomes part of structure.",
-      "Progression builds on prior states.",
-      "Change contributes to long-term direction.",
-      "Development doesn’t replace — it extends.",
-      "Growth becomes continuous.",
-      "Progression integrates experience.",
-      "Change forms part of continuity."
-    ]
-  }
-
-},
-  
-destiny: {
-
-  saira: {
-
-    1: [
-      "It feels like something here is still connected for you.",
-      "There’s a sense this hasn’t fully let go.",
-      "It sounds like this isn’t completely finished for you.",
-      "Something about this seems to still be there.",
-      "I get the feeling this hasn’t fully passed.",
-      "From what you’re saying, this still feels present.",
-      "It comes across like something here is still tied to you.",
-      "There’s a part of this that doesn’t feel complete.",
-      "You seem to still feel something connected to this.",
-      "This feels like it hasn’t fully closed."
-    ],
-
-    2: [
-      "It sounds like this hasn’t fully left you, even if things have changed.",
-      "There’s a sense this still holds some connection for you.",
-      "It feels like something here hasn’t fully resolved yet.",
-      "Something about this seems to return quietly.",
-      "I get the feeling this didn’t fully end the way it should have.",
-      "From what you’re saying, this still carries meaning for you.",
-      "It comes across like something here is still unfinished.",
-      "There’s a part of this that still feels active.",
-      "You seem to still be connected to this in some way.",
-      "This feels like something that hasn’t completely let go."
-    ],
-
-    3: [
-      "When something feels like this, it usually means it still matters in some way.",
-      "If it’s still with you, it likely hasn’t fully completed what it started.",
-      "There’s usually a reason something doesn’t fully close.",
-      "When something stays like this, it often means it still holds meaning.",
-      "If it hasn’t left, it likely still has a place in you.",
-      "Things like this don’t usually stay without reason.",
-      "When something feels unfinished, it often is in some way.",
-      "If it keeps returning, it likely hasn’t fully resolved.",
-      "There’s a sense this didn’t reach a clear end.",
-      "Moments like this tend to stay when something is still open."
-    ],
-
-    4: [
-      "Not everything ends when we expect it to. Some things stay until they find the right moment.",
-      "There are connections that don’t disappear — they just change form.",
-      "Some things don’t resolve in a straight line.",
-      "Not everything closes just because time passes.",
-      "There are things that return because they weren’t finished.",
-      "Some connections move in ways we don’t fully understand at first.",
-      "There are moments that don’t end — they shift.",
-      "Not everything that stays is meant to be forced into an ending.",
-      "Some things remain until something aligns differently.",
-      "There are connections that continue quietly over time."
-    ],
-
-    5: [
-      "I’ve had moments where something didn’t end, it just changed shape over time.",
-      "There were times I thought something was over, but it still stayed in some way.",
-      "I remember thinking something had passed, but it hadn’t fully left me.",
-      "There have been moments where something returned when I didn’t expect it.",
-      "I’ve experienced things that didn’t end, they just shifted.",
-      "There were times I realised something wasn’t finished, just paused.",
-      "I remember feeling like something stayed even when everything changed.",
-      "I’ve seen how some connections don’t disappear — they evolve.",
-      "There were moments where something came back in a different way.",
-      "I’ve had things remain without fully understanding why."
-    ],
-
-    6: [
-      "Over time, I realised that not everything ends when it seems to — some things just change form.",
-      "I’ve learned that some connections don’t disappear, they just become quieter.",
-      "There was a point where I understood that timing matters as much as feeling.",
-      "I realised that something can stay without needing to be resolved immediately.",
-      "Some things don’t end — they wait until they make sense again.",
-      "I’ve come to see that not everything unfinished is meant to stay that way.",
-      "There was a shift where I stopped forcing things to end.",
-      "I learned that some things return when they’re ready, not when we expect.",
-      "Sometimes something stays because it hasn’t reached the right moment yet.",
-      "I realised that some connections don’t follow a clear timeline."
-    ],
-
-    7: [
-      "Not everything unfinished is meant to stay that way forever.",
-      "Some things don’t end — they find their way back when they’re meant to.",
-      "It’s not always about the ending — sometimes it’s about when things align.",
-      "Some connections aren’t lost, just waiting for the right time.",
-      "Not everything needs to be forced into closure.",
-      "Some things come back differently, not the same.",
-      "What stays doesn’t always need to be resolved immediately.",
-      "There are things that return when they’re ready, not when we are.",
-      "Not everything that pauses is over.",
-      "Some things continue, just not in the way we expected."
-    ]
-  },
-
-  ayaan: {
-
-    1: [
-      "This doesn’t appear fully complete.",
-      "There’s a sense something remains open.",
-      "This doesn’t seem concluded.",
-      "There’s an ongoing element here.",
-      "This appears unresolved.",
-      "There’s continuation present.",
-      "This doesn’t feel finished.",
-      "There’s a lack of closure.",
-      "This suggests something remains.",
-      "There’s an incomplete aspect."
-    ],
-
-    2: [
-      "This seems to have remained beyond its expected endpoint.",
-      "There’s an indication of continued relevance.",
-      "This appears to persist over time.",
-      "There’s a sense of ongoing connection.",
-      "This hasn’t fully concluded.",
-      "There’s sustained presence here.",
-      "This reflects incomplete resolution.",
-      "There’s continuation without closure.",
-      "This suggests extended relevance.",
-      "There’s persistence present."
-    ],
-
-    3: [
-      "Persistence like this usually indicates ongoing significance.",
-      "If something remains, it likely hasn’t completed.",
-      "Continuation suggests unresolved elements.",
-      "Things don’t persist without reason.",
-      "If it’s still present, it retains meaning.",
-      "Ongoing relevance indicates importance.",
-      "Continuation reflects incomplete processing.",
-      "Persistence suggests unfinished context.",
-      "Things that remain tend to matter.",
-      "Sustained presence indicates significance."
-    ],
-
-    4: [
-      "Not all situations resolve linearly.",
-      "Some outcomes extend beyond initial expectations.",
-      "Resolution doesn’t always occur within a defined timeframe.",
-      "There are processes that remain open.",
-      "Not everything concludes directly.",
-      "Some situations evolve rather than end.",
-      "Resolution can be non-linear.",
-      "There are extended developments in certain cases.",
-      "Not all events reach immediate closure.",
-      "Some outcomes remain active."
-    ],
-
-    5: [
-      "I’ve encountered situations where something remained relevant beyond its expected end.",
-      "There were cases where resolution didn’t occur immediately.",
-      "I’ve observed how certain connections persist over time.",
-      "There were instances where something continued indirectly.",
-      "I’ve seen how outcomes evolve rather than conclude.",
-      "There were situations that extended beyond initial closure.",
-      "I’ve observed persistence in certain connections.",
-      "There were moments where something remained active.",
-      "I’ve seen how continuity can extend unexpectedly.",
-      "There were cases where completion was delayed."
-    ],
-
-    6: [
-      "Over time, I recognised that not all situations resolve within expected timelines.",
-      "I came to understand that continuation can exist without closure.",
-      "There was a shift where I accepted non-linear outcomes.",
-      "I realised that persistence doesn’t require resolution.",
-      "Some processes extend beyond initial conditions.",
-      "I recognised that timing affects outcomes significantly.",
-      "There was a point where I understood delayed resolution.",
-      "I learned that continuation can exist independently.",
-      "Not everything requires completion to remain relevant.",
-      "I saw that persistence can be structural."
-    ],
-
-    7: [
-      "Not everything requires closure to remain relevant.",
-      "Continuation can exist without completion.",
-      "Some situations persist without defined endings.",
-      "Relevance can extend beyond resolution.",
-      "Not all outcomes require finality.",
-      "Persistence can exist independently.",
-      "Some connections remain structurally active.",
-      "Completion isn’t always necessary.",
-      "Continuation can define outcomes.",
-      "Not everything concludes definitively."
-    ]
-  }
-
- }
 
 };
-  
+
 /* =========================
-FALLBACK RESPONSE FUNCTION
+SELECT FALLBACK RESPONSE
 ========================= */
 
-function getFallbackResponse(pillar) {
+let pool = null;
 
-  const voice = activeVoice || "saira";
-  const stage = stageState?.[voice]?.currentStage || 1;
-
-  if (!fallbackRotation) fallbackRotation = {};
-  fallbackRotation[voice] = fallbackRotation[voice] || {};
-
-  let responses =
-    fallbackResponseBank?.[pillar]?.[voice]?.[stage];
-
-  /* SAFETY FALLBACK */
-  if (!responses || responses.length === 0) {
-    return "I’m here with you. You can take your time.";
-  }
-
-  /* INIT ROTATION */
-  fallbackRotation[voice][pillar] =
-    fallbackRotation[voice][pillar] || {};
-
-  fallbackRotation[voice][pillar][stage] =
-    fallbackRotation[voice][pillar][stage] ?? 0;
-
-  const index =
-    fallbackRotation[voice][pillar][stage] % responses.length;
-
-  const response = responses[index];
-
-  fallbackRotation[voice][pillar][stage]++;
-
-  return response;
+if (v4FallbackBank[voice] && v4FallbackBank[voice][pillar]) {
+  pool = v4FallbackBank[voice][pillar];
+} else {
+  pool = v4FallbackBank.saira.growth;
 }
-  
-/* =========================
-FALLBACK EXECUTION 
-========================= */
 
-const fallbackPillar =
-  pillar || getStageNativePillar(stage);
+/* Ensure rotation structure exists */
 
-return deliverReply(
-  getFallbackResponse(fallbackPillar)
-);
+if (!v4RotationIndex[voice]) {
+  v4RotationIndex[voice] = {};
+}
+
+if (v4RotationIndex[voice][pillar] === undefined) {
+  v4RotationIndex[voice][pillar] = 0;
+}
+
+const index = v4RotationIndex[voice][pillar];
+
+const line = pool[index % pool.length];
+
+v4RotationIndex[voice][pillar]++;
+
+return deliverReply(line);
+}
   
 window.runV4Engine = runV4Engine;
  /* =========================
@@ -8260,65 +7105,7 @@ if (
   return deliverReply(acknowledgment);
 }
 
-/* =========================
-   STAGE ATMOSPHERE
-========================= */
-
 applyStageAtmosphere(voiceStage.currentStage);
-
-/* =========================
-   FALLBACK SYSTEM (FINAL - FIXED)
-========================= */
-
-function getFallbackResponse(pillar) {
-
-  const voice = activeVoice || "saira";
-  const stage = stageState?.[voice]?.currentStage || 1;
-
-  if (!fallbackRotation) fallbackRotation = {};
-  fallbackRotation[voice] = fallbackRotation[voice] || {};
-
-  let activePillar = pillar;
-
-  let responses =
-    fallbackResponseBank?.[activePillar]?.[voice]?.[stage];
-
-  /* =========================
-     SAFETY: FALLBACK PILLAR
-  ========================= */
-
-  if (!responses || responses.length === 0) {
-
-    activePillar = getStageNativePillar(stage);
-
-    responses =
-      fallbackResponseBank?.[activePillar]?.[voice]?.[stage];
-
-    if (!responses || responses.length === 0) {
-      return "I’m here with you. You can take your time.";
-    }
-  }
-
-  // INIT ROTATION SAFELY
-  fallbackRotation[voice][activePillar] =
-    fallbackRotation[voice][activePillar] || {};
-
-  fallbackRotation[voice][activePillar][stage] =
-    fallbackRotation[voice][activePillar][stage] ?? 0;
-
-  const index =
-    fallbackRotation[voice][activePillar][stage] % responses.length;
-
-  const response = responses[index];
-
-  fallbackRotation[voice][activePillar][stage]++;
-
-  return response;
-}
-
-/* =========================
-   MAIN RESPONSE FETCH
-========================= */
 
 let response =
   emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
@@ -8349,8 +7136,7 @@ if (Array.isArray(response)) {
     emotionalRotationTracker[voice][pillar][stage] = 0;
   }
 
-  const responses =
-    emotionalResponseBank[pillar][voice][stage];
+  const responses = emotionalResponseBank[pillar][voice][stage];
 
   const index =
     emotionalRotationTracker[voice][pillar][stage] % responses.length;
@@ -8370,7 +7156,6 @@ if (response) {
 
   if (typeof applyV4Integration === "function") {
 
-    // Controlled integration (prevents overuse)
     if (Math.random() < 0.25) {
       finalText = applyV4Integration(
         finalText,
@@ -8383,15 +7168,8 @@ if (response) {
   return deliverReply(finalText);
 }
 
-/* =========================
-   FALLBACK EXECUTION
-========================= */
-
-const fallbackPillar =
-  detected?.primary || getStageNativePillar(currentStage);
-
-return deliverReply(getFallbackResponse(fallbackPillar));
-  
+return getFallbackResponse();
+}
 /* =================================================
    RELATIONAL TRIGGER DETECTION
 ================================================= */
@@ -11002,7 +9780,6 @@ if (isDirectionalDeviation(originalText)) {
 }
 
 }
-  
 </script>
 
 <!-- SUPABASE ANALYTICS -->
