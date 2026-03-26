@@ -7293,17 +7293,53 @@ function injectEmotionalPillar(state) {
 
   let finalPillar = detected ? detected.primary : nativePillar;
 
+  /* =========================
+    ANTI-LOOP PILLAR CONTROL
+  ========================= */
+
+  if (!v4PillarHistory) v4PillarHistory = {};
+
+  if (!v4PillarHistory[activeVoice]) {
+    v4PillarHistory[activeVoice] = [];
+  }
+
+  const history = v4PillarHistory[activeVoice];
+
+  // Track last 5 pillar selections
+  history.push(finalPillar);
+  if (history.length > 5) history.shift();
+
+  // Count how many times current pillar repeats
+  const sameCount = history.filter(p => p === finalPillar).length;
+
+  // If stuck in same pillar → diversify
+  if (sameCount >= 4) {
+
+    const alternatives = ["affection", "fear", "growth"];
+
+    const filtered = alternatives.filter(p => p !== finalPillar);
+
+    if (filtered.length > 0) {
+      finalPillar =
+        filtered[Math.floor(Math.random() * filtered.length)];
+    }
+  }
+
+  /* =========================
+     EXISTING GUARDRAIL
+  ========================= */
+
   const targetStage = pillarToStage[finalPillar];
 
- if (targetStage > currentStage + 2) {
-  finalPillar = nativePillar;
-}
+  if (targetStage > currentStage + 2) {
+    finalPillar = nativePillar;
+  }
+
   return {
     ...state,
     activePillar: finalPillar
   };
 }
-
 /* =================================================
    V4 INTEGRATION LAYER (POST PARTITION ONLY)
 ================================================= */
