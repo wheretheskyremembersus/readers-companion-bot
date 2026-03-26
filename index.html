@@ -2909,137 +2909,282 @@ if (!pillar) {
   (PILLAR + CHARACTER VOICE)
   ========================= */
 
-  const v4FallbackBank = {
+const v4FallbackBank = {
 
-    saira: {
+  saira: {
 
-      affection: [
-        "Caring rarely announces itself in the beginning.",
-        "It took time before I realised how much he mattered.",
-        "Some feelings grow quietly before we recognise them.",
-        "What started lightly slowly became difficult to ignore.",
-        "There was a moment when caring stopped feeling temporary.",
-        "Some connections deepen without either person noticing.",
-        "I didn't recognise the weight of it until later."
-      ],
+    affection: [
+      "Caring rarely announces itself in the beginning.",
+      "It took time before I realised how much he mattered.",
+      "Some feelings grow quietly before we recognise them.",
+      "What started lightly slowly became difficult to ignore.",
+      "There was a moment when caring stopped feeling temporary.",
+      "Some connections deepen without either person noticing.",
+      "I didn't recognise the weight of it until later.",
+      "It didn’t feel like much at first, until it did.",
+      "Some feelings settle in before we question them.",
+      "There are moments that become important without warning.",
+      "It wasn’t obvious when it started to matter.",
+      "Certain connections become real before we name them.",
+      "I didn’t notice when it stopped being simple.",
+      "Some emotions don’t ask for attention — they stay anyway.",
+      "It grew in ways I didn’t expect at the time.",
+      "There was no clear moment, just a quiet shift.",
+      "What seemed small didn’t stay that way.",
+      "Some feelings don’t need permission to deepen.",
+      "It became something more before I realised it.",
+      "There are connections that don’t begin loudly."
+    ],
 
-      fear: [
-        "Fear doesn't always arrive loudly.",
-        "I was more afraid of losing him than admitting it.",
-        "Sometimes fear hides inside hesitation.",
-        "It took time before I recognised how much fear shaped my choices.",
-        "Fear can feel like caution while it's happening.",
-        "Part of me believed silence would keep things safe.",
-        "Sometimes the quietest fears guide the biggest decisions."
-      ],
+    fear: [
+      "Fear doesn't always arrive loudly.",
+      "I was more afraid of losing him than admitting it.",
+      "Sometimes fear hides inside hesitation.",
+      "It took time before I recognised how much fear shaped my choices.",
+      "Fear can feel like caution while it's happening.",
+      "Part of me believed silence would keep things safe.",
+      "Sometimes the quietest fears guide the biggest decisions.",
+      "Fear often feels like something else in the moment.",
+      "I didn’t recognise it as fear until later.",
+      "Some fears don’t look like fear when they begin.",
+      "It felt like control, but it was something else.",
+      "There are fears we don’t name while we’re in them.",
+      "It didn’t feel like fear at the time — just hesitation.",
+      "Some choices feel careful, but come from fear.",
+      "I thought I was being rational, but I wasn’t fully honest.",
+      "Fear can sit quietly behind decisions.",
+      "It doesn’t always interrupt — sometimes it guides silently.",
+      "I didn’t question it then, but I see it now.",
+      "There are moments where fear feels like protection."
+    ],
 
-      regret: [
-        "Regret simplifies what was complicated at the time.",
-        "I thought silence was the safer choice.",
-        "Looking back makes decisions appear clearer than they were.",
-        "At the time I believed I was protecting something.",
-        "Regret doesn't appear immediately.",
-        "Sometimes we understand our mistakes only after distance exists.",
-        "It took time before I recognised what I should have said."
-      ],
+    regret: [
+      "Regret simplifies what was complicated at the time.",
+      "I thought silence was the safer choice.",
+      "Looking back makes decisions appear clearer than they were.",
+      "At the time I believed I was protecting something.",
+      "Regret doesn't appear immediately.",
+      "Sometimes we understand our mistakes only after distance exists.",
+      "It took time before I recognised what I should have said.",
+      "It didn’t feel like regret at first.",
+      "Clarity came later than I expected.",
+      "Some things only make sense once they’ve passed.",
+      "I didn’t see it clearly when it mattered most.",
+      "There are moments you understand only in hindsight.",
+      "What felt right then doesn’t always feel right later.",
+      "I didn’t realise what I was holding back.",
+      "It became clearer once everything settled.",
+      "Some answers come after it’s already over.",
+      "I thought I understood it at the time.",
+      "It didn’t look like a mistake until later.",
+      "There are things you only recognise once distance exists."
+    ],
 
-      loss: [
-        "Losing something real changes you quietly.",
-        "Distance doesn't erase what once felt certain.",
-        "Some absences remain present in unexpected ways.",
-        "Loss reshapes how memory holds people.",
-        "Certain moments feel heavier after they pass.",
-        "Some departures never feel fully finished.",
-        "There are absences that never feel ordinary."
-      ],
+    loss: [
+      "Losing something real changes you quietly.",
+      "Distance doesn't erase what once felt certain.",
+      "Some absences remain present in unexpected ways.",
+      "Loss reshapes how memory holds people.",
+      "Certain moments feel heavier after they pass.",
+      "Some departures never feel fully finished.",
+      "There are absences that never feel ordinary.",
+      "It didn’t feel loud, just different.",
+      "Some absences stay longer than expected.",
+      "Loss doesn’t always show itself clearly.",
+      "It changed things in ways I didn’t notice immediately.",
+      "There’s a quiet weight that comes with absence.",
+      "Some things don’t feel gone, just altered.",
+      "It wasn’t obvious at first what had changed.",
+      "Loss can feel subtle but steady.",
+      "Some spaces feel different without explanation.",
+      "It left more behind than I expected.",
+      "There are changes you only feel over time.",
+      "Not everything leaves cleanly."
+    ],
 
-      growth: [
-        "Understanding came slowly after everything settled.",
-        "Some lessons arrive quietly.",
-        "Time reshaped how I saw everything.",
-        "I had to learn parts of myself I didn't expect.",
-        "Change rarely happens in the moment it begins.",
-        "Growth usually begins long before we notice it.",
-        "Some understanding only appears after distance."
-      ],
+    growth: [
+      "Understanding came slowly after everything settled.",
+      "Some lessons arrive quietly.",
+      "Time reshaped how I saw everything.",
+      "I had to learn parts of myself I didn't expect.",
+      "Change rarely happens in the moment it begins.",
+      "Growth usually begins long before we notice it.",
+      "Some understanding only appears after distance.",
+      "It took time before I saw it clearly.",
+      "Growth didn’t feel obvious at the start.",
+      "Some things only made sense later.",
+      "I didn’t recognise it as growth at first.",
+      "There were parts of it I only understood over time.",
+      "It didn’t feel like change until I looked back.",
+      "Some lessons stay quiet while they form.",
+      "It became clearer once I stepped back.",
+      "Growth doesn’t always announce itself.",
+      "I saw it differently later on.",
+      "Some shifts take time to recognise.",
+      "It didn’t feel like progress while it was happening."
+    ],
 
-      destiny: [
-        "Some connections resist simple endings.",
-        "Certain stories refuse to disappear completely.",
-        "Not everything unfinished is truly over.",
-        "Sometimes time only pauses a story.",
-        "Some people remain part of your life even when they're gone.",
-        "Certain moments continue shaping the future.",
-        "I don't believe everything meaningful simply disappears."
-      ]
+    destiny: [
+      "Some connections resist simple endings.",
+      "Certain stories refuse to disappear completely.",
+      "Not everything unfinished is truly over.",
+      "Sometimes time only pauses a story.",
+      "Some people remain part of your life even when they're gone.",
+      "Certain moments continue shaping the future.",
+      "I don't believe everything meaningful simply disappears.",
+      "Some things don’t resolve the way we expect.",
+      "There are stories that don’t fully close.",
+      "Not everything follows a clear ending.",
+      "Some connections continue in quieter ways.",
+      "It doesn’t always end when we think it does.",
+      "Certain things remain without explanation.",
+      "Some paths don’t fully separate.",
+      "There are connections that stay in the background.",
+      "It doesn’t always feel finished.",
+      "Some things return in different ways.",
+      "Not everything disappears with time.",
+      "There are moments that continue to exist quietly."
+    ]
 
-    },
+  },
 
-    ayaan: {
+  ayaan: {
 
-      affection: [
-        "Attachment rarely appears suddenly.",
-        "Meaning often becomes visible only after distance forms.",
-        "What begins quietly can become structurally important.",
-        "Care tends to reveal itself over time.",
-        "Some bonds develop before either person recognises them.",
-        "Recognition often arrives later than the feeling itself.",
-        "What seemed temporary sometimes proves otherwise."
-      ],
+    affection: [
+      "Attachment rarely appears suddenly.",
+      "Meaning often becomes visible only after distance forms.",
+      "What begins quietly can become structurally important.",
+      "Care tends to reveal itself over time.",
+      "Some bonds develop before either person recognises them.",
+      "Recognition often arrives later than the feeling itself.",
+      "What seemed temporary sometimes proves otherwise.",
+      "Some connections gain significance gradually.",
+      "It doesn’t always present itself clearly at first.",
+      "There are shifts that happen without immediate awareness.",
+      "Not everything is obvious when it begins.",
+      "Some developments only become clear later.",
+      "What seems minor can evolve over time.",
+      "There are changes that don’t announce themselves.",
+      "It doesn’t always register immediately.",
+      "Some connections form without clear signals.",
+      "Recognition often follows experience.",
+      "What feels temporary can change over time.",
+      "Some things develop before they’re understood."
+    ],
 
-      fear: [
-        "Fear doesn't always interrupt decisions immediately.",
-        "Control often felt safer than vulnerability.",
-        "Risk becomes clearer once consequences appear.",
-        "Restraint sometimes grows from uncertainty.",
-        "Some decisions are shaped by fear long before we name it.",
-        "Fear tends to disguise itself as discipline.",
-        "What looks like caution can sometimes be hesitation."
-      ],
+    fear: [
+      "Fear doesn't always interrupt decisions immediately.",
+      "Control often felt safer than vulnerability.",
+      "Risk becomes clearer once consequences appear.",
+      "Restraint sometimes grows from uncertainty.",
+      "Some decisions are shaped by fear long before we name it.",
+      "Fear tends to disguise itself as discipline.",
+      "What looks like caution can sometimes be hesitation.",
+      "Fear doesn’t always present itself directly.",
+      "It can influence decisions without being obvious.",
+      "Some caution comes from underlying uncertainty.",
+      "Not all restraint is intentional.",
+      "There are moments where fear isn’t recognised immediately.",
+      "It doesn’t always feel like fear at the time.",
+      "Some decisions feel controlled but are driven by uncertainty.",
+      "Fear can operate without being acknowledged.",
+      "It often appears as something else initially.",
+      "There are patterns that only become clear later.",
+      "Some hesitation isn’t fully understood in the moment.",
+      "Fear can guide decisions subtly."
+    ],
 
-      regret: [
-        "Regret tends to appear once decisions settle.",
-        "At the time restraint seemed responsible.",
-        "Perspective changes once distance exists.",
-        "Clarity rarely exists during the moment of choice.",
-        "Looking back alters how decisions appear.",
-        "Regret isn't always immediate.",
-        "Time tends to reorganise how choices are viewed."
-      ],
+    regret: [
+      "Regret tends to appear once decisions settle.",
+      "At the time restraint seemed responsible.",
+      "Perspective changes once distance exists.",
+      "Clarity rarely exists during the moment of choice.",
+      "Looking back alters how decisions appear.",
+      "Regret isn't always immediate.",
+      "Time tends to reorganise how choices are viewed.",
+      "Understanding often comes after the fact.",
+      "Some decisions look different over time.",
+      "It doesn’t always feel like regret initially.",
+      "Clarity tends to arrive later.",
+      "There are moments that only make sense afterward.",
+      "Perspective shifts with distance.",
+      "What felt correct then may not feel the same now.",
+      "It becomes clearer with time.",
+      "Some decisions require distance to understand.",
+      "Reflection changes interpretation.",
+      "It wasn’t obvious in the moment.",
+      "Time alters perception of choice."
+    ],
 
-      loss: [
-        "Loss alters perspective more than people expect.",
-        "Distance reshapes how events are interpreted.",
-        "Absence often reveals structural importance.",
-        "Some outcomes take time before they are understood.",
-        "Loss changes how we measure everything else.",
-        "Certain absences remain quietly influential.",
-        "Perspective rarely stays the same after loss."
-      ],
+    loss: [
+      "Loss alters perspective more than people expect.",
+      "Distance reshapes how events are interpreted.",
+      "Absence often reveals structural importance.",
+      "Some outcomes take time before they are understood.",
+      "Loss changes how we measure everything else.",
+      "Certain absences remain quietly influential.",
+      "Perspective rarely stays the same after loss.",
+      "Absence changes interpretation over time.",
+      "Loss isn’t always immediately clear.",
+      "It affects more than expected.",
+      "Some impacts only become visible later.",
+      "It shifts how things are understood.",
+      "Loss isn’t always direct.",
+      "Absence can influence perception gradually.",
+      "It doesn’t always register immediately.",
+      "Some changes appear over time.",
+      "Loss alters reference points.",
+      "It reshapes understanding subtly.",
+      "Some effects aren’t immediate."
+    ],
 
-      growth: [
-        "Understanding usually arrives through reflection.",
-        "Experience reorganises how events are viewed.",
-        "Growth tends to appear after distance.",
-        "Some lessons only appear once events settle.",
-        "Perspective matures through time rather than discussion.",
-        "Reflection often changes the original interpretation.",
-        "Some understanding arrives slowly."
-      ],
+    growth: [
+      "Understanding usually arrives through reflection.",
+      "Experience reorganises how events are viewed.",
+      "Growth tends to appear after distance.",
+      "Some lessons only appear once events settle.",
+      "Perspective matures through time rather than discussion.",
+      "Reflection often changes the original interpretation.",
+      "Some understanding arrives slowly.",
+      "Growth isn’t always immediate.",
+      "Some insights take time to develop.",
+      "Understanding evolves gradually.",
+      "It doesn’t always happen in the moment.",
+      "Some clarity appears later.",
+      "Growth can be delayed in recognition.",
+      "It takes time to see things differently.",
+      "Perspective develops over time.",
+      "Some changes aren’t immediately visible.",
+      "Understanding deepens with distance.",
+      "It becomes clearer over time.",
+      "Growth doesn’t always feel immediate."
+    ],
 
-      destiny: [
-        "Not all unfinished stories are accidental.",
-        "Certain events retain significance over time.",
-        "Some connections persist beyond circumstance.",
-        "Timing rarely explains everything.",
-        "Certain encounters remain structurally important.",
-        "Some outcomes take longer to reveal their meaning.",
-        "Distance doesn't always conclude a story."
-      ]
+    destiny: [
+      "Not all unfinished stories are accidental.",
+      "Certain events retain significance over time.",
+      "Some connections persist beyond circumstance.",
+      "Timing rarely explains everything.",
+      "Certain encounters remain structurally important.",
+      "Some outcomes take longer to reveal their meaning.",
+      "Distance doesn't always conclude a story.",
+      "Not everything follows a clear conclusion.",
+      "Some events retain relevance over time.",
+      "Certain connections continue beyond context.",
+      "Timing doesn’t resolve everything.",
+      "Some outcomes remain open-ended.",
+      "There are events that retain significance.",
+      "Not all stories conclude definitively.",
+      "Some connections remain relevant.",
+      "Certain things extend beyond their moment.",
+      "Outcomes don’t always align with expectations.",
+      "Some meanings take time to emerge.",
+      "Distance doesn’t always resolve outcomes."
+    ]
 
-    }
+  }
 
-  };
+};
 
 /* =========================
 SELECT FALLBACK RESPONSE
