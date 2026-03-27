@@ -2891,10 +2891,7 @@ if (!v4RotationIndex) v4RotationIndex = {};
 
   const stage = stageState?.[voice]?.currentStage || 1;
 
-let narrativeAnchor = null;
-
-if (meta && meta.type === "event" && meta.event) {
-  narrativeAnchor = getNarrativeAnchor(meta.event);
+let narrativeAnchor = "TEST ANCHOR WORKING";
 }
   
 /* =========================
