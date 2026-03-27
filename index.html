@@ -2864,10 +2864,10 @@ if (!v4RotationIndex) {
 /* ================================
 V4 EMOTIONAL ENGINE
 ================================= */
-console.log("META:", meta);
   
-function runV4Engine(text, originalText,meta) {
-
+function runV4Engine(text, originalText, meta) {
+console.log("META INSIDE V4:", meta);
+  
   if (!originalText || originalText.trim() === "") return;
   if (interactionLocked) return;
 
