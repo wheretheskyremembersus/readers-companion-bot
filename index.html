@@ -435,6 +435,51 @@ body {
 }
 
 /* =========================
+   Wave VOICE BUTTON
+========================= */
+
+.voice-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+/* waveform bars */
+.voice-btn .wave {
+  width: 3px;
+  height: 12px;
+  background: white;
+  border-radius: 2px;
+  transition: 0.2s;
+}
+
+/* animation when listening */
+.voice-btn.listening .wave:nth-child(1) {
+  animation: waveAnim 1s infinite;
+}
+.voice-btn.listening .wave:nth-child(2) {
+  animation: waveAnim 1s infinite 0.2s;
+}
+.voice-btn.listening .wave:nth-child(3) {
+  animation: waveAnim 1s infinite 0.4s;
+}
+.voice-btn.listening .wave:nth-child(4) {
+  animation: waveAnim 1s infinite 0.6s;
+}
+
+@keyframes waveAnim {
+  0%, 100% { height: 10px; }
+  50% { height: 18px; }
+}
+
+/* =========================
    TYPING AREA
 ========================= */
 
@@ -583,8 +628,13 @@ body {
 <div class="typing-area" id="typingArea" style="display:none;">
   <input type="text" id="userInput" placeholder="You can ask something..." />
   <button id="sendBtn" onclick="sendTypedMessage()">Send</button>
-  <button id="micBtn">🎤</button>
-
+  <button id="micBtn" class="voice-btn">
+  <span class="wave"></span>
+  <span class="wave"></span>
+  <span class="wave"></span>
+  <span class="wave"></span>
+</button>
+  
 </div>
 </div>
 
@@ -1103,7 +1153,6 @@ window.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ MIC SETUP
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -1119,9 +1168,14 @@ window.addEventListener("DOMContentLoaded", function () {
     };
 
     recognition.onend = () => {
-      isListening = false;
-      console.log("🛑 stopped");
-    };
+  isListening = false;
+  console.log("🛑 stopped");
+
+  const micBtn = document.getElementById("micBtn");
+  if (micBtn) {
+    micBtn.classList.remove("listening"); 
+  }
+};
 
     recognition.onerror = (e) => {
       isListening = false;
@@ -1158,31 +1212,30 @@ window.addEventListener("DOMContentLoaded", function () {
   const micBtn = document.getElementById("micBtn");
 
   if (micBtn) {
-    micBtn.addEventListener("click", () => {
+  micBtn.addEventListener("click", () => {
 
-      if (!recognition) return;
+    if (!recognition) return;
 
-      unlockSpeech();
-      
-      micTriggered = true;
-      
-      if (isListening) {
-        recognition.stop();
-        return;
-      }
+    unlockSpeech();
+    micTriggered = true;
 
-      voiceSendLock = false;
+    if (isListening) {
+      recognition.stop();
+      micBtn.classList.remove("listening"); // 👈 STOP animation
+      return;
+    }
 
-      try {
-        recognition.start();
-      } catch (e) {
-        console.log("Restarting mic...");
-        recognition.stop();
-        setTimeout(() => recognition.start(), 200);
-      }
+    voiceSendLock = false;
 
-    });
-  }
+    try {
+      recognition.start();
+      micBtn.classList.add("listening"); // 👈 START animation
+    } catch (e) {
+      recognition.stop();
+      setTimeout(() => recognition.start(), 200);
+    }
+  });
+}
 
 }); // ✅ closes DOMContentLoaded
 
