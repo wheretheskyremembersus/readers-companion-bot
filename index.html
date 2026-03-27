@@ -990,7 +990,7 @@ window.addEventListener("DOMContentLoaded", function () {
   voiceSendLock = true;
 
   addUserMessage(transcript);
-  pI(transcript, transcript);
+  route("A1", transcript);
 
   setTimeout(() => {
     voiceSendLock = false;
@@ -2390,6 +2390,12 @@ function getSelfReferencePrefix(stage) {
   return "If you're asking about me…";
 }
 
+function route(key, value) {
+  if (key === "A1") {
+    return pI(value, value);
+  }
+}
+  
 function pI(userText, originalText) {
 
   if (interactionLocked) return;
