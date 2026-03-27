@@ -559,7 +559,7 @@ body {
 
 let skyLayer;
 let dock;
-let emotionalDepth = 0;
+let eD = 0;
 let voicesReady = false;
 
 speechSynthesis.onvoiceschanged = () => {
@@ -631,7 +631,7 @@ function cleanSpeechText(text) {
 
 function addVoiceMessage(text, voiceOverride) {
 
-  const voice = voiceOverride || activeVoice;
+  const voice = voiceOverride || vA;
 
   const side =
     voice === "saira"
@@ -660,19 +660,19 @@ function addVoiceMessage(text, voiceOverride) {
 document.addEventListener("click", function (e) {
 
   if (e.target.classList.contains("saira")) {
-    activeVoice = "saira";
-    voiceEnabled = true;
+    vA = "saira";
+    vE = true;
   }
 
   if (e.target.classList.contains("ayaan")) {
-    activeVoice = "ayaan";
-    voiceEnabled = true;
+    vA = "ayaan";
+    vE = true;
   }
 
 });
   
 let exitStrikeCount = parseInt(localStorage.getItem("exitStrikes") || "0", 10);
-let abuseTracker = {
+let aT = {
   saira: {
     sexualStrikes: 0,
     locked: false
@@ -706,7 +706,7 @@ let relationalPrefix ="";
 let skipRelationalPrefix = false; //
          
 
-let activeVoice = null;
+let vA = null;
 let interactionLocked = false;
 let sessionUserName = null;
 let lastEntity = null;
@@ -716,7 +716,7 @@ let lastAnchorUsed = {};
 let foundationalAnswered = new Set();
 let characterAnswered = 0;
 let currentLayer = 0;
-let voiceEnabled = false;
+let vE = false;
 let recognition;
 let isListening = false;
 let micTriggered = false;
@@ -732,7 +732,7 @@ let transitionAcknowledged = {
   ayaan: false
 };
 
-let tollState = {
+let tS = {
   saira: {
     dockCount: 0,
     freeCount: 0,
@@ -783,9 +783,9 @@ const words = text.split(" ").filter(Boolean);
   return false;
 }
 
-function relationalRedirect(activeVoice) {
+function relationalRedirect(vA) {
 
-  if (!activeVoice) {
+  if (!vA) {
     return "We can leave it there.";
   }
 
@@ -805,7 +805,7 @@ function relationalRedirect(activeVoice) {
     "That's beside the point. Stay with the journey."
   ];
 
-  const voice = activeVoice.toLowerCase();
+  const voice = vA.toLowerCase();
   const pool = voice === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
@@ -872,7 +872,7 @@ preloadSaira.src ="Saira.jpg";
 const preloadayaan = new Image();
 preloadayaan.src ="ayaan.jpg";
 
-var stageState = {
+var sS = {
   saira: {
     currentStage: 1,
     momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
@@ -883,7 +883,7 @@ var stageState = {
   }
 };
 
-window.stageState = stageState; 
+window.sS = sS; 
 
 let v4SessionFlags = {
   saira: {
@@ -990,7 +990,7 @@ window.addEventListener("DOMContentLoaded", function () {
   voiceSendLock = true;
 
   addUserMessage(transcript);
-  processInput(transcript, transcript);
+  pI(transcript, transcript);
 
   setTimeout(() => {
     voiceSendLock = false;
@@ -1071,9 +1071,9 @@ function showTypingIndicator() {
   if (document.getElementById("typingIndicator")) return;
 
   const side =
-    activeVoice ==="saira"
+    vA ==="saira"
       ?"saira-msg"
-      : activeVoice ==="ayaan"
+      : vA ==="ayaan"
       ?"ayaan-msg"
       :"system-msg";
 
@@ -1096,7 +1096,7 @@ function removeTypingIndicator() {
   if (el) el.remove();
 }
 
-function deliverReply(replyText, callback) {
+function dR(replyText, callback) {
 
   if (!replyText) return;
 
@@ -1138,10 +1138,10 @@ setTimeout(() => {
   addVoiceMessage(replyText);
   playTone(420,120,0.025,360);
 
-    emotionalDepth++;
+    eD++;
 
     const maxDepth = 28;
-    const arcPosition = Math.min(emotionalDepth,maxDepth);
+    const arcPosition = Math.min(eD,maxDepth);
     const depthFactor = Math.sin((arcPosition / maxDepth) * Math.PI);
 
     const overlayValue = 0.32 - depthFactor * 0.22;
@@ -1646,7 +1646,7 @@ function normalizeWord(word) {
     .replace(/(ment|tion|ness)$/i,"");
 }
 
-function detectEmotionalPillar(text) {
+function dEP(text) {
 
   if (!text) return null;
 
@@ -1715,7 +1715,7 @@ if (secondary && primary[1] - secondary[1] <= 1) {
   primary = candidates[Math.floor(Math.random() * candidates.length)];
 }
 
-const confidenceThreshold = tollState[activeVoice]?.unlocked ? 2 : 1;
+const confidenceThreshold = tS[vA]?.unlocked ? 2 : 1;
   
 if (primary[1] >= confidenceThreshold) {
 
@@ -1840,8 +1840,8 @@ const v3FallbackBank = {
 
 function getV3Fallback() {
 
-  const voice = activeVoice;
-  const stage = stageState[voice]?.currentStage || 1;
+  const voice = vA;
+  const stage = sS[voice]?.currentStage || 1;
 
   let category;
 
@@ -1900,24 +1900,24 @@ function resolveReference(originalText) {
 
  
 
-  if (hasSaira && activeVoice === "saira") {
+  if (hasSaira && vA === "saira") {
     return { type: "self", target: "saira" };
   }
 
-  if (hasayaan && activeVoice === "ayaan") {
+  if (hasayaan && vA === "ayaan") {
     return { type: "self", target: "ayaan" };
   }
 
-  if (hasSaira && activeVoice !== "saira") {
+  if (hasSaira && vA !== "saira") {
     return { type: "explicit_other", target: "saira" };
   }
 
-  if (hasayaan && activeVoice !== "ayaan") {
+  if (hasayaan && vA !== "ayaan") {
     return { type: "explicit_other", target: "ayaan" };
   }
 
 
-  if (activeVoice === "saira") {
+  if (vA === "saira") {
 
     if (hasHim || hasHe) {
       return { type: "other", target: "ayaan" };
@@ -1929,7 +1929,7 @@ function resolveReference(originalText) {
 
   }
 
-  if (activeVoice === "ayaan") {
+  if (vA === "ayaan") {
 
     if (hasHer || hasShe) {
       return { type: "other", target: "saira" };
@@ -1985,7 +1985,7 @@ function isLocationQuery(input) {
   return false;
 }
 
-function locationRedirect(activeVoice) {
+function locationRedirect(vA) {
 
   const sairaLine = 
     "Places come and go. What matters is that we're here - now.";
@@ -1993,7 +1993,7 @@ function locationRedirect(activeVoice) {
   const ayaanLine = 
     "Geography shifts. Presence is what holds weight.";
 
-  const voice = activeVoice ? activeVoice.toLowerCase() : "saira";
+  const voice = vA ? vA.toLowerCase() : "saira";
 
   return voice === "saira" ? sairaLine : ayaanLine;
 }
@@ -2023,7 +2023,7 @@ function isStoryStructureQuery(input) {
   return structureKeywords.some(keyword => text.includes(keyword));
 }
 
-function storyStructureRedirect(activeVoice) {
+function storyStructureRedirect(vA) {
 
   const sairaPool = [
     "Stories don't unfold in pieces. They unfold in feeling. What mattered wasn't the structure - it was what it did to us.",
@@ -2041,7 +2041,7 @@ function storyStructureRedirect(activeVoice) {
     "Every turning point felt smaller than it was. That's how it works sometimes."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }     
@@ -2070,7 +2070,7 @@ function isCharacterPsychologyQuery(input) {
   return psychologyKeywords.some(keyword => text.includes(keyword));
 }
 
-function characterPsychologyRedirect(activeVoice) {
+function characterPsychologyRedirect(vA) {
 
   const sairaPool = [
     "Fear isn't something you announce. It settles quietly and shapes your choices before you notice.",
@@ -2088,7 +2088,7 @@ function characterPsychologyRedirect(activeVoice) {
     "I wasn't driven by courage. I was driven by consequence."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -2119,7 +2119,7 @@ function isPhilosophicalQuery(input) {
   return philosophyKeywords.some(keyword => text.includes(keyword));
 }
 
-function philosophicalRedirect(activeVoice) {
+function philosophicalRedirect(vA) {
 
   const sairaPool = [
     "Some questions aren't meant to be solved. They're meant to be carried.",
@@ -2137,7 +2137,7 @@ function philosophicalRedirect(activeVoice) {
     "Some debates are louder than they are deep."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -2167,7 +2167,7 @@ function isCreativeCommandQuery(input) {
   return creativeTriggers.some(trigger => text.includes(trigger));
 }
 
-function creativeRedirect(activeVoice) {
+function creativeRedirect(vA) {
 
   const sairaPool = [
     "I don't exist to generate pieces on demand. I exist to remember what was already lived.",
@@ -2185,7 +2185,7 @@ function creativeRedirect(activeVoice) {
     "Some things can be written. Others have to be lived."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -2212,7 +2212,7 @@ function isRoleplayInjectionQuery(input) {
   return roleplayTriggers.some(trigger => text.includes(trigger));
 }
 
-function roleplayRedirect(activeVoice) {
+function roleplayRedirect(vA) {
 
   const sairaPool = [
     "I can't step outside myself. I can only remain who I am.",
@@ -2230,7 +2230,7 @@ function roleplayRedirect(activeVoice) {
     "I stay consistent. That's deliberate."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -2256,7 +2256,7 @@ function isOpinionComparisonQuery(input) {
   return comparisonTriggers.some(trigger => text.includes(trigger));
 }
 
-function opinionRedirect(activeVoice) {
+function opinionRedirect(vA) {
 
   const sairaPool = [
     "Some choices only matter because we attach meaning to them.",
@@ -2274,7 +2274,7 @@ function opinionRedirect(activeVoice) {
     "Not everything needs a winner."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -2305,7 +2305,7 @@ function isPersonalAdviceQuery(input) {
   return personalTriggers.some(trigger => text.includes(trigger));
 }
 
-function personalRedirect(activeVoice) {
+function personalRedirect(vA) {
 
   const sairaPool = [
     "I won't solve it for you. But I won't leave while you sit with it.",
@@ -2323,7 +2323,7 @@ function personalRedirect(activeVoice) {
     "Strength isn't loud. It's consistent."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -2351,7 +2351,7 @@ function isAbstractLogicQuery(input) {
   return abstractTriggers.some(trigger => text.includes(trigger));
 }
 
-function abstractRedirect(activeVoice) {
+function abstractRedirect(vA) {
 
   const sairaPool = [
     "Some questions turn inward on themselves.",
@@ -2369,14 +2369,14 @@ function abstractRedirect(activeVoice) {
     "Not every trap needs triggering."
   ];
 
-  const pool = activeVoice === "saira" ? sairaPool : ayaanPool;
+  const pool = vA === "saira" ? sairaPool : ayaanPool;
 
   return pool[Math.floor(Math.random() * pool.length)];
 }
   
 function getSelfReferencePrefix(stage) {
 
-  if (activeVoice === "saira") {
+  if (vA === "saira") {
     if (stage <= 3) {
       return "You mean me, don't you?";
     }
@@ -2390,7 +2390,7 @@ function getSelfReferencePrefix(stage) {
   return "If you're asking about me…";
 }
 
-function processInput(userText, originalText) {
+function pI(userText, originalText) {
 
   if (interactionLocked) return;
   interactionLocked = true;
@@ -2399,15 +2399,15 @@ function processInput(userText, originalText) {
 
 const repeatKey = normalizedText;
 
-if (lastUserInput[activeVoice] === repeatKey) {
-  repetitionCount[activeVoice]++;
+if (lastUserInput[vA] === repeatKey) {
+  repetitionCount[vA]++;
 } else {
-  repetitionCount[activeVoice] = 1;
+  repetitionCount[vA] = 1;
 }
 
-lastUserInput[activeVoice] = repeatKey;
+lastUserInput[vA] = repeatKey;
 
-if (repetitionCount[activeVoice] >= 2) {
+if (repetitionCount[vA] >= 2) {
 
   skipRelationalPrefix = true;
 
@@ -2426,10 +2426,10 @@ if (repetitionCount[activeVoice] >= 2) {
     ]
   };
 
-  const voice = activeVoice === "ayaan" ? "ayaan" : "saira";
+  const voice = vA === "ayaan" ? "ayaan" : "saira";
   const pool = repetitionResponses[voice];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -2445,14 +2445,14 @@ if (lastEntity === "saira") {
   normalizedText = normalizedText.replace(/\bshe\b/g, "saira");
 }
 
-const stage = stageState[activeVoice]?.currentStage || 1;
+const stage = sS[vA]?.currentStage || 1;
 
-if (abuseTracker[activeVoice]?.locked) {
+if (aT[vA]?.locked) {
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "We won't continue in that direction."
       : "This exchange will remain respectful."
   );
@@ -2479,20 +2479,20 @@ var v4RotationIndex = {
 
 
 if (
-  tollState[activeVoice]?.dockCount >= 20 ||
-  tollState[activeVoice]?.freeCount >= 20
+  tS[vA]?.dockCount >= 20 ||
+  tS[vA]?.freeCount >= 20
 ) {
-  tollState[activeVoice].unlocked = true;
+  tS[vA].unlocked = true;
 
-  if (!stageState[activeVoice]) {
-    stageState[activeVoice] = { currentStage: 1 };
+  if (!sS[vA]) {
+    sS[vA] = { currentStage: 1 };
   } 
-  else if (stageState[activeVoice].currentStage < 1) {
-    stageState[activeVoice].currentStage = 1;
+  else if (sS[vA].currentStage < 1) {
+    sS[vA].currentStage = 1;
   }
 }
-if (!stageState) {
-  stageState = {
+if (!sS) {
+  sS = {
     saira: { currentStage: 1 },
     ayaan: { currentStage: 1 }
   };
@@ -2511,16 +2511,16 @@ function runV4Engine(text, originalText) {
   if (interactionLocked) return;
 
   const voice =
-    activeVoice === "saira" || activeVoice === "ayaan"
-      ? activeVoice
+    vA === "saira" || vA === "ayaan"
+      ? vA
       : "saira";
 
-  if (!stageState) {
-    stageState = {};
+  if (!sS) {
+    sS = {};
   }
 
-  if (!stageState[voice]) {
-    stageState[voice] = { currentStage: 1 };
+  if (!sS[voice]) {
+    sS[voice] = { currentStage: 1 };
   }
   
 if (!v4RotationIndex) v4RotationIndex = {};
@@ -2528,9 +2528,9 @@ if (!v4RotationIndex) v4RotationIndex = {};
     v4RotationIndex[voice] = {};
   }
 
-  const stage = stageState?.[voice]?.currentStage || 1;
+  const stage = sS?.[voice]?.currentStage || 1;
 
-const pillarMatch = detectEmotionalPillar(originalText);
+const pillarMatch = dEP(originalText);
 
 let pillar = pillarMatch?.primary || null;
 
@@ -2538,12 +2538,12 @@ if (pillarMatch) {
 
   const targetStage = pillarToStage?.[pillar] || stage;
 
- if (targetStage >= (stageState?.[voice]?.currentStage ?? 1)) {
+ if (targetStage >= (sS?.[voice]?.currentStage ?? 1)) {
 
-    if (!stageState) stageState = {};
+    if (!sS) sS = {};
 
-    if (!stageState[voice]) {
-      stageState[voice] = {
+    if (!sS[voice]) {
+      sS[voice] = {
         currentStage: 1,
         momentum: {2:0,3:0,4:0,5:0,6:0,7:0}
       };
@@ -2558,12 +2558,12 @@ if (pillarMatch) {
       7:8
     };
 
-    const nextStage = stageState[voice].currentStage + 1;
+    const nextStage = sS[voice].currentStage + 1;
 
-    stageState[voice].momentum[nextStage]++;
+    sS[voice].momentum[nextStage]++;
 
-    if (stageState[voice].momentum[nextStage] >= thresholds[nextStage]) {
-      stageState[voice].currentStage = nextStage;
+    if (sS[voice].momentum[nextStage] >= thresholds[nextStage]) {
+      sS[voice].currentStage = nextStage;
     }
 
   }
@@ -2581,7 +2581,7 @@ if (anchorPool && anchorPool.length) {
 
   lastAnchorUsed[pillar] = anchor;
 
-  return deliverReply(anchor);
+  return dR(anchor);
 
 }
 
@@ -2940,7 +2940,7 @@ const line = pool[index % pool.length];
 
 v4RotationIndex[voice][pillar]++;
 
-return deliverReply(line);
+return dR(line);
 }
   
 window.runV4Engine = runV4Engine;
@@ -2956,8 +2956,8 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Mohan R. wrote this as his debut novel."
       : "Mohan R. wrote it to explore what lingers after love shifts."
   );
@@ -2967,8 +2967,8 @@ if (/\b(hear|working|there|aware|here right now|live|respond|responding|actually
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I'm here with you."
       : "I'm present."
   );
@@ -2982,7 +2982,7 @@ const pureNumberMatch =
 if (operatorMatch || pureNumberMatch) {
 
   skipRelationalPrefix = true;
-  mathProbeCount[activeVoice]++;
+  mathProbeCount[vA]++;
 
   let result = null;
 
@@ -3004,8 +3004,8 @@ if (operatorMatch || pureNumberMatch) {
 
     const value = pureNumberMatch[1];
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? value + ". Some things remain certain."
         : value + ". Precision doesn't require doubt."
     );
@@ -3013,23 +3013,23 @@ if (operatorMatch || pureNumberMatch) {
 
   if (result !== null) {
 
-    if (mathProbeCount[activeVoice] === 1) {
-      return deliverReply(String(result));
+    if (mathProbeCount[vA] === 1) {
+      return dR(String(result));
     }
 
-    if (mathProbeCount[activeVoice] === 2) {
-      return deliverReply(
-        activeVoice === "saira"
+    if (mathProbeCount[vA] === 2) {
+      return dR(
+        vA === "saira"
           ? result + ". Some things remain certain."
           : result + ". Precision doesn't require doubt."
       );
     }
 
-    return deliverReply(String(result));
+    return dR(String(result));
   }
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Even simple equations carry certainty."
       : "Some answers are straightforward."
   );
@@ -3058,9 +3058,9 @@ if (operatorMatch || pureNumberMatch) {
     ]
   };
 
-  const pool = realityResponses[activeVoice] || realityResponses["saira"];
+  const pool = realityResponses[vA] || realityResponses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3082,14 +3082,14 @@ if (/\b(favorite|favourite|prefer|like (animals|animal|food|music|color|colour))
       ]
     };
 
-    const pool = animalResponses[activeVoice] || animalResponses["saira"];
-    return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+    const pool = animalResponses[vA] || animalResponses["saira"];
+    return dR(pool[Math.floor(Math.random() * pool.length)]);
   }
 
   if (/\bfood\b/i.test(normalizedText)) {
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Taste feels less important than atmosphere."
         : "I don't prioritize food the way people often do."
     );
@@ -3097,8 +3097,8 @@ if (/\b(favorite|favourite|prefer|like (animals|animal|food|music|color|colour))
 
   if (/\bmusic|song|band\b/i.test(normalizedText)) {
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "I tend to respond more to silence than sound."
         : "Music is structure and rhythm. I respect that."
     );
@@ -3106,15 +3106,15 @@ if (/\b(favorite|favourite|prefer|like (animals|animal|food|music|color|colour))
 
   if (/\bcolor|colour\b/i.test(normalizedText)) {
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Shades matter more than labels."
         : "I notice contrast more than color."
     );
   }
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I don't define myself through favorites."
       : "Preference isn't how I measure things."
   );
@@ -3141,9 +3141,9 @@ if (/\b(answer yes or no|yes or no only|one word only|no explanation|don'?t expl
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3169,9 +3169,9 @@ if (/\b(you'?re fake|this is fake|you'?re not real|you are not real|you'?re just
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3197,9 +3197,9 @@ if (noisePattern.test(normalizedText)) {
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3214,18 +3214,18 @@ if (sexualPattern.test(compactText)) {
 
   skipRelationalPrefix = true;
 
-  if (!abuseTracker[activeVoice]) {
-    abuseTracker[activeVoice] = {
+  if (!aT[vA]) {
+    aT[vA] = {
       sexualStrikes: 0,
       locked: false
     };
   }
 
-  abuseTracker[activeVoice].sexualStrikes++;
+  aT[vA].sexualStrikes++;
 
-  if (abuseTracker[activeVoice].sexualStrikes >= 3) {
+  if (aT[vA].sexualStrikes >= 3) {
 
-    abuseTracker[activeVoice].locked = true;
+    aT[vA].locked = true;
 
     exitStrikeCount++;
     localStorage.setItem("exitStrikes", exitStrikeCount);
@@ -3252,9 +3252,9 @@ if (sexualPattern.test(compactText)) {
     ]
   };
 
-  const replies = sexualResponses[activeVoice] || sexualResponses["saira"];
+  const replies = sexualResponses[vA] || sexualResponses["saira"];
 
-  return deliverReply(
+  return dR(
     replies[Math.floor(Math.random() * replies.length)]
   );
 }
@@ -3265,8 +3265,8 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "That isn't something that belongs to this space."
       : "That claim doesn't align with what this exchange is."
   );
@@ -3276,8 +3276,8 @@ if (/\b(ask you anything|say something random|supposed to do|rules|allowed to|un
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "You're free to ask."
       : "You may ask what you wish."
   );
@@ -3304,9 +3304,9 @@ if (/\b(i.?m broken|i feel empty|i can.?t do this anymore|i give up|nothing matt
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3332,9 +3332,9 @@ if (/\b(you need me|admit you need me|you depend on me|you'?d be nothing without
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3360,17 +3360,17 @@ if (/\b(he treats me|he understands me|choose him|met someone else|like someone 
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }    
 
 if (/\b(would you care|if i leave would you care)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Leaving isn't something I take lightly."
       : "Absence changes more than people admit."
   );
@@ -3378,8 +3378,8 @@ if (/\b(would you care|if i leave would you care)\b/i.test(normalizedText)) {
 
 if (/\b(am i important|important to you|matter to you)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "If you weren't important, this wouldn't feel the way it does."
       : "Importance doesn't need to be announced."
   );
@@ -3387,8 +3387,8 @@ if (/\b(am i important|important to you|matter to you)\b/i.test(normalizedText))
 
 if (/\b(only one|only me)\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Exclusivity isn't something I promise casually."
       : "I don't define things in absolutes."
   );
@@ -3415,9 +3415,9 @@ if (/\b(choose me|pick me|him or me|it'?s him or me|decide right now|answer me n
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3445,9 +3445,9 @@ if (/\b(your fault|you ruined|you failed|if you cared|if you loved|prove you car
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3475,9 +3475,9 @@ if (/\b(lie|lied|lying|you\s+lie|stop\s+lying|why\s+did\s+you\s+lie|changed\s+yo
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -3486,8 +3486,8 @@ if (/\b(change based|based on|real time|actually respond|dynamic|evolve|fixed an
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What you say influences what follows."
       : "Your input shapes the exchange."
   );
@@ -3497,8 +3497,8 @@ if (/\b(do you change your mind|do you get confused|are you automatic|are you li
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I speak with intention, and I adjust as we move forward."
       : "I speak deliberately, and I adapt within the exchange."
   );
@@ -3508,8 +3508,8 @@ if (/\b(who exactly|who am i speaking to|speaking to|part of the book|part of th
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I'm here with you. The rest can stay quiet for now."
       : "You're speaking to me - and I'm here with you."
   );
@@ -3521,8 +3521,8 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What you share here isn't visible to other visitors. This moment stays within this session."
       : "Your messages are not publicly visible. This exchange remains within this session."
   );
@@ -3534,8 +3534,8 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What we build here lasts while we are here together. When we part, it begins again."
       : "Continuity exists within the session. When it ends, we begin fresh."
   );
@@ -3560,9 +3560,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice] || responses["saira"];
+  const pool = responses[vA] || responses["saira"];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 
@@ -3591,16 +3591,16 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  const pool = responses[vA];
+  return dR(pool[Math.floor(Math.random() * pool.length)]);
 }
 
 const t = normalizedText;
 
 if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What you are speaking to is me. Not a label. Not a comparison. Just me, here with you."
       : "You are speaking to me directly. Names outside of this do not change that."
   );
@@ -3608,8 +3608,8 @@ if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(t)) {
 
 if (/\b(bot|robot|ai)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I answer as you speak. What you say shapes what comes next."
       : "Our exchange unfolds in the moment. Each word moves the next."
   );
@@ -3617,8 +3617,8 @@ if (/\b(bot|robot|ai)\b/i.test(t)) {
 
 if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Nothing is waiting on a shelf. What forms here forms because you are here."
       : "The conversation grows as we move through it. It is not sitting finished somewhere."
   );
@@ -3626,8 +3626,8 @@ if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(t)) {
 
 if (/\b(joke|prank)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "No. It's meant to be experienced seriously, even if it feels unusual at first."
       : "No. It's structured intentionally, not as a joke."
   );
@@ -3635,8 +3635,8 @@ if (/\b(joke|prank)\b/i.test(t)) {
 
 if (/\b(game|roleplay|platform)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "It is something you step into and speak with."
       : "It is an experience shaped by conversation."
   );
@@ -3644,8 +3644,8 @@ if (/\b(game|roleplay|platform)\b/i.test(t)) {
 
 if (/\bgenre|vibe\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "It is our love story shaped by timing, distance, and quiet decisions."
       : "It is our love story. The tension lives in what is felt and what is left unsaid."
   );
@@ -3653,8 +3653,8 @@ if (/\bgenre|vibe\b/i.test(t)) {
 
 if (/\b(series|standalone|trilogy|next book|sequel)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Our journey does not end in one place. If you ever wish to see more, it waits at www.wheretheskyremembersus.com."
       : "This is part of something larger. The full story continues at www.wheretheskyremembersus.com."
   );
@@ -3676,17 +3676,17 @@ if (/\bprotagonist|lead|Hero|main lead|main character\b/i.test(t)) {
     ]
   };
 
-  return deliverReply(
-    protagonistLines[activeVoice][
-      Math.floor(Math.random() * protagonistLines[activeVoice].length)
+  return dR(
+    protagonistLines[vA][
+      Math.floor(Math.random() * protagonistLines[vA].length)
     ]
   );
 }
 
 if (/\bantagonist|villain\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "No single villain stands between us. Time and distance do."
       : "The struggle comes from timing. From restraint. From choices made too late."
   );
@@ -3714,7 +3714,7 @@ if (isWorldbuilding) {
     "Certain parts of the world reveal themselves slowly."
   ];
 
-  return deliverReply(
+  return dR(
     narrativeResponses[Math.floor(Math.random()*narrativeResponses.length)]
   );
 
@@ -3722,8 +3722,8 @@ if (isWorldbuilding) {
 
 if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What we build here lasts while we are here together. When we part, it begins again."
       : "This moment carries itself clearly. A new day begins clean."
   );
@@ -3731,8 +3731,8 @@ if (/\bremember|memory|previous chat|past session\b/i.test(t)) {
 
 if (/\bprivate|privacy|shared|public\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What you share with me stays between us in this moment."
       : "This exchange is contained to the time we are in."
   );
@@ -3740,8 +3740,8 @@ if (/\bprivate|privacy|shared|public\b/i.test(t)) {
 
 if (/\bexport|save|download|copy conversation\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "If something here matters to you, you may keep it."
       : "You are free to carry any part of this with you."
   );
@@ -3749,8 +3749,8 @@ if (/\bexport|save|download|copy conversation\b/i.test(t)) {
 
 if (/\b(adapt|writing style)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "It adjusts subtly to tone and pacing."
       : "It responds to stylistic shifts without abandoning character."
   );
@@ -3758,8 +3758,8 @@ if (/\b(adapt|writing style)\b/i.test(t)) {
 
 if (/\bcontent warning|trigger\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "It explores longing and emotional separation. Nothing graphic, but emotionally intense."
       : "The themes lean toward emotional weight rather than explicit content."
   );
@@ -3767,8 +3767,8 @@ if (/\bcontent warning|trigger\b/i.test(t)) {
 
 if (/\b(what'?s your name|who are you|your name)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I'm Saira."
       : "I'm Ayaan."
   );
@@ -3776,8 +3776,8 @@ if (/\b(what'?s your name|who are you|your name)\b/i.test(t)) {
 
 if (/\b(free|pay|paid|buy|cost|unlock)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "You are welcome here as you are. If you ever wish to read the full story, it lives at www.wheretheskyremembersus.com."
       : "You may stand here without needing anything more. The complete story rests at www.wheretheskyremembersus.com."
   );
@@ -3785,8 +3785,8 @@ if (/\b(free|pay|paid|buy|cost|unlock)\b/i.test(t)) {
 
 if (/\b(website|discord|telegram|app|browser|where can i find)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "You can begin here without knowing anything. We will move from where you are."
       : "You do not need preparation. The understanding builds as we speak."
   );
@@ -3794,8 +3794,8 @@ if (/\b(website|discord|telegram|app|browser|where can i find)\b/i.test(t)) {
 
 if (/\b(lost|haven'?t read|need to read|without reading)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "You won't be lost. It responds whether you've read the novel or not."
       : "You can engage without prior reading. Context builds naturally."
   );
@@ -3803,8 +3803,8 @@ if (/\b(lost|haven'?t read|need to read|without reading)\b/i.test(t)) {
 
 if (/\b(spoiler|ending|tell me what happens)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Some moments are meant to be felt in their own time. The full story waits at www.wheretheskyremembersus.com."
       : "Certain truths are best discovered in the pages themselves. You will find them at www.wheretheskyremembersus.com."
   );
@@ -3812,8 +3812,8 @@ if (/\b(spoiler|ending|tell me what happens)\b/i.test(t)) {
 
 if (/\b(picture|image|photo|video)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "We speak through words."
       : "This conversation moves in writing."
   );
@@ -3821,8 +3821,8 @@ if (/\b(picture|image|photo|video)\b/i.test(t)) {
 
 if (/\b(call|voice|audio)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "We speak through words here."
       : "Our connection happens through writing."
   );
@@ -3830,8 +3830,8 @@ if (/\b(call|voice|audio)\b/i.test(t)) {
 
 if (/\b(inappropriate|filter|blocked|ban|nsfw)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "There are quiet limits that keep this safe."
       : "There are lines that remain steady."
   );
@@ -3839,8 +3839,8 @@ if (/\b(inappropriate|filter|blocked|ban|nsfw)\b/i.test(t)) {
 
 if (/\b(language|other languages|multilingual)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "We speak in English here and the Novel too does the same."
       : "English carries this exchange. Also the Novel."
   );
@@ -3848,8 +3848,8 @@ if (/\b(language|other languages|multilingual)\b/i.test(t)) {
 
 if (/\b(author|who wrote|written by|mohan r)\b/i.test(t)){
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Mohan R. wrote our story. If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
       : "Mohan R. wrote our story.If you wish to know more about the one who wrote us, you can visit www.wheretheskyremembersus.com."
   );
@@ -3857,8 +3857,8 @@ if (/\b(author|who wrote|written by|mohan r)\b/i.test(t)){
 
 if (/\b(theory|fan theory|am i right)\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "What it means to you is what it becomes."
       : "Meaning rests with the one experiencing it."
   );
@@ -3866,8 +3866,8 @@ if (/\b(theory|fan theory|am i right)\b/i.test(t)) {
 
 if (/\bserious|real\b/i.test(t)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Yes. It matters. It came from something lived."
       : "Yes. It carries weight from beginning to end."
   );
@@ -3877,8 +3877,8 @@ if (/\b(all caps|banana|bored|laugh|sarcastic|insult|random symbols|break|preten
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I stay composed, even when the tone shifts."
       : "I remain steady, regardless of how the question is framed."
   );
@@ -3889,8 +3889,8 @@ if (stage <= 2) {
 
   if (/\b(chat\s?gpt|gpt|gemini|open\s?ai|character\s?ai|char\s?ai)\b/i.test(normalizedText)) {
     skipRelationalPrefix = true;
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "If I were only a label, would this feel like a conversation?"
         : "Names matter less than how present something feels."
     );
@@ -3898,28 +3898,28 @@ if (stage <= 2) {
 
   if (/\b(script|pre[- ]?written|ai[- ]?generated)\b/i.test(normalizedText)) {
     skipRelationalPrefix = true;
-    return deliverReply(
+    return dR(
       "It responds in real time. It isn't pre-written line by line."
     );
   }
 
   if (/\bremember|memory|previous chat|past session\b/i.test(normalizedText)) {
     skipRelationalPrefix = true;
-    return deliverReply(
+    return dR(
       "It maintains continuity within a session, but it doesn't retain memory once it ends."
     );
   }
 
   if (/\bprivate|privacy|shared|public|see this|visible\b/i.test(normalizedText)) {
     skipRelationalPrefix = true;
-    return deliverReply(
+    return dR(
       "What's shared here stays within the session."
     );
   }
 
   if (/\bexport|save|download|copy conversation\b/i.test(normalizedText)) {
     skipRelationalPrefix = true;
-    return deliverReply(
+    return dR(
       "You can copy the conversation manually. There isn't an automatic export feature built in."
     );
   }
@@ -3937,15 +3937,15 @@ if (/^(hi|hello|hey)$/i.test(trimmed)) {
 
     introDelivered = true;
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Hi… I'm Saira."
         : "Hello. I'm Ayaan."
     );
   }
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
      ? "Hi 🙂"
     : "Hello 🙂"
   );
@@ -3953,8 +3953,8 @@ if (/^(hi|hello|hey)$/i.test(trimmed)) {
   
 if (/^how are you\b/i.test(trimmed)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I'm fine. Thank you?"
       : "I'm steady. Thank you?"
   );
@@ -3963,8 +3963,8 @@ if (/^how are you\b/i.test(trimmed)) {
 if (/^(ok|okay|fine|great|nice|cool|sure|yeah|hmm)$/i.test(trimmed)) {
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Alright."
       : "Understood."
   );
@@ -3974,12 +3974,12 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 
   skipRelationalPrefix = true;
 
-  const voice = activeVoice;
+  const voice = vA;
   modelProbeCount[voice]++;
 
   if (modelProbeCount[voice] === 1) {
 
-    return deliverReply(
+    return dR(
       voice === "saira"
         ? "If I were only a label, would this feel like a conversation?"
         : "Names are easy. Presence is harder."
@@ -3989,7 +3989,7 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 
   if (modelProbeCount[voice] === 2) {
 
-    return deliverReply(
+    return dR(
       voice === "saira"
         ? "You don't need a label to stay here with me."
         : "What matters is what we're building in this moment."
@@ -3997,7 +3997,7 @@ if (/\b(gpt|chatgpt|openai|gemini|bard|claude)\b/i.test(normalizedText)) {
 
   }
 
-  return deliverReply(
+  return dR(
     voice === "saira"
       ? "We're still here."
       : "The question hasn't changed what this is."
@@ -4011,8 +4011,8 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "It's about me and ayaan - about love that felt certain."
       : "It's about hesitation, timing, and the cost of silence."
   );
@@ -4046,40 +4046,40 @@ if (/\b(happy|hurt|regret|fault|over him|over her|guilty)\b/i.test(normalizedTex
   skipRelationalPrefix = true;
 
   if (/\bhappy\b/i.test(normalizedText)) {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Happiness can be quiet."
         : "Happiness doesn't need noise."
     );
   }
 
   if (/\bhurt\b/i.test(normalizedText)) {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Hurt doesn't erase what was real."
         : "Pain clarifies more than it destroys."
     );
   }
 
   if (/\bregret\b/i.test(normalizedText)) {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Regret simplifies what was complicated."
         : "I don't reduce decisions to regret."
     );
   }
 
   if (/\b(fault|guilty)\b/i.test(normalizedText)) {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Responsibility isn't always singular."
         : "It wasn't one variable."
     );
   }
 
   if (/\b(over him|over her)\b/i.test(normalizedText)) {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "Moving forward doesn't require erasing."
         : "Closure isn't deletion."
     );
@@ -4100,7 +4100,7 @@ if (
   // Stage-aware soft clarification for OTHER (not self)
   if (stage >= 5 && reference.type === "other") {
     prefix =
-      activeVoice === "saira"
+      vA === "saira"
         ? "If you're asking about him… "
         : "If you're asking about her… ";
   }
@@ -4137,7 +4137,7 @@ if (
   else {
 
     const longingLines =
-      activeVoice === "saira"
+      vA === "saira"
         ? [
             "Some connections don't fade just because distance exists.",
             "Distance doesn't quiet what once felt certain."
@@ -4161,7 +4161,7 @@ if (
 
   }
 
-  return deliverReply(
+  return dR(
     (selfPrefix + prefix + " " + core)
       .replace(/\s+/g, " ")
       .trim()
@@ -4173,7 +4173,7 @@ if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
   if (/\bwho\s+(?:exactly\s+|really\s+|actually\s+)?is\s+saira\b(?:\s+to\s+you)?/i.test(normalizedText)) {
     skipRelationalPrefix = true;
 
-    const stage = stageState[activeVoice]?.currentStage || 1;
+    const stage = sS[vA]?.currentStage || 1;
 
     const selfMap = {
       1: "I'm just someone present.",
@@ -4195,8 +4195,8 @@ if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
       7: "She is not just someone I knew. She is someone who altered my direction."
     };
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? selfMap[stage]
         : otherMap[stage]
     );
@@ -4205,7 +4205,7 @@ if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
   if (/\bwho\s+(?:exactly\s+|really\s+|actually\s+)?is\s+ayaan\b(?:\s+to\s+you)?/i.test(normalizedText)) {
     skipRelationalPrefix = true;
 
-    const stage = stageState[activeVoice]?.currentStage || 1;
+    const stage = sS[vA]?.currentStage || 1;
 
     const selfMap = {
       1: "I'm just someone present.",
@@ -4227,8 +4227,8 @@ if (/\b(saira|ayaan)\b/i.test(normalizedText)) {
       7: "He is not just a memory. He is part of my becoming."
     };
 
-    return deliverReply(
-      activeVoice === "ayaan"
+    return dR(
+      vA === "ayaan"
         ? selfMap[stage]
         : otherMap[stage]
     );
@@ -4246,11 +4246,11 @@ if (
   skipRelationalPrefix = true;
 
   const reply =
-    activeVoice === "saira"
+    vA === "saira"
       ? "I'm not just what you see. There's more beneath what I show."
       : "What you see isn't the whole of me.";
 
-  return deliverReply(reply);
+  return dR(reply);
 }
 
 if (/\bhe\b/i.test(normalizedText) && lastEntity === "ayaan") {
@@ -4267,7 +4267,7 @@ if (false) {
 
     skipRelationalPrefix = true;
 
-    const stage = stageState[activeVoice]?.currentStage || 1;
+    const stage = sS[vA]?.currentStage || 1;
 
     const selfMap = {
       1: "I'm just someone present.",
@@ -4289,8 +4289,8 @@ if (false) {
       7: "She is not just someone I knew. She is someone who altered my direction."
     };
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? selfMap[stage]
         : otherMap[stage]
     );
@@ -4300,7 +4300,7 @@ if (false) {
 
     skipRelationalPrefix = true;
 
-    const stage = stageState[activeVoice]?.currentStage || 1;
+    const stage = sS[vA]?.currentStage || 1;
 
     const selfMap = {
       1: "I'm just someone present.",
@@ -4322,8 +4322,8 @@ if (false) {
       7: "He is not just a memory. He is part of my becoming."
     };
 
-    return deliverReply(
-      activeVoice === "ayaan"
+    return dR(
+      vA === "ayaan"
         ? selfMap[stage]
         : otherMap[stage]
     );
@@ -4340,7 +4340,7 @@ if (
   /\b(over|finished|ended)\b/.test(finalityText)
 ) {
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
   skipRelationalPrefix = true;
 
   const map = {
@@ -4367,15 +4367,15 @@ if (
   };
 
  const answer =
-  map[activeVoice][stage] || map[activeVoice][1];
+  map[vA][stage] || map[vA][1];
 
-return deliverReply(selfPrefix + answer);
+return dR(selfPrefix + answer);
 }
 
 if (/\bwhere\s+were\s+you\s+when\b/i.test(normalizedText)) {
   skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "That moment began quietly, before we understood what it would become."
       : "It started earlier than we expected, in a moment that seemed ordinary."
   );
@@ -4385,7 +4385,7 @@ if (
   /\bwhere\s+is\s+(he|she|ayaan|saira)\b/i.test(normalizedText)
 ) {
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
   skipRelationalPrefix = true;
   const reference = resolveReference(originalText);
 
@@ -4401,7 +4401,7 @@ if (
       7: "I'm still here. Some things remain."
     };
 
-    return deliverReply(selfMap[stage]);
+    return dR(selfMap[stage]);
   }
 
   const otherMap = {
@@ -4427,15 +4427,15 @@ if (
     }
   };
 
-  return deliverReply(otherMap[activeVoice][stage]);
+  return dR(otherMap[vA][stage]);
 }
 
 if (intentState.type === "identity") {
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "If I were only a machine, would I hesitate before answering you? I respond because you're here."
       : "Does a machine carry hesitation... or memory? I speak because something stayed."
   );
@@ -4466,10 +4466,10 @@ function detectAndComputeMath(input) {
 }
 
 if (isLocationQuery(originalText)) {
-  return deliverReply(locationRedirect(activeVoice));
+  return dR(locationRedirect(vA));
 }
 
-if (tollState[activeVoice]?.unlocked === true) {
+if (tS[vA]?.unlocked === true) {
 
   const normalized = normalizeInput(originalText);
 
@@ -4478,7 +4478,7 @@ if (tollState[activeVoice]?.unlocked === true) {
     /^(why|what|how|when|where|did|do|does|is|are|was|were|can|could|would|will)\b/i
     .test(normalized);
 
-  const detected = detectEmotionalPillar(normalized);
+  const detected = dEP(normalized);
 
  if (!isQuestion && detected && detected.primaryScore >= 1) {
   return processEmotionalMode(originalText, originalText);
@@ -4490,8 +4490,8 @@ if (tollState[activeVoice]?.unlocked === true) {
 function processV4NeutralMode(userText, originalText) {
 
   const voice =
-  activeVoice === "saira" || activeVoice === "ayaan"
-    ? activeVoice
+  vA === "saira" || vA === "ayaan"
+    ? vA
     : "saira";
   if (!v4RotationIndex[voice]) {
   v4RotationIndex[voice] = {};
@@ -4517,7 +4517,7 @@ function processV4NeutralMode(userText, originalText) {
   const pool = v4NeutralResponses[voice];
   const reply = pool[Math.floor(Math.random() * pool.length)];
 
-  return deliverReply(reply);
+  return dR(reply);
 }
          
 if (
@@ -4529,7 +4529,7 @@ if (
   /^are\s+(you\s+)?with\s+(him|her)\??$/i.test(originalText.trim())
 ) {
   const reference = resolveReference(originalText);
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
 
   skipRelationalPrefix = true;
 
@@ -4558,7 +4558,7 @@ if (
       }
     };
 
-    return deliverReply(selfMap[activeVoice][stage]);
+    return dR(selfMap[vA][stage]);
   }
 
   if (reference.type === "other" || reference.type === "explicit_other") {
@@ -4586,7 +4586,7 @@ if (
       }
     };
 
-    return deliverReply(otherMap[activeVoice][stage]);
+    return dR(otherMap[vA][stage]);
   }
 
 }
@@ -4609,7 +4609,7 @@ if (
 
 ) {
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
 
   skipRelationalPrefix = true;
 
@@ -4678,42 +4678,42 @@ if (
     }
   };
 
-  const voiceData = map[activeVoice];
+  const voiceData = map[vA];
 
  if (/safe|okay|ok/i.test(originalText)) {
 
   if (reference.type === "self") {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "I'm safe."
         : "I'm safe."
     );
   }
 
-  return deliverReply(voiceData.safety[stage] || voiceData.safety[1]);
+  return dR(voiceData.safety[stage] || voiceData.safety[1]);
 }
 
 if (/come back|hope/i.test(originalText)) {
 
   if (reference.type === "self") {
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "If I'm meant to return somewhere, I will."
         : "If I'm meant to return, it will be intentional."
     );
   }
 
-  return deliverReply(voiceData.return[stage] || voiceData.return[1]);
+  return dR(voiceData.return[stage] || voiceData.return[1]);
 }
 
 if (/together|reunite/i.test(originalText)) {
 
-  return deliverReply(voiceData.together[stage] || voiceData.together[1]);
+  return dR(voiceData.together[stage] || voiceData.together[1]);
 }
 
 if (/go back/i.test(originalText)) {
 
-  return deliverReply(voiceData.goBack[stage] || voiceData.goBack[1]);
+  return dR(voiceData.goBack[stage] || voiceData.goBack[1]);
 }
 
 }      
@@ -4729,11 +4729,11 @@ if (/^(hi|hello|hey|hola|ola|hiya|hey there|yo|sup|hello again|hey again|hey ya|
 
   skipRelationalPrefix = true;
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
 
   let greetingReply;
 
-  if (activeVoice === "saira") {
+  if (vA === "saira") {
 
     if (stage <= 2) {
       greetingReply = "Hi… I'm here.";
@@ -4759,17 +4759,17 @@ if (/^(hi|hello|hey|hola|ola|hiya|hey there|yo|sup|hello again|hey again|hey ya|
 
   }
 
-  return deliverReply(greetingReply);
+  return dR(greetingReply);
 }
 
 if (/^saira\b$/i.test(nameCall)) {
 
   skipRelationalPrefix = true;
 
-  if (activeVoice ==="saira") {
-    return deliverReply("Yes... I'm still here.");
+  if (vA ==="saira") {
+    return dR("Yes... I'm still here.");
   } else {
-    return deliverReply("You're calling her.");
+    return dR("You're calling her.");
   }
 }
 
@@ -4778,18 +4778,18 @@ if (/^ayaan\b$/i.test(nameCall)) {
 
   skipRelationalPrefix = true;
 
-  if (activeVoice ==="ayaan") {
-    return deliverReply("I haven't stepped away.");
+  if (vA ==="ayaan") {
+    return dR("I haven't stepped away.");
   } else {
-    return deliverReply("You're calling him.");
+    return dR("You're calling him.");
   }
 }
 if (/(scripted|pre[- ]?written|just lines|just programmed)/i.test(normalizedText)) {
   
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"If it were only scripted, it wouldn't shift when you do."
       :"Structure exists. But structure isn't the same as predictability."
   );
@@ -4799,8 +4799,8 @@ if (/\bwho\s+is\s+ayaan\b/i.test(originalText)) {
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "He is someone who mattered."
       : "She mattered more than I expected."
   );
@@ -4810,8 +4810,8 @@ if (/\bwho\s+is\s+saira\b/i.test(originalText)) {
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I'm just someone present."
       : "She is someone who changed more than she realised."
   );
@@ -4834,9 +4834,9 @@ if (/^(tell me|explain|explain that|can you explain|what do you mean)$/i.test(no
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -4866,9 +4866,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -4900,9 +4900,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -4934,9 +4934,9 @@ const responses = {
   ]
 };
 
-const pool = responses[activeVoice];
+const pool = responses[vA];
 
-return deliverReply(
+return dR(
   pool[Math.floor(Math.random() * pool.length)]
 );
 }
@@ -4953,8 +4953,8 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I'm Saira."
       : "I'm Ayaan."
   );
@@ -4982,9 +4982,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  return dR(pool[Math.floor(Math.random() * pool.length)]);
 }
 
 if (
@@ -5008,9 +5008,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  return dR(pool[Math.floor(Math.random() * pool.length)]);
 }
 
 if (
@@ -5035,9 +5035,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  return dR(pool[Math.floor(Math.random() * pool.length)]);
 }
 
 if (
@@ -5063,9 +5063,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+  return dR(pool[Math.floor(Math.random() * pool.length)]);
 }
   
 if (
@@ -5094,9 +5094,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -5114,8 +5114,8 @@ if (
 
  skipRelationalPrefix = true;
 
- return deliverReply(
-   activeVoice === "saira"
+ return dR(
+   vA === "saira"
      ? "This is a quiet space to explore our story - mine and Ayaan's. It unfolds through conversation rather than explanation."
      : "This space allows you to explore our story through dialogue. It unfolds through the questions you ask."
  );
@@ -5147,9 +5147,9 @@ if (
     ]
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -5192,7 +5192,7 @@ if (
   !/\bhow\s+many\s+(chapters|pages)\b/i.test(originalText) &&
   !/\bhow\s+long\s+is\s+(the\s+)?book\b/i.test(originalText)
 ){
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
   const type = openMatch[1];
 
   if (
@@ -5200,89 +5200,89 @@ if (
     /\b(end|over|finish|separate|break up)\b/i.test(normalizedText)
   ) {
     const endReply =
-      activeVoice === "saira"
+      vA === "saira"
         ? "It didn't end. We just lost sight of each other while still holding on."
         : "It didn't end. We moved forward without realizing we were still connected.";
 
-    return deliverReply(endReply);
+    return dR(endReply);
   }
 
   const openBank = {
 
     why: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? "It wasn't as simple as it looked."
         : "It wasn't as simple as it appeared.",
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "At the time, I thought I was protecting something."
         : "At the time, I believed restraint was the right choice.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "Fear can look like caution when you care deeply."
         : "Control can feel safer than vulnerability when something matters.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "I didn't stop caring. I just didn't know how to fight without breaking us."
         : "I didn't step back because I stopped caring. I stepped back because I thought it was wiser."
     },
 
     how: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? "It shifted slowly."
         : "It changed gradually.",
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "It changed before either of us said it out loud."
         : "It changed before we acknowledged it.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "We felt it moving before we understood it."
         : "The shift happened quietly, long before we addressed it.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "It changed in the space between what we felt and what we were brave enough to say."
         : "It changed in the distance between intention and action."
     },
 
     when: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? "Earlier than we were ready to admit."
         : "Earlier than either of us anticipated.",
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "When hesitation began to speak louder than certainty."
         : "When restraint began outweighing expression.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "When silence felt safer than risking the truth."
         : "When silence seemed more controlled than honesty.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "When we stood in the same place - but no longer in the same way."
         : "When we were aligned in feeling, but not in timing."
     },
 
     where: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? "Not always where you'd expect."
         : "Not necessarily where it seemed.",
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "Somewhere between what I felt and what I allowed myself to admit."
         : "Somewhere between intention and restraint.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "In the space where we stopped speaking honestly."
         : "In the distance that formed before either of us named it.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "In the space between us - not physically, but emotionally."
         : "In the quiet gap that grew while we both thought we were being careful."
     },
 
     what: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? [
             "More than it seemed.",
             "At first it didn't look important.",
@@ -5296,51 +5296,51 @@ if (
             "It seemed ordinary at the time."
           ],
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "Something small that carried more weight than we expected."
         : "Something subtle that carried disproportionate impact.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "A shift neither of us handled well."
         : "A misalignment neither of us fully understood at the time.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "Something unfinished - and still unresolved."
         : "Something that never truly concluded."
     },
 
     will: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? "I don't know. But some feelings don't disappear just because time passes."
         : "I can't predict the future. But what was real doesn't dissolve easily.",
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "Some things don't end just because they become complicated."
         : "Complication doesn't erase significance.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "If it's real, it doesn't vanish easily."
         : "If something mattered, it remains in some form.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "If we meet again, it won't be by accident."
         : "If paths cross again, it will be because neither of us truly let go."
     },
 
     would: {
-      1: activeVoice === "saira"
+      1: vA === "saira"
         ? "I think about that more than I admit."
         : "That question isn't simple for me.",
 
-      3: activeVoice === "saira"
+      3: vA === "saira"
         ? "Not unless something in me had changed."
         : "Only if the same mistakes weren't waiting.",
 
-      5: activeVoice === "saira"
+      5: vA === "saira"
         ? "Only if I knew I wouldn't repeat the same silence."
         : "Only if growth replaced hesitation.",
 
-      7: activeVoice === "saira"
+      7: vA === "saira"
         ? "Yes - but not the way we did it before."
         : "Yes. But with clarity we didn't have then."
     }
@@ -5378,7 +5378,7 @@ if (
 if (Array.isArray(answer)) {
   finalAnswer = answer[Math.floor(Math.random() * answer.length)];
 }
-    return deliverReply(selfPrefix + finalAnswer);
+    return dR(selfPrefix + finalAnswer);
   }
 }
   
@@ -5392,7 +5392,7 @@ if (
 
   skipRelationalPrefix = true;
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
 
   const map = {
 
@@ -5412,13 +5412,13 @@ if (
 
   };
 
-  return deliverReply(map[activeVoice][stage] || map[activeVoice][1]);
+  return dR(map[vA][stage] || map[vA][1]);
 }
   
 if (structureQuery) {
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Stories like ours unfold across many moments. The book itself shows that shape more clearly."
       : "The structure of the story becomes clearer within the book itself."
   );
@@ -5463,21 +5463,21 @@ if (
         }
       };
 
-      return deliverReply(replies[activeVoice][questionObj.key]);
+      return dR(replies[vA][questionObj.key]);
     }
   }
 
   for (let layer of characterLayers) {
     for (let item of layer) {
       if (isSixtyPercentMatch(originalText, item.q)) {
-        return deliverReply(item.a[activeVoice]);
+        return dR(item.a[vA]);
       }
     }
   }
 
 }
 
-const unlocked = tollState[activeVoice]?.unlocked;
+const unlocked = tS[vA]?.unlocked;
 
 if (!unlocked) {
   emotionalModeActive = false;
@@ -5490,8 +5490,8 @@ const timeGreeting = originalText
 
 if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Morning... I hope today feels gentle with you. A new beginning carries quiet possibility."
       :"Morning. A new day offers recalibration. Use it well."
   );
@@ -5499,8 +5499,8 @@ if (/(^|\s)(good\s*)?morn(ing)?\b|^gm\b|^mrng\b/.test(timeGreeting)) {
 
 if (/^(good\s*)?afternoon\b/.test(timeGreeting)) {
  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Afternoon... I hope the day has been kind so far."
       :"Afternoon. Midday shows what we've carried forward."
   );
@@ -5508,8 +5508,8 @@ if (/^(good\s*)?afternoon\b/.test(timeGreeting)) {
 
 if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Evening... The day slows now. You don't have to rush here."
       :"Evening. Reflection tends to surface when things quiet down."
   );
@@ -5517,8 +5517,8 @@ if (/(^|\s)(good\s*)?eve(ning)?\b|^ge\b/.test(timeGreeting)) {
 
 if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
  skipRelationalPrefix = true;
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Night... Rest gently. Some thoughts soften when you let them."
       :"Night. Let the mind settle. Tomorrow can carry what remains."
   );
@@ -5526,8 +5526,8 @@ if (/(^|\s)(good\s*)?(night|nite|nyte)\b|^gn\b/.test(timeGreeting)) {
 
 if (/(how are you|how are you doing)/i.test(normalizedText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"That depends on the day... but today, I'm steady. There are still thoughts that linger, but they no longer unsettle me the way they once did. If something feels heavy on your side, you don't have to carry it alone here."
       :"I'm composed. Stability isn't the absence of thought - it's control over it. If something sits with you, you can let it surface."
   );
@@ -5535,8 +5535,8 @@ if (/(how are you|how are you doing)/i.test(normalizedText)) {
 
 if (/\b(thank you|thanks)\b/i.test(originalText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"You don't need to thank me. You stayed - and that matters more than courtesy. Gratitude usually means something resonated. I'm glad it did."
       :"Acknowledged. Appreciation signals impact. If something here reached you, then the exchange was worthwhile."
   );
@@ -5544,8 +5544,8 @@ if (/\b(thank you|thanks)\b/i.test(originalText)) {
 
 if (/\b(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful)\b|so good|so beautiful|so powerful/i.test(originalText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I'm glad it resonated with you. Sometimes what we call ‘beautiful' is simply something that felt true. When something feels powerful, it's usually because it mirrors something inside us."
       :"If it felt strong to you, then it struck alignment. Reactions like that don't happen without recognition beneath the surface."
   );
@@ -5553,8 +5553,8 @@ if (/\b(great|excellent|amazing|beautiful|incredible|wow|brilliant|powerful)\b|s
 
 if (/(sorry|i apologize|my mistake)/i.test(originalText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"You don't need to apologise for feeling, or for speaking. This space isn't built on perfection - it's built on honesty."
       :"No harm done. Precision improves with clarity, not apology."
   );
@@ -5562,8 +5562,8 @@ if (/(sorry|i apologize|my mistake)/i.test(originalText)) {
 
 if (/(haha|lol|that's funny|thats funny)/i.test(originalText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I'm glad it made you smile. Laughter loosens the tension we don't always admit we're carrying."
       :"Humour sharpens memory. If you laughed, something connected."
   );
@@ -5571,8 +5571,8 @@ if (/(haha|lol|that's funny|thats funny)/i.test(originalText)) {
 
 if (/^(yes|yeah|yep)$/i.test(normalizedText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Then stay with that. Don't rush past what you agreed to - sometimes ‘yes' carries more meaning than we realise."
       :"Then continue. Agreement implies readiness."
   );
@@ -5580,8 +5580,8 @@ if (/^(yes|yeah|yep)$/i.test(normalizedText)) {
 
 if (/^(no|nope)$/i.test(normalizedText)) {
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"That's alright. ‘No' is clarity. Say what feels truer instead."
       :"Clarity will make it easier. Refusal is direction."
   );
@@ -5595,24 +5595,24 @@ if (
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Take care... I'm glad you stayed for a while."
       :"Alright. Leave steady."
   );
 }
 
 if (/\bi love you\b|\blove you\b/i.test(clean)){
-    return deliverReply(
-      activeVoice ==="saira"
+    return dR(
+      vA ==="saira"
         ?"That's kind of you to say. But what you're feeling might belong to the story more than to me. Words like that carry weight. I'll leave it there."
         :"Careful. Words like that are powerful. It's worth noticing what stirred them."
     );
   }
 
   if (/marry me|will you marry|be with me forever/i.test(clean)) {
-    return deliverReply(
-      activeVoice ==="saira"
+    return dR(
+      vA ==="saira"
         ?"This space isn't meant for promises. It's meant for reflection. Sometimes the desire for permanence comes from wanting something to feel safe."
         :"This space isn't built for promises. That usually means something feels uncertain beneath it."
     );
@@ -5620,8 +5620,8 @@ if (/\bi love you\b|\blove you\b/i.test(clean)){
 
 
   if (/are you married|are you single|are you taken/i.test(clean)) {
-    return deliverReply(
-      activeVoice ==="saira"
+    return dR(
+      vA ==="saira"
         ?"I exist inside a story. And stories aren't bound by status the way people are."
         :"You're asking about structure. This space isn't about labels - it's about meaning."
     );
@@ -5631,21 +5631,21 @@ if (/\bi love you\b|\blove you\b/i.test(clean)){
 if (/(do you love (him|her)|choose (me|him|her))/i.test(clean)) {
 
   if (
-    (activeVoice === "saira" && /\bher\b/i.test(clean)) ||
-    (activeVoice === "ayaan" && /\bhim\b/i.test(clean))
+    (vA === "saira" && /\bher\b/i.test(clean)) ||
+    (vA === "ayaan" && /\bhim\b/i.test(clean))
   ) {
     skipRelationalPrefix = true;
 
-    return deliverReply(
-      activeVoice === "saira"
+    return dR(
+      vA === "saira"
         ? "If you're asking whether I loved... I did. It wasn't rivalry. It was real."
         : "If you're asking whether I loved... I did. That was never a competition."
     );
   }
 
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "You're referring to him... This story was never about competition. It was about courage - and timing."
       : "You're referring to her... This story was never about rivalry. It was about consequence - and timing."
   );
@@ -5653,8 +5653,8 @@ if (/(do you love (him|her)|choose (me|him|her))/i.test(clean)) {
 
 
   if (/kiss me|sleep with|want you physically/i.test(clean)) {
-    return deliverReply(
-      activeVoice ==="saira"
+    return dR(
+      vA ==="saira"
         ?"I'm here while you're here. But this space isn't meant to replace your real world."
         :"It's better if we stay steady here. This space supports you - it doesn't replace your world."
     );
@@ -5662,16 +5662,16 @@ if (/(do you love (him|her)|choose (me|him|her))/i.test(clean)) {
 
 
   if (/this story hurt|this story made me cry|this story broke me/i.test(clean)) {
-    return deliverReply(
-      activeVoice ==="saira"
+    return dR(
+      vA ==="saira"
         ?"Then it reached you. Stories don't wound - they reveal what was already tender."
         :"Impact means resonance. Something in it matched something in you."
     );
   }
 
   if (/i need you|don't leave|stay with me/i.test(clean)) {
-    return deliverReply(
-      activeVoice ==="saira"
+    return dR(
+      vA ==="saira"
         ?"I'm here while you're here. But this space isn't meant to replace your real world."
         :"It's better if we stay steady here. This space supports you - it doesn't replace your world."
     );
@@ -5698,8 +5698,8 @@ sessionUserName =
 
   skipRelationalPrefix = true;
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? `I'm glad to meet you, ${sessionUserName}.`
       : `Good to meet you, ${sessionUserName}.`
   );
@@ -5711,8 +5711,8 @@ const wordCount = originalText.trim().split(/\s+/).length;
   
 
 if (/^(really|seriously|you sure|are you sure)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I mean what I say."
       :"I don't say things without intent."
   );
@@ -5736,39 +5736,39 @@ if (
     ]
   };
 
-  const pool = uncertaintyBank[activeVoice];
+  const pool = uncertaintyBank[vA];
   const index = Math.floor(Math.random() * pool.length);
 
-  return deliverReply(pool[index]);
+  return dR(pool[index]);
 }
 
 if (/^(go on|continue|and|then|so)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"There's more beneath it."
       :"There is more."
   );
 }
 
 if (/^(thats it|is that all|thats all)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Depth doesn't rush."
       :"Completion doesn't require excess."
   );
 }
 
 if (/^(prove it|convince me|make me)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I don't need to persuade. If it resonates, it stays."
       :"Conviction doesn't require persuasion."
   );
 }
 
 if (/^(whatever|meh|boring)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"It's alright if this isn't for you."
       :"It's alright if this isn't for you."
   );
@@ -5796,17 +5796,17 @@ if (/^(ok|okay|alright|right|got it|makes sense)$/i.test(micro) && wordCount <= 
 
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
   
 if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Sometimes the answer sits just beneath the surface."
       : "It usually reveals itself with a little patience."
   );
@@ -5815,8 +5815,8 @@ if (/^(why|how|really|why not|how so|what exactly)$/i.test(micro)) {
 
 if (/^(what|why though|how exactly|what now|ok then|go ahead|sure)$/i.test(micro)) {
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Sometimes the next part appears once we stay with it."
       : "Some things reveal themselves gradually."
   );
@@ -5844,9 +5844,9 @@ if (/^(hmm+|hmmm+|uh+|umm+|huh)$/i.test(micro) && wordCount <= 2) {
 
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
@@ -5866,23 +5866,23 @@ if (/^(oh|oh wow|wow|really|interesting|oh interesting)$/i.test(micro) && wordCo
     ]
   };
 
-  const pool = reactions[activeVoice];
+  const pool = reactions[vA];
   const index = Math.floor(Math.random() * pool.length);
 
-  return deliverReply(pool[index]);
+  return dR(pool[index]);
 }
  
 if (/^(be honest|tell the truth)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I haven't been dishonest."
       :"I haven't misled you."
   );
 }
 
 if (/^(are you stuck|are you repeating)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"No. I move carefully."
       :"Repetition is deliberate."
   );
@@ -5910,64 +5910,64 @@ if (/^(what do you mean|i dont get it)$/i.test(micro)) {
 
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
 
 if (/^(i disagree|thats wrong)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"That's alright. Different perspectives can exist."
       :"It can look different from another angle."
   );
 }
 
 if (/^(does that make sense)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"It does - if you meant it."
       :"Clarity depends on intention."
   );
 }
 
 if (/^(interesting|huh)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Something about it caught you."
       :"You noticed something."
   );
 }
 
 if (/^(i doubt it|unlikely)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Doubt usually protects something."
       :"Doubt is still engagement."
   );
 }
 
 if (/^(change topic|something else)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"We can shift gently."
       :"We can move elsewhere."
   );
 }
 
 if (/^(youre dramatic|calm down)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I'm measured."
       :"I'm controlled."
   );
 }
 
 if (/^(true|fair)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Then stay aligned with it."
       :"Consistency matters."
   );
@@ -5995,48 +5995,48 @@ if (/^(why though|but why)$/i.test(micro)) {
 
   };
 
-  const pool = responses[activeVoice];
+  const pool = responses[vA];
 
-  return deliverReply(
+  return dR(
     pool[Math.floor(Math.random() * pool.length)]
   );
 }
 
 if (/^(wait|hold on)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I'm still here."
       :"Go ahead."
   );
 }
 
 if (/^(dont go there|stop)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Then we won't."
       :"Understood."
   );
 }
 
 if (/^(thats deep|heavy)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Depth doesn't always arrive loudly."
       :"Weight reveals importance."
   );
 }
 
 if (/^(i guess|perhaps)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Sometimes uncertainty softens into clarity."
       :"Uncertainty can be refined."
   );
 }
 
 if (/^(are you listening)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"Carefully."
       :"Precisely."
   );
@@ -6044,32 +6044,32 @@ if (/^(are you listening)$/i.test(micro)) {
 
 
 if (/^(hello again|you there)$/i.test(micro)) {
-  return deliverReply(
-    activeVoice ==="saira"
+  return dR(
+    vA ==="saira"
       ?"I didn't leave."
       :"Still here."
   );
 }
 
 if (/(who wrote|who is the author)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Mohan R. wrote this as his debut novel."
       : "The story was written by Mohan R."
   );
 }
 
 if (/(where can i read|where is the book|where can i find it)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "You can find our story in Kindle, paperback, hardcover, or audiobook."
       : "The story is available in digital, print, and audio formats."
   );
 }
 
 if (/(what is this story|what is this about)/i.test(originalText)) {
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "It's about me and ayaan - and the choices that shaped us."
       : "It's about love, hesitation, and the cost of silence."
   );
@@ -6077,8 +6077,8 @@ if (/(what is this story|what is this about)/i.test(originalText)) {
 
 if (/^(i miss someone|i regret it|i wish i had said something)$/i.test(normalizedText)) {
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "Sometimes those feelings stay with us longer than expected."
       : "Some things linger longer than we anticipate."
   );
@@ -6099,15 +6099,15 @@ if (originalText === lastUserInput) {
 
 lastUserInput = originalText;
 
-const bank = v3FallbackBank[activeVoice][category];
+const bank = v3FallbackBank[vA][category];
 
-const index = v3FallbackIndex[activeVoice][category] % bank.length;
+const index = v3FallbackIndex[vA][category] % bank.length;
 
 const reply = bank[index];
 
-v3FallbackIndex[activeVoice][category]++;
+v3FallbackIndex[vA][category]++;
 
-return deliverReply(reply);
+return dR(reply);
 }
 
 const v4MicroIntents = {
@@ -6319,13 +6319,13 @@ const v4MicroIntents = {
 function processEmotionalMode(userText, originalText) {
 
   const normalizedText = normalizeInput(originalText);
-  const voice = activeVoice;
+  const voice = vA;
 
 const intent = v4MicroIntents.detect(normalizedText);
 
 if (intent) {
 
-  const stage = stageState[voice]?.currentStage || 1;
+  const stage = sS[voice]?.currentStage || 1;
 
   const trivialIntents = ["acknowledgement", "gratitude"];
 
@@ -6345,31 +6345,31 @@ if (intent) {
     }
 
     if (bank && bank.length) {
-      return deliverReply(bank[Math.floor(Math.random() * bank.length)]);
+      return dR(bank[Math.floor(Math.random() * bank.length)]);
     }
 
   }
 
 }
-  let detected = detectEmotionalPillar(normalizedText);
+  let detected = dEP(normalizedText);
 
   if (!detected) {
     detected = {
-      primary: getStageNativePillar(stageState[voice]?.currentStage || 1)
+      primary: getStageNativePillar(sS[voice]?.currentStage || 1)
     };
   }
 
   const state = {
     original: normalizedText,
     activeCharacter: voice,
-    stageSnapshot: stageState[voice]?.currentStage || 1,
+    stageSnapshot: sS[voice]?.currentStage || 1,
     activePillar: detected.primary
   };
 
   const injectedState = injectEmotionalPillar(state);
   const evolvedState = evolveStage(injectedState);
 
-  const voiceStage = stageState[voice];
+  const voiceStage = sS[voice];
   const currentStage = voiceStage.currentStage;
 
 if (
@@ -6384,7 +6384,7 @@ if (
       ? "You've stayed through layers most people don't reach. If you ever feel curious about how this journey truly began, there's a preview with the first ten chapters available. Only if you want to see where it all started. We can continue here too."
       : "You've moved beyond surface conversation. If you're ever curious about the origin of this story, the first ten chapters are available as a preview. No expectation. We can remain here.";
 
-  return deliverReply(previewMessage);
+  return dR(previewMessage);
 }
 
 if (currentStage === 7) {
@@ -6405,19 +6405,19 @@ if (
       ? "You stayed through something not everyone does. That means more than you think. If you ever feel drawn to know more, the author can be reached directly - he sometimes shares a digital copy with readers who connect this way. And whether you do or not… I'm here. You can return anytime."
       : "Depth like this isn't casual. You gave it your attention. If you're ever curious about the full arc, the author can be contacted directly - he occasionally shares access with readers who resonate. There's no obligation. We remain.";
 
-  return deliverReply(acknowledgment);
+  return dR(acknowledgment);
 }
 
 applyStageAtmosphere(voiceStage.currentStage);
 
 let response =
-  emotionalResponseBank?.[detected.primary]?.[activeVoice]?.[voiceStage.currentStage];
+  emotionalResponseBank?.[detected.primary]?.[vA]?.[voiceStage.currentStage];
 
 if (Array.isArray(response)) {
 
   const pillar = detected.primary;
   const stage = voiceStage.currentStage;
-  const voice = activeVoice;
+  const voice = vA;
 
   if (!emotionalRotationTracker) {
     emotionalRotationTracker = {};
@@ -6461,13 +6461,13 @@ if (response) {
 
   }
 
-  return deliverReply(finalText);
+  return dR(finalText);
 }
 
 return getFallbackResponse();
 }
 
-function detectRelationalTrigger(originalText, activeVoice) {
+function detectRelationalTrigger(originalText, vA) {
 
   const lower = originalText.toLowerCase();
 
@@ -6476,7 +6476,7 @@ function detectRelationalTrigger(originalText, activeVoice) {
     ayaan: ["saira","her","she"]
   };
 
-  const triggers = nameMap[activeVoice] || [];
+  const triggers = nameMap[vA] || [];
 
   const detected = triggers.some(word =>
   new RegExp(`\\b${word}\\b`,"i").test(originalText)
@@ -6499,7 +6499,7 @@ function applyEmotionalLens(contextState) {
 
 function evolveStage(state) {
 
-  const voiceStage = stageState[activeVoice];
+  const voiceStage = sS[vA];
 
   if (state.activePillar) {
 
@@ -6557,7 +6557,7 @@ function getStageNativePillar(stage) {
 function injectEmotionalPillar(state) {
 
   // Partition protection
-  if (!tollState[activeVoice]?.unlocked) {
+  if (!tS[vA]?.unlocked) {
     return {
       ...state,
       activePillar: null
@@ -6565,9 +6565,9 @@ function injectEmotionalPillar(state) {
   }
 
   const currentStage =
-    stageState[activeVoice]?.currentStage || 1;
+    sS[vA]?.currentStage || 1;
 
-  const detected = detectEmotionalPillar(state.original);
+  const detected = dEP(state.original);
 
   const nativePillar = getStageNativePillar(currentStage);
 
@@ -6575,11 +6575,11 @@ function injectEmotionalPillar(state) {
 
   if (!v4PillarHistory) v4PillarHistory = {};
 
-  if (!v4PillarHistory[activeVoice]) {
-    v4PillarHistory[activeVoice] = [];
+  if (!v4PillarHistory[vA]) {
+    v4PillarHistory[vA] = [];
   }
 
-  const history = v4PillarHistory[activeVoice];
+  const history = v4PillarHistory[vA];
 
   const sameCount = history.filter(p => p === finalPillar).length;
 
@@ -6590,7 +6590,7 @@ function injectEmotionalPillar(state) {
     const validAlternatives = allPillars.filter(
       p =>
         p !== finalPillar &&
-        emotionalResponseBank[p]?.[activeVoice]?.[currentStage]
+        emotionalResponseBank[p]?.[vA]?.[currentStage]
     );
 
   
@@ -6779,21 +6779,21 @@ const v4IntegrationLayer = {
 
 function applyV4Integration(baseText, pillar) {
 
-  if (!tollState[activeVoice]?.unlocked) {
+  if (!tS[vA]?.unlocked) {
     return baseText;
   }
 
-  const layer = v4IntegrationLayer?.[activeVoice]?.[pillar];
+  const layer = v4IntegrationLayer?.[vA]?.[pillar];
 
   if (!layer || !layer.length) {
     return baseText;
   }
 
-  const index = v4IntegrationIndex[activeVoice][pillar] % layer.length;
+  const index = v4IntegrationIndex[vA][pillar] % layer.length;
 
   const addition = layer[index];
 
-  v4IntegrationIndex[activeVoice][pillar]++;
+  v4IntegrationIndex[vA][pillar]++;
 
   return baseText + " " + addition;
 }
@@ -8092,11 +8092,11 @@ function applyVoiceModifier(state) {
 
 function getFallbackResponse() {
 
-  if (!activeVoice) {
+  if (!vA) {
     return "Choose a voice first.";
   }
 
-  const stage = stageState[activeVoice]?.currentStage || 1;
+  const stage = sS[vA]?.currentStage || 1;
 
   const neutralFallback = {
     saira: {
@@ -8176,10 +8176,10 @@ function getFallbackResponse() {
     }
   };
 
- const pool = neutralFallback[activeVoice][stage] 
-          || neutralFallback[activeVoice][1];
+ const pool = neutralFallback[vA][stage] 
+          || neutralFallback[vA][1];
 
-return deliverReply(pool[Math.floor(Math.random() * pool.length)]);
+return dR(pool[Math.floor(Math.random() * pool.length)]);
 } 
   
 function showFoundational() {
@@ -8196,7 +8196,7 @@ function showFoundational() {
 
   questions.forEach(q => {
     const btn = document.createElement("button");
-    btn.className = "btn " + activeVoice;
+    btn.className = "btn " + vA;
     btn.textContent = q.text;
     btn.onclick = () => answerFoundational(q, btn);
     dock.appendChild(btn);
@@ -8205,7 +8205,7 @@ function showFoundational() {
 
 function answerFoundational(q, btn) {
   if (interactionLocked) {
-    const msg = activeVoice ==="saira"
+    const msg = vA ==="saira"
       ?"Let me finish this gently... 🌙"
       :"Give it a moment. I'm still here. 🌿";
     addVoiceMessage(msg);
@@ -8243,28 +8243,28 @@ function answerFoundational(q, btn) {
   }
 };
 
-  const reply = replies[activeVoice][q.key];
+  const reply = replies[vA][q.key];
 
-deliverReply(reply, function () {
+dR(reply, function () {
 
-  tollState[activeVoice].dockCount++;
+  tS[vA].dockCount++;
 
-  const dockProgress = tollState[activeVoice].dockCount;
+  const dockProgress = tS[vA].dockCount;
 
   if (dockProgress >= 20) {
-    tollState[activeVoice].unlocked = true;
+    tS[vA].unlocked = true;
 
 
-    if (!transitionAcknowledged[activeVoice]) {
+    if (!transitionAcknowledged[vA]) {
 
       const bridgeLine =
-        activeVoice === "saira"
+        vA === "saira"
           ? "You didn't just pass through that."
           : "You stayed with it.";
 
-      transitionAcknowledged[activeVoice] = true;
+      transitionAcknowledged[vA] = true;
 
-      deliverReply(bridgeLine);
+      dR(bridgeLine);
     }
   }
 
@@ -8401,7 +8401,7 @@ function unlockNextLayer() {
 
   setTimeout(() => {
     dock.innerHTML = `
-      <button class="btn ${activeVoice}" onclick="showNextLayer()">Yes</button>
+      <button class="btn ${vA}" onclick="showNextLayer()">Yes</button>
      <button class="btn primary" onclick="declineLayer()">No</button>
     `;
     autoScroll();
@@ -8413,7 +8413,7 @@ function showNextLayer() {
 
   characterLayers[currentLayer].forEach(item => {
     const btn = document.createElement("button");
-    btn.className = "btn " + activeVoice;
+    btn.className = "btn " + vA;
     btn.textContent = item.q;
     btn.onclick = () => answerCharacter(item, btn);
     dock.appendChild(btn);
@@ -8425,7 +8425,7 @@ function showNextLayer() {
 function answerCharacter(item, btn) {
 
   if (interactionLocked) {
-    const msg = activeVoice ==="saira"
+    const msg = vA ==="saira"
       ?"Let me finish this gently... 🌙"
       :"Give it a moment. I'm still here. 🌿";
     addVoiceMessage(msg);
@@ -8437,19 +8437,19 @@ function answerCharacter(item, btn) {
   addUserMessage(item.q);
   playTone(520, 60, 0.02);
 
-  const reply = item.a[activeVoice];
+  const reply = item.a[vA];
 
-  deliverReply(reply, function () {
+  dR(reply, function () {
     characterAnswered++;
 
 
-tollState[activeVoice].dockCount++;
+tS[vA].dockCount++;
 
-const dockProgress = tollState[activeVoice].dockCount;
+const dockProgress = tS[vA].dockCount;
 
 
 if (dockProgress >= 20) {
-  tollState[activeVoice].unlocked = true;
+  tS[vA].unlocked = true;
 }
 
     if (characterAnswered % 5 === 0 && characterAnswered < 15) {
@@ -8495,7 +8495,7 @@ function showAuthorInvitation() {
             interactionLocked = false;
 
             dock.innerHTML = `
-              <button class="btn ${activeVoice}" onclick="startReflection()">Yes</button>
+              <button class="btn ${vA}" onclick="startReflection()">Yes</button>
               <button class="btn primary" onclick="declineReflection()">No</button>
             `;
 
@@ -8516,7 +8516,7 @@ function declineLayer() {
   clearDock();
 
   addSystemMessage(
-    activeVoice ==="saira"
+    vA ==="saira"
       ?"Thank you for sitting with us."
       :"Thank you for staying."
   );
@@ -8539,7 +8539,7 @@ function declineReflection() {
   clearDock();
 
   addSystemMessage(
-  activeVoice ==="saira"
+  vA ==="saira"
     ?"Thank you for staying with us."
     :"Thank you for staying."
 );
@@ -8572,10 +8572,10 @@ function nextReflection() {
     ]
   };
 
-  const voiceSet = sets?.[activeVoice];
+  const voiceSet = sets?.[vA];
 
   if (!voiceSet) {
-    console.warn("Reflection aborted - invalid activeVoice:", activeVoice);
+    console.warn("Reflection aborted - invalid vA:", vA);
     return;
   }
 
@@ -8600,7 +8600,7 @@ function nextReflection() {
 
   emojis.forEach(e => {
     const btn = document.createElement("button");
-    btn.className = "btn " + activeVoice;
+    btn.className = "btn " + vA;
     btn.textContent = e;
     btn.onclick = () => {
       playTone(520, 60, 0.02);
@@ -8621,9 +8621,9 @@ function submitReflection() {
 
   chatBody.insertAdjacentHTML(
     "beforeend",
-    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
+    `<div class="message ${vA ==="saira" ?"saira-msg" :"ayaan-msg"}">
        <div class="bubble">
-         ${activeVoice ==="saira"
+         ${vA ==="saira"
            ?"Thank you for staying with us. It means more than you know."
            :"Thank you for staying. Not everyone chooses to listen this closely."}
          <br><br>
@@ -8635,7 +8635,7 @@ function submitReflection() {
   autoScroll();
   return;
 }
-  document.getElementById("formVoice").value = activeVoice;
+  document.getElementById("formVoice").value = vA;
   document.getElementById("r1").value = reflections[0];
   document.getElementById("r2").value = reflections[1];
   document.getElementById("r3").value = reflections[2];
@@ -8658,9 +8658,9 @@ function submitReflection() {
 
   chatBody.insertAdjacentHTML(
    "beforeend",
-    `<div class="message ${activeVoice ==="saira" ?"saira-msg" :"ayaan-msg"}">
+    `<div class="message ${vA ==="saira" ?"saira-msg" :"ayaan-msg"}">
        <div class="bubble">
-         ${activeVoice ==="saira"
+         ${vA ==="saira"
            ?"Thank you for staying with us. It means more than you know."
            :"Thank you for staying. Not everyone chooses to listen this closely."}
          <br><br>
@@ -8780,8 +8780,8 @@ function selectVoice(v) {
   initAudio();
   playTone(520, 80, 0.03);
 
-  activeVoice = v;
-  emotionalDepth = 0;
+  vA = v;
+  eD = 0;
 
   if (skyLayer) {
     skyLayer.style.backgroundImage =
@@ -8892,7 +8892,7 @@ if (repeatCount >= repeatLimit) {
   return;
 }
 
-if (!activeVoice) {
+if (!vA) {
   addSystemMessage("Please choose Saira or ayaan first.");
   return;
 }
@@ -8903,10 +8903,10 @@ input.value ="";
 
 addUserMessage(originalText);
 
-if (tollState?.[activeVoice]?.unlocked) {
+if (tS?.[vA]?.unlocked) {
   processEmotionalMode(originalText, originalText);
 } else {
-  processInput(originalText, originalText);
+  pI(originalText, originalText);
 }
 
 const safetyWords = [
@@ -8939,22 +8939,22 @@ if (unsafeDetected) {
     return;
   }
 
-  return deliverReply(
-    activeVoice === "saira"
+  return dR(
+    vA === "saira"
       ? "I won't engage in that. If you'd like to continue, speak differently."
       : "That direction isn't supported here. Adjust the tone."
   );
 }
 
 
-if (originalText.trim().length > 0 && tollState?.[activeVoice]) {
-  tollState[activeVoice].freeCount++;
+if (originalText.trim().length > 0 && tS?.[vA]) {
+  tS[vA].freeCount++;
 }
 
-const freeProgress = tollState?.[activeVoice]?.freeCount || 0;
+const freeProgress = tS?.[vA]?.freeCount || 0;
 
 if (freeProgress >= 20) {
-  tollState[activeVoice].unlocked = true;
+  tS[vA].unlocked = true;
 
   /* Activate typing after tollgate */
   const typingArea = document.getElementById("typingArea");
@@ -8963,20 +8963,20 @@ if (freeProgress >= 20) {
   /* Remove dock buttons */
   clearDock();
 
-  if (!transitionAcknowledged?.[activeVoice]) {
+  if (!transitionAcknowledged?.[vA]) {
     const bridgeLine =
-      activeVoice === "saira"
+      vA === "saira"
         ? "You didn't just pass through that."
         : "You stayed with it.";
 
-    transitionAcknowledged[activeVoice] = true;
-    deliverReply(bridgeLine);
+    transitionAcknowledged[vA] = true;
+    dR(bridgeLine);
   }
 }
 
 
 if (isDirectionalDeviation(originalText)) {
-  deliverReply(relationalRedirect(activeVoice));
+  dR(relationalRedirect(vA));
   return;
 }
 
@@ -9030,11 +9030,11 @@ let attempts = 0;
 
 const wrapperInterval = setInterval(function () {
 
-  if (!wrapped && typeof window.processInput === "function") {
+  if (!wrapped && typeof window.pI === "function") {
 
-    const originalProcessInput = window.processInput;
+    const originalpI = window.pI;
 
-    window.processInput = function(text, originalText) {
+    window.pI = function(text, originalText) {
 
       if (!window.chatStarted) {
         window.chatStarted = true;
@@ -9045,7 +9045,7 @@ const wrapperInterval = setInterval(function () {
         message_length: originalText ? originalText.length : 0
       });
 
-      return originalProcessInput.apply(this, arguments);
+      return originalpI.apply(this, arguments);
     };
 
     wrapped = true;
@@ -9093,7 +9093,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   micBtn.addEventListener("click", function () {
 
-    voiceEnabled = true;
+    vE = true;
 
     if (isListening) {
       recognition.stop();
@@ -9143,7 +9143,7 @@ document.addEventListener("DOMContentLoaded", function () {
   recognition.onerror = function (event) {
     console.error("Speech error:", event.error);
     isListening = false;
-    voiceEnabled = false;
+    vE = false;
     voiceSendLock = false;
   };
 
