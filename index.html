@@ -2199,58 +2199,6 @@ function normalizeInput(text) {
     // Trim edges
     .trim();
 }
-  
-// =======================
-// META LAYER V$
-// =======================
-
-function detectMetaType(input) {
-  if (/favourite|favorite|loved|best part/i.test(input)) return "favourite";
-  if (/author|writer|why was this written|real story/i.test(input)) return "author";
-  if (/how|when|where|what happened|tell me about/i.test(input)) return "event";
-  return "general";
-}
-
-const eventMap = {
-collision: ["how did you meet","how did u meet","first meet","we met","when did you meet","hit","car","accident"],  
-  cafe: ["cafe", "coffee", "bokka"],
-  dinner: ["dinner", "restaurant"],
-  kiss: ["kiss", "dance"]
-};
-
-function detectEvent(input) {
-  const text = input.toLowerCase();
-  for (let key in eventMap) {
-    if (eventMap[key].some(word => text.includes(word))) {
-      return key;
-    }
-  }
-  return null;
-}
-
-function detectMode(input) {
-  if (/how did|what happened/i.test(input)) return "recall";
-  if (/why/i.test(input)) return "explain";
-  return "general";
-}
-
-function buildMetaContext(input) {
-  return {
-    type: detectMetaType(input),
-    event: detectEvent(input),
-    mode: detectMode(input)
-  };
-}
-
-function getNarrativeAnchor(event) {
-  const anchors = {
-    collision: "We met in Mumbai… I almost got hit by his car.",
-    cafe: "That café… it felt like something shifted quietly.",
-    dinner: "That night at dinner… everything felt closer than it should have.",
-    kiss: "That moment… when everything stopped between us."
-  };
-  return anchors[event] || null;
-}
 /* =========================
    LOCATION / PLACE DETECTION (STRUCTURAL)
 ========================= */
@@ -2724,7 +2672,6 @@ function processInput(userText, originalText) {
   interactionLocked = true;
 
   let normalizedText = normalizeInput(originalText);
-  const meta = buildMetaContext(originalText);
 
 /* =========================
    REPETITION / LOOP STRESS GUARD
@@ -2864,10 +2811,9 @@ if (!v4RotationIndex) {
 /* ================================
 V4 EMOTIONAL ENGINE
 ================================= */
-  
-function runV4Engine(text, originalText, meta) {
-console.log("META INSIDE V4:", meta);
-  
+
+function runV4Engine(text, originalText) {
+
   if (!originalText || originalText.trim() === "") return;
   if (interactionLocked) return;
 
@@ -2890,9 +2836,6 @@ if (!v4RotationIndex) v4RotationIndex = {};
   }
 
   const stage = stageState?.[voice]?.currentStage || 1;
-
-let narrativeAnchor = "TEST ANCHOR WORKING";
-
   
 /* =========================
   EMOTIONAL PILLAR DETECTION
@@ -2949,12 +2892,9 @@ if (anchorPool && anchorPool.length) {
 
   lastAnchorUsed[pillar] = anchor;
 
-  if (narrativeAnchor) {
-    anchor = narrativeAnchor + " " + anchor;
-  }
-
   return deliverReply(anchor);
- }
+
+}
 
 }
   /* =========================
@@ -3320,13 +3260,9 @@ if (v4RotationIndex[voice][pillar] === undefined) {
 
 const index = v4RotationIndex[voice][pillar];
 
-let line = pool[index % pool.length];
+const line = pool[index % pool.length];
 
 v4RotationIndex[voice][pillar]++;
-
-if (narrativeAnchor) {
-  line = narrativeAnchor + " " + line;
-}
 
 return deliverReply(line);
 }
