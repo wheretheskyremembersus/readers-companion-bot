@@ -1233,8 +1233,8 @@ let audioCtx, analyser, source, dataArray;
 let waveRunning = false;
 let animationId;
 
-let canvas, ctx;
-
+let canvas = null;
+let ctx = null;
 async function initAudioWave() {
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -1283,6 +1283,14 @@ const value = smoothData[i];
 
 function startWave() {
   if (waveRunning) return;
+
+  if (!canvas) {
+    canvas = document.getElementById("waveCanvas");
+    if (canvas) ctx = canvas.getContext("2d");
+  }
+
+  if (!ctx) return; // ❗ prevent silent failure
+
   waveRunning = true;
   drawWave();
 }
