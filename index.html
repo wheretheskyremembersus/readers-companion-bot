@@ -434,50 +434,6 @@ body {
   box-shadow: 0 0 12px rgba(120,180,255,0.45);
 }
 
-/* =========================
-   Wave VOICE BUTTON
-========================= */
-
-.voice-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  cursor: pointer;
-}
-
-/* waveform bars */
-.voice-btn .wave {
-  width: 3px;
-  height: 12px;
-  background: white;
-  border-radius: 2px;
-  transition: 0.2s;
-}
-
-/* animation when listening */
-.voice-btn.listening .wave:nth-child(1) {
-  animation: waveAnim 1s infinite;
-}
-.voice-btn.listening .wave:nth-child(2) {
-  animation: waveAnim 1s infinite 0.2s;
-}
-.voice-btn.listening .wave:nth-child(3) {
-  animation: waveAnim 1s infinite 0.4s;
-}
-.voice-btn.listening .wave:nth-child(4) {
-  animation: waveAnim 1s infinite 0.6s;
-}
-
-@keyframes waveAnim {
-  0%, 100% { height: 10px; }
-  50% { height: 18px; }
-}
 
 /* =========================
    TYPING AREA
@@ -629,10 +585,7 @@ body {
   <input type="text" id="userInput" placeholder="You can ask something..." />
   <button id="sendBtn" onclick="sendTypedMessage()">Send</button>
   <button id="micBtn" class="voice-btn">
-  <span class="wave"></span>
-  <span class="wave"></span>
-  <span class="wave"></span>
-  <span class="wave"></span>
+  <canvas id="waveCanvas" width="120" height="120"></canvas>
 </button>
   
 </div>
@@ -1142,6 +1095,10 @@ function playTone(startFreq = 750, duration = 40, volume = 0.14) {
 /* ---------- Enable Enter Key ---------- */
 
 window.addEventListener("DOMContentLoaded", function () {
+  canvas = document.getElementById("waveCanvas");
+if (canvas) {
+  ctx = canvas.getContext("2d");
+}
   const inputField = document.getElementById("userInput");
 
   if (inputField) {
@@ -1171,9 +1128,11 @@ window.addEventListener("DOMContentLoaded", function () {
   isListening = false;
   console.log("🛑 stopped");
 
+  stopWave(); // ✅ ADD THIS
+
   const micBtn = document.getElementById("micBtn");
   if (micBtn) {
-    micBtn.classList.remove("listening"); 
+    micBtn.classList.remove("listening");
   }
 };
 
@@ -1212,31 +1171,101 @@ window.addEventListener("DOMContentLoaded", function () {
   const micBtn = document.getElementById("micBtn");
 
   if (micBtn) {
-  micBtn.addEventListener("click", () => {
+  micBtn.addEventListener("click", async () => {
 
-    if (!recognition) return;
+  if (!recognition) return;
 
-    unlockSpeech();
-    micTriggered = true;
+  unlockSpeech();
+  micTriggered = true;
 
-    if (isListening) {
-      recognition.stop();
-      micBtn.classList.remove("listening"); // 👈 STOP animation
-      return;
-    }
+  if (isListening) {
+    recognition.stop();
+    stopWave(); // ✅ ADD
+    return;
+  }
 
-    voiceSendLock = false;
+  if (!audioCtx) {
+    await initAudioWave(); // ✅ ADD
+  }
 
-    try {
-      recognition.start();
-      micBtn.classList.add("listening"); // 👈 START animation
-    } catch (e) {
-      recognition.stop();
-      setTimeout(() => recognition.start(), 200);
-    }
-  });
+  voiceSendLock = false;
+
+  try {
+    recognition.start();
+    startWave(); // ✅ ADD
+  } catch (e) {
+    recognition.stop();
+    setTimeout(() => recognition.start(), 200);
+  }
+ });
 }
 
+/* =========================
+   Wave VOICE BUTTON
+========================= */
+let audioCtx, analyser, source, dataArray;
+let waveRunning = false;
+let animationId;
+
+let canvas, ctx;
+
+async function initAudioWave() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+  source = audioCtx.createMediaStreamSource(stream);
+  analyser = audioCtx.createAnalyser();
+
+  analyser.fftSize = 64;
+  dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  source.connect(analyser);
+}
+
+let smoothData = [0, 0, 0, 0, 0];
+function drawWave() {
+  if (!analyser) return;
+
+  analyser.getByteFrequencyData(dataArray); // ✅ ADD THIS LINE
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  for (let i = 0; i < 5; i++) {
+    let raw = dataArray[i * 2] / 255;
+smoothData[i] = smoothData[i] * 0.7 + raw * 0.3;
+const value = smoothData[i];
+    const height = 10 + value * 30;
+    const x = cx + (i - 2) * 8;
+    
+    ctx.beginPath();
+   ctx.rect(x - 2, cy - height / 2, 4, height);
+    
+    ctx.fillStyle = "white";
+    ctx.shadowColor = "white";
+    ctx.shadowBlur = 10;
+    ctx.fill();
+  }
+
+  if (waveRunning) {
+    animationId = requestAnimationFrame(drawWave);
+  }
+}
+
+function startWave() {
+  if (waveRunning) return;
+  waveRunning = true;
+  drawWave();
+}
+
+function stopWave() {
+  waveRunning = false;
+  cancelAnimationFrame(animationId);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+ }
 }); // ✅ closes DOMContentLoaded
 
 /* ---------- Auto Scroll ---------- */
