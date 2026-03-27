@@ -434,7 +434,6 @@ body {
   box-shadow: 0 0 12px rgba(120,180,255,0.45);
 }
 
-
 /* =========================
    TYPING AREA
 ========================= */
@@ -540,32 +539,6 @@ body {
     gap: 60px;
   }
 }
-.voice-btn.no-style {
-  all: unset;
-
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-
-  background: black;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  flex: 0 0 48px;
-}
-
-.voice-btn.no-style canvas {
-  width: 26px;
-  height: 26px;
-}
-#waveCanvas {
-  background: transparent;
-}
-  
 </style>
 </head>
 
@@ -610,10 +583,8 @@ body {
 <div class="typing-area" id="typingArea" style="display:none;">
   <input type="text" id="userInput" placeholder="You can ask something..." />
   <button id="sendBtn" onclick="sendTypedMessage()">Send</button>
-<button id="micBtn" class="voice-btn no-style">
-  <canvas id="waveCanvas" width="120" height="120"></canvas>
-</button>
-  
+  <button id="micBtn">🎤</button>
+
 </div>
 </div>
 
@@ -1121,10 +1092,6 @@ function playTone(startFreq = 750, duration = 40, volume = 0.14) {
 /* ---------- Enable Enter Key ---------- */
 
 window.addEventListener("DOMContentLoaded", function () {
-  canvas = document.getElementById("waveCanvas");
-if (canvas) {
-  ctx = canvas.getContext("2d");
-}
   const inputField = document.getElementById("userInput");
 
   if (inputField) {
@@ -1136,6 +1103,7 @@ if (canvas) {
     });
   }
 
+  // ✅ MIC SETUP
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -1151,16 +1119,9 @@ if (canvas) {
     };
 
     recognition.onend = () => {
-  isListening = false;
-  console.log("🛑 stopped");
-
-  stopWave(); // ✅ ADD THIS
-
-  const micBtn = document.getElementById("micBtn");
-  if (micBtn) {
-    micBtn.classList.remove("listening");
-  }
-};
+      isListening = false;
+      console.log("🛑 stopped");
+    };
 
     recognition.onerror = (e) => {
       isListening = false;
@@ -1197,109 +1158,32 @@ if (canvas) {
   const micBtn = document.getElementById("micBtn");
 
   if (micBtn) {
-  micBtn.addEventListener("click", async () => {
+    micBtn.addEventListener("click", () => {
 
-  if (!recognition) return;
+      if (!recognition) return;
 
-  unlockSpeech();
-  micTriggered = true;
+      unlockSpeech();
+      
+      micTriggered = true;
+      
+      if (isListening) {
+        recognition.stop();
+        return;
+      }
 
-  if (isListening) {
-    recognition.stop();
-    stopWave(); // ✅ ADD
-    return;
+      voiceSendLock = false;
+
+      try {
+        recognition.start();
+      } catch (e) {
+        console.log("Restarting mic...");
+        recognition.stop();
+        setTimeout(() => recognition.start(), 200);
+      }
+
+    });
   }
 
-  if (!audioCtx) {
-    await initAudioWave(); // ✅ ADD
-  }
-
-  voiceSendLock = false;
-
-  try {
-    recognition.start();
-    startWave(); // ✅ ADD
-  } catch (e) {
-    recognition.stop();
-    setTimeout(() => recognition.start(), 200);
-  }
- });
-}
-
-/* =========================
-   Wave VOICE BUTTON
-========================= */
-let audioCtx, analyser, source, dataArray;
-let waveRunning = false;
-let animationId;
-
-let canvas = null;
-let ctx = null;
-async function initAudioWave() {
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-  source = audioCtx.createMediaStreamSource(stream);
-  analyser = audioCtx.createAnalyser();
-
-  analyser.fftSize = 64;
-  dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-  source.connect(analyser);
-}
-
-let smoothData = [0, 0, 0, 0, 0];
-function drawWave() {
-  if (!analyser) return;
-
-  analyser.getByteFrequencyData(dataArray); // ✅ ADD THIS LINE
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  const cx = canvas.width / 2;
-  const cy = canvas.height / 2;
-
-  for (let i = 0; i < 5; i++) {
-    let raw = dataArray[i * 2] / 255;
-smoothData[i] = smoothData[i] * 0.7 + raw * 0.3;
-const value = smoothData[i];
-    const height = 10 + value * 30;
-    const x = cx + (i - 2) * 8;
-    
-    ctx.beginPath();
-    ctx.rect(x - 3, cy - height / 2, 6, height);
-    
-    ctx.fillStyle = "#ffffff";
-    ctx.shadowColor = "#ffffff";
-    ctx.shadowBlur = 0;
-    ctx.fill();
-  }
-
-  if (waveRunning) {
-    animationId = requestAnimationFrame(drawWave);
-  }
-}
-
-function startWave() {
-  if (waveRunning) return;
-
-  if (!canvas) {
-    canvas = document.getElementById("waveCanvas");
-    if (canvas) ctx = canvas.getContext("2d");
-  }
-
-  if (!ctx) return; // ❗ prevent silent failure
-
-  waveRunning = true;
-  drawWave();
-}
-
-function stopWave() {
-  waveRunning = false;
-  cancelAnimationFrame(animationId);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
- }
 }); // ✅ closes DOMContentLoaded
 
 /* ---------- Auto Scroll ---------- */
