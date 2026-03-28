@@ -629,7 +629,6 @@ if (!selectedVoice) {
   speech.pitch = voiceType === "saira" ? 1.1 : 0.9;
   speech.rate  = voiceType === "saira" ? 0.95 : 0.9;
 
- speechSynthesis.cancel();   
 speechSynthesis.resume();   
 speechSynthesis.speak(speech);
   
