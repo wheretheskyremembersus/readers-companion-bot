@@ -560,18 +560,17 @@ body {
 let skyLayer;
 let dock;
 let eD = 0;
+let voicesReady = false;
+
+speechSynthesis.onvoiceschanged = () => {
+  voicesReady = true;
+};
 
 function unlockSpeech() {
-  if (!('speechSynthesis' in window)) return;
-
-  const utter = new SpeechSynthesisUtterance("init");
-  utter.volume = 0; // silent
-
-  speechSynthesis.speak(utter);
-  speechSynthesis.cancel();
-
-  speechSynthesis.resume();
- }
+  if (speechSynthesis.paused) {
+    speechSynthesis.resume();
+  }
+}
   
 window.addEventListener("load", function () {
 
@@ -591,13 +590,11 @@ window.addEventListener("load", function () {
 function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
-  let voices = speechSynthesis.getVoices();
-if (!voices.length) {
-  setTimeout(() => speakText(text, voiceType), 200);
-  return;
- }
+
+  if (!voicesReady) {
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return; 
 }
-  
 const voices = speechSynthesis.getVoices();
 let selectedVoice = null;
 if (voiceType === "saira") {
@@ -622,9 +619,7 @@ if (!selectedVoice) {
   speech.pitch = voiceType === "saira" ? 1.1 : 0.9;
   speech.rate  = voiceType === "saira" ? 0.95 : 0.9;
 
-speechSynthesis.resume();   
-speechSynthesis.speak(speech);
-  
+  speechSynthesis.speak(speech);
 }
 
 function cleanSpeechText(text) {
