@@ -560,11 +560,6 @@ body {
 let skyLayer;
 let dock;
 let eD = 0;
-let voicesReady = false;
-
-speechSynthesis.onvoiceschanged = () => {
-  voicesReady = true;
-};
 
 function unlockSpeech() {
   if (!('speechSynthesis' in window)) return;
@@ -596,13 +591,11 @@ window.addEventListener("load", function () {
 function speakText(text, voiceType) {
 
   if (!('speechSynthesis' in window)) return;
-
-  if (!voicesReady) {
-  const voices = speechSynthesis.getVoices();
-  if (!voices.length) {
-    setTimeout(() => speakText(text, voiceType), 250);
-    return;
-  }
+  let voices = speechSynthesis.getVoices();
+if (!voices.length) {
+  setTimeout(() => speakText(text, voiceType), 200);
+  return;
+ }
 }
   
 const voices = speechSynthesis.getVoices();
