@@ -567,10 +567,16 @@ speechSynthesis.onvoiceschanged = () => {
 };
 
 function unlockSpeech() {
-  if (speechSynthesis.paused) {
-    speechSynthesis.resume();
-  }
-}
+  if (!('speechSynthesis' in window)) return;
+
+  const utter = new SpeechSynthesisUtterance("init");
+  utter.volume = 0; // silent
+
+  speechSynthesis.speak(utter);
+  speechSynthesis.cancel();
+
+  speechSynthesis.resume();
+ }
   
 window.addEventListener("load", function () {
 
@@ -593,8 +599,12 @@ function speakText(text, voiceType) {
 
   if (!voicesReady) {
   const voices = speechSynthesis.getVoices();
-  if (!voices.length) return; 
+  if (!voices.length) {
+    setTimeout(() => speakText(text, voiceType), 250);
+    return;
+  }
 }
+  
 const voices = speechSynthesis.getVoices();
 let selectedVoice = null;
 if (voiceType === "saira") {
@@ -619,7 +629,10 @@ if (!selectedVoice) {
   speech.pitch = voiceType === "saira" ? 1.1 : 0.9;
   speech.rate  = voiceType === "saira" ? 0.95 : 0.9;
 
-  speechSynthesis.speak(speech);
+ speechSynthesis.cancel();   
+speechSynthesis.resume();   
+speechSynthesis.speak(speech);
+  
 }
 
 function cleanSpeechText(text) {
